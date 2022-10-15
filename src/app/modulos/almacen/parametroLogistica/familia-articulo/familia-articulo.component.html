@@ -1,0 +1,304 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Familias de Artículos
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+            <input data-toggle="modal" data-target="#modalFamArt" #modalFamArt type="hidden" name="button">
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Buscar familia de artículo:</mat-label>
+                    <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                    <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                        aria-label="Clear" (click)="this.txtFiltro.setValue(''); fnListarFamiliaArticulo(1);">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Unidad de medida -->
+    <div id="listaMobile" class="mat-elevation-z8 mb-4">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="nId" sticky>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción
+                    </th>
+                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaOpc2">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="fnSeleccionarFamiliaArt(row)">
+                                <mat-icon color="accent">create</mat-icon>
+                                <span>Modificar</span>
+                            </button>
+                            <button mat-menu-item (click)="fnSubFamilias(row)">
+                                <mat-icon color="accent">touch_app</mat-icon>
+                                <span>Ver Sub familias</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodigo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Código
+                    </th>
+                    <td data-label='Código: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2">
+                        <ngb-highlight [result]="row.sCodigo" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sAbrev">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                        Abreviatura
+                    </th>
+                    <td data-label='Abreviatura: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaOpc2">
+                        <ngb-highlight [result]="row.sAbrev" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDescripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                        Familia
+                    </th>
+                    <td data-label='Familia: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLarge">
+                        <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nCorrelativo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                        Correlativo
+                    </th>
+                    <td data-label='Correlativo: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLib2">
+                        <ngb-highlight [result]="row.nCorrelativo" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sServicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Tipo
+                    </th>
+                    <td data-label='Tipo: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+                        <ngb-highlight [result]="row.sServicio" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sEstado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                    </th>
+                    <td data-label='Estado: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="row.nEstado==0 ? 'make-gris' : ''">
+                </tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+</div>
+
+<app-sub-familia-articulo *ngIf="pMostrar==1" [pFamArt]="pFamArt" (pMostrar)="fnOcultar($event)">
+</app-sub-familia-articulo>
+
+<!--Modal para añadir familias de articulos-->
+<div class="modal fade  bd-example-modal-xl" id="modalFamArt" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalFamArt"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalFamArtLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <!--Cuando se va a registrar-->
+                    <form *ngIf="pOpcion==1" class="row col-md-12" [formGroup]="formFamArt">
+                        <div class="form-group col-md-2 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Código:</mat-label>
+                                <input type="text" matInput placeholder="00" formControlName="txtCodigo"
+                                    [errorStateMatcher]="matcher" readonly>
+                                <mat-error *ngIf="formFamArt.get('txtCodigo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-2 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Abreviatura:</mat-label>
+                                <input #input (input)="fnEvitarEspacios()" [value]="input.value.toUpperCase()"
+                                    type="text" matInput placeholder="A" formControlName="txtAbrev"
+                                    [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formFamArt.get('txtAbrev').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formFamArt.get('txtAbrev').hasError('pattern')">
+                                    .Solo letras</mat-error>
+                                <mat-error
+                                    *ngIf="formFamArt.get('txtAbrev').hasError('maxlength') || formFamArt.get('txtAbrev').hasError('minlength')">
+                                    .Solo una letra</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Descripción:</mat-label>
+                                <input type="text" (input)="fnEvitarEspacios()" matInput placeholder="Descripcion"
+                                    formControlName="txtDescripcion" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formFamArt.get('txtDescripcion').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formFamArt.get('txtDescripcion').hasError('caracterValidator')">
+                                    .El texto no debe contener: "/", "|", "?"</mat-error>
+                                <mat-error *ngIf="formFamArt.get('txtDescripcion').hasError('maxlength')">
+                                    .Max. 50 digitos</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <mat-slide-toggle formControlName="stServicio">¿Es servicio?</mat-slide-toggle>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button mat-mini-fab color="accent" (click)="fnAnadirFamArt()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--Cuando se va a modificar-->
+
+                    <form *ngIf="pOpcion==2" class="row col-md-12" [formGroup]="formFamArtActualizar">
+                        <div class="form-group col-md-2 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Código:</mat-label>
+                                <input type="text" matInput placeholder="00" formControlName="txtCodigo"
+                                    [errorStateMatcher]="matcher" readonly>
+                                <mat-error *ngIf="formFamArtActualizar.get('txtCodigo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-2 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Abreviatura:</mat-label>
+                                <input #input readonly [value]="input.value.toUpperCase()" type="text" matInput
+                                    placeholder="A" formControlName="txtAbrev" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formFamArtActualizar.get('txtAbrev').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error
+                                    *ngIf="formFamArtActualizar.get('txtAbrev').hasError('maxlength') || formFamArt.get('txtAbrev').hasError('minlength')">
+                                    .Solo una letra</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Descripción:</mat-label>
+                                <input [readonly]="pOpcion==2 && pTipo==1" type="text" (input)="fnEvitarEspaciosAct()"
+                                    matInput placeholder="Descripcion" formControlName="txtDescripcion"
+                                    [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formFamArtActualizar.get('txtDescripcion').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formFamArtActualizar.get('txtDescripcion').hasError('maxlength')">
+                                    .Max. 50 digitos</mat-error>
+                                <mat-error
+                                    *ngIf="formFamArtActualizar.get('txtDescripcion').hasError('caracterValidator')">
+                                    .El texto no debe contener: "/", "|", "?"</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-3 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Correlativo:</mat-label>
+                                <input type="number" matInput placeholder="00" formControlName="txtCorrelativo"
+                                    [errorStateMatcher]="matcher" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-3 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Tipo:</mat-label>
+                                <input type="text" matInput placeholder="00" formControlName="txtServicio"
+                                    [errorStateMatcher]="matcher" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-3 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select formControlName="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstados" [value]="vEstado.nEstado">
+                                        {{vEstado.sEstado}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Modificar" mat-mini-fab color="accent" (click)="fnModificarFamArt()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarFamArt()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="row col-md-12 d-flex justify-content-end">
+                        <div *ngIf="pOpcion==2" class="form-group col-md-4">
+                        </div>
+
+                    </div>
+
+                </mat-card>
+                <div class="container-fluid">
+                    <div class="form-row col-md-12 justify-content-end align-items-end">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

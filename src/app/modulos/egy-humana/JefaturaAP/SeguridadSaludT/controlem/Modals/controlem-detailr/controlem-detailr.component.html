@@ -1,0 +1,538 @@
+<ngx-spinner
+  name="spi_nuevo_rango"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<!-- #region FB -->
+<div class="fab-container">
+  <button
+    mat-mini-fab
+    class="fab-toggler"
+    (click)="fb.opcionesMostrarOcultar()"
+  >
+    <i class="material-icons" [@fabToggler]="{ value: fb.animacion }">add</i>
+  </button>
+  <div [@speedDialStagger]="fb.opciones.length">
+    <button
+      *ngFor="let btn of fb.opciones; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="fb.ejecucionOpciones(ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+<!-- #endregion -->
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Detalle del responsable</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="closeDetail()"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row" style="margin-bottom: 15px">
+    <!-- #region INFORMACION DEL RESPONSABLE-->
+    <div id="dLeftDetail" class="col-lg-6">
+      <mat-accordion #maDetail="matAccordion">
+        <!-- Información personal -->
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información del personal : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div class="col-lg-3 divAvatar">
+              <a>
+                <span class="imgBadge">{{
+                  infoResp.getValorCampo("sCodPlla")
+                }}</span>
+                <img
+                  class="imgAvatar"
+                  src="../../../../../assets/img/LuckyAvatar.png"
+                  alt=""
+                />
+              </a>
+            </div>
+
+            <div id="fgDetail" [formGroup]="infoResp.form" class="col-lg-9">
+              <div class="form-row">
+                <div class="col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo</mat-label>
+                    <input type="text" matInput formControlName="sTipo" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>N° Documento</mat-label>
+                    <input type="text" matInput formControlName="sDocumento" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-12">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Apellidos y nombres</mat-label>
+                    <input type="text" matInput formControlName="sNombres" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Ciudad</mat-label>
+                    <input type="text" matInput formControlName="sCiudad" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%" appDateFormat>
+                    <mat-label>Fecha ingreso</mat-label>
+                    <input
+                      formControlName="dFechIni"
+                      matInput
+                      [matDatepicker]="dFechIni"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechIni"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechIni></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%" appDateFormat>
+                    <mat-label>Fecha término</mat-label>
+                    <input
+                      formControlName="dFechFin"
+                      matInput
+                      [matDatepicker]="dFechFin"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechFin"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechFin></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region HISTORIAL DEL RANGOS-->
+    <div id="dRigthDetail" class="col-lg" style="margin-right: 15px">
+      <div class="row" style="margin-left: 0px">
+        <h6>Lista de rangos :</h6>
+        <hr style="margin-top: 0px; margin-bottom: 10px" />
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="dTableDetail" class="melevation">
+            <table
+              mat-table
+              [dataSource]="histRangos.dataSource"
+              style="width: 100%"
+              multiTemplateDataRows
+            >
+              <!-- Visualizar Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Ver</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Visualizar :"
+                  style="padding-left: 17px"
+                >
+                  <button
+                    matTooltip="Ver personal"
+                    matTooltipPosition="right"
+                    mat-stroked-button
+                    color="accent"
+                    (click)="
+                      histRangos.verPersonalAsignadoAlRango(element.nIdRangoEM)
+                    "
+                  >
+                    <mat-icon>groups</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- Fecha Inicio Column -->
+              <ng-container matColumnDef="dFechIni">
+                <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Fecha Inicio :"
+                >
+                  {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <!-- Fecha Fin Column -->
+              <ng-container matColumnDef="dFechFin">
+                <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Fecha Fin :"
+                >
+                  {{ element.dFechFin | date: "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <!-- Fecha Fin Column -->
+              <ng-container matColumnDef="sEstado">
+                <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Estado :"
+                >
+                  {{ element.sEstado }}
+                </td>
+              </ng-container>
+
+              <!-- Fecha Fin Column -->
+              <ng-container matColumnDef="eliminar">
+                <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                >
+                  <button
+                    matTooltip="Eliminar"
+                    matTooltipPosition="right"
+                    mat-stroked-button
+                    color="accent"
+                    [disabled]="!histRangos.estadoBtnEliminar(element)"
+                    (click)="histRangos.eliminarRango(element)"
+                  >
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell
+                  *matFooterCellDef
+                  [attr.colspan]="histRangos.columnas.length"
+                >
+                  No se encuentran registros.
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="histRangos.columnas"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: histRangos.columnas"
+              ></tr>
+              <mat-footer-row
+                *matFooterRowDef="['noData']"
+                [hidden]="
+                  histRangos.dataSource &&
+                  histRangos.dataSource.filteredData.length > 0
+                "
+              ></mat-footer-row>
+            </table>
+          </div>
+
+          <mat-paginator
+            #paginacionHistorialRangos
+            style="display: contents"
+            [hidePageSize]="false"
+            [pageSize]="2"
+          ></mat-paginator>
+        </div>
+      </div>
+    </div>
+    <!-- #endregion -->
+  </div>
+
+  <!-- #region LISTA DE PERSONAL POR RANGO-->
+
+  <!-- #region FILTRO-->
+  <div class="icard melevation col-xl-12">
+    <div class="row">
+      <div class="col-lg">
+        <div class="row" style="margin-left: 0px">
+          <h6>Aplicar filtro por :</h6>
+          <hr style="margin-top: 0px; margin-bottom: 10px" />
+        </div>
+        <form autocomplete="off" [formGroup]="personalRango.filtro.filtroForm">
+          <div class="form-row">
+            <div class="col-lg-5">
+              <mat-form-field style="width: 100%">
+                <mat-label>Nombres o documento de identidad</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  formControlName="sNombreDoc"
+                  (input)="personalRango.filtro.filtrar()"
+                />
+                <button
+                  style="outline: none"
+                  mat-button
+                  *ngIf="personalRango.filtro.getValorCampo('sNombreDoc')"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="personalRango.filtro.limpiarFiltro()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-3">
+              <mat-form-field style="width: 100%">
+                <mat-label>Planilla</mat-label>
+                <mat-select
+                  formControlName="sCodPlla"
+                  (selectionChange)="personalRango.filtro.filtrar()"
+                >
+                  <mat-option>--</mat-option>
+                  <mat-option
+                    *ngFor="let item of personalRango.filtro.comboPlanilla"
+                    [value]="item.sCodPlla"
+                    >{{ item.sDesc }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-2">
+              <mat-form-field style="width: 100%">
+                <mat-label>Ciudad</mat-label>
+                <mat-select
+                  formControlName="sCiudad"
+                  (selectionChange)="personalRango.filtro.filtrar()"
+                >
+                  <mat-option>--</mat-option>
+                  <mat-option
+                    *ngFor="let item of personalRango.filtro.comboCiudad"
+                    [value]="item.sDesc"
+                    >{{ item.sDesc }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-2">
+              <mat-form-field style="width: 100%">
+                <mat-label>Estado</mat-label>
+                <mat-select
+                  formControlName="nEstado"
+                  (selectionChange)="personalRango.filtro.filtrar()"
+                >
+                  <mat-option>--</mat-option>
+                  <mat-option
+                    *ngFor="let item of personalRango.filtro.comboEstadoEm"
+                    [value]="item.nEleCod"
+                    >{{ item.cEleNam }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+
+  <div class="row" style="margin-top: 20px">
+    <div class="col-sm">
+      <h6>Personal a cargo de : {{ infoResp.getValorCampo("sNombres") }}</h6>
+      <hr style="margin-top: 0px; margin-bottom: 20px" />
+    </div>
+  </div>
+
+  <!-- #region TABLA-->
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="dTableDetail" class="melevation">
+        <table
+          mat-table
+          [dataSource]="personalRango.dataSource"
+          style="width: 100%"
+          multiTemplateDataRows
+        >
+          <!-- Nombres Column -->
+          <ng-container matColumnDef="sNombres">
+            <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="m-card-title"
+              data-label="Apellidos y nombres :"
+            >
+              <ngb-highlight
+                [result]="element.sNombres | titlecase"
+                [term]="personalRango.filtro.getValorCampo('sNombreDoc')"
+              ></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Nombres Column -->
+          <ng-container matColumnDef="sCodPlla">
+            <th mat-header-cell *matHeaderCellDef>Plla</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Tipo de planilla : "
+            >
+              {{ element.sCodPlla }}
+            </td>
+          </ng-container>
+
+          <!-- Tipo doc Column -->
+          <ng-container matColumnDef="sDscTipo">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Tipo de documento : "
+            >
+              {{ element.sDscTipo }}
+            </td>
+          </ng-container>
+
+          <!-- Documento Column -->
+          <ng-container matColumnDef="sDocumento">
+            <th mat-header-cell *matHeaderCellDef>Documento</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="N° Documento : "
+            >
+              <ngb-highlight
+                [result]="element.sDocumento"
+                [term]="personalRango.filtro.getValorCampo('sNombreDoc')"
+              ></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Fecha Inicio Column -->
+          <ng-container matColumnDef="dFechIni">
+            <th mat-header-cell *matHeaderCellDef>Fech. Ini</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Fecha de ingreso : "
+            >
+              {{ element.dFechIni | date: "dd/MM/yyyy" }}
+            </td>
+          </ng-container>
+
+          <!-- Ciudad Column -->
+          <ng-container matColumnDef="sCiudad">
+            <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Ciudad : "
+            >
+              {{ element.sCiudad }}
+            </td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="sEstado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Estado : "
+            >
+              {{ element.sEstado }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell
+              *matFooterCellDef
+              [attr.colspan]="personalRango.columnas.length"
+            >
+              No se encuentran registros.
+            </mat-footer-cell>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="personalRango.columnas; sticky: true"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: personalRango.columnas"
+          ></tr>
+          <mat-footer-row
+            *matFooterRowDef="['noData']"
+            [hidden]="
+              personalRango.dataSource &&
+              personalRango.dataSource.filteredData.length > 0
+            "
+          ></mat-footer-row>
+        </table>
+      </div>
+
+      <mat-paginator
+        #paginacionPersonalRango
+        style="display: contents"
+        [hidePageSize]="false"
+        [pageSize]="2"
+      ></mat-paginator>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #endregion -->
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar
+    *ngIf="false"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

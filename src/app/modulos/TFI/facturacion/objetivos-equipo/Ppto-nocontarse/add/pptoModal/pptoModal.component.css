@@ -1,0 +1,21 @@
+/* Header */
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+    text-align: center;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+/* Tamaño de Ng Select igual a inputs  */
+ .ngselect{
+    padding-bottom:3.5px; 
+    bottom:0.35rem
+}
+ 
+
+
+

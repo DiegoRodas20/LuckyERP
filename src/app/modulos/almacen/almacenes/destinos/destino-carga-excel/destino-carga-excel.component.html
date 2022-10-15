@@ -1,0 +1,36 @@
+<div class="modal-header text-center header-modal-lucky">
+  <h5>
+    <Label> Añadir Nueva Lista de Destinos </Label>
+  </h5>
+  <!-- <button type="button" class="close button-modal-lucky" aria-label="Close" matDialogClose>
+    <span class="material-icons">close</span>
+  </button> -->
+  <button class="close button-modal-lucky" matDialogClose>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <mat-card>
+    <form class="mt-2" autocomplete="false" [formGroup]="form">
+      <div class="form-row col-md-12">
+        <div class="form-group col-md-11">
+          <div>
+            <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              (change)="fnSeleccionarArchivo($event)" onclick="this.value = null" formControlName="fileUpload"
+              class="custom-file-input" aria-describedby="inputGroupFileAddon04" />
+            <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">
+              {{nameLabel}}
+            </mat-label>
+          </div>
+          <mat-error *ngIf="fileUploadError">{{ fileUploadError }}</mat-error>
+        </div>
+        <div class="form-group col-md-1">
+          <button mat-raised-button color="primary" type="button" matTooltip="Subir Archivo" (click)="fnUploadFile()"
+            type="button" class="center">
+            <mat-icon>cloud_upload</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</div>

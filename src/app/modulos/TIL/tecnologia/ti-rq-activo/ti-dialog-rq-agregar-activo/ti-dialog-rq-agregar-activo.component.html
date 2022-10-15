@@ -1,0 +1,209 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">
+    Asignación de Activo
+    <button class="close button-modal-lucky" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form *ngIf="!bEsDetalle" class="row" [formGroup]="formActivo">
+            <div class="col-md-4">
+                <ng-select (change)="GetAllArticulo($event);" class="alinea-ng-select" appendTo="body"
+                    [clearable]="false" formControlName="cboTipoArticulo" placeholder="Tipo de Activo" required>
+                    <ng-option *ngFor="let vTipo of lTipoArticulo" [value]="vTipo.tipoElementoId">
+                        {{vTipo.descripcion}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboTipoArticuloError">{{ cboTipoArticuloError }}</mat-error>
+            </div>
+
+            <div class="col-md-7 col-10">
+                <ng-select (change)="GetInformacionArticulo($event)" class="alinea-ng-select" appendTo="body"
+                    [clearable]="false" formControlName="cboArticulo" placeholder="Activo" required>
+                    <ng-option *ngFor="let vArticulo of lArticulo" [value]="vArticulo.nIdActivo">
+                        {{vArticulo.sCodActivo}} - {{vArticulo.sNombreProducto}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboArticuloError">{{ cboArticuloError }}</mat-error>
+            </div>
+
+            <div class="col-md-1 col-2">
+                <div class="box">
+                    <img *ngIf="vArticuloSeleccionado==null || vArticuloSeleccionado?.sRutaArchivo=='' || vArticuloSeleccionado?.sRutaArchivo==null"
+                        width="40px" height="40px" src="/assets/img/SinImagen.jpg" (click)="fnVerImagen(null, '')">
+
+                    <img *ngIf="vArticuloSeleccionado!=null && vArticuloSeleccionado?.sRutaArchivo!='' && vArticuloSeleccionado?.sRutaArchivo!=null"
+                        width="40px" height="40px" [src]='vArticuloSeleccionado?.sRutaArchivo'
+                        (click)="fnVerImagen(vArticuloSeleccionado.sCodActivo,vArticuloSeleccionado.sNombreProducto, vArticuloSeleccionado.sRutaArchivo)">
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto de Descuento:</mat-label>
+                    <input type="number" matInput formControlName="txtDescuento">
+                    <mat-error *ngIf="formActivo.controls.txtDescuento.hasError('min')">No puede ser menor de 0
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="this.formActivo.controls.txtDatosActivo.value" class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Datos del Activo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtDatosActivo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Componentes:</mat-label>
+                    <mat-chip-list #chipListInformacion>
+                        <mat-chip *ngFor="let vInfor of lInformacionArticulo">
+                            {{vInfor.sInformacion}}
+                        </mat-chip>
+                        <input readonly #informacionInput formControlName="cboInformacion"
+                            [matChipInputFor]="chipListInformacion"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-10">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Fotos del activo:</mat-label>
+                    <mat-chip-list #chipFotos>
+                        <mat-chip [removable]="true" (removed)="fnEliminarFoto(vFotos)" (click)="fnVerFoto(vFotos)"
+                            *ngFor="let vFotos of lFotos">
+                            {{vFotos.sObservacion}}
+                            <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                        </mat-chip>
+                        <input readonly #fotosInput formControlName="cboFotos" [matChipInputFor]="chipFotos"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-1 col-2 d-flex align-items-end">
+                <button style="margin-bottom: 20px;" (click)="fnAnadirFoto()" mat-icon-button class="fab-secondary"
+                    color="accent">
+                    <i class="material-icons" matTooltip="Agregar foto" matTooltipPosition="left">add</i>
+                </button>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Observación:</mat-label>
+                    <input type="text" matInput formControlName="txtObservacion">
+                </mat-form-field>
+            </div>
+
+        </form>
+
+        <form *ngIf="bEsDetalle" class="row" [formGroup]="formActivoDetalle">
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Tipo de Activo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtTipoArticulo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-7 col-10">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Activo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtArticulo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-1 col-2">
+                <div class="box">
+                    <img *ngIf="this.data.activo?.sRutaArchivo=='' || this.data.activo?.sRutaArchivo==null" width="40px"
+                        height="40px" src="/assets/img/SinImagen.jpg" (click)="fnVerImagen(null, '')">
+
+                    <img *ngIf="this.data.activo?.sRutaArchivo!='' && this.data.activo?.sRutaArchivo!=null" width="40px"
+                        height="40px" [src]='this.data.activo?.sRutaArchivo'
+                        (click)="fnVerImagen(this.data.activo?.sActivo, this.data.activo?.sArticulo, this.data.activo?.sRutaArchivo)">
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto de Descuento:</mat-label>
+                    <input readonly type="number" matInput formControlName="txtDescuento">
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="this.formActivoDetalle.controls.txtDatosActivo.value" class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Datos del Activo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtDatosActivo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Componentes:</mat-label>
+                    <mat-chip-list #chipDetalleListInformacion>
+                        <mat-chip *ngFor="let vInfor of lInformacionArticulo">
+                            {{vInfor.sInformacion}}
+                        </mat-chip>
+                        <input readonly #informacionDetalleInput formControlName="cboInformacion"
+                            [matChipInputFor]="chipDetalleListInformacion"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Fotos del activo:</mat-label>
+                    <mat-chip-list #chipFotosDetalle>
+                        <mat-chip
+                            (click)="fnVerImagen('Observación N°' + vFotos.nNumero, vFotos.sObservacion, vFotos.sRutaArchivo)"
+                            *ngFor="let vFotos of lFotosDetalle">
+                            {{vFotos.sObservacion}}
+                        </mat-chip>
+                        <input readonly #fotosInput formControlName="cboFotos" [matChipInputFor]="chipFotosDetalle"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Observación:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtObservacion">
+                </mat-form-field>
+            </div>
+
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <!--Para guardar-->
+        <button *ngIf="!bEsDetalle" matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAgregarActivo()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+
+        <!--Para descargar el formato sin firmar-->
+        <button style="margin-right: 5px;" *ngIf="bEsDetalle && this.data.activo?.nIdDescuento!=0"
+            matTooltip="Descargar Formato" mat-mini-fab color="accent" (click)="fnDescargarPDFDescuento()">
+            <mat-icon>cloud_download</mat-icon>
+        </button>
+
+        <!--Para subir el formato firmado-->
+        <button style="margin-right: 5px;" *ngIf="bEsDetalle && this.data.activo?.nIdDescuento!=0"
+            matTooltip="Realizar descuento" mat-mini-fab color="accent" (click)="fnSubirDocumento()">
+            <mat-icon>cloud_upload</mat-icon>
+        </button>
+
+        <!--Para descargar el formato subido-->
+        <button style="margin-right: 5px;" *ngIf="bEsDetalle && this.data.activo?.sRutaArchivoDetalle!=null"
+            matTooltip="Descargar Documento" mat-mini-fab color="accent" (click)="fnVerFile()">
+            <mat-icon>cloud_download</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

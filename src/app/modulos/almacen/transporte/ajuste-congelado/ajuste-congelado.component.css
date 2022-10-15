@@ -1,0 +1,30 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 70px;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container button {
+  margin-bottom: 5px;
+}
+
+.center-text-card {
+  text-align: center;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}

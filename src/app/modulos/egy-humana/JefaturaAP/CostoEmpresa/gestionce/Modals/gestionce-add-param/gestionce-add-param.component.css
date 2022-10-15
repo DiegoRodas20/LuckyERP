@@ -1,0 +1,125 @@
+.mat-header-row {
+    height: 40px;
+    background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+}
+
+.icard {
+    border-radius: 4px;
+    padding-top: 15px;
+}
+
+.melevation {
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+}
+
+.modal-header button {
+    color: white !important;
+    text-shadow: none !important;
+    outline: none;
+}
+
+.modal-footer {
+    padding: 0px !important;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+.fab-toggler {
+    float: right;
+    z-index: 100;
+    outline: none;
+}
+
+:host ::ng-deep .mat-mini-fab[disabled][disabled] {
+    background-color: #fff
+}
+
+
+/*#region scrollbar*/
+
+:host ::ng-deep ::-webkit-scrollbar {
+    width: 5px !important;
+}
+
+:host ::ng-deep ::-webkit-scrollbar-track {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+:host ::ng-deep ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 8px !important;
+    border-radius: 8px !important;
+    background: rgba(255, 64, 129, 0.8) !important;
+}
+
+:host ::ng-deep ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255, 64, 129, 0.4) !important;
+}
+
+
+/*#endregion scrollbar*/
+
+::ng-deep #ngsConcepto .ng-select .ng-select-container {
+    min-height: 50px !important;
+}
+
+::ng-deep .ng-select .ng-select-container {
+    min-height: 38px;
+}
+
+.ng-select-required ::ng-deep .ng-select {
+    padding-bottom: 0px;
+}
+
+.ng-select-required ::ng-deep .ng-select .ng-select-container:after {
+    border-bottom: thin solid red !important;
+}
+
+.ng-select-required ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    color: red !important;
+}
+
+.ng-select-required ::ng-deep .ng-select .ng-arrow-wrapper .ng-arrow {
+    color: red !important;
+    bottom: 0px !important;
+}
+
+.ng-select-required ::ng-deep .mat-error {
+    font-size: 75%;
+}
+
+.footer_alert {
+    width: 100%;
+    margin: .75rem;
+}

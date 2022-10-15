@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>
+    <h5 class="card-header">¿Desea Activar el Parametro?</h5>
+</h2>
+<!-- Cuerpo  -->
+<mat-dialog-content>
+    Solo se puede tener 1 parametro activo por año,<br />
+    si activa este parametro, el resto de parametros<br />
+    del mismo año se desactivará.
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-icon-button color="accent" (click)="btnCerrar()">
+        <mat-icon class="material-icons md-36">close</mat-icon>
+    </button>
+    <button mat-icon-button color="accent" (click)="btnAceptar()">
+        <mat-icon class="material-icons md-36">check</mat-icon>
+    </button>
+</mat-dialog-actions>

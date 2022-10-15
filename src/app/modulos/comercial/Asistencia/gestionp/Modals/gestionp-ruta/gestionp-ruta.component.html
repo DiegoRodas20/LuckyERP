@@ -1,0 +1,490 @@
+<ngx-spinner name="spi_ruta" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+    <button [@tada]="{value: tadaRuta}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleRuta, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsRuta}">add</i>
+    </button>
+    <div [@speedDialStagger]="abRuta.length">
+        <button *ngFor="let btn of abRuta; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleRuta, ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h4 class="modal-title">Asignar Rutas</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<!-- contenido -->
+<div class="modal-body">
+    <div class="row">
+        <div id="dLeftDetail" class="col-lg-5">
+            <div class="row" style="padding-left: 15px;">
+                <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                    <h6>Lista de personal :</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                </div>
+            </div>
+            <div class="row">
+                <div [formGroup]="fgFilter" class="col-lg-12">
+                    <div class="form-row">
+                        <div class="col-lg-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Filtrar personal por nombres </mat-label>
+                                <input type="text" matInput formControlName="sNombres">
+                                <button style="outline: none;" mat-button *ngIf="getFilter.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sNombres.patchValue('')">
+                                <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dTableListaPlanning">
+                <table #mtPlanning mat-table [dataSource]="PlanningRDS" style="width: 100%;">
+                    <ng-container matColumnDef="sPersoImg">
+                        <th mat-header-cell *matHeaderCellDef> Perfil </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label=''>
+                            <div class="divImg">
+                                <div [@divTable]="element == editTable ? 'over' : 'out'" class="divMouse" (click)="selectPerso(element)" (mouseover)="mouseOver(1, element)" (mouseout)="editTable = null">
+                                    <span [@editTable]="element == editTable ? 'over' : 'out'" class="material-icons imgMouse">touch_app</span>
+                                </div>
+                                <img class="imgTable" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sNombres" style="width: 80%;">
+                        <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                        <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :' style="width: 80%;">
+                            <ngb-highlight [result]="element.sNombres | titlecase" [term]="getFilter.sNombres.value"></ngb-highlight>
+                            <br style="display:block;line-height:5px;">
+                            <label>  Perfil: {{ element.sCategoria}} </label>
+                            <br style="display:block;line-height:5px;">
+                            <label> Canal: {{ element.sCanal }} </label>
+                            <br style="display:block;line-height:5px;">
+                            <label> # Dias: {{ element.nDias }} </label>
+
+                        </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="action"  >
+                        <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Opción </th>
+                        <td style="text-align: right;" mat-cell *matCellDef="let element" style="text-align: right;width: 15%;">
+                            <button matTooltip="Remover" style="text-align: right;" matTooltipPosition="right" mat-icon-button color="accent" 
+                            [disabled]="(mPlanning === 1) ? 'false' : 'true'" (click)="removePerso(element)">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="noData">
+                        <mat-footer-cell *matFooterCellDef [attr.colspan]="PlanningRDC.length">
+                            No se encuentran registros.
+                        </mat-footer-cell>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="PlanningRDC; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: PlanningRDC;"></tr>
+                    <mat-footer-row *matFooterRowDef="['noData']" [hidden]="PlanningRDS && this.PlanningRDS.filteredData.length > 0"></mat-footer-row>
+
+                </table>
+            </div>
+            <mat-paginator #pagPlanning style="display: contents;" [hidePageSize]="false" [pageSize]="3"></mat-paginator>
+        </div>
+        <div id="dRightDetail" class="col-lg-7">
+            <div class="row" style="padding-left: 15px;">
+                <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                    <h6>Personal Seleccionado : {{PersonalSeleccionado}} </h6>
+                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                </div>
+            </div>
+            <div class="row fdiv-personal" style="padding: 5px 15px 5px 5px; direction: rtl; margin-left: 0px;">
+                <mat-accordion style="direction: ltr; width: 100%" multi>
+                    <mat-expansion-panel #mepCalendario [expanded]="true" [disabled]="true">
+                        <!-- <mat-expansion-panel [expanded]="expandedCalendario" [disabled]="disableCalendario" multi> -->
+                        <mat-expansion-panel-header style="color: black;">
+                            <mat-panel-title> Días en calendario : {{dFechaCalendario}}</mat-panel-title>
+                            <mat-icon style="margin-right: 10px">calendar_today</mat-icon>
+                        </mat-expansion-panel-header>
+                        <div class="card__row row">
+                            <div id="card_inner2" class="card__inner">
+                                <mwl-calendar-month-view [viewDate]="viewDate" [events]="eventMain" [locale]="locale" (dayClicked)="dayClicked($event.day)" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays" (beforeViewRender)="beforeMonthViewRender($event)">
+                                </mwl-calendar-month-view>
+                            </div>
+                            <div style="width: 100%; margin-bottom: 0px;" *ngIf="DiaAsignado === true" class="alert alert-info d-flex align-items-center" role="alert">
+                                <span class="material-icons" style="margin-right: 10px;">info</span>
+                                <a>Esta marcando un dia con asignaciones.</a>
+                            </div>
+                        </div>
+
+                        <div class="fab-perso">
+                            <button mat-mini-fab class="fab-toggler-perso">
+                                <i class="material-icons" [@fabToggler]="{value: tsPerso}">control_camera</i>
+                            </button>
+                            <div [@speedDialStagger]="abPerso.length">
+                                <button *ngFor="let btn of abPerso; let ibtn = index;" mat-mini-fab class="fab-secondary-perso" color="secondary" [disabled]="btn.dis" (click)="clickFab(5, ibtn)">
+                                  <i class="material-icons" matTooltip="{{btn.tool}}"  matTooltipPosition="below">{{btn.icon}}</i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                    <!-- (opened)="expandedRutas = true" (closed)="expandedRutas = false"  -->
+                    <mat-expansion-panel [(expanded)] ="expandedRutas" [disabled]="disableRutas">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title> Asignar rutas: &nbsp; {{ DiaSeleccionado}} </mat-panel-title>
+                            <mat-panel-description>
+                            </mat-panel-description>
+                            <mat-icon style="margin-right: 10px">commute</mat-icon>
+                        </mat-expansion-panel-header>
+                        <mat-horizontal-stepper #stepRight id="stepRight">
+                            <mat-step>
+                                <!-- <div class="row" style="padding-left: 15px;">
+                                    <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                        <h6>Asignar rutas:</h6>
+                                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                    </div>
+                                </div> -->
+                                <div class="form-row">
+                                    <div class="form-group  col-lg-7">
+                                        <ng-select [items]="getTienda" bindLabel="sDireccion" placeholder="Seleccionar tienda(s)" appendTo="body" (change)="SelectedTienda($event)" [disabled]="disableNgSelect" [(ngModel)]="TiendaSelected">
+                                        </ng-select>
+                                    </div>
+                                    <div class="form-group col-lg-5" style="padding-top: 5px;">
+                                        <button mat-raised-button color="accent" style="width: 100%; padding-left: 5px; outline: none;" [disabled]="disableButonAniadir" (click)="addTienda()">
+                                            <mat-icon>add</mat-icon>
+                                            Añadir
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <h6>Tiendas Seleccionadas : </h6>
+                                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 dListDoc">
+                                        <mat-selection-list class="mslDoc" [multiple]="false">
+                                            <!-- matBadgeHidden="{{item.nRepeat === 1}}" -->
+                                            <mat-list-option class="card" *ngFor="let item of TiendasSeleccionadas">
+                                                <div class="row row-list" style="align-items: center;">
+                                                    <a>{{item.sDireccion}}</a>
+                                                    <button matTooltip="Remover" style="position: absolute; right: 0;" matTooltipPosition="right" mat-icon-button color="accent" [disabled]="(mTiendas === 1) ? 'true' : 'false'" (click)="removeTienda(item)">
+                                                        <mat-icon>remove_circle</mat-icon>
+                                                    </button>
+                                                </div>
+                                            </mat-list-option>
+                                        </mat-selection-list>
+
+                                        <div style="width: 100%; margin-bottom: 0px;" *ngIf="TiendasSeleccionadas?.length === 0" class="alert alert-info d-flex align-items-center" role="alert">
+                                            <span class="material-icons" style="margin-right: 10px;">info</span>
+                                            <a>Debe seleccionar una tienda como mínimo.</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dStep row" style="padding-left: 10px;">
+                                    <button style="float: right;" mat-button matStepperNext>Ubigeo </button>
+                                </div>
+                            </mat-step>
+                            <mat-step>
+                                <div id="fgUbigeo" [formGroup]="fgUbigeo" class="col-lg-12" style="padding-left: 15px;">
+                                    <!-- <div class="row" >
+                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;" >
+                                            <h6>Seleccionar Ubigeo:</h6>
+                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                        </div>
+                                    </div> -->
+                                    <div class="form-row">
+
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Departamento</mat-label>
+                                                <mat-select formControlName="departamentoId" (selectionChange)="ChangeDepartamento($event)">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let elem of Departamentos" [value]="elem.cEntCod">
+                                                        {{ elem.dato }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Provincia</mat-label>
+                                                <mat-select formControlName="provinciaId" (selectionChange)="ChangeProvincia($event)">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let elem of Provincias" [value]="elem.cEntCod">
+                                                        {{ elem.dato }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Distrito</mat-label>
+                                                <mat-select formControlName="distritoId" (selectionChange)="ChangeDistrito($event)">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let elem of Distritos" [value]="elem.cEntCod">
+                                                        {{ elem.dato }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dStep row">
+                                    <button style="float: left;" mat-button matStepperPrevious>Tiendas</button>
+                                </div>
+                            </mat-step>
+                        </mat-horizontal-stepper>
+
+                    </mat-expansion-panel>
+                    <!-- (opened)="expandedHorario = true" (closed)="expandedHorario = false"  -->
+                    <mat-expansion-panel [(expanded)] ="expandedHorario" [disabled]="disableHorario">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title> Asignar horario: {{ DiaSeleccionado}} </mat-panel-title>
+                            <mat-panel-description>
+                            </mat-panel-description>
+                            <mat-icon style="margin-right: 10px">hourglass_top</mat-icon>
+                        </mat-expansion-panel-header>
+                        <div class="card__row row">
+                            <div id="card_inner3" class="card__inner__Horario">
+                                <div id="fgHoras" [formGroup]="fgHoras" class="col-lg-12" style="padding-left: 15px;">
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Hora Inicio</mat-label>
+                                                        <mat-select formControlName="sHoraIngreso">
+                                                            <mat-option value="06">06</mat-option>
+                                                            <mat-option value="07">07</mat-option>
+                                                            <mat-option value="08">08</mat-option>
+                                                            <mat-option value="09">09</mat-option>
+                                                            <mat-option value="10">10</mat-option>
+                                                            <mat-option value="11">11</mat-option>
+                                                            <mat-option value="12">12</mat-option>
+                                                            <mat-option value="13">13</mat-option>
+                                                            <mat-option value="14">14</mat-option>
+                                                            <mat-option value="15">15</mat-option>
+                                                            <mat-option value="16">16</mat-option>
+                                                            <mat-option value="17">17</mat-option>
+                                                            <mat-option value="18">18</mat-option>
+                                                            <mat-option value="19">19</mat-option>
+                                                            <mat-option value="20">20</mat-option>
+                                                            <mat-option value="21">21</mat-option>
+                                                            <mat-option value="22">22</mat-option>
+                                                            <mat-option value="23">23</mat-option>
+                                                            <!-- <mat-option 
+                                                              *ngFor="let item of cboIngreso"
+                                                              [value]="item.cNomEle"
+                                                            >
+                                                              {{ item.cNomEle }}
+                                                            </mat-option> -->
+                                                        </mat-select>
+
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Minutos Inicio</mat-label>
+                                                        <mat-select formControlName="sMinutosIngreso">
+                                                            <mat-option value="00">00</mat-option>
+                                                            <mat-option value="15">15</mat-option>
+                                                            <mat-option value="30">30</mat-option>
+                                                            <mat-option value="45">45</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Hora Fin</mat-label>
+                                                        <mat-select formControlName="sHoraFin">
+                                                            <mat-option value="06">06</mat-option>
+                                                            <mat-option value="07">07</mat-option>
+                                                            <mat-option value="08">08</mat-option>
+                                                            <mat-option value="09">09</mat-option>
+                                                            <mat-option value="10">10</mat-option>
+                                                            <mat-option value="11">11</mat-option>
+                                                            <mat-option value="12">12</mat-option>
+                                                            <mat-option value="13">13</mat-option>
+                                                            <mat-option value="14">14</mat-option>
+                                                            <mat-option value="15">15</mat-option>
+                                                            <mat-option value="16">16</mat-option>
+                                                            <mat-option value="17">17</mat-option>
+                                                            <mat-option value="18">18</mat-option>
+                                                            <mat-option value="19">19</mat-option>
+                                                            <mat-option value="20">20</mat-option>
+                                                            <mat-option value="21">21</mat-option>
+                                                            <mat-option value="22">22</mat-option>
+                                                            <mat-option value="23">23</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Minutos Fin</mat-label>
+                                                        <mat-select formControlName="sMinutosFin">
+                                                            <mat-option value="00">00</mat-option>
+                                                            <mat-option value="15">15</mat-option>
+                                                            <mat-option value="30">30</mat-option>
+                                                            <mat-option value="45">45</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="fab-perso">
+                            <button mat-mini-fab class="fab-toggler-perso">
+                                <i class="material-icons" [@fabToggler]="{value: tsHorario}">control_camera</i>
+                            </button>
+                            <div [@speedDialStagger]="abHorario.length">
+                                <button *ngFor="let btn of abHorario; let ibtn = index;" mat-mini-fab class="fab-secondary-perso" color="secondary" (click)="clickFab(6, ibtn)">
+                                  <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="below">{{btn.icon}}</i>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+            <!-- <div class="row" class="col-lg">
+                    <div class="row" style="padding-left: 15px;">
+                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                            <h6>Días en calendario:</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+                    <mwl-calendar-month-view  [viewDate]="viewDate" [events]="eventMain" [locale]="locale" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                    </mwl-calendar-month-view>
+            </div> -->
+            <!-- <div class="row" class="col-lg-12">
+                <mat-horizontal-stepper #stepRight id="stepRight" >
+                    <mat-step>
+                        <div class="row" style="padding-left: 15px;">
+                            <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                <h6>Asignar rutas:</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+                        </div>
+                        <div class="row" class="col-lg-12" style="padding-left: 5px;">
+                            <ng-select
+                                [items]="getTienda"
+                                [multiple]="true"
+                                bindLabel="sDireccion"
+                                bindValue="nIdTienda"
+                                placeholder="Select items"
+                                [(ngModel)]="selectedTienda">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                        <span class="ng-value-label">{{item.sDireccion}}</span>
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    </div>
+                                    <div class="ng-value" *ngIf="items.length > 2">
+                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="row" class="col-lg-12" style="padding-left: 15px;">
+                            <div class="col-sm">
+                                <h6>Tiendas Seleccionadas : </h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-left: 15px;" class="col-lg-12">
+                            <div class="dListDoc">
+                                <mat-selection-list class="mslDoc" [multiple]="false">
+                                    <mat-list-option style="margin-top: 10px;" class="card" *ngFor="let item of getTienda" matBadge="{{item.nRepeat}}" matBadgeHidden="{{item.nRepeat === 1}}">
+                                        <div class="row row-list">
+                                            <mat-checkbox class="example-margin" [checked]="(1 === 0) ? false : true" [disabled]="false" color="accent"></mat-checkbox>
+                                            <a>{{item.sDireccion}}</a>
+                                        </div>
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+                        </div>
+                        
+                        <div class="dStep row" style="padding-left: 10px;">
+                            <button style="float: right;" mat-button matStepperNext>Ubigeo </button>
+                        </div>
+                    </mat-step>
+                    <mat-step>
+                        <div id="fgUbigeo" [formGroup]="fgUbigeo" class="col-lg-12" style="padding-left: 15px;">
+                            <div class="row" >
+                                <div class="col-sm" style="padding: 10px 0px 0px 0px;" >
+                                    <h6>Seleccionar Ubigeo:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                </div>
+                            </div>
+                            <div class="form-row" >
+
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                      <mat-label>Departamento</mat-label>
+                                      <mat-select formControlName="departamentoId" (selectionChange)="ChangeDepartamento($event)">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let elem of Departamentos" [value]="elem.cEntCod">
+                                          {{ elem.dato }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                      <mat-label>Provincia</mat-label>
+                                      <mat-select formControlName="provinciaId" (selectionChange)="ChangeProvincia($event)">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let elem of Provincias" [value]="elem.cEntCod">
+                                          {{ elem.dato }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                            </div>
+                            <div class="form-row" >
+                                 <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                      <mat-label>Distrito</mat-label>
+                                      <mat-select formControlName="distritoId" (selectionChange)="ChangeDistrito($event)">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let elem of Distritos" [value]="elem.cEntCod">
+                                          {{ elem.dato }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                 </div>
+                            </div>
+                        </div>
+                       
+                        <div class="dStep row" >
+                            <button style="float: left;" mat-button matStepperPrevious>Tiendas</button>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+               
+            </div> -->
+        </div>
+
+    </div>
+</div>

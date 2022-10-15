@@ -1,0 +1,30 @@
+/* Estilos de la cabecera */
+
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 20px;
+}
+
+/* Estilos de la tabla*/
+
+table{
+  width: 100%;
+}
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.example-container {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+td, th {
+  font-size: 14px;
+}

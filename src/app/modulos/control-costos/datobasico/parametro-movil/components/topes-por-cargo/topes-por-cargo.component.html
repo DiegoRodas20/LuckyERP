@@ -1,0 +1,10 @@
+<div class="mx-3 my-3">
+    <div>
+        <p class="titulo my-2">Relación de topes, cargos sucursal Central</p>
+        <app-table-cargos (cleanSearch)="cleanLima()" (addButtonAction)="agregarCargo($event)" [tipoLista]="1" [lista]="listaCargoLima"></app-table-cargos>
+    </div>
+    <div>
+        <p class="titulo my-2">Relación de topes, cargos sucursal Provincias</p>
+        <app-table-cargos (cleanSearch)="cleanProvincia()" (addButtonAction)="agregarCargo($event)" [tipoLista]="2" [lista]="listaCargoProvincia"></app-table-cargos>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.Close {
+    float        : right;
+    margin-bottom: 0.1rem;
+    padding-top  : 0.1rem;
+}
+
+.clsFrame {
+    height    : 100%;
+    min-height: 35rem;
+}
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color           : white;
+}

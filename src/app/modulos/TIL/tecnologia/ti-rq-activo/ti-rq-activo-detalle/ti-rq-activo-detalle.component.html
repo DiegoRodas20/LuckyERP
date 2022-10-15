@@ -1,0 +1,305 @@
+<div class="col-md-10 mx-auto" style="padding-top: 90px;"
+    [ngStyle]="{'display': (estaCargado && !asignacionAbierta) ? 'block' : 'none'}">
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="this[btn.state]" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(btn.functionName)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <mat-card class="title-card">
+                <h3>Detalle del Requerimiento</h3>
+            </mat-card>
+        </div>
+        <mat-card class="mat-elevation-z8">
+            <form [formGroup]="formAsignaActivo" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Solicitante</mat-label>
+                                    <input formControlName="txtSolicitante" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Correo</mat-label>
+                                    <input formControlName="txtCorreo" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cargo</mat-label>
+                                    <input formControlName="txtCargoSolicitante" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Teléfono</mat-label>
+                                    <input formControlName="txtTelefono" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Motivo</mat-label>
+                                    <input formControlName="txtMotivo" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_HERRAMIENTA_TI" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Servicio</mat-label>
+                                    <input formControlName="txtServicio" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cuenta/Cliente</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" formControlName="txtCuenta" matInput
+                                        readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Canal</mat-label>
+                                    <input formControlName="txtCanal" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Presupuesto</mat-label>
+                                    <input formControlName="txtPresupuesto" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <!--Zona de controles para cuando es RQ de Personal campo-->
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Vacante</mat-label>
+                                    <input formControlName="txtVacante" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-2">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cargo</mat-label>
+                                    <input formControlName="txtCargo" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Inicio Actividad</mat-label>
+                                    <input formControlName="txtInicioActividad" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fin Actividad</mat-label>
+                                    <input formControlName="txtFinActividad" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_PERSONAL_CAMPO" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Planilla</mat-label>
+                                    <input formControlName="txtPlanilla" matInput readonly>
+                                </mat-form-field>
+                            </div>
+                            <!--FIN ZONA-->
+
+                            <!--Zona de Controles para cuando es RQ de herramienta-->
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_HERRAMIENTA_TI" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Vacante</mat-label>
+                                    <input formControlName="txtVacante" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_HERRAMIENTA_TI" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha inicio - Fecha Fin</mat-label>
+                                    <input formControlName="txtFechasCC" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_HERRAMIENTA_TI" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Título</mat-label>
+                                    <input formControlName="txtTituloGastoCosto" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="this.vAsignaActivo?.nIdTipoAsigna==RQ_HERRAMIENTA_TI" class="col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Solicitud</mat-label>
+                                    <input formControlName="txtFechaGastoCosto" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Observación TI</mat-label>
+                                    <input [readonly]="!btnGuardar" formControlName="txtObservacion" matInput>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 contenedorAuditoria">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <!-- Campos auditoria -->
+                            <div class="col-md-10 campoAuditoria">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Nro RQ:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" formControlName="txtNrReq" type="text"
+                                        matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Actualizó:</mat-label>
+                                    <input formControlName="txtActualizo" type="text" matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Actualización:</mat-label>
+                                    <input formControlName="txtFechaAct" type="text" matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Estado:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" formControlName="txtEstado" type="text"
+                                        matInput readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Informacion en celular-->
+                    <mat-expansion-panel class="col-md-12 campoAuditoriaAcordeon">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                Información
+                            </mat-panel-title>
+                            <button mat-icon-button>
+                                <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                            </button>
+                        </mat-expansion-panel-header>
+                        <div class="row">
+                            <div class="col-md-10">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Nro RQ:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" formControlName="txtNrReq" type="text"
+                                        matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Actualizó:</mat-label>
+                                    <input formControlName="txtActualizo" type="text" matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Actualización:</mat-label>
+                                    <input formControlName="txtFechaAct" type="text" matInput readonly>
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Estado:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" formControlName="txtEstado" type="text"
+                                        matInput readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+    <hr>
+    <div>
+        <div id="listaMobile" class="mat-elevation-z8 scroll-table mt-2">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- <ng-container matColumnDef="opcion">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                        </th>
+                        <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaOpc2">
+
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button mat-menu-item (click)="fnVerDetalleActivo(row)">
+                                    <mat-icon color="accent">touch_app</mat-icon>
+                                    <span>Ver Detalle</span>
+                                </button>
+
+                                <button mat-menu-item (click)="fnVerImagen(row)">
+                                    <mat-icon color="accent">image</mat-icon>
+                                    <span>Ver foto</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container> -->
+
+                    <ng-container matColumnDef="sTipoActivo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Activo </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Tipo de Activo: '>
+                            <ngb-highlight [result]="row.sTipoActivo" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="nCantidad">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Cantidad: '>
+                            <ngb-highlight [result]="row.nCantidad" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sNombrePerfil">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Perfil</th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Perfil: '>
+                            <ngb-highlight [result]="row.sNombrePerfil" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="sNombreProducto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Artículo</th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Articulo: '>
+                            <ngb-highlight [result]="row.sNombreProducto" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="sNombreProducto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Detalle </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Detalle: '>
+                            <ngb-highlight [result]="row.sNombreProducto" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container> -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <div class="paginator-fixed">
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-ti-rq-asignacion-activo [lTipoActivo]="this.lTipoActivo" [idAsignaActivo]="idAsignaActivo"
+    [lPersonal]="this.vAsignaActivo.detallePersonal" (asignacionAbierta)="fnOcultarAsignacion($event)"
+    *ngIf="asignacionAbierta">
+</app-ti-rq-asignacion-activo>

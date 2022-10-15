@@ -1,0 +1,146 @@
+/* Titulo Card  */ 
+
+.card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+}
+
+/* Contenedor General */
+
+.classContainer {
+    padding: 80px 30px 0;
+}
+
+/* Mat Table */
+
+table {
+    width: 100%;
+}
+
+td, th {
+    font-size: 14px;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+}
+
+.clsColumnaOpc {
+  width: 120px;
+}
+
+.clsColumnaLarge {
+  width: 400px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+.clsColumnaTelf {
+  width: 5%
+}
+
+.clsColumnaOpcion {
+  width: 7%
+}
+
+.clsColumnaNumDoc {
+  width: 8%
+}
+
+.clsPuestoPost {
+  width: 10%
+}
+
+.clsPuestoEval {
+  width: 12%
+}
+
+.clsColumnaNombre {
+  width: 15%
+}
+
+/* Mat Sort Color Blanco */
+
+:host /deep/ .mat-sort-header-arrow {
+  color: white;
+}
+
+/* Inputs */
+mat-form-field {
+   width    : 100%;
+}
+
+.table tr th {
+  padding         : 5px !important;
+  font-size       : 11px;
+  font-weight: normal;
+  text-align      : center;
+  vertical-align  : middle;
+  background-color: #334D6E;
+  color           : white;
+}
+
+.table tr td {
+  padding         : 5px !important;
+  font-size       : 11px;
+  text-align      : center;
+  vertical-align  : middle;
+  background-color: rgba(237, 235, 235, 0.8);
+}
+
+/* Controles Disableados  */
+
+:host /deep/ form .ng-invalid label {
+  color: #f44336;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled textarea {
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/.ng-select.ng-select-disabled .ng-select-container .ng-value-container .ng-value {
+  color: black !important
+}
+
+/* Select  */
+select {
+  font-size       : 12px;
+  background-color: #D8EBFF;
+  width           : 80px;
+  display         : inline-block;
+}
+
+.select2 {
+  font-size: 12px;
+  width    : 60%;
+  float    : right;
+}
+
+.select1 {
+  font-size: 12px;
+  display  : inline-block;
+  width    : 80%;
+}
+
+.form-row .form-group span {
+  font-size: 12px;
+  width    : 80px;
+}
+
+.selectContent {
+  bottom: 0.3rem
+}

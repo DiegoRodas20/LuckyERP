@@ -1,0 +1,512 @@
+
+    <h5 mat-dialog-title class="w-100 card-header text-center">
+      Ficha Tecnica
+    </h5>
+
+    <div mat-dialog-content>
+      <form [formGroup]="ListForm">
+        <div class="form-row">
+          <div class="col-md-12">
+            <div id="contentTo" class="clsScrollTable">
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <td rowspan="4"><img id="imageid" src="../assets/img/LogoPDF.PNG" /></td>
+                  <td rowspan="4">
+                    <h2>Regístrate y se parte de nuestra familia</h2>
+                  </td>
+                  <td rowspan="4">
+                    <img src="{{sRutaImagen}}" class="clsFoto">
+                  </td>
+                  <th>Fecha</th>
+                </tr>
+                <tr>
+                  <td>{{this.vFecha}}</td>
+                </tr>
+                <tr>
+                  <th>Cargo al que postula</th>
+                </tr>
+                <tr>
+                  <td>{{this.vPuesto}} </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th class="clsControl">
+                    Nacionalidad
+                  </th>
+                  <th class="clsControl">
+                    Tipo Documento
+                  </th>
+                  <th class="clsControl">
+                    N° Documento
+                  </th>
+                  <th>
+                    Apellidos y Nombres
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    {{this.vNacionalidad}}
+                  </td>
+                  <td>
+                    {{this.vTipoDoc}}
+                  </td>
+                  <td>
+                    {{this.vNumDoc}}
+                  </td>
+                  <td>
+                    {{this.vNombre}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th class="clsControl">
+                    Género
+                  </th>
+                  <th class="clsControl">
+                    Estado Civil
+                  </th>
+                  <th class="clsControl">
+                    Teléfonos
+                  </th>
+                  <th colspan="2">
+                    Dirección
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    {{this.vgenero}}
+                  </td>
+                  <td>
+                    {{this.vEstCiv}}
+                  </td>
+                  <td>
+                    {{this.vCelular}}
+                  </td>
+                  <td>
+                    {{this.vDistrito}}
+                  </td>
+                  <td>
+                    {{this.vDireccion}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th colspan="3">
+                    Fecha de Nacimiento
+                  </th>
+                  <th>
+                    Edad
+                  </th>
+                  <th>
+                    Email
+                  </th>
+                </tr>
+                <tr>
+                  <td class="clsControl">
+                    {{this.vdia}}
+                  </td>
+                  <td class="clsControl">
+                    {{this.vmes}}
+                  </td>
+                  <td class="clsControl">
+                    {{this.vanio}}
+                  </td>
+                  <td>
+                    {{this.vEdad}}
+                  </td>
+                  <td>
+                    {{this.vCorreo}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th style="width: 450px;">
+                    ¿Cómo te enteraste de Nosotros?
+                  </th>
+                  <th>
+                    ¿Te contactaron para una entrevista de trabajo?
+                  </th>
+                </tr>
+                <tr>
+                  <td rowspan="2">
+                    {{this.vfuente}}
+                  </td>
+                  <td>
+                    {{this.vcontacto}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Contactado por {{this.nNomContac}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th style="width: 700px;" colspan="2">
+                    ¿Cuentas con Carné de Sanidad?
+                  </th>
+                  <th>
+                    ¿Tienes hijos?
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    {{this.nZona}}
+                  </td>
+                  <td>
+                    <table class="table table-fixed table-bordered">
+                      <thead>
+                        <tr>
+                          <th>
+                            {{this.tituloZona}}
+                          </th>
+                          <th colspan="2">
+                            Manipulación de Alimentos
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            {{this.primeraZona}}
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineLima" value="si"
+                                formControlName="inlineLima">
+                              <label class="form-check-label" for="inNo">Si</label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineLima" value="no"
+                                formControlName="inlineLima">
+                              <label class="form-check-label" for="inNo">No</label>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {{this.SegundaZona}}
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineSanisidro" value="si"
+                                formControlName="inlineSanisidro">
+                              <label class="form-check-label" for="inNo">Si</label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineSanisidro" value="no"
+                                formControlName="inlineSanisidro">
+                              <label class="form-check-label" for="inNo">No</label>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {{this.TerceraZona}}
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineCallao" value="si"
+                                formControlName="inlineCallao">
+                              <label class="form-check-label" for="inNo">Si</label>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineCallao" value="no"
+                                formControlName="inlineCallao">
+                              <label class="form-check-label" for="inNo">No</label>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td>
+                    {{this.vnHijo}} -
+                    {{this.vchijo}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th style="width: 171px;">
+                    Educ. Secundaria
+                  </th>
+                  <th colspan="3">
+                    Educación Superior
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    Desde (Año)<br>
+                  </td>
+                  <td>
+                    Desde (Año)
+                  </td>
+                  <td>
+                    Centro de estudios
+                  </td>
+                  <td>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Hasta (Año)<br>
+                  </td>
+                  <td>
+                    Hasta (Año)
+                  </td>
+                  <td>
+                    Especialidad
+                  </td>
+                  <td>
+
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <th colspan="3">
+                    Experiencias Laborales (Indícanos las 4 últimas)
+                  </th>
+                </tr>
+                <tr>
+                  <td style="width: 171px;">
+                  </td>
+                  <th style="width: 390px;"> Experiencia 1
+                  </th>
+                  <th> Experiencia 2
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    Empresa:
+                  </td>
+                  <td>
+                    {{this.nEmpr1}}
+                  </td>
+                  <td>
+                    {{this.nEmpr2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Sector o Rubro:
+                  </td>
+                  <td>
+                    {{this.nsect1}}
+                  </td>
+                  <td>
+                    {{this.nsect2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Cargo ocupado:
+                  </td>
+                  <td>
+                    {{this.nCarg1}}
+                  </td>
+                  <td>
+                    {{this.nCarg2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Sueldo neto aprox.:
+                  </td>
+                  <td>
+                    {{this.nsuel1}}
+                  </td>
+                  <td>
+                    {{this.nsuel2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Desde (Año y Mes)
+                  </td>
+                  <td>
+                    {{this.nIni1}}
+                  </td>
+                  <td>
+                    {{this.nIni2}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <td colspan="2" style="width: 171px;">
+                    Hasta (Año y Mes)
+                  </td>
+                  <td style="width: 390px;">
+                    {{this.nFin1}}
+                  </td>
+                  <td>
+                    {{this.nFin2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td rowspan="3" style="width: 85px;">
+                    Referencias
+                  </td>
+                  <td style="width: 86px;">
+                    Nombre
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Cargo
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Teléfonos
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <td style="width: 171px;">
+                  </td>
+                  <th style="width: 390px;"> Experiencia 3
+                  </th>
+                  <th> Experiencia 4
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    Empresa:
+                  </td>
+                  <td>
+                    {{this.nEmpr3}}
+                  </td>
+                  <td>
+                    {{this.nEmpr4}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Sector o Rubro:
+                  </td>
+                  <td>
+                    {{this.nsect3}}
+                  </td>
+                  <td>
+                    {{this.nsect4}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Cargo ocupado:
+                  </td>
+                  <td>
+                    {{this.nCarg3}}
+                  </td>
+                  <td>
+                    {{this.nCarg4}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Sueldo neto aprox.:
+                  </td>
+                  <td>
+                    {{this.nsuel3}}
+                  </td>
+                  <td>
+                    {{this.nsuel4}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Desde (Año y Mes)
+                  </td>
+                  <td>
+                    {{this.nIni3}}
+                  </td>
+                  <td>
+                    {{this.nIni4}}
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-fixed table-bordered">
+                <tr>
+                  <td colspan="2" style="width: 171px;">
+                    Hasta (Año y Mes)
+                  </td>
+                  <td style="width: 390px;">
+                    {{this.nFin3}}
+                  </td>
+                  <td>
+                    {{this.nFin4}}
+                  </td>
+                </tr>
+                <tr>
+                  <td rowspan="3" style="width: 85px;">
+                    Referencias
+                  </td>
+                  <td style="width: 86px;">
+                    Nombre
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Cargo
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Teléfonos
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-12 mt-4 text-right">
+      <button mat-raised-button class="mr-2" (click)="onNoClick()">Salir</button>
+      <button mat-raised-button color="accent" (click)="captureScreen()">Descargar</button>
+    </div>
+
+    <ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+      <p style="color: white; padding-top: 50px;">Cargando información...</p>
+    </ngx-spinner>

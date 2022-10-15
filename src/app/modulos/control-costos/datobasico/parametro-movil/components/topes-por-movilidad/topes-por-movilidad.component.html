@@ -1,0 +1,91 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+            <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+        <!-- <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="modificarDatos()">
+            <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="cancelarDatos()">
+            <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">clear</i>
+        </button> -->
+    </div>
+</div>
+<form autocomplete="off" [formGroup]="form" (ngSubmit)="save()">
+    <div class="row  mx-3 my-3">
+
+        <div class="container container-md col-lg-6 col-md-6 my-1 justify-content-center" formGroupName="form1">
+            <p class="titulo">Estado en 1º Quincena</p>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-8 texto-centrado">
+                    <mat-label>Se hace solicitudes de la 1° quincena mes actual</mat-label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <!-- <mat-form-field class="example-full-width" appearance="outline">
+                        <input type="numb
+                        er" matInput formControlName="item1">
+                    </mat-form-field> -->
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-8 texto-centrado">
+                    <mat-label>Se hace solicitudes de la 2° quincena mes pasado, hasta el día</mat-label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <input type="number" matInput formControlName="item2" max="15" min="1">
+                    </mat-form-field>
+                    <small *ngIf="form1Item2" class="text-danger">Debe estar en un rango de 1 a 15 días</small>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-8 texto-centrado">
+                    <mat-label>Se hace solicitudes de la 2° quincena mes actual, apartir del día</mat-label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <input type="number" matInput formControlName="item3" max="31" min="1">
+                    </mat-form-field>
+                    <small *ngIf="form1Item3" class="text-danger">Debe estar en un rango de 1 a 30 días</small>
+                </div>
+            </div>
+        </div>
+        <div class="container col-lg-6 col-md-6 my-1" formGroupName="form2">
+            <p class="titulo">Estado en 2º Quincena</p>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-8 texto-centrado">
+                    <mat-label>Se hace solicitudes de la 1° quincena y 2° quincena del mes actual </mat-label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <!-- <mat-form-field class="example-full-width" appearance="outline">
+                        <input type="number" matInput formControlName="item1">
+                    </mat-form-field> -->
+                </div>
+            </div>
+            <div class="">
+                <hr>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-8 texto-centrado">
+                    <mat-label>Se hace solicitudes de la 1° quincena siguiente mes, apartir del día</mat-label>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <input type="number" matInput formControlName="item2" max="31" min="1">
+                    </mat-form-field>
+                    <small *ngIf="form2Item2" class="text-danger">Debe estar en un rango de 1 a 30 días</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<!-- <div class="mx-3 button-center py-2 ">
+    <button mat-raised-button (click)="modificarDatos()" class="mr-2" color="primary"> Grabar Datos</button>
+</div> -->

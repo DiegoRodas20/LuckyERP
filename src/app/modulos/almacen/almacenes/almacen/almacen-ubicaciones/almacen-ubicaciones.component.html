@@ -1,0 +1,292 @@
+<div class="fab-container" *ngIf="!bDialogUbicacionAbierto">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <!-- <button mat-mini-fab class="fab-secondary" color="white" (click)="imprimirQR()" matTooltipPosition="left" matTooltip="Imprimir Codigo QR" [useExistingCss]="true" printSectionId="print-qr" ngxPrint> -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="imprimirQR()"
+            matTooltipPosition="left">
+            <i class="material-icons" matTooltip="Imprimir QR" matTooltipPosition="left">print</i>
+        </button>
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+
+<div mat-dialog-title style="text-align: center;">
+    <mat-card class="title-card">Ubicaciones del Almacén Base</mat-card>
+</div>
+
+<mat-dialog-content>
+    <mat-card class="col-md-12" style="margin: 0 0px; overflow: hidden;">
+        <form autocomplete="false" [formGroup]="form" style="padding: 10px;">
+            <div class="form-row">
+                <div class="col-lg-5 col-md-5 col-sm-10 col-10">
+                    <ng-select appendTo="body" [clearable]="false" placeholder="Almacén Base"
+                        formControlName="idDireccion" (change)="cambioAlmacenBase()">
+                        <ng-option *ngFor="let item of listaAlmacenBase" [value]="item.nIdAlmacenBase">
+                            {{item.sDesc}}
+
+                        </ng-option>
+
+                    </ng-select>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 button-inactivar">
+                    <button mat-icon-button color="accent" (click)="desactivarAlmacen()">
+                        <i class="material-icons" matTooltip="Anular Almacén" matTooltipPosition="left">block</i>
+                    </button>
+                </div>
+
+                <div class="col-lg-5 col-md-5 col-sm-10 col-10">
+                    <ng-select appendTo="body" [clearable]="false" placeholder="Direcciones para almacén base"
+                        formControlName="addIdDireccion">
+                        <ng-option *ngFor="let item of listaDireccionAlmacenBase" [value]="item.idDireccion">
+                            {{item.sDesc}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1" style="padding-top: 13px;">
+                    <button mat-icon-button class="fab-secondary" color="accent" (click)="agregarDireccion()">
+                        <i class="material-icons" matTooltip="Agregar Direcciones" matTooltipPosition="left">check</i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12" style="margin-top: 20px;">
+                    <mat-radio-group aria-label="Select an option" formControlName="tipo">
+                        <mat-radio-button value="1">Ubicación Pallet</mat-radio-button>
+                        <mat-radio-button value="2">Ubicación General</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-10 col-10">
+                    <ng-select appendTo="body" [clearable]="true" placeholder="Clientes" formControlName="cliente">
+                        <ng-option *ngFor="let item of listaClientes" [value]="item.nIdCliente">
+                            {{item.descripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1" style="padding-top: 13px;">
+                    <button mat-icon-button class="fab-secondary" color="accent" (click)="vincularCliente()">
+                        <i class="material-icons" matTooltip="Vincular Cliente" matTooltipPosition="left">save</i>
+                    </button>
+                </div>
+
+
+            </div>
+
+            <hr>
+            <br>
+            <div *ngIf="form.get('tipo').value === '1'">
+                <!-- ==================== -->
+                <!-- Pasillo - Bloque - Columna -->
+                <!-- ==================== -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-10 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Pasillo</mat-label>
+                            <mat-select formControlName="pasillo" (selectionChange)="cambioPasillo($event.value)">
+                                <mat-option *ngFor="let item of listaPasillo" [value]="item.codigo"> {{ item.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarPasillo()">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Pasillo</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarPasillo()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Pasillo</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarPasillo()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Pasillo</span>
+                            </button>
+                        </mat-menu>
+                        <!-- <button mat-icon-button mat-mini-fab class="fab-secondary" color="accent" (click)="agregarPasillo()">
+                                            <i class="material-icons" matTooltip="Agregar Pasillo" matTooltipPosition="left">add</i>
+                                        </button> -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-10 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Bloque</mat-label>
+                            <mat-select formControlName="bloque" (selectionChange)="cambioBloque($event.value)">
+                                <mat-option *ngFor="let item of listaBloque" [value]="item.codigo"> {{ item.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-icon-button [matMenuTriggerFor]="menuBloque" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menuBloque="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarBloque()">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Bloque</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarBloque()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Bloque</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarBloque()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Bloque</span>
+                            </button>
+                        </mat-menu>
+                        <!-- <button mat-icon-button mat-mini-fab class="fab-secondary" color="accent" (click)="agregarBloque()">
+                                            <i class="material-icons" matTooltip="Agregar Bloque" matTooltipPosition="left">add</i>
+                                        </button> -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-10 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Columna</mat-label>
+                            <mat-select formControlName="columna" (selectionChange)="cambioColumna($event.value)">
+                                <mat-option *ngFor="let item of listaColumna" [value]="item.codigo"> {{ item.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-icon-button [matMenuTriggerFor]="menuColumna" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menuColumna="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarColumna()">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Columna</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarColumna()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Columna</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarColumna()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Columna</span>
+                            </button>
+                        </mat-menu>
+                        <!-- <button mat-icon-button mat-mini-fab class="fab-secondary" color="accent" (click)="agregarColumna()">
+                                            <i class="material-icons" matTooltip="Agregar Columna" matTooltipPosition="left">add</i>
+                                        </button> -->
+                    </div>
+
+
+                </div>
+                <!-- ==================== -->
+                <!-- Fila - Pallet -->
+                <!-- ==================== -->
+                <div class="row">
+                    <div class="col-lg-3 col-md-10 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Fila</mat-label>
+                            <mat-select formControlName="fila" (selectionChange)="cambioFila($event.value)">
+                                <mat-option *ngFor="let item of listaFila" [value]="item.codigo"> {{ item.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-icon-button [matMenuTriggerFor]="menuFila" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menuFila="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarFila()">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Fila</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarFila()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Fila</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarFila()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Fila</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                    <div class="col-lg-3 col-md-10 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Pallet</mat-label>
+                            <mat-select formControlName="pallet">
+                                <mat-option *ngFor="let item of listaPallet" [value]="item.codigo"> {{ item.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-icon-button [matMenuTriggerFor]="menuPallet" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menuPallet="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarPallet()">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Pallet</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarPallet()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Pallet</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarPallet()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Pallet</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="form.get('tipo').value === '2'">
+                <div class="row">
+                    <div class="col-lg-5 col-md-5 col-sm-10 col-9">
+                        <mat-form-field>
+                            <mat-label>Código</mat-label>
+                            <mat-select formControlName="extra">
+                                <mat-option *ngFor="let item of listaExtras" [value]="item.codigo"> {{ item.codigo }} -
+                                    {{ item.nombre}} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <!-- <button mat-icon-button mat-mini-fab class="fab-secondary" color="accent" (click)="agregarUbicacionExtra()">
+                                            <i class="material-icons" matTooltip="Agregar Direcciones" matTooltipPosition="left">add</i>
+                                        </button> -->
+                        <button mat-icon-button [matMenuTriggerFor]="menuDireccionGeneral" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menuDireccionGeneral="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="agregarUbicacionExtra()" color="secondary">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Agregar Ubicación General</span>
+                            </button>
+                            <button mat-menu-item (click)="modificarUbicacionExtra()">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Modificar Ubicación General</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminarUbicacionExtra()">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar Ubicación General</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </mat-card>
+</mat-dialog-content>

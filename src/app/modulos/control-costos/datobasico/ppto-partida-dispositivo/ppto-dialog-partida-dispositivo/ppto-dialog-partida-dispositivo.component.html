@@ -1,0 +1,103 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">{{sTitulo}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form *ngIf="!this.data" class="row" [formGroup]="formMatriz">
+            <div class="form-group col-md-6">
+                <ng-select (change)="fnListarPartEspecifica($event)" class="alinea-ng-select" appendTo="body"
+                    [clearable]="false" formControlName="cboPartidaGen" placeholder="Partida Genérica" required>
+                    <ng-option *ngFor="let vPartida of lPartidaGenerica" [value]="vPartida.nId">
+                        {{vPartida.sDescripcion}}</ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formMatriz.controls.cboPartidaGen.hasError('required') && formMatriz.controls.cboPartidaGen.touched">
+                    Obligatorio</mat-error>
+            </div>
+
+            <div class="form-group col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false" formControlName="cboPartidaEsp"
+                    placeholder="Partida Específica" required>
+                    <ng-option *ngFor="let vPartida of lPartidaEspecifica" [value]="vPartida.nId">
+                        {{vPartida.sDescripcion}}</ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formMatriz.controls.cboPartidaEsp.hasError('required') && formMatriz.controls.cboPartidaEsp.touched">
+                    Obligatorio</mat-error>
+            </div>
+
+            <div class="form-group col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false"
+                    formControlName="cboTipoDispositivo" placeholder="Tipo Dispositivo" required>
+                    <ng-option *ngFor="let vTipo of lTipoDispositivo" [value]="vTipo.nId">
+                        {{vTipo.sDescripcion}}</ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formMatriz.controls.cboTipoDispositivo.hasError('required') && formMatriz.controls.cboTipoDispositivo.touched">
+                    Obligatorio</mat-error>
+            </div>
+
+            <div class="form-group col-md-3">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <mat-select formControlName="cboEstado">
+                        <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.estado">
+                            {{vEstado.sDescripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formMatriz.controls.cboEstado.hasError('required')">Obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+
+        <form *ngIf="this.data" class="row" [formGroup]="formMatrizActualizar">
+            <div class="form-group col-md-6">
+
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Partida Genérica:</mat-label>
+                    <input type="text" matInput readonly formControlName="txtPartidaGen">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-6">
+
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Partida Específica:</mat-label>
+                    <input type="text" matInput readonly formControlName="txtPartidaEsp">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Tipo Dispositivo:</mat-label>
+                    <input type="text" matInput readonly formControlName="txtTipoDispositivo">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-3">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <mat-select formControlName="cboEstado">
+                        <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.estado">
+                            {{vEstado.sDescripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formMatriz.controls.cboEstado.hasError('required')">Obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+    </div>
+</mat-dialog-actions>

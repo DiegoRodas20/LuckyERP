@@ -1,0 +1,636 @@
+<div class="row"><br /></div>
+<div class="row"><br /></div>
+<div class="row"><br /></div>
+
+<!-- Bloque de vista de las Partidas  -->
+<div class="container-fluid" [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+    <!-- Botones Flotantes pantalla Principal-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFabPrincipal(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsListaPrincipal}">add</i>
+        </button>
+        <div [@speedDialStagger]="abListaPrincipal.length">
+            <button *ngIf="this.abListaPrincipal.length>0" data-toggle="modal" matTooltip="Nueva Partida"
+                data-target="#modalParGen" mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+                color="secondary" (click)="clickFabPrincipal(0)">
+                <i class="material-icons" matTooltipPosition="left">add</i>
+            </button>
+
+            <button *ngIf="this.abListaPrincipal.length>0" mat-mini-fab matTooltip="Relación Útiles"
+                class="fab-secondary" color="secondary" matTooltipPosition="left" (click)="clickFabPrincipal(1)">
+                <i class="material-icons" matTooltipPosition="left">list_alt</i>
+            </button>
+
+        </div>
+    </div>
+
+    <h3 style="text-align:center" class="col-md-10 offset-md-1 card-header">Matriz Partidas Artículo/Servicio </h3>
+    <div class="row"><br /></div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <!-- Inicio del contendo -->
+            <div class="row">
+                <div class="col-sm-6 offset-md-3">
+                    <div class="form-row d-flex justify-content-center ">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-6 col-8">
+                            <mat-form-field style="width: 100%;" class="example-full-width">
+                                <mat-label>Buscar partida</mat-label>
+                                <input matInput type="text" [formControl]="txtFiltro" (keyup)="applyFilter($event)">
+                                <button mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="txtFiltro.setValue('');fnListarPartida()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- <div class="col-sm-2 col-2">
+                            <button type="button" mat-mini-fab class="fab-toggler" matTooltip="Nueva Partida"
+                                data-toggle="modal" data-target="#modalParGen" style="margin-right: 15px;"
+                                (click)="fnNuevaParGen()">
+                                <i class="material-icons">add</i>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-2 col-2">
+                            <button type="button" mat-mini-fab class="fab-toggler" matTooltip="Relación Útiles"
+                                (click)="fnMostrarUtiles(1)">
+                                <mat-icon> list_alt</mat-icon>
+                            </button>
+                        </div> -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row col-sm-12">
+                <div class="col-md-10 offset-md-1">
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dsMatriz" #msMatriz="matSort" matSort style="width: 100%;">
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="accion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Ver Artículos: '>
+                                        <button mat-stroked-button type="button" color="accent"
+                                            (click)="fnVerDetalle(row)" matTooltip="Ver Artículos">
+                                            <mat-icon>touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sParGenDsc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Genérica </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Genérica: '>
+                                        <ngb-highlight [result]="row.sParGenDsc" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPartida">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Partida: '>
+                                        <ngb-highlight [result]="row.sCodPartida" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sPartidaDesc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaLarge'
+                                        data-label='Descripción: '>
+                                        <ngb-highlight [result]="row.sPartidaDesc" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nServicio">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Servicios </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Servicios: '>
+                                        <ngb-highlight [result]="row.nServicio" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nArticulo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículos </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Artículos: '>
+                                        <ngb-highlight [result]="row.nArticulo" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+
+                                <tr mat-header-row *matHeaderRowDef="dcMatriz; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: dcMatriz;">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #paginatorMatriz="matPaginator" [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bloque de vista de las partidas relacionadas con Articulo/Servicio -->
+<div class="container-fluid" [ngClass]="vDetalle ?  'clsShow' : 'clsHide'">
+    <!-- Botones Flotantes Articulo/Servicio-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFabRelacion(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsListaRelacion}">add</i>
+        </button>
+        <div [@speedDialStagger]="abListaRelacion.length">
+            <button *ngIf="this.abListaRelacion.length>0" matTooltipPosition="left" mat-mini-fab color="secondary"
+                matTooltip="Nuevo Artículo" type="button" data-toggle="modal" data-target="#modalArticulo"
+                (click)="clickFabRelacion(0)">
+                <i class="material-icons" matTooltipPosition="left">add</i>
+            </button>
+
+            <button *ngIf="this.abListaRelacion.length>0" matTooltipPosition="left" mat-mini-fab matToolTip="Volver"
+                class="fab-secondary" color="warn" (click)="clickFabRelacion(1)">
+                <i class="material-icons" matTooltipPosition="left">keyboard_arrow_left</i>
+            </button>
+
+        </div>
+    </div>
+
+    <h3 style="text-align:center" class="col-md-10 offset-md-1 card-header">Relación Artículo/Servicio de:
+        {{vPartidaDsc}}</h3>
+    <div class="row"><br /></div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+
+            <div class="row">
+                <div class="col-sm-6 offset-md-3">
+                    <div class="form-row">
+                        <div class="col-sm-6 col-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar Artículo/Servicio</mat-label>
+                                <input matInput type="text" [formControl]="txtFiltro2" (keyup)="applyFilter2($event)">
+                                <button mat-button *ngIf="txtFiltro2.value" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="txtFiltro2.setValue('');fnBuscarArticulo()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="col-sm-2 col-2">
+                            <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo Artículo" type="button"
+                                (click)="fnNuevoArticulo()" data-toggle="modal" data-target="#modalArticulo"
+                                style="margin-right: 15px;">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-2 col-2">
+                            <button mat-mini-fab class="fab-toggler" matTooltip="Volver" type="button"
+                                (click)="fnVolver()">
+                                <mat-icon>keyboard_arrow_left</mat-icon>
+                            </button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-10 offset-md-1">
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+                        <table mat-table [dataSource]="dsRelacion" #msRelacion="matSort" matSort style="width: 100%;">
+
+                            <ng-container matColumnDef="accion" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción</th>
+
+                                <td mat-cell *matCellDef="let row">
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                        matTooltipPosition="right" mat-stroked-button color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu" xPosition="after">
+
+                                        <button mat-menu-item data-toggle="modal" data-target="#modalArticulo"
+                                            (click)="fnSelecArticulo(row)">
+                                            <mat-icon color="accent">edit</mat-icon>
+                                            <span>Modificar</span>
+                                        </button>
+
+                                        <button mat-menu-item (click)="fnVerImagen(row)">
+                                            <mat-icon color="accent">image</mat-icon>
+                                            <span>Ver foto</span>
+                                        </button>
+
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="sCodPartida">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Partida: '>
+                                    <ngb-highlight [result]="row.sCodPartida + ' ' + row.sPartidaDesc"
+                                        [term]="txtFiltro2.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCodArticulo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo/Servicio </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                    data-label='Articulo/Servicio: '>
+                                    <ngb-highlight [result]="row.sCodArticulo + ' ' + row.sArticuloDesc"
+                                        [term]="txtFiltro2.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sEstado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Estado: '>
+                                    <ngb-highlight [result]="row.sEstado" [term]="txtFiltro2.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sEsUtilOficina">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Para N.U. </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Para N.U: '>
+                                    <ngb-highlight [result]="row.sEsUtilOficina" [term]="txtFiltro2.value">
+                                    </ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nCantMin">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cant. mínima </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                    data-label='Cant. mínima: '>
+                                    <ngb-highlight [result]="row.nCantMin" [term]="txtFiltro2.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dcRelacion; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcRelacion;"
+                                [ngClass]="{'make-gris': row.sEstado=='Inactivo'}">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #paginatorRelacion="matPaginator" [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Bloque de vista de la Relacion de Utiles de Oficina -->
+<div class="container-fluid" [ngClass]="vMostarNU ? 'clsShow' :'clsHide' ">
+    <!-- Botones Flotantes Utiles-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFabUtiles(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsListaUtiles}">add</i>
+        </button>
+        <div [@speedDialStagger]="abListaUtiles.length">
+
+            <button *ngIf="this.abListaUtiles.length>0" mat-mini-fab matToolTip="Volver" class="fab-secondary"
+                color="warn" (click)="clickFabUtiles(0)" matTooltipPosition="left">
+                <i class="material-icons" matTooltipPosition="left">keyboard_arrow_left</i>
+            </button>
+
+        </div>
+    </div>
+
+    <h3 style="text-align:center" class="col-md-10 offset-md-1 card-header">Listado: Artículos de Oficina para Nota de
+        Útiles</h3>
+    <div class="row"><br /></div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+
+            <div class="row">
+                <div class="col-sm-10 offset-md-1">
+                    <div class="form-row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-6 col-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar útil oficina</mat-label>
+                                <input matInput type="text" [formControl]="txtFiltro3" (keyup)="applyFilter3($event)">
+                                <button mat-button *ngIf="txtFiltro3.value" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="txtFiltro3.setValue('');fnListaUtiles()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="col-sm-4 col-2">
+                            <button mat-mini-fab matTooltip="Regresar" type="button" (click)="fnMostrarUtiles(2)">
+                                <mat-icon>
+                                    <mat-icon>keyboard_arrow_left</mat-icon>
+                                </mat-icon>
+                            </button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-10 offset-md-1">
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+                        <table mat-table [dataSource]="dsListado" #msListado="matSort" matSort style="width: 100%;">
+
+                            <!-- ID Column -->
+                            <ng-container matColumnDef="accion" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Editar: '>
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                        matTooltipPosition="right" mat-stroked-button color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu" xPosition="after">
+
+                                        <button mat-menu-item data-toggle="modal" data-target="#modalArticuloUtil"
+                                            (click)="fnSelecArticulo(row)">
+                                            <mat-icon color="accent">edit</mat-icon>
+                                            <span>Modificar</span>
+                                        </button>
+
+                                        <button mat-menu-item (click)="fnVerImagen(row)">
+                                            <mat-icon color="accent">image</mat-icon>
+                                            <span>Ver foto</span>
+                                        </button>
+
+                                    </mat-menu>
+                                    <!-- <button mat-stroked-button type="button" color="accent" data-toggle="modal" data-target="#modalArticuloUtil"  (click)="fnSelecArticulo(row)"> <mat-icon>create</mat-icon></button> -->
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCodArticulo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Artículo: '>
+                                    <ngb-highlight [result]="row.sCodArticulo + ' - ' + row.sArticuloDesc"
+                                        [term]="txtFiltro3.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCodPartida">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Partida: '>
+                                    <ngb-highlight [result]="row.sCodPartida + ' - ' + row.sPartidaDesc"
+                                        [term]="txtFiltro3.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nCantMin">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
+                                <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Stock: '>
+                                    <ngb-highlight [result]="row.nCantMin" [term]="txtFiltro3.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="dcListado; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcListado;">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #paginatorListado="matPaginator" [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- *********************************************************************************************************************************************************************************************************** -->
+<!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<!-- Modal para agregar una nueva partida a la Matriz -->
+<div class="modal fade  bd-example-modal-xl" id="modalParGen" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="modalParGen" aria-hidden="true">
+    <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important;">
+        <div class="modal-content">
+            <div class="modal-header  text-center header-modal-lucky">
+                <h5 id="modalParGenLongTitle">Agregar nueva partida a la matriz de Artículo/Servicio</h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form [formGroup]="parGenForm">
+                        <div class="form-row">
+                            <div class="form-row col-md-12 offset-md-2">
+
+                                <div class="form-group col-md-9">
+                                    <ng-select placeholder="Partidas" formControlName="cboPartida" [clearable]="false">
+                                        <ng-option *ngFor="let list of ListaArticuloNuevo" [(value)]="list.nIdPartida">
+                                            {{list.sPartidaDesc}}</ng-option>
+                                    </ng-select>
+                                </div>
+
+                                <div class="col-md-3 d-flex justify-content-center">
+                                    <button mat-mini-fab matTooltip="Guardar" (click)="fnGuardarParGen()">
+                                        <mat-icon>
+                                            <mat-icon>save</mat-icon>
+                                        </mat-icon>
+                                    </button>
+                                    <input class="close" data-dismiss="modal" data-toggle="modal" #modalParGen
+                                        data-target="#modalParGen" type="hidden" name="button">
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar nuevo Articulo/Servicio a la Matriz  -->
+<div class="modal fade  bd-example-modal-xl" id="modalArticulo" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="modalArticulo" aria-hidden="true">
+    <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95%;">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalArticuloLongTitle"><Label>{{vTitulo}}</Label> </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form [formGroup]="articuloForm">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-11">
+                                <ng-select placeholder="Artículos/Servicios" formControlName="cboArticulo"
+                                    [clearable]="false">
+                                    <ng-option *ngFor="let list of ListaArticuloMatris" [(value)]="list.nIdArticulo">
+                                        {{list.sNombreProducto}}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="form-row col-md-12 offset-md-2">
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Uso Nota: </mat-label>
+                                        <mat-select formControlName="cboUsoNota" (selectionChange)="fnUsoUtiles()"
+                                            [ngClass]="{'is-valid': submitted2 && u.cboUsoNota.valid, 'is-invalid': submitted2 && u.cboUsoNota.errors}">
+                                            <mat-option value="">Seleccione</mat-option>
+                                            <mat-option *ngFor="let vListaUso of lUsoNota" [value]="vListaUso.nIdUso">
+                                                {{vListaUso.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Stock Min: </mat-label>
+                                        <input matInput type="text" formControlName="txtStockMin"
+                                            [ngClass]="{'is-valid': submitted2 && u.txtStockMin.valid, 'is-invalid': submitted2 && u.txtStockMin.errors}" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Estado: </mat-label>
+                                        <mat-select formControlName="cboEstado"
+                                            [ngClass]="{'is-valid': submitted2 && u.cboEstado.valid, 'is-invalid': submitted2 && u.cboEstado.errors}">
+                                            <mat-option value="">Seleccione</mat-option>
+                                            <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nIdEstado">
+                                                {{vEstado.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-center">
+                                    <button mat-mini-fab matTooltip="Guardar" (click)="fnGuardarArticulo()">
+                                        <mat-icon>save</mat-icon>
+                                    </button>
+                                    <input class="close" data-dismiss="modal" data-toggle="modal" #modalArticulo
+                                        data-target="#modalArticulo" type="hidden" name="button">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para solo Modificar Articulo de Util de la Matriz  -->
+<div class="modal fade  bd-example-modal-xl" id="modalArticuloUtil" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="modalArticuloUtil" aria-hidden="true">
+    <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important;">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalArticuloUtilLongTitle"><Label>{{vTitulo}}</Label> </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form [formGroup]="articuloForm">
+                        <div class="form-row">
+                            <div class="form-row col-md-10 offset-md-1">
+                                <div class="form-group col-md-1">
+                                    <Label></Label>
+                                </div>
+
+                                <div class="form-group col-md-11">
+                                    <ng-select placeholder="Articulos" formControlName="cboArticulo"
+                                        [clearable]="false">
+                                        <ng-option *ngFor="let list of ListaArticuloMatris"
+                                            [(value)]="list.nIdArticulo">{{list.sNombreProducto}}</ng-option>
+                                    </ng-select>
+                                </div>
+
+                                <!--<div class="form-group col-md-3">
+                                    <mat-form-field>
+                                    <mat-label>Artículo: </mat-label>
+                                    <input matInput type="text" formControlName="txtArticulo" maxlength="6"style="text-transform:uppercase;" (blur)="fnValidarArticulo()" [ngClass]="{'is-valid': submitted2 && u.txtArticulo.valid, 'is-invalid': submitted2 && u.txtArticulo.errors}"/>
+                                </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-8" >
+                                    <mat-form-field>
+                                    <mat-label>Descripción: </mat-label>
+                                    <input matInput type="text" formControlName="txtDescripcion" [ngClass]="{'is-valid': submitted2 && u.txtDescripcion.valid, 'is-invalid': submitted2 && u.txtDescripcion.errors}"/>
+                                    </mat-form-field>
+                                </div>-->
+
+                            </div>
+
+                            <div class="form-row col-md-10 offset-md-1">
+
+                                <div class="form-group col-md-1">
+                                    <Label></Label>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Uso Nota </mat-label>
+                                        <mat-select formControlName="cboUsoNota" (selectionChange)="fnUsoUtiles()"
+                                            [ngClass]="{'is-valid': submitted2 && u.cboUsoNota.valid, 'is-invalid': submitted2 && u.cboUsoNota.errors}">
+                                            <mat-option value="">Seleccione</mat-option>
+                                            <mat-option *ngFor="let vListaUso of lUsoNota" [value]="vListaUso.nIdUso">
+                                                {{vListaUso.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="articuloForm.get('cboUsoNota').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Stock Min</mat-label>
+                                        <input matInput type="text" formControlName="txtStockMin"
+                                            [ngClass]="{'is-valid': submitted2 && u.txtStockMin.valid, 'is-invalid': submitted2 && u.txtStockMin.errors}" />
+
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="form-group col-md-4" [hidden]="true">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Estado: </mat-label>
+                                        <mat-select formControlName="cboEstado"
+                                            [ngClass]="{'is-valid': submitted2 && u.cboEstado.valid, 'is-invalid': submitted2 && u.cboEstado.errors}">
+                                            <mat-option value="">Seleccione</mat-option>
+                                            <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nIdEstado">
+                                                {{vEstado.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="articuloForm.get('cboEstado').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-2 d-flex justify-content-center ">
+                                    <button mat-mini-fab matTooltip="Guardar" (click)="fnGuardarArticuloUtil()">
+                                        <mat-icon>save</mat-icon>
+                                    </button>
+                                    <input class="close" data-dismiss="modal" data-toggle="modal" #modalArticuloUtil
+                                        data-target="#modalArticuloUtil" type="hidden" name="button">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

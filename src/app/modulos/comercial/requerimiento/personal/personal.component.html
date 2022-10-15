@@ -1,0 +1,808 @@
+<div class="col-md-10 offset-md-1 clsprincipal" *ngIf="accionStepper === 'cancel' else elseRequerimiento ">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            {{sTitulo}}
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container" *ngIf=BtnCrear>
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="onOpenStepper(btn.icon)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+            <div class="col-lg-4">
+                <mat-form-field class="w-100 margintop">
+                    <mat-label>Buscar:</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" #input>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Personal-->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="Opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef> Opción </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="accent" (click)="onOpenStepper('mostrar',element)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodRQ">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Requerimiento </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sCodRQ}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodCC">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sCodCC}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDescCC">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del Presupuesto</th>
+                    <td mat-cell *matCellDef="let element"> {{element.sDescCC}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sMotivo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sMotivo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sSolicitante">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Solicitante </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sSolicitante}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sEstado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sEstado}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFechaCreacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element.dFechaCreacion.split(' ')[0]}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>
+
+<!-- ------------------------------- -->
+<!-- STEPPER NUEVO/EDITAR REQUERIMIENTO -->
+<!-- ------------------------------- -->
+<ng-template #elseRequerimiento>
+    <div class="clsprincipal">
+
+        <div class="clstituloCrtl">
+            <h3>Detalle del Requerimiento de Personal</h3>
+        </div>
+
+        <div class="fab-container">
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(2, -1)">
+                <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+            </button>
+            <div [@speedDialStagger]="abAdd.length">
+                <button *ngFor="let btn of abAdd; let ibtn = index;" mat-mini-fab class="fab-secondary"
+                    color="secondary" (click)="clickFab(1, btn)" matBadgePosition="after" matBadgeColor="accent">
+                    <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                </button>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <form [formGroup]="requerimientoFormGroup">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <mat-label>Nro Requerimiento</mat-label>
+                            <input formControlName="NroRequerimiento" matInput placeholder="Nro. Requerimiento">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-label>Fecha Creación</mat-label>
+                            <input formControlName="FechaCreacion" matInput placeholder="Nro. Requerimiento">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-label>Estado</mat-label>
+                            <input formControlName="Estado" matInput placeholder="Nro. Requerimiento">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+            <form [formGroup]="documentoFormGroup">
+                <div class="row">
+
+                    <div class="col-md-3 col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Nro. Documento</mat-label>
+                            <input matInput formControlName="NroDocumento" placeholder="N° Doc.">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-5 col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input formControlName="Nombre" matInput placeholder="Nombre">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Correo</mat-label>
+                            <input formControlName="Correo" matInput placeholder="Correo">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row documento">
+
+                    <div class="col-md-3 col-sm-12">
+
+                        <mat-form-field>
+                            <mat-label>Cargo</mat-label>
+                            <input matInput formControlName="Cargo" placeholder="Cargo">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-5 col-sm-12">
+                        <mat-form-field>
+                            <mat-label>Teléfono</mat-label>
+                            <input matInput formControlName="Telefono" placeholder="Teléfono">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12">
+                        <!-- <mat-form-field>
+                <mat-label>Estado de RQ</mat-label>
+                <input matInput formControlName="Estado" placeholder="Estado">
+              </mat-form-field> -->
+                    </div>
+                </div>
+            </form>
+
+            <mat-divider></mat-divider>
+
+            <div class="row stepperPersonal">
+                <div class="col-sm-12">
+
+                    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+
+                        <!-- Seccion Presupuesto -->
+                        <mat-step [stepControl]="presupuestoFormGroup">
+                            <form [formGroup]="presupuestoFormGroup">
+                                <ng-template matStepLabel>Presupuesto </ng-template>
+
+                                <div class="row">
+                                    <div class="col d-flex justify-content-center">
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Nro. Presupuesto</mat-label>
+                                            <input matInput type="text" formControlName="NroPresupuesto"
+                                                (change)='fnObtenerPresupuesto(1,$event.value)' autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Descripción</mat-label>
+                                            <input matInput formControlName="Descripcion" placeholder="Descripción"
+                                                readonly="readonly">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col d-flex align-items-center">
+                                        <mat-form-field>
+                                            <mat-label>Marca</mat-label>
+                                            <input matInput formControlName="Marca" placeholder="Marca"
+                                                readonly="readonly">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col d-flex align-items-center">
+                                        <mat-form-field>
+                                            <mat-label>Motivo</mat-label>
+                                            <mat-select formControlName="Motivo"
+                                                (selectionChange)="fnListarSubMotivos()">
+                                                <mat-option *ngFor="let objMotivo of sltMotivo"
+                                                    [value]="objMotivo.codigo">{{objMotivo.valor}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col d-flex align-items-center">
+                                        <mat-form-field>
+                                            <mat-label>SubMotivo</mat-label>
+                                            <mat-select formControlName="SubMotivo">
+                                                <mat-option *ngFor="let element of sltSubMotivo"
+                                                    [value]="element.nIdSubMotivo">
+                                                    {{element.sSubMotivo}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Cliente</mat-label>
+                                            <input matInput formControlName="Cliente" placeholder="Cliente"
+                                                readonly="readonly">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+
+                                        <mat-form-field>
+                                            <mat-label>Canal</mat-label>
+                                            <input matInput type="text" formControlName="Canal" readonly="readonly">
+                                        </mat-form-field>
+
+                                    </div>
+
+                                    <div class="col">
+
+                                        <mat-form-field>
+                                            <mat-label>SubCanal</mat-label>
+                                            <input matInput type="text" formControlName="SubCanal" readonly="readonly">
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+
+                            </form>
+                        </mat-step>
+
+                        <!-- Seccion Planilla -->
+                        <mat-step [stepControl]="planillaFormGroup" readonly label="Planilla">
+                            <form [formGroup]="planillaFormGroup">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Sucursal</mat-label>
+                                            <mat-select formControlName="Sucursal"
+                                                (selectionChange)="fnChangeSucursal()">
+                                                <mat-option *ngFor="let value of sltSucursal" [value]="value.nIdCCS">
+                                                    {{value.sDesc}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Puesto</mat-label>
+                                            <mat-select formControlName="Puesto" (selectionChange)="fnChangePuesto()">
+                                                <mat-option *ngFor="let value of sltPuesto" [value]="value.partCod">
+                                                    {{value.partNombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Cargo</mat-label>
+                                            <mat-select formControlName="Cargo" (selectionChange)="fnChangeCargo()">
+                                                <mat-option *ngFor="let value of sltCargo" [value]="value.idPE">
+                                                    {{value.carDesc}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div> -->
+
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Cargo</mat-label>
+                                            <input matInput formControlName="NombreCargo" placeholder="Cargo" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Vacantes</mat-label>
+                                            <input matInput type="number" formControlName="Vacantes" min="0"
+                                                placeholder="Vacantes" (change)="fnValidarVacantes('Vacantes')">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>BackUp</mat-label>
+                                            <input matInput type="number" formControlName="BackUp" placeholder="BackUp"
+                                                min="0" (change)="fnValidarVacantes('BackUp')">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Tipo de Contrato</mat-label>
+                                            <mat-select formControlName="TipoContrato"
+                                                (selectionChange)="fnPlanillaChange(); controlTipoContrato($event)">
+                                                <mat-option *ngFor="let value of sltContrato" [value]="value.codigo">
+                                                    {{value.valor}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Planilla</mat-label>
+                                            <input matInput type="text" formControlName="Planilla"
+                                                placeholder="Planilla" readonly="readonly">
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field>
+                                            <mat-label>Planilla</mat-label>
+                                            <mat-select formControlName="Planilla">
+                                                <mat-option *ngFor="let objPlanilla of sltPlanilla"
+                                                    [value]="objPlanilla.codigo">
+                                                    {{objPlanilla.valor}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field> -->
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Inicio de labores</mat-label>
+                                            <input matInput [min]="todayDate" [matDatepicker]="frIni"
+                                                (dateChange)="fnValidarFechas(); fnValidarFechaFin()" readonly
+                                                formControlName="InicioActividad">
+                                            <mat-datepicker-toggle matSuffix [for]="frIni"></mat-datepicker-toggle>
+                                            <mat-datepicker #frIni></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field>
+                                            <mat-label>Fin de labores</mat-label>
+                                            <input [disabled]="isDisabled" matInput [min]="todayDateFin"
+                                                [matDatepicker]="frFin" (dateChange)="fnValidarFechas()" readonly
+                                                formControlName="FinActividad">
+                                            <mat-datepicker-toggle matSuffix [for]="frFin"></mat-datepicker-toggle>
+                                            <mat-datepicker #frFin></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col ">
+                                        <mat-form-field>
+                                            <mat-label>Sexo</mat-label>
+                                            <mat-select formControlName="Genero">
+                                                <mat-option *ngFor="let value of sltSexo" [value]="value.codigo">
+                                                    {{value.valor}} </mat-option>
+
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </mat-step>
+
+                        <!-- Seccion Oferta -->
+                        <mat-step [stepControl]="ofertaFormGroup" label="Oferta">
+                            <form [formGroup]="ofertaFormGroup">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <mat-radio-group formControlName="OfertaRadioBtn" (change)="fnOferta()"
+                                            aria-label="">
+                                            <mat-radio-button [disabled]="isDisabled == true" [value]="1709">Diario Neto
+                                            </mat-radio-button>
+                                            <mat-radio-button [value]="1710">Mensual</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div *ngIf="ofertaFormGroup.value.OfertaRadioBtn === 1710"
+                                        class="col-md-12 text-center">
+                                        <mat-radio-group formControlName="ofertaMensual" aria-label=""
+                                            (change)="fnOfertaMensual()">
+                                            <mat-radio-button [disabled]="isColgate == false" [value]="2594">Bruto
+                                            </mat-radio-button>
+                                            <mat-radio-button [disabled]="isColgate == true" [value]="2621">Neto
+                                            </mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row">
+                                <div class="col d-flex justify-content-center "
+                                    *ngIf="ofertaFormGroup.value.OfertaRadioBtn === 1709">
+                                    <form [formGroup]="diarioFormGroup">
+                                        <mat-form-field>
+                                            <mat-label>Diario Neto</mat-label>
+                                            <input matInput formControlName="DiarioNeto" type="number" />
+                                            <mat-error *ngIf="diarioFormGroup.get('DiarioNeto').hasError('required')">
+                                                Debe ingresar el
+                                                dato</mat-error>
+                                            <mat-error *ngIf="diarioFormGroup.get('DiarioNeto').hasError('min')">No se
+                                                permiten montos menores a 10</mat-error>
+                                            <mat-error *ngIf="diarioFormGroup.get('DiarioNeto').hasError('max')">No se
+                                                permiten montos mayores a 200</mat-error>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+
+                                <div class="col d-flex justify-content-center"
+                                    *ngIf="ofertaFormGroup.value.OfertaRadioBtn === 1710">
+                                    <form [formGroup]="mensualFormGroup">
+
+                                        <mat-form-field
+                                            *ngIf="ofertaFormGroup.value.ofertaMensual === 2594 && ofertaFormGroup.value.OfertaRadioBtn === 1710">
+                                            <mat-label>Mensual Bruto</mat-label>
+                                            <input matInput type="number" id="idProvisBruto"
+                                                formControlName="TotalBruto" />
+
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalBruto').hasError('required')">
+                                                Debe ingresar el
+                                                dato</mat-error>
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalBruto').hasError('min')">No se
+                                                permiten montos menores a 10</mat-error>
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalBruto').hasError('max')">No se
+                                                permiten montos mayores a 2500</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field
+                                            *ngIf="ofertaFormGroup.value.ofertaMensual === 2621 && ofertaFormGroup.value.OfertaRadioBtn === 1710 && isColgate == false">
+
+                                            <mat-label>Mensual Neto</mat-label>
+                                            <input matInput type="number" id="idProvisNeto"
+                                                formControlName="TotalNeto" />
+
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalNeto').hasError('required')">
+                                                Debe ingresar el
+                                                dato</mat-error>
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalNeto').hasError('min')">No se
+                                                permiten montos menores a 10</mat-error>
+                                            <mat-error *ngIf="mensualFormGroup.get('TotalNeto').hasError('max')">No se
+                                                permiten montos mayores a 1800</mat-error>
+                                        </mat-form-field>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </mat-step>
+
+                        <!-- Seccion Días de trabajo -->
+                        <mat-step [stepControl]="horarioTrabajoFormGroup" label="Días de trabajo">
+                            <div class="row">
+
+                                <div class="col-md-5 d-flex justify-content-center align-items-center">
+                                    <form [formGroup]="diasSemanaFormGroup">
+                                        <ul style=" list-style-type: none;">
+                                            <li>
+                                                <mat-checkbox formControlName="LunesChk" class="example-margin"
+                                                    [value]="1826">
+                                                    Lunes
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="MartesChk" class="example-margin"
+                                                    [value]="1827">
+                                                    Martes
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="MiercolesChk" class="example-margin"
+                                                    [value]="1828">Miércoles
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="JuevesChk" class="example-margin"
+                                                    [value]="1829">
+                                                    Jueves
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="ViernesChk" class="example-margin"
+                                                    [value]="1830">Viernes
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="SabadoChk" class="example-margin"
+                                                    [value]="1831">
+                                                    Sabado
+                                                </mat-checkbox>
+                                            </li>
+                                            <li>
+                                                <mat-checkbox formControlName="DomingoChk" class="example-margin"
+                                                    [value]="1832">Domingo
+                                                </mat-checkbox>
+                                            </li>
+                                        </ul>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form [formGroup]="horarioTrabajoFormGroup">
+                                        <div class="row">
+                                            <mat-form-field>
+                                                <mat-label>Entrada</mat-label>
+                                                <mat-select formControlName="Entrada">
+                                                    <mat-option *ngFor="let value of sltIngreso" [value]="value.codigo">
+                                                        {{value.valor}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <mat-form-field>
+                                                <mat-label>Salida</mat-label>
+                                                <mat-select formControlName="Salida">
+                                                    <mat-option *ngFor="let value of sltSalida" [value]="value.codigo">
+                                                        {{value.valor}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <mat-form-field>
+                                                <mat-label>Refrigerio</mat-label>
+                                                <mat-select formControlName="Refrigerio">
+                                                    <mat-option *ngFor="let value of sltRefrigerio"
+                                                        [value]="value.codigo">
+                                                        {{value.valor}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </mat-step>
+
+                        <!-- Seccion Sanidad -->
+                        <mat-step [stepControl]="sanidadFormGroup" label="Sanidad">
+                            <form [formGroup]="sanidadFormGroup">
+
+                                <div class="clsSubtitulo">¿Requiere Carné de Sanidad?</div>
+
+                                <div class="row ">
+
+                                    <div class="col d-flex justify-content-center">
+                                        <mat-radio-group formControlName="CarneSanidad" aria-label="Carné de sanidad">
+                                            <mat-radio-button value="si" (click)="fnCarneSanidad(1)">Sí
+                                            </mat-radio-button>
+                                            <mat-radio-button value="no" (click)="fnCarneSanidad(0)">No
+                                            </mat-radio-button>
+                                            <!--   <mat-radio-button value="ambos" (click)="fnCarneSanidad(2)">Ambos</mat-radio-button> -->
+                                        </mat-radio-group>
+                                    </div>
+
+                                </div>
+
+                                <div class="clsSubtitulo">¿De dónde?</div>
+
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col d-flex justify-content-center" style="overflow: auto">
+
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td>
+                                                    Lima Metropolitana:
+                                                </td>
+                                                <td>
+                                                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                                        formControlName="LimaMetropolitana" class="example-radio-group">
+                                                        <mat-radio-button class="example-radio-button" value="si">Sí
+                                                        </mat-radio-button>
+                                                        <mat-radio-button class="example-radio-button" value="no">No
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>San Isidro: </td>
+                                                <td>
+                                                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                                        formControlName="SanIsidro" class="example-radio-group">
+                                                        <mat-radio-button class="example-radio-button" value="si">Sí
+                                                        </mat-radio-button>
+                                                        <mat-radio-button class="example-radio-button" value="no">No
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Callao: </td>
+                                                <td>
+                                                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                                        formControlName="Callao" class="example-radio-group">
+                                                        <mat-radio-button class="example-radio-button" value="si">Sí
+                                                        </mat-radio-button>
+                                                        <mat-radio-button class="example-radio-button" value="no">No
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div class="col-md-4" style="margin-left: 2rem;"></div>
+                                </div>
+
+                                <div class="clsSubtitulo">¿Manipula Alimentos?</div>
+
+                                <div class="row ">
+
+                                    <div class="col d-flex justify-content-center">
+                                        <mat-radio-group formControlName="Alimentos">
+                                            <mat-radio-button value="1"
+                                                [checked]="sanidadFormGroup.get('Alimentos').value==1">
+                                                Sí
+                                            </mat-radio-button>
+                                            <mat-radio-button value="0"
+                                                [checked]="sanidadFormGroup.get('Alimentos').value===0">
+                                                No
+                                            </mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-12 col-sm-12 ">
+                                        <mat-form-field>
+                                            <mat-label>Comentario adicional</mat-label>
+                                            <textarea matInput formControlName="Caracteristicas" cdkAutosizeMinRows="5"
+                                                cdkAutosizeMaxRows="35" style="height:4rem"></textarea>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                            <!-- <hr>
+                <div class="row d-flex justify-content-around ">
+  
+                  <button mat-button matStepperPrevious>
+                    <mat-icon>navigate_before</mat-icon> Anterior
+                  </button>
+                
+                </div> -->
+                        </mat-step>
+
+                        <!-- Seccion Herramientas TI -->
+                        <mat-step [stepControl]="herramientasFormGroup" label="Herramientas">
+
+                            <form [formGroup]="herramientasFormGroup">
+
+                                <div class="clsSubtitulo">¿Estas personas necesitan herramientas de T.I?</div>
+
+                                <div class="row ">
+
+                                    <div class="col d-flex justify-content-center">
+                                        <mat-radio-group formControlName="herramienta" aria-label="Herramientas">
+                                            <mat-radio-button value="si" (click)="fnCarneSanidad(1)">Sí
+                                            </mat-radio-button>
+                                            <mat-radio-button value="no" (click)="fnCarneSanidad(0)">No
+                                            </mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+
+                                </div>
+
+                                <div class="clsSubtitulo">¿Qué Herramientas?</div>
+
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col d-flex justify-content-center" style="overflow: auto">
+
+                                        <ng-select appendTo="body" formControlName="selectHerramienta"
+                                            [clearable]="false" placeholder="Herramienta">
+                                            <ng-option *ngFor="let item of listaHerramientas" [value]="item.nId">
+                                                {{item.sNombreHerramienta}}
+                                            </ng-option>
+                                        </ng-select>
+
+                                    </div>
+                                    <div class="col-md-4" style="margin-left: 2rem;"></div>
+                                </div>
+
+                                <!--Tabla Herramientas Actuales-->
+                                <!--  <div id="listaMobile" class="mat-elevation-z8">
+                                    <div>
+                                        <table mat-table [dataSource]="listaHerramientasTableData" matSort style="width: 100%;">
+
+                                            Opciones
+                                            <ng-container matColumnDef="opcion" sticky>
+                                                <td mat-cell *matCellDef="let row"
+                                                    class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                                                    <button mat-raised-button color="accent"
+                                                        (click)="fnQuitarHerramienta(row.nIdArticulo,row.sHerramienta)">
+                                                        <mat-icon> remove</mat-icon>
+                                                    </button>
+                                                </td>
+                                            </ng-container>
+
+                                            Nombre de Requisito
+                                            <ng-container matColumnDef="sNombreRequisito">
+                                                <td mat-cell *matCellDef="let element"
+                                                    class='has_label_on_mobile clsColumnaNombre'
+                                                    data-label='Requisito: '>
+                                                    <ngb-highlight [result]="element.sNombreHerramienta"></ngb-highlight>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-row *matRowDef="let row; columns: listaHerramientasTableColumns;"> </tr>
+
+                                        </table>
+                                    </div>
+                                    <mat-paginator #listaHerramientasPaginator="matPaginator" [pageSizeOptions]="[5, 10, 20]">
+                                    </mat-paginator>
+                                </div> -->
+                                <!--Fin Tabla-->
+
+                            </form>
+
+                        </mat-step>
+
+                    </mat-horizontal-stepper>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<!-- ------------------------------- -->
+<!-- STEPPER NUEVO/EDITAR REQUERIMIENTO -->
+<!-- ------------------------------- -->

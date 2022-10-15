@@ -1,0 +1,132 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+<br>
+<h5 class="col-md-10 offset-md-1 card-header" style="text-align:center">Detalle del Presupuesto</h5>
+<br>
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+            <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class="form-row col-md-12">
+    <!-- Cabecera del Gasto -->
+    <div class="col-md-10 offset-md-1">
+        <div class="col-md rounded" style="padding-top: 10px;">
+            <mat-card>
+                <form [formGroup]="presupuestoForm">
+                    <div class="form-row">
+                        <div class="col-md-10 offset-md-1">
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+
+                                    <!-- <mat-form-field style="width: 100%;">
+                                        <mat-label>Presupuesto:</mat-label>
+
+                                        <input matInput formControlName="txtPresupuesto" [readonly]="habilitado" placeholder="Buscar" aria-label="State" [matAutocomplete]="auto2">
+                                        <mat-autocomplete #auto2="matAutocomplete">
+                                            <mat-option *ngFor="let state of filteredCentroCosto | async" [value]="state.sDescripcion">
+                                                <span>{{state.sDescripcion}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <small *ngIf="CentroCostoNotFound" class="text-danger"> Error, verificar Presupuesto </small>
+                                    </mat-form-field> -->
+                                    <ng-select appendTo="body" [clearable]="false" placeholder="Buscar" formControlName="txtPresupuesto" (change)="cambioPresupuesto($event)">
+                                        <ng-option *ngFor="let state of lCboCentroCosto " [value]="state.sDescripcion">
+                                            {{state.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <button mat-stroked-button color="accent" style="outline: none;" mat-button (click)="fnBuscarDatos()">
+                                        <mat-icon>search</mat-icon>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Cliente:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtCliente" style="color: rgb(236, 0, 140);">
+
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Servicio:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtServicio">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Ejecutivo:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtEjecutivo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Director:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtDirector">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Estado:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtEstado">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Moneda:</mat-label>
+                                        <input type="text" matInput readonly formControlName="txtMoneda">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Porcentaje de Resguardo General:</mat-label>
+                                        <input type="number" matInput formControlName="txtResguardo" min="0" max="100" placeholder="0.00">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+
+<!-- <pre>
+    Estado del formulario {{presupuestoForm.valid}}
+  <br />
+    Status: {{presupuestoForm.status}}
+  </pre>
+
+<pre>
+  {{ presupuestoForm.value | json }}
+  </pre> -->

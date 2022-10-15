@@ -1,0 +1,433 @@
+<div style="padding: 80px 0px 0px 0px; min-height: calc(100% - 123px);">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Consulta de Personal</h5>
+
+            <div class="fab-container">
+                <button [@tada]="{value: tadaMain}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="body-main" class="card-body">
+
+                <div class="row">
+                    <div id="dLeft" class="col-xl-6">
+                        <mat-card class="example-card ccLeft">
+                            <mat-card-header style="display: flow-root">
+                                <!-- <div mat-card-avatar style="background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');">
+                                </div> -->
+
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-sm-2" style="text-align: center;">
+                                        <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                    </div>
+
+                                    <div class="col-sm-10">
+                                        <mat-card-title style="margin-top: 15px;">{{fcNombres.value}}</mat-card-title>
+                                        <mat-card-subtitle>{{fcIdentidad.value}}</mat-card-subtitle>
+                                    </div>
+                                </div>
+                            </mat-card-header>
+
+                            <mat-card-content style="margin-top: 15px;">
+                                <div id="fgInfo" [formGroup]="fgInfo">
+                                    <div class="row">
+                                        <div class="col-sm" style="margin-top: 10px;">
+                                            <h6>Dirección:</h6>
+                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-4">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Departamento</mat-label>
+                                                <input type="text" matInput formControlName="cEntNamSecond">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-lg-4">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Provincia</mat-label>
+                                                <input type="text" matInput formControlName="cEntNamThird">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-lg-4">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Distrito</mat-label>
+                                                <input type="text" matInput formControlName="cEntNamFourth">
+                                            </mat-form-field>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-6">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Dirección</mat-label>
+                                                <input type="text" matInput formControlName="sDireccion">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Referencia</mat-label>
+                                                <input type="text" matInput formControlName="sReferencia">
+                                            </mat-form-field>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h6>Haberes:</h6>
+                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-6">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Banco</mat-label>
+                                                <input type="text" matInput formControlName="sBanco">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-lg-6">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>N° Cuenta</mat-label>
+                                                <input type="text" matInput formControlName="sNroCuenta">
+                                            </mat-form-field>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="col-xl-6">
+                        <mat-card class="example-card">
+                            <mat-card-header style="border-bottom-style: solid; border-bottom-width: 1px;">
+                                <div mat-card-avatar style="background-size: cover;">
+                                    <button mat-mini-fab style="outline: none;">
+                                        <mat-icon>work</mat-icon>
+                                    </button>
+                                </div>
+                                <mat-card-title style="margin-bottom: 5px;">Información Laboral</mat-card-title>
+                                <mat-card-subtitle>Activo</mat-card-subtitle>
+                            </mat-card-header>
+
+                            <mat-card-content class="mcRight">
+                                <mat-tab-group mat-align-tabs="center" id="mg-lab" [selectedIndex]="tabLab.value">
+
+                                    <!-- Página 1 -->
+                                    <mat-tab>
+                                        <div id="fgLab" [formGroup]="fgLab">
+
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 10px;">
+                                                    <h6>Datos:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-lg-6">
+
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Planilla</mat-label>
+                                                        <input type="text" matInput formControlName="sPlanilla">
+                                                    </mat-form-field>
+
+                                                </div>
+                                                <div class="col-lg-6">
+
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Fecha de ingreso</mat-label>
+                                                        <input formControlName="dFechIng" matInput [matDatepicker]="mdpFechIng">
+                                                        <mat-datepicker-toggle matSuffix [for]="mdpFechIng"></mat-datepicker-toggle>
+                                                        <mat-datepicker #mdpFechIng></mat-datepicker>
+                                                    </mat-form-field>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-lg-12">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Jefe inmediato</mat-label>
+                                                        <input type="text" matInput formControlName="sResp">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 0px;">
+                                                    <h6>Contrato:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-lg-6">
+
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Fecha de inicio</mat-label>
+                                                        <input formControlName="dFechIniCont" matInput [matDatepicker]="mdpFechIniCont">
+                                                        <mat-datepicker-toggle matSuffix [for]="mdpFechIniCont"></mat-datepicker-toggle>
+                                                        <mat-datepicker #mdpFechIniCont></mat-datepicker>
+                                                    </mat-form-field>
+
+                                                </div>
+                                                <div class="col-lg-6">
+
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Fecha de termino</mat-label>
+                                                        <input formControlName="dFechFinCont" matInput [matDatepicker]="mdpFechFinCont">
+                                                        <mat-datepicker-toggle matSuffix [for]="mdpFechFinCont"></mat-datepicker-toggle>
+                                                        <mat-datepicker #mdpFechFinCont></mat-datepicker>
+                                                    </mat-form-field>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <!-- Página 2 -->
+                                    <mat-tab>
+                                        <div id="fgOrg" [formGroup]="fgOrg">
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 10px;">
+                                                    <h6>Organización:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-lg-12">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Campaña / Centro de Costo</mat-label>
+                                                        <input type="text" matInput formControlName="sCamp">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Cliente / Dirección</mat-label>
+                                                        <input type="text" matInput formControlName="sCli">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Canal / Área</mat-label>
+                                                        <input type="text" matInput formControlName="sCanal">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+
+                                    <!-- Página 3 -->
+                                    <mat-tab>
+                                        <div id="fgCont" [formGroup]="fgCont">
+
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 10px;">
+                                                    <h6>Teléfonos:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Número personal</mat-label>
+                                                        <input type="text" matInput formControlName="sNumPer">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Número corporativo</mat-label>
+                                                        <input type="text" matInput formControlName="sNumEmp">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 10px;">
+                                                    <h6>Correo electrónico:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Correo personal</mat-label>
+                                                        <input type="text" matInput formControlName="sMailPer">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Correo corporativo</mat-label>
+                                                        <input type="text" matInput formControlName="sMailEmp">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <!-- Página 4 -->
+                                    <mat-tab *ngIf=divDocuments>
+                                        <div id="fgDoc">
+
+                                            <div class="row">
+                                                <div class="col-sm" style="margin-top: 10px;">
+                                                    <h6>Documentos:</h6>
+                                                    <hr style="margin-top: 0px; margin-bottom: 5px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="dListDoc">
+                                                <mat-selection-list class="mslDoc" [multiple]="false">
+                                                    <mat-list-option style="margin-top: 5px;" class="card" *ngFor="let item of aDocuments" [disabled]="disListDoc">
+                                                        <div class="row row-list">
+                                                            <button style="outline: none;" mat-icon-button color="accent" (click)="viewDoc(item)" [disabled]="item.dis">
+                                                                <mat-icon>visibility</mat-icon>
+                                                            </button>
+                                                            <a>{{item.sDesc}}</a>
+                                                        </div>
+                                                    </mat-list-option>
+                                                </mat-selection-list>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+
+                                </mat-tab-group>
+                            </mat-card-content>
+
+                            <mat-card-actions>
+                                <div class="form-row">
+                                    <div class="col-6">
+                                        <button mat-stroked-button color="accent" [disabled]="tabLab.value === 0" (click)="selectTab(0)">Anterior</button>
+                                    </div>
+                                    <div class="col-6" style="text-align: end;">
+                                        <button mat-stroked-button color="accent" [disabled]="tabLab.value === 3" (click)="selectTab(1)">Siguiente</button>
+                                    </div>
+                                </div>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="z-index: 1042" class="modal fade bd-example-modal-lg" id="ModalSearch" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ModalSearchTitle" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Cabecera -->
+            <h5 class="card-header">
+                Busqueda de personal
+                <button type="button" class="close" style="color: white !important; text-shadow: none !important; outline: none;" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </h5>
+
+            <!-- Cuerpo  -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm">
+                        <h6>Aplicar filtro por</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+                </div>
+
+                <div class="row" [formGroup]="fgSearch">
+                    <div class="col-lg-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Nombres o documento de identidad</mat-label>
+                            <input type="text" matInput formControlName="sNombres" autocomplete="off">
+                            <button style="outline: none;" mat-button *ngIf="getSearch.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getSearch.sNombres.patchValue('')">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm">
+                        <h6>Lista de personal</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+                </div>
+
+                <div id="searchDiv" class="mat-elevation-z8">
+                    <table mat-table [dataSource]="searchDS" style="width: 100%;">
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="action">
+                            <!-- <ng-container matColumnDef="action" sticky> -->
+                            <th mat-header-cell *matHeaderCellDef> Seleccionar </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="selectPerson(element)">
+                                    <mat-icon>touch_app</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCodPlla">
+                            <th mat-header-cell *matHeaderCellDef> Plla </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sTipo">
+                            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sTipo}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDocumento">
+                            <th mat-header-cell *matHeaderCellDef> Documento </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                <ngb-highlight [result]="element.sDocumento" [term]="getSearch.sNombres.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sNombres">
+                            <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                            <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                <ngb-highlight [result]="element.sNombres.trim()" [term]="getSearch.sNombres.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="searchDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: searchDC;"></tr>
+                    </table>
+                    <mat-paginator #searchP style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                </div>
+            </div>
+
+            <mat-progress-bar *ngIf="pbSearch" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+</div>

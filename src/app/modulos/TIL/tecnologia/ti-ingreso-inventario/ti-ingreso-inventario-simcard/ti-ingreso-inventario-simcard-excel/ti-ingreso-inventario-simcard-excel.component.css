@@ -1,0 +1,11 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}

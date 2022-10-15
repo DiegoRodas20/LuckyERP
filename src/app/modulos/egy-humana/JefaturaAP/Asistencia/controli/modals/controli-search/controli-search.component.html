@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h4> Búsqueda de personal:</h4>
+  <button class="close" (click)="fnCloseModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="form-row">
+    <div class="col-lg-6">
+      <mat-form-field>
+        <mat-label>Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event.target.value)" #input>
+        <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-12">
+      <div id="listaMobile" class="mat-elevation-z8 example-container">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+            <!-- #region Formación de rows dependiendo del tipo -->
+            <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+              [style.textAlign]="col.align">
+              <span *ngSwitchCase="null">
+                <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+              </span>
+              <span *ngSwitchCase="'titlecase'">
+                <ngb-highlight [result]="row[col.field] | titlecase" [term]="input.value"></ngb-highlight>
+              </span>
+              <span *ngSwitchCase="'accion'">
+                <button mat-stroked-button matTooltip="Registrar" matTooltipPosition="right" color="accent"
+                  (click)="showModal(row)">
+                  <mat-icon>playlist_add</mat-icon>
+                </button>
+              </span>
+            </td>
+            <!-- #endregion -->
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedcolumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedcolumns"></tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[5,10]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</div>

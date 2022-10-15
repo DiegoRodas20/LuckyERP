@@ -1,0 +1,37 @@
+<!-- <div class="fab-container">
+  <button mat-mini-fab class="fab-secondary" color="accent">
+      <i class="material-icons" matTooltip="Buscar" matTooltipPosition="left" (click)="fnGetOperaciones()">search</i>
+  </button>
+  <button mat-mini-fab class="fab-secondary" color="accent">
+      <i class="material-icons" matTooltip="Asignar" matTooltipPosition="left" (click)="fnOpenModal()">call_split</i>
+  </button>
+  <button mat-mini-fab class="fab-secondary" color="accent">
+      <i class="material-icons" matTooltip="Actualizar" matTooltipPosition="left">add</i>
+  </button>
+</div> -->
+
+<div style="padding-top: 80px;" class="col-md-10 offset-md-1">
+  <h3 class="card-header center-text-card" style="text-align: center;">Asignación de Factura</h3>
+	<div class="row"><br /></div>
+  <!-- <mat-card class="mb-3 title-card">Asignación de Factura</mat-card> -->
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="En base a transportes">
+      <app-factura-transporte-header
+        (sendTipoEnvio)="fnChangeDistribucion($event)"
+        (sendEmpresa)="fnGetSucursales($event)"
+        (sendOperaciones)="fnGetOperaciones()"
+        (sendOpenModal)="fnOpenModal()"
+        [empresas]="empresas"
+        [clientes]="clientes"
+        [sucursales]="sucursales">
+      </app-factura-transporte-header>
+      <br>
+      <app-factura-transporte-table
+        [operaciones]="operaciones">
+      </app-factura-transporte-table>
+    </mat-tab>
+    <mat-tab label="Directa">
+      <app-factura-directa-transporte></app-factura-directa-transporte>
+    </mat-tab>
+  </mat-tab-group>
+</div>

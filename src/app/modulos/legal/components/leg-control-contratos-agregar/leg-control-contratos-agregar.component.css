@@ -1,0 +1,73 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+}
+
+.margin-table {
+    margin-top: 10px;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 350px;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+#formulario {
+    margin: 0px !important;
+    padding: 15px;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+    color: black;
+}
+
+::ng-deep .mat-select-value {
+    color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+    color: black !important;
+}
+
+.mat-input-element:disabled,
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+    color: black !important;
+}
+
+ng-select-value {
+    color: black !important;
+}

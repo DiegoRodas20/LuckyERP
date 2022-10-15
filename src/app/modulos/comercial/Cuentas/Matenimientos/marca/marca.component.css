@@ -1,0 +1,34 @@
+
+.example-container {
+  height: 34rem;
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+} 
+
+mat-form-field{
+  width: 100%;
+}
+
+.clsColumnaCatShort {
+  width: 20%;
+}
+  
+.clsColumnaCatLarge {
+  width: 60%;
+}
+  
+.clsColumnaOpc {
+  width: 15%;
+}
+
+.clsColumnaLinea {
+  width: 35%;
+}
+
+.clsColumnaMarca {
+  width: 25%;
+}

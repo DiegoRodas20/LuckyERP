@@ -1,0 +1,587 @@
+<div class="col-md-10 offset-md-1 mt-4 clsprincipal">
+  <div>
+    <div class="text-center">
+      <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+        Solicitud de Cotización
+        <span *ngIf="urlParamTextil"> Textil</span>
+        <span *ngIf="urlParamGeneral"> General</span>
+      </h3>
+    </div>
+ 
+    <div class="row">
+      <div class="col-md-12 col-12">
+        <mat-card>
+          <div class="row m-auto">
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Solicitante</mat-label>
+                <input matInput type="text" [(ngModel)]="Solicitante.solicitante" readonly />
+              </mat-form-field>
+
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Nro de Presupuesto <span *ngIf="controlPresupuesto.value !== ''">{{selected}}</span>
+                </mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="controlPresupuesto"
+                  [matAutocomplete]="autoPresupuesto" [readonly]="estadoEnviado">
+                <mat-autocomplete #autoPresupuesto="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="presupuestoSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaPptos | async" [value]="option">
+                    {{option.descripFull}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+
+              <mat-form-field class="example-full-width">
+
+                <mat-label>
+                  Tipo de Cotización <span
+                    *ngIf="controlTipoCotizacion.value !== ''">{{solicitudCotizacion.nTipoOC}}</span>
+                </mat-label>
+
+                <input type="text" aria-label="Number" matInput [formControl]="controlTipoCotizacion"
+                  [matAutocomplete]="autoTipoCotizacion" required [readonly]="estadoEnviado">
+                <mat-autocomplete #autoTipoCotizacion="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="TipoOCSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterTipoOC | async" [value]="option">
+                    {{option.cEleNam}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlTipoCotizacion.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Observación
+                </mat-label>
+                <input matInput type="text" [formControl]="controlObservacion" />
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Año
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="solicitudCotizacion.nEj" readonly />
+              </mat-form-field>
+
+
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Código Cliente <span
+                    *ngIf="controlCliente.value !== ''">{{solicitudCotizacion.nIdClienteFK}}</span></mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="controlCliente"
+                  [matAutocomplete]="autoCliente" required [readonly]="controlClienteReadOnly || estadoEnviado">
+                <mat-autocomplete #autoCliente="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="clienteSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaClientes | async" [value]="option">
+                    {{option.razonSocial}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlCliente.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Lugar de entrega
+                </mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="controlLugarDeEntrega"
+                  [matAutocomplete]="autoLugarDeEntrega" required [readonly]="estadoEnviado">
+                <mat-autocomplete #autoLugarDeEntrega="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="lugarDeEntregaSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaLugaresEntrega | async" [value]="option">
+                    {{option.descrip}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlLugarDeEntrega.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Título
+                </mat-label>
+                <input matInput type="text" required [formControl]="controlTitulo" [readonly]="estadoEnviado" />
+                <mat-error *ngIf="controlTitulo.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Fecha de entrega máxima</mat-label>
+                <input matInput [min]="minDate" [matDatepicker]="picker" [(ngModel)]="fechaElegida"
+                  [formControl]="controlFechaEntrega" required readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="controlFechaEntrega.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Dirección
+                </mat-label>
+                <input matInput type="text" required [formControl]="controllugarEntregaOtro"
+                  [readonly]="editarDireccion==true" />
+                <mat-error *ngIf="controllugarEntregaOtro.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+  <!--  TABLA GENERAL O TEXTIL-->
+  <div style="padding-bottom: 5%; padding-top: 2rem; width: 100%">
+
+    <div style="padding-bottom: 1rem">
+      <span style="font-size: 12px">Por favor, use una fila para describir un artículo, agregue tantas filas como
+        artículos requiera.</span>
+    </div>
+
+
+    <div class="mat-elevation-z8 contenedor_tabla">
+      <!--General-->
+      <table mat-table [dataSource]="tempData" *ngIf="urlParamGeneral" style="width: 100%">
+        <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumns">
+
+          <th [attr.about]="cssTablaGeneral()" mat-header-cell *matHeaderCellDef style="padding-right: 0.5rem">
+            {{obtenerNombreColumna(colum)}}
+            <span>
+              <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer" *ngIf="colum === 'editable'"
+                (click)="InsertIntoArr()">add_circle</mat-icon>
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 0.5rem">
+
+            <div *ngIf="element.editable" style="padding-top: 1rem">
+
+              <div *ngIf="colum === 'sCiudad'">
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput [formControl]="ControlsCiudad(i)" required [matAutocomplete]="auto">
+                  <mat-autocomplete [displayWith]="getOptionTextCity" #auto="matAutocomplete" panelWidth="auto"
+                    autoActiveFirstOption (optionSelected)="CiudadPPSeleccionado($event, element)">
+                    <div *ngIf="solicitudCotizacion.nIdCentroCostoFK > 0">
+                      <mat-option *ngFor="let city of filterListaPptosCiudad[i] | async" [value]="city">
+                        {{city.sCod}} - {{city.sDesc}}
+                      </mat-option>
+                    </div>
+                    <div
+                      *ngIf="solicitudCotizacion.nIdCentroCostoFK == null || solicitudCotizacion.nIdCentroCostoFK== ''">
+                      <mat-option *ngFor="let city of filterListaCiudad[i] | async" [value]="city">
+                        {{city.sCod}} - {{city.sDesc}}
+                      </mat-option>
+                    </div>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="ControlsCiudad(i).invalid">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum === 'sProductoDescripcion'" class="d-flex justify-content-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Descripción</mat-label>
+                  <input matInput [(ngModel)]="element.sProductoDescripcion" required>
+                  <mat-error *ngIf="element.sProductoDescripcion === ''
+                  || element.sProductoDescripcion === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'uMedida'" class="d-flex justify-content-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Medida</mat-label>
+                  <input matInput [formControl]="ControlsMedida(i)" [matAutocomplete]="auto" required>
+                  <mat-autocomplete [displayWith]="getOptionTextMedida" #auto="matAutocomplete" panelWidth="auto"
+                    autoActiveFirstOption (optionSelected)="UdSeleccionado($event, element)">
+                    <mat-option *ngFor="let option of filterListaMedidas[i] | async" [value]="option">
+                      {{option.sCodUndMedida}} - {{option.sDescripcion}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="ControlsMedida(i).invalid">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum == 'sMarcaSugerida'" class="d-flex justify-content-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Marca</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sMarcaSugerida" required>
+                  <mat-error *ngIf="element.sMarcaSugerida === ''
+                  || element.sMarcaSugerida === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'nCantidad'">
+
+                <div class="d-flex justify-content-center">
+                  <div style="width: 50%">
+                    <mat-form-field class="style-form-field p-1 text-center">
+                      <mat-label>Cantidad</mat-label>
+                      <input matInput placeholder="" [(ngModel)]="element.nCantidad" type="number" min="1"
+                        (keyup.enter)="InsertarElemento(element)" required>
+                      <mat-error *ngIf="element.nCantidad === ''
+                  || element.nCantidad === null">.Obligatorio
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+              </div>
+
+              <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                <div class="btn-group">
+                  <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer"
+                    (click)="DeshabilitarEdicion(element)" color="accent">save
+                  </mat-icon>
+                  <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                    (click)="EliminarElemento(i)">delete
+                  </mat-icon>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div *ngIf="!element.editable" style="padding-top: 1rem">
+
+              <div *ngIf="colum === 'sCiudad'">
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput [(ngModel)]="element.sDesc" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sProductoDescripcion'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Descripción</mat-label>
+                  <input matInput [(ngModel)]="element.sProductoDescripcion" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'uMedida'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Medida</mat-label>
+                  <input matInput [(ngModel)]="element.sDescripcion" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sMarcaSugerida'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Marca</mat-label>
+                  <input matInput [(ngModel)]="element.sMarcaSugerida" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'nCantidad'" class="style-form-field p-1 text-center">
+
+                <div class="d-flex justify-content-center">
+                  <div style="width: 50%">
+                    <mat-form-field class="style-form-field p-1 text-center">
+                      <mat-label>Cantidad</mat-label>
+                      <input matInput [(ngModel)]="element.nCantidad" disabled>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                <div class="btn-group">
+                  <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer" (click)="HabilitarEdicion(element)"
+                    color="accent">edit
+                  </mat-icon>
+                  <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                    (click)="EliminarElemento(i)">delete
+                  </mat-icon>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!--Textil-->
+      <table mat-table style="width: 100%" [dataSource]="tempData2" *ngIf="urlParamTextil">
+        <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumns2">
+
+          <th [attr.about]="cssTablaTextil()" mat-header-cell *matHeaderCellDef style="padding-right: 2rem">
+            {{obtenerNombreColumna2(colum)}}
+            <span>
+              <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer" *ngIf="colum === 'editable'"
+                (click)="InsertIntoArr2()">add_circle</mat-icon>
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let element, let i = index" style="padding-right: 2rem">
+
+            <div *ngIf="element.editable" style="padding-top: 1rem">
+
+              <div *ngIf="colum === 'sCiudad'">
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput [formControl]="ControlsCiudad(i)" required [matAutocomplete]="auto">
+                  <mat-autocomplete [displayWith]="getOptionTextCit2" #auto="matAutocomplete" panelWidth="auto"
+                    autoActiveFirstOption (optionSelected)="CiudadPPSeleccionado($event, element)">
+                    <div *ngIf="solicitudCotizacion.nIdCentroCostoFK > 0">
+                      <mat-option *ngFor="let city of filterListaPptosCiudad[i] | async" [value]="city">
+                        {{city.sCod}} - {{city.sDesc}}
+                      </mat-option>
+                    </div>
+                    <div
+                      *ngIf="solicitudCotizacion.nIdCentroCostoFK == null || solicitudCotizacion.nIdCentroCostoFK== ''">
+                      <mat-option *ngFor="let city of filterListaCiudad[i] | async" [value]="city">
+                        {{city.sCod}} - {{city.sDesc}}
+                      </mat-option>
+                    </div>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="ControlsCiudad(i).invalid">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum === 'sProductoDescripcion'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Artículo</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sProductoDescripcion" required>
+                  <mat-error *ngIf="element.sProductoDescripcion === '' || element.sProductoDescripcion === null">
+                    .Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sColor'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Color</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sColor" required>
+                  <mat-error *ngIf="element.sColor === '' || element.sColor === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'sLogo'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Logo</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sLogo" required>
+                  <mat-error *ngIf="element.sLogo === '' || element.sLogo === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'sTipoTela'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Tela</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sTipoTela" required>
+                  <mat-error *ngIf="element.sTipoTela === '' || element.sTipoTela === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'sTalla'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Talla</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sTalla" required>
+                  <mat-error *ngIf="element.sTalla === '' || element.sTalla === null">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'nIdSexo'">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Sexo</mat-label>
+                  <input matInput [formControl]="ControlsSexo(i)" [matAutocomplete]="auto" required>
+                  <mat-autocomplete [displayWith]="getOptionTextSex" #auto="matAutocomplete" panelWidth="auto"
+                    autoActiveFirstOption (optionSelected)="SexoSeleccionado($event, element)">
+                    <mat-option *ngFor="let option of filterListaSexo[i] | async" [value]="option">
+                      {{option.cEleNam}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="ControlsSexo(i).invalid">.Obligatorio
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum == 'nCantidad'">
+
+                <div class="d-flex justify-content-center">
+                  <div style="width: 50%">
+                    <mat-form-field class="style-form-field p-1 text-center">
+                      <mat-label>Cantidad</mat-label>
+                      <input matInput placeholder="" [(ngModel)]="element.nCantidad" type="number" min="1"
+                        (keyup.enter)="InsertarElemento2(element)" required>
+                      <mat-error *ngIf="element.nCantidad === '' || element.nCantidad === null">.Obligatorio
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+              </div>
+
+              <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                <div class="btn-group">
+                  <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer"
+                    (click)="DeshabilitarEdicion(element)" color="accent">save
+                  </mat-icon>
+                  <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                    (click)="EliminarElemento2(i)">delete
+                  </mat-icon>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div *ngIf="!element.editable" style="padding-top: 1rem">
+
+              <div *ngIf="colum === 'sCiudad'" class="style-form-field p-1 text-left">
+
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sDesc" disabled>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum === 'sProductoDescripcion'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Artículo</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sProductoDescripcion" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sColor'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Color</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sColor" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sLogo'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Logo</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sLogo" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'sTipoTela'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Tela</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sTipoTela" disabled>
+                </mat-form-field>
+              </div>
+
+              <div *ngIf="colum === 'sTalla'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Talla</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sTalla" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum === 'nIdSexo'" class="style-form-field p-1 text-center">
+
+                <mat-form-field class="style-form-field p-1 text-center">
+                  <mat-label>Sexo</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="element.sSexo" disabled>
+                </mat-form-field>
+
+              </div>
+
+              <div *ngIf="colum == 'nCantidad'" class="style-form-field p-1 text-center">
+
+                <div class="d-flex justify-content-center">
+                  <div style="width: 50%">
+                    <mat-form-field class="style-form-field p-1 text-center">
+                      <mat-label>Cantidad</mat-label>
+                      <input matInput placeholder="" [(ngModel)]="element.nCantidad" disabled>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+              </div>
+
+              <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                <div class="btn-group">
+                  <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer" (click)="HabilitarEdicion(element)"
+                    color="accent">edit
+                  </mat-icon>
+                  <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                    (click)="EliminarElemento2(i)">delete
+                  </mat-icon>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+    <i class="material-icons" [@fabToggler]="{value: fabTogglerState}">add</i>
+  </button>
+  <div [@speedDialStagger]="buttons.length">
+    <button [matTooltip]="tapColumns(0)" mat-mini-fab class="fab-secondary" color="secondary">
+      <i class="material-icons" (click)="tap(0)">{{buttons[0].icon}}</i>
+    </button>
+    <button [matTooltip]="tapColumns(1)" mat-mini-fab class="fab-secondary" color="secondary">
+      <i class="material-icons" (click)="tap(1)">{{buttons[1].icon}}</i>
+    </button>
+  </div>
+</div>

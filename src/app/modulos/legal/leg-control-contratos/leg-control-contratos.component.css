@@ -1,0 +1,37 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+table {
+    width: 100%;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 350px;
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-selected,
+:host /deep/ .mat-step-header .mat-step-icon {
+    background-color: rgb(236, 0, 140);
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-state-error {
+    background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+}

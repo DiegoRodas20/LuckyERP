@@ -1,0 +1,75 @@
+<!-- Mostar Partida -->
+<div *ngIf="listar" style="padding-top: 30px;">
+
+    <div class="p-5">
+        <div class="mb-3 p-3" style="text-align: center;">
+            <mat-card class="title-card col-md-8 offset-md-2">
+                <h5>Grupo de Partidas</h5>
+            </mat-card>
+        </div>
+        <div class="col-md-8 offset-md-2">
+            <app-table-partida (addButtonAction)="addButtonActionTable($event)" [datos]="listaItems" [readOnly]="false">
+            </app-table-partida>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<!-- Agregar Partida -->
+<div *ngIf="!listar" class="container">
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngIf="abLista.length>0" mat-raised-button mat-mini-fab class="fab-secondary" color="white"
+                (click)="crearGrupo()">
+                <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+            </button>
+            <button *ngIf="abLista.length>0" mat-raised-button mat-mini-fab class="fab-secondary" color="white"
+                (click)="anadirPartidaDetalle()">
+                <i class="material-icons" matTooltip="Añadir Partida" matTooltipPosition="left">add</i>
+            </button>
+            <button *ngIf="abLista.length>0" mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="cancelar()">
+                <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">exit_to_app</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="margen">
+        <div class="col-md-12 ">
+            <div class="mb-3 p-3" style="text-align: center;">
+                <mat-card class="title-card">Nuevo Grupo Partida</mat-card>
+            </div>
+
+        </div>
+        <div class="justify-content-center justify-content-md-center justify-content-sm-center"
+            style="text-align-last: center;">
+            <form autocomplete="" [formGroup]="form">
+                <mat-form-field class="col-md-5 col-sm-10 col-10">
+                    <mat-label>Tipo de Grupo de Partida</mat-label>
+                    <mat-select formControlName="tipo">
+                        <mat-option>Indicar tipo de grupo</mat-option>
+                        <mat-option *ngFor="let item of listaTipoGrupoPartida" [value]="item.nEleCod">{{item.cEleNam}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+
+        </div>
+        <app-table-partida (nombreGrupo)="obtenerNombre($event)" (addButtonAction)="addButtonActionTable($event)"
+            (partidaSeleccionada)="eliminarPartidaDetalle($event)" [isDelete]="true" [datos]="listaPartidaDetalle"
+            [readOnly]="true"></app-table-partida>
+        <!-- <div class="row p-4 justify-content-center">
+            <button mat-raised-button color="primary" class="col-md-4" (click)="crearGrupo()"> Crear Grupo </button>
+            <div class="col-md-1"></div>
+            <button mat-raised-button color="warn" class="col-md-4" (click)="cancelar()"> Cerrar </button>
+        </div> -->
+
+    </div>
+</div>
+
+<!-- <button style="padding-top: 30px;" mat-raised-button color="warn" class="col-md-4" (click)="cancelar()"> Cerrar </button> -->

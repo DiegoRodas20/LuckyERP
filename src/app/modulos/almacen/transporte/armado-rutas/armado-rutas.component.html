@@ -1,0 +1,94 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="clsprincipal transporte">
+  <div class="col-md-10 offset-md-1">
+    <div class="card">
+      <h5 class="col-md-12 card-header"> Rutas Diarias </h5>
+      <div class="card-body">
+        <div class="form-group col-md-12">
+          <div class="row">
+            <div class="col-md-8 offset-md-3">
+              <div class="form-row">
+                <div class="col-sm-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Sucursal </mat-label>
+                    <mat-select [formControl]="formSucursal" (selectionChange)="fnListarRutas(true); input.value = ''">
+                      <mat-option *ngFor="let itm of listaSucursales" [value]="itm.nId">
+                        {{ itm.sDescripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Búsqueda </mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar Ruta" #input />
+                    <button *ngIf="input.value" matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+                <button mat-mini-fab class="fab-toggler" (click)="fnNuevoArmado()" matTooltip="Nueva Ruta">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button mat-mini-fab class="fab-toggler" (click)="verNotasAnuladas()" matTooltip="Ver Notas Anuladas">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="listaMobile" class="example-container mat-elevation-z8">
+          <table mat-table [dataSource]="dsRutas" matSort>
+            <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+
+              <!-- #region Designación de sort en header -->
+              <ng-template [ngIf]="col.sort" [ngIfElse]="withSort">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+              </ng-template>
+              <ng-template #withSort>
+                <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+              </ng-template>
+              <!-- #endregion -->
+
+              <!-- #region Formación de rows dependiendo del tipo -->
+              <td mat-cell *matCellDef="let row" [ngClass]="{'color_white': row.bLiquidado}" class='header_mobile'
+                id="{{col.header}}: ">
+                <span *ngSwitchCase="'accion'">
+                  <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+                    mat-stroked-button color="accent">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu" xPosition="after">
+                    <button mat-menu-item (click)="verDetalle(row.nIdGrupo)">
+                      <mat-icon color="accent">touch_app</mat-icon>
+                      <span>Ver Detalle</span>
+                    </button>
+                  </mat-menu>
+                </span>
+                <span *ngSwitchCase="null">
+                  <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+                </span>
+                <span *ngSwitchCase="'deci2'">
+                  <ngb-highlight [result]="row[col.field] | number :'1.2-2'" [term]="input.value"></ngb-highlight>
+                </span>
+                <span *ngSwitchCase="'deci6'">
+                  <ngb-highlight [result]="row[col.field] | number :'1.6-6'" [term]="input.value"></ngb-highlight>
+                </span>
+              </td>
+              <!-- #endregion -->
+
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

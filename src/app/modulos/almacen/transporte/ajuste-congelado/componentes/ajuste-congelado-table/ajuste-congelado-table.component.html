@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-12 mx-auto">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+      <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button aria-label="Clear"
+        (click)="fnClean()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</div>
+<div id="listaMobile" class="mat-elevation-z8">
+  <div class="example-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="colOpciones" sticky>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Opciones</th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Actualizar precio: '>
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+            mat-stroked-button color="accent">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="after">
+            <button mat-menu-item (click)="fnEditar(element)">
+              <mat-icon color="accent">edit</mat-icon>
+              <span>Actualizar precio</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sCiudad">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Ciudad </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ciudad: '>
+          <ngb-highlight [result]="element.sCiudad" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sFechaOperMov">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Traslado </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Traslado: '>
+          <ngb-highlight [result]="element.sFechaOperMov" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sCodTransporte">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Transporte </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Transporte: '>
+          <ngb-highlight [result]="element.sCodTransporte" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sNota">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nota Operaciones </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Nota Operaciones: '>
+          <ngb-highlight [result]="element.sNota" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sCliente">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cliente: '>
+          <ngb-highlight [result]="element.sCliente" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sCodAlmacen">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacén </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Almacén: '>
+          <ngb-highlight [result]="element.sCodAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sDestino">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Destino </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Destino: '>
+          <ngb-highlight [result]="element.sDestino" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nPeso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Peso </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Peso: '>
+          <ngb-highlight [result]="element.nPeso | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nVolumen">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Volumen </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Volumen: '>
+          <ngb-highlight [result]="element.nVolumen | number :'1.6-6'" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nPrecio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Precio: '>
+          <ngb-highlight [result]="element.nPrecio | number :'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sEstado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado: '>
+          <ngb-highlight [result]="element.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="100%">
+          No hay datos que coincidan con los filtros.
+        </td>
+      </tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+</div>

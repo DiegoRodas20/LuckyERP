@@ -1,0 +1,135 @@
+<!-- #region Spinner -->
+<ngx-spinner
+  name="gestionap_planning_modal"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- #endregion -->
+
+<!-- #region FB 
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="clickGrupoFb()">
+    <i class="material-icons" [@fabToggler]="{ value: animacionFb }">add</i>
+  </button>
+  <div [@speedDialStagger]="opcionesFb.length">
+    <button
+      *ngFor="let btn of opcionesFb; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickOpcionFb(ibtn)"
+      [disabled]="btn.disabled"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>-->
+<!-- #endregion -->
+
+<!-- #region HEADER-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    Visualización de asistencia: {{ capitalizeFirstLetter(sDireccion) }}
+  </h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="cerrarModal()"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<!-- #endregion -->
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-lg-6 divLocation">
+      <mat-accordion>
+        <!-- Locación -->
+        <mat-expansion-panel [expanded]="true" [disabled]="modoEscritorio">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Puntos de ubicación : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">map</mat-icon>
+          </mat-expansion-panel-header>
+
+          <agm-map
+            [latitude]="oDirection.lat"
+            [longitude]="oDirection.lng"
+            [scrollwheel]="false"
+            [streetViewControl]="false"
+            [zoom]="18"
+          >
+            <agm-marker
+              *ngIf="dDirection.lng === 0 && dDirection.lng === 0"
+              [latitude]="oDirection.lat"
+              [longitude]="oDirection.lng"
+            ></agm-marker>
+
+            <agm-direction
+              *ngIf="dDirection.lng !== 0 && dDirection.lng !== 0"
+              [origin]="oDirection"
+              [destination]="dDirection"
+              [travelMode]="'WALKING'"
+            ></agm-direction>
+          </agm-map>
+
+          <div>
+            <div
+              class="alert alert-primary"
+              role="alert"
+              style="margin-top: 5px; margin-bottom: 5px"
+            >
+              <mat-icon style="margin-right: 10px">trip_origin</mat-icon>
+              <b>A: Posicion de marcación</b>
+            </div>
+            <div class="alert alert-danger" role="alert">
+              <mat-icon style="margin-right: 10px">place</mat-icon
+              ><b> B: Destino</b>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6">
+      <mat-accordion>
+        <!-- Imagen -->
+        <mat-expansion-panel [expanded]="true" [disabled]="modoEscritorio">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Imagen sustento : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">wallpaper</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div class="col-lg-12 divFile">
+              <img
+                class="imgFile"
+                id="imgFile"
+                [src]="infoTiendaRuta.sFileSustento"
+              />
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>
+
+<mat-progress-bar
+  *ngIf="false"
+  color="accent"
+  mode="indeterminate"
+></mat-progress-bar>

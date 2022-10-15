@@ -1,0 +1,40 @@
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell, th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-cell:last-of-type, th.mat-header-cell:last-of-type {
+  padding: .25em .5em !important;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+  height: 400px;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  text-align: center !important;
+  background-color: rgb(51, 77, 110);
+  color: white;
+  font-size: 14px;
+}
+
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 25px;
+  text-align: center;
+}
+
+.mat-column-sCodArticulo {
+  text-align: center;
+}
+.mat-column-nUnidades {
+  text-align: right;
+}
+.mat-column-nPesoTotal {
+  text-align: right;
+}
+.mat-column-nVolumenTotal {
+  text-align: right;
+}

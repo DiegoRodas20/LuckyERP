@@ -1,0 +1,9 @@
+<div class="transporte">
+  <mat-card class="mb-1 title-card"> Validaciones</mat-card>
+  <mat-dialog-content>
+    <mat-list role="list" style="height: 300px;">
+      <mat-list-item *ngFor="let item of data.validaciones" role="listitem">N°{{ item.nId }} - {{item.sDescripcion}}
+      </mat-list-item>
+    </mat-list>
+  </mat-dialog-content>
+</div>

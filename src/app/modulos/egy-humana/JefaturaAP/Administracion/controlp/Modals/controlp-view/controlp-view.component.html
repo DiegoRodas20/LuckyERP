@@ -1,0 +1,1248 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabIcon]="tiView" [@fabToggler]="{ value: tsView }">{{ tabView === 0 ? tiView_dp :
+            tiView_pl }}</i>
+    </button>
+    <div [@speedDialStagger]="abView.length">
+        <button *ngFor="let btn of abView; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{ btn.tool }}" matTooltipPosition="left">{{ btn.icon }}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_view" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px">
+        Cargando información...
+    </p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Detalle del personal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row" style="margin-right: 0px; margin-left: 0px">
+        <mat-tab-group #mtg_view style="width: 100%" dynamicHeight [selectedIndex]="tabView" (selectedIndexChange)="changeIndex_View($event)">
+            <mat-tab label="Datos personales">
+                <div class="row" style="padding: 19px 20px 10px 15px">
+                    <!-- Left section -->
+                    <div class="col-xl-5 fdiv-dp" style="padding-left: 0px; padding-right: 15px">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Detalle :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px" />
+                            </div>
+                        </div>
+
+                        <div class="row fdiv-personal" style="padding: 5px 15px 5px 5px; direction: rtl; margin-left: 0px;">
+                            <mat-accordion style="direction: ltr; width: 100%">
+                                <!-- Datos -->
+                                <mat-expansion-panel [expanded]="tabView_dp.value === 0" (opened)="changeIndex_dp(0)" [disabled]="maView_dp > -1 && tabView_dp.value !== 0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Información : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_nombres | titlecase }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">face</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <div [formGroup]="fgView_datos" style="padding-bottom: 10px">
+                                        <div class="form-row">
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>N° Ficha</mat-label>
+                                                    <input type="text" matInput formControlName="T0_nIdPersonal" />
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-8">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Apellidos y nombres</mat-label>
+                                                    <input type="text" matInput formControlName="T0_sNombres" />
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+
+                                <!-- Documento de identidad -->
+                                <mat-expansion-panel (opened)="changeIndex_dp(1)" [disabled]="maView_dp > -1 && tabView_dp.value !== 1">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Documento de identidad :
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_doc.T3_sDocumento.value }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">fingerprint</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_doc" [formGroup]="fgView_doc" style="padding-bottom: 10px">
+                                        <div class="form-row">
+                                            <div class="col-lg-7">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Tipo de documento</mat-label>
+                                                    <mat-select formControlName="A3_nIdTipoDoc" (valueChange)="EnabledDoc($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoDoc" [value]="item">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_doc.A3_nIdTipoDoc.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-5">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>N° Documento</mat-label>
+                                                    <input type="text" matInput formControlName="T3_sDocumento" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="
+                              getView_doc.T3_sDocumento.hasError('required') ||
+                              getView_doc.T3_sDocumento.hasError('vString')
+                            ">. Obligatorio</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_doc.T3_sDocumento.hasError('minlength')
+                            ">. Longitud de caracteres incorrecto</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_doc.T3_sDocumento.hasError('pattern')
+                            ">. Caracteres incorrectos</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div *ngIf="getView_doc.vExiste.hasError('esIgual')" class="alert alert-danger" role="alert" style="margin-bottom: 0px !important">
+                                                El documento de identidad le pertenece a otro personal.
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+
+                                <!-- Direcciones -->
+                                <mat-expansion-panel (opened)="changeIndex_dp(2)" [disabled]="maView_dp > -1 && tabView_dp.value !== 2">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Domicilio : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_dom.T9_sDireccion.value }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">house</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_dom" [formGroup]="fgView_dom" style="padding-bottom: 10px">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-4">
+                                                <ng-select [items]="cboUbigeo1" appendTo="body" bindLabel="cEntNamSecond" bindValue="cEntCod" labelForId="state" formControlName="codUbigeo1" placeholder="Departamento" (change)="ChangeUbigeo($event, 2, 1)">
+                                                </ng-select>
+                                                <mat-error style="font-size: 12.5px" *ngIf="getView_dom.codUbigeo1.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <ng-select [items]="cboUbigeo2" appendTo="body" bindLabel="cEntNamThird" bindValue="cEntCod" formControlName="codUbigeo2" placeholder="Provincia" (change)="ChangeUbigeo($event, 3, 1)">
+                                                </ng-select>
+                                                <mat-error style="font-size: 12.5px" *ngIf="getView_dom.codUbigeo2.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <ng-select [searchable]="true" [items]="cboUbigeo3" appendTo="body" bindLabel="cEntNamFourth" bindValue="cEntCod" clearAllText="Limpiar" formControlName="T9_sIdUbigeo" placeholder="Distrito">
+                                                </ng-select>
+                                                <mat-error style="font-size: 12.5px" *ngIf="getView_dom.T9_sIdUbigeo.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Dirección</mat-label>
+                                                    <input type="text" matInput formControlName="T9_sDireccion" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="
+                              getView_dom.T9_sDireccion.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Referencia</mat-label>
+                                                    <input type="text" matInput formControlName="T9_sReferencia" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="
+                              getView_dom.T9_sReferencia.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+
+                                <!-- Periodo laboral -->
+                                <mat-expansion-panel (opened)="changeIndex_dp(3)" [disabled]="maView_dp > -1 && tabView_dp.value !== 3">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Periodo laboral : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{
+                                                getView_plab.T2_dFechIni.value | date: "dd/MM/yyyy"
+                                                }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">date_range</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_plab" [formGroup]="fgView_plab">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%" appDateFormat>
+                                                    <mat-label>Fecha inicio</mat-label>
+                                                    <input formControlName="T2_dFechIni" matInput [matDatepicker]="mdpViewPlab" [errorStateMatcher]="matcher" />
+                                                    <mat-datepicker-toggle matSuffix [for]="mdpViewPlab">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #mdpViewPlab></mat-datepicker>
+                                                    <mat-error *ngIf="
+                              getView_plab.T2_dFechIni.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Motivo de cese</mat-label>
+                                                    <mat-select formControlName="T2_nIdMotFin" (valueChange)="EnabledMotFin($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboMotivoC" [value]="item.nIdTipEle">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_plab.T2_nIdMotFin.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%" appDateFormat>
+                                                    <mat-label>Fecha término</mat-label>
+                                                    <input formControlName="T2_dFechFin" matInput [matDatepicker]="mdpViewPlab2" [errorStateMatcher]="matcher" />
+                                                    <mat-datepicker-toggle matSuffix [for]="mdpViewPlab2">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #mdpViewPlab2></mat-datepicker>
+                                                    <mat-error *ngIf="
+                              getView_plab.T2_dFechFin.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+
+                    <!-- Right section -->
+                    <div class="col-xl-7" style="padding-right: 0px; padding-left: 2px">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Histórico :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 0px" />
+                            </div>
+                        </div>
+
+                        <mat-tab-group id="mg-dp" [selectedIndex]="tabView_dp.value">
+                            <mat-tab label="Datos">
+                                <form autocomplete="off" id="fgView_info" [formGroup]="fgView_info" style="padding: 15px 10px 0px 10px">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Apellido Paterno</mat-label>
+                                                <input type="text" matInput formControlName="T1_sApePa" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_sApePa.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                                <mat-error *ngIf="getView_info.T1_sApePa.hasError('pattern')">. Caracteres incorrectos
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Apellido Materno</mat-label>
+                                                <input type="text" matInput formControlName="T1_sApeMa" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_sApeMa.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                                <mat-error *ngIf="getView_info.T1_sApeMa.hasError('pattern')">. Caracteres incorrectos
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Primer Nombre</mat-label>
+                                                <input type="text" matInput formControlName="T1_sPriNom" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_sPriNom.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                                <mat-error *ngIf="getView_info.T1_sPriNom.hasError('pattern')">. Caracteres incorrectos
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Segundo Nombre</mat-label>
+                                                <input type="text" matInput formControlName="T1_sSegNom" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_sSegNom.hasError('pattern')">. Caracteres incorrectos
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-4">
+                                            <mat-form-field style="width: 100%" appDateFormat>
+                                                <mat-label>Fecha Nacimiento</mat-label>
+                                                <input formControlName="T1_dFechNac" matInput [matDatepicker]="mdpViewInfo" [errorStateMatcher]="matcher" />
+                                                <mat-datepicker-toggle matSuffix [for]="mdpViewInfo">
+                                                </mat-datepicker-toggle>
+                                                <mat-datepicker #mdpViewInfo></mat-datepicker>
+                                                <mat-error *ngIf="getView_info.T1_dFechNac.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Género</mat-label>
+                                                <mat-select formControlName="T1_nIdSexo" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboGenero" [value]="item.nEleCod">
+                                                        {{ item.cEleNam }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getView_info.T1_nIdSexo.hasError('noSelect')">. Obligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Estado civil</mat-label>
+                                                <mat-select formControlName="T1_nIdEstCiv" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboEstadoCivil" [value]="item.nEleCod">
+                                                        {{ item.cEleNam }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getView_info.T1_nIdEstCiv.hasError('noSelect')">. Obligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label># Celular</mat-label>
+                                                <input type="text" matInput formControlName="T1_nTelMovil" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_nTelMovil.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                                <mat-error *ngIf="getView_info.T1_nTelMovil.hasError('pattern')">. # Celular inválido
+                                                </mat-error>
+                                                <mat-error *ngIf="
+                            getView_info.T1_nTelMovil.hasError('maxlength')
+                          ">. Lóngitud inválida</mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-lg-8">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Correo electrónico</mat-label>
+                                                <input type="text" matInput formControlName="T1_sCorreo" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getView_info.T1_sCorreo.hasError('required')">. Obligatorio
+                                                </mat-error>
+                                                <mat-error *ngIf="getView_info.T1_sCorreo.hasError('email')">. Correo inválido
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-6">
+                                            <ng-select [searchable]="true" [items]="aResponsable" bindLabel="sNombres" bindValue="nIdResp_" clearAllText="Limpiar" formControlName="T1_nIdResp" placeholder="Jefe inmediato">
+                                            </ng-select>
+                                            <mat-error style="font-size: 12.5px" *ngIf="fgView_info.controls.T1_nIdResp.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                        <div class="form-group col-lg-6">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Nacionalidad</mat-label>
+                                                <mat-select formControlName="T1_nIdNacion" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboNacion" [value]="item.nNatCode">
+                                                        {{ item.cNatDes }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getView_info.T1_nIdNacion.hasError('noSelect')">. Obligatorio
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-tab>
+
+                            <mat-tab label="Doc">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_doc mat-table [dataSource]="dsView_doc" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDesc">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        Tipo
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Tipo :">
+                                                        {{ element.sDesc | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDocumento">
+                                                    <th mat-header-cell *matHeaderCellDef>Documento</th>
+                                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Documento :">
+                                                        {{ element.sDocumento }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIni">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_doc"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_doc"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagDoc style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Dom">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_dom mat-table [dataSource]="dsView_dom" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDireccion">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        Direccion
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Direccion :">
+                                                        {{ element.sDireccion | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="departamento">
+                                                    <th mat-header-cell *matHeaderCellDef>Dpto.</th>
+                                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Departamento :">
+                                                        {{ element.departamento | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="provincia">
+                                                    <th mat-header-cell *matHeaderCellDef>Provincia</th>
+                                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Provincia :">
+                                                        {{ element.provincia | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="distrito">
+                                                    <th mat-header-cell *matHeaderCellDef>Distrito</th>
+                                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Distrito :">
+                                                        {{ element.distrito | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="noData">
+                                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="dcView_dom.length">
+                                                        No se encuentran registros.
+                                                    </mat-footer-cell>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_dom"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_dom"></tr>
+                                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="
+                            dsView_dom && dsView_dom.filteredData.length > 0
+                          "></mat-footer-row>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagDom style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Plab">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_plab mat-table [dataSource]="dsView_plab" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIniPlab">
+                                                    <th style="padding-left: 5px; text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="padding-left: 5px; text-align: center" mat-cell *matCellDef="let element" class="m-card-title" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDescPlab">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Motivo de cese
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Motivo de cese :">
+                                                        {{ element.sDesc | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_plab"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_plab"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagPlab style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Datos periodo laboral">
+                <div class="row" style="padding: 20px 20px 10px 15px">
+                    <!-- Left section -->
+                    <div class="col-xl-5 fdiv-dp" style="padding-left: 0px; padding-right: 15px">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Detalle :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px" />
+                            </div>
+                        </div>
+
+                        <div class="row fdiv-personal" style="padding: 5px 15px 5px 5px; direction: rtl; margin-left: 0px;">
+                            <mat-accordion style="direction: ltr; width: 100%">
+                                <!-- Planilla -->
+                                <mat-expansion-panel [expanded]="tabView_pl.value === 0" (opened)="changeIndex_pl(0)" [disabled]="maView_pl > -1 && tabView_pl.value !== 0">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Planilla : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_pllaDesc }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">groups</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_plla" [formGroup]="fgView_plla">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-12">
+                                                <mat-form-field style="width: 100%">
+                                                    <!-- <mat-label>Planilla</mat-label> -->
+                                                    <mat-select formControlName="T4_nIdPlla" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboPlanilla" [value]="item.nIdPlla">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getView_plla.T4_nIdPlla.hasError('noSelect')">. Obligatorio
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+
+                                <!-- Organización -->
+                                <mat-expansion-panel (opened)="changeIndex_pl(1)" [disabled]="maView_pl > -1 && tabView_pl.value !== 1">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Organización : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_orgDesc }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">work</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_org" [formGroup]="fgView_org" style="padding-bottom: 10px">
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6" [ngClass]="{'ng-select-required': getView_org.T12_nIdDireccion.hasError('required')}">
+                                                <ng-select [items]="cboDireccion" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdDireccion" placeholder="Dirección" (change)="ChangeDireccion($event)">
+                                                </ng-select>
+                                                <mat-error *ngIf="getView_org.T12_nIdDireccion.hasError('required')">. Obligatorio</mat-error>
+                                            </div>
+
+                                            <div class="col-lg-6" [ngClass]="{'ng-select-required': getView_org.T12_nIdArea.hasError('required')}">
+                                                <ng-select [items]="cboArea" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdArea" placeholder="Area">
+                                                </ng-select>
+                                                <mat-error *ngIf="getView_org.T12_nIdArea.hasError('required')">. Obligatorio</mat-error>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6" [ngClass]="{'ng-select-required': getView_org.T12_nIdCargo.hasError('required')}">
+                                                <ng-select [items]="cboCargo" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdCargo" placeholder="Cargo" (change)="ChangeCargo($event)">
+                                                </ng-select>
+                                                <mat-error *ngIf="getView_org.T12_nIdCargo.hasError('required')">. Obligatorio</mat-error>
+                                            </div>
+
+                                            <div class="col-lg-6" [ngClass]="{'ng-select-required': getView_org.T12_nIdPuesto.hasError('required')}">
+                                                <ng-select [items]="cboPuesto" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdPuesto" placeholder="Puesto" (change)="ChangePuesto($event)">
+                                                </ng-select>
+                                                <mat-error *ngIf="getView_org.T12_nIdPuesto.hasError('required')">. Obligatorio</mat-error>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-lg-12">
+                                                <ng-select [items]="cboEspecialidad" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdEspecialidad" placeholder="Especialidad">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </mat-expansion-panel>
+
+                                <!-- Sistema pensionario -->
+                                <mat-expansion-panel (opened)="changeIndex_pl(3)" [disabled]="maView_pl > -1 && tabView_pl.value !== 3">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Sistema pensionario : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_spDesc }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">location_city</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_sp" [formGroup]="fgView_sp">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Tipo</mat-label>
+                                                    <mat-select formControlName="tipoSisPen" (valueChange)="ChangeAFP($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoSP" [value]="item.nEleCod">
+                                                            {{ item.cEleNam }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getView_sp.tipoSisPen.hasError('noSelect')">. Obligatorio
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>AFP</mat-label>
+                                                    <mat-select formControlName="A6_nIdRegPen" (valueChange)="EnabledCuspp($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboAFP" [value]="item">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getView_sp.A6_nIdRegPen.hasError('noSelect')">. Obligatorio
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Código único</mat-label>
+                                                    <input type="text" matInput formControlName="T6_sCuspp" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="getView_sp.T6_sCuspp.hasError('vCuspp')">. Obligatorio
+                                                    </mat-error>
+                                                    <mat-error *ngIf="getView_sp.T6_sCuspp.hasError('maxlength')">. Lóngitud inválida</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+
+                                <!-- Banco -->
+                                <mat-expansion-panel (opened)="changeIndex_pl(4)" [disabled]="maView_pl > -1 && tabView_pl.value !== 4">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Banco : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_bancoDesc }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">account_balance</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_banco" [formGroup]="fgView_banco">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Tipo</mat-label>
+                                                    <mat-select formControlName="T8_nIdTipoCta" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoCuenta" [value]="item.nIdTipEle">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Banco</mat-label>
+                                                    <mat-select formControlName="A8_nIdBanco" (valueChange)="EnabledBanco($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboBanco" [value]="item">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_banco.A8_nIdBanco.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-8">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>N° Cuenta</mat-label>
+                                                    <input type="text" matInput formControlName="T8_sNroCuenta" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sNroCuenta.hasError('vString')
+                            ">. vString</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sNroCuenta.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sNroCuenta.hasError('minlength')
+                            ">. Longitud de caracteres incorrecto</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Moneda</mat-label>
+                                                    <mat-select formControlName="T8_nIdMoneda" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboMoneda" [value]="item.nIdTipEle">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_nIdMoneda.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-8">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Tipo de documento</mat-label>
+                                                    <mat-select formControlName="A8_nIdTipoDoc" (valueChange)="EnabledBancoDoc($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoDoc" [value]="item">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_banco.A8_nIdTipoDoc.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>N° Documento</mat-label>
+                                                    <input type="text" matInput formControlName="T8_sDocumento" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sDocumento.hasError('vString')
+                            ">. vString</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sDocumento.hasError('required')
+                            ">. Obligatorio</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sDocumento.hasError('minlength')
+                            ">. Longitud de caracteres incorrecto</mat-error>
+                                                    <mat-error *ngIf="
+                              getView_banco.T8_sDocumento.hasError('pattern')
+                            ">. Caracteres incorrectos</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+
+                                <!-- Remuneracion -->
+                                <mat-expansion-panel (opened)="changeIndex_pl(5)" [disabled]="maView_pl > -1 && tabView_pl.value !== 5">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Salario : </mat-panel-title>
+                                        <mat-panel-description>
+                                            <a>{{ getView_remDesc }}</a>
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">monetization_on</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" id="fgView_rem" [formGroup]="fgView_rem">
+                                        <div class="form-row">
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Tipo</mat-label>
+                                                    <mat-select formControlName="A7_nTipoSalario" (valueChange)="EnabledMonto($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoSalario" [value]="item">
+                                                            {{ item.sDesc }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="
+                              getView_rem.A7_nTipoSalario.hasError('noSelect')
+                            ">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Monto</mat-label>
+                                                    <span matPrefix>S/ &nbsp;</span>
+                                                    <input type="number" matInput formControlName="T7_nMonto" [errorStateMatcher]="matcher" />
+                                                    <mat-error *ngIf="getView_rem.T7_nMonto.hasError('vMonto')">. Obligatorio
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+
+                    <!-- Right section -->
+                    <div class="col-xl-7" style="padding-right: 0px; padding-left: 2px">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Histórico :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 0px" />
+                            </div>
+                        </div>
+
+                        <mat-tab-group id="mg-pl" [selectedIndex]="tabView_pl.value" (selectedIndexChange)="tabView_pl.setValue($event)">
+                            <mat-tab label="Planilla">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_plla mat-table [dataSource]="dsView_plla" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDesc">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        Planilla
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Planilla :">
+                                                        {{ element.sDesc | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIni">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_plla"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_plla"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagPlla style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Organización">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div id="dTableOrg">
+                                            <table #tView_org mat-table [dataSource]="dsView_org" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>N°</th>
+                                                    <td style="text-align: right;" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">{{ i + 1 }}</button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="Column_One">
+                                                    <th mat-header-cell *matHeaderCellDef></th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label class="principal">  Dirección : {{ element.sDireccion | titlecase }} </label>
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label class="principal">  Área : {{ element.sArea | titlecase }} </label>
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label class="principal">  Cargo : {{ element.sCargo | titlecase }} </label>
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label class="principal">  Puesto : {{ element.sPuesto | titlecase }} </label>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="Column_Two">
+                                                    <th mat-header-cell *matHeaderCellDef></th>
+                                                    <td mat-cell *matCellDef="let element" style="vertical-align: top;">
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label>  Especialidad : {{ element.sEspecialidad | titlecase }} </label>
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label>  Inicio : {{ element.dFechIni | date: "dd/MM/yyyy" }} </label>
+                                                        <br style="display:block;line-height:5px;">
+                                                        <label>  Termino : {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }} </label>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="noData">
+                                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="dcView_org.length">
+                                                        No se encuentran registros.
+                                                    </mat-footer-cell>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_org"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_org"></tr>
+                                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dsView_org && this.dsView_org.filteredData.length > 0"></mat-footer-row>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagOrg style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Cargo">
+                            </mat-tab>
+
+                            <mat-tab label="Sistema Pensionario">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_sp mat-table [dataSource]="dsView_sp" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDesc">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        AFP
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="AFP :">
+                                                        {{ element.sDesc | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sCuspp">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        CUSPP
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-sub-title" data-label="Código único sistema pensionario :">
+                                                        {{ element.sCuspp }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIni">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_sp"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_sp"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagSp style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Banco">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_banco mat-table [dataSource]="dsView_banco" style="width: 100%">
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element; let i = index">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            {{ i + 1 }}
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDescBanco">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        Banco
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Banco :">
+                                                        {{ element.sDescBanco | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sNroCuenta">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N° Cuenta
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="N° Cuenta :">
+                                                        {{ element.sNroCuenta }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIni">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="noData">
+                                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="dcView_banco.length">
+                                                        No se encuentran registros.
+                                                    </mat-footer-cell>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_banco"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_banco"></tr>
+                                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="
+                            dsView_banco && dsView_banco.filteredData.length > 0
+                          "></mat-footer-row>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagBanco style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Salario">
+                                <div class="row" style="padding-left: 5px; padding-right: 5px">
+                                    <div class="col-lg-12">
+                                        <div class="melevation">
+                                            <table #tView_rem mat-table [dataSource]="dsView_rem" style="width: 100%" multiTemplateDataRows>
+                                                <ng-container matColumnDef="action">
+                                                    <th style="text-align: center; padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        N°
+                                                    </th>
+                                                    <td style="text-align: center; padding-left: 5px" mat-cell *matCellDef="let element">
+                                                        <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnSelect(element)">
+                                                            <mat-icon>format_list_numbered</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDesc">
+                                                    <th style="padding-left: 5px" mat-header-cell *matHeaderCellDef>
+                                                        Tipo
+                                                    </th>
+                                                    <td style="padding-left: 5px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Tipo :">
+                                                        {{ element.sDesc | titlecase }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="nMonto">
+                                                    <th mat-header-cell *matHeaderCellDef>
+                                                        Monto ( S/ )
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Monto ( S/ ) :">
+                                                        {{ element.nMonto * 1 | number: "1.2-2" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechIni">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Inicio
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Inicio :">
+                                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="dFechFin">
+                                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                        Termino
+                                                    </th>
+                                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                                        {{ element.dFechFin === null ? "-" : (element.dFechFin | date: "dd/MM/yyyy") }}
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="expandedSalario">
+                                                    <td mat-cell *matCellDef="let element" [attr.colspan]="dcView_rem.length" style="padding-left: 0px; padding-right: 0px">
+                                                        <div style="overflow: hidden" [@detailExpand]="
+                                element == expandedElement
+                                  ? 'expanded'
+                                  : 'collapsed'
+                              ">
+                                                            <div class="div_expanded" [formGroup]="
+                                  getExpanded(element.nIdPlRem)._FormGroup
+                                ">
+                                                                <table *ngIf="getExpanded(element.nIdPlRem).cant > 0" #mt_Expanded mat-table [dataSource]="
+                                    getExpanded(element.nIdPlRem)._DataSource
+                                  " style="width: 100%">
+                                                                    <ng-container matColumnDef="sDesc">
+                                                                        <th mat-header-cell *matHeaderCellDef>
+                                                                            Concepto
+                                                                        </th>
+                                                                        <td style="font-size: 20px" mat-cell *matCellDef="let element" class="m-card-title" data-label="Tipo :">
+                                                                            {{ element.sDesc }}
+                                                                        </td>
+                                                                    </ng-container>
+
+                                                                    <ng-container matColumnDef="nImporte">
+                                                                        <th mat-header-cell *matHeaderCellDef>
+                                                                            Importe ( S/ )
+                                                                        </th>
+                                                                        <td style="text-align: right; font-size: 20px" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Importe ( S/ ) : ">
+                                                                            {{ element.nImporte * 1 | number: "1.2-2" }}
+                                                                        </td>
+                                                                    </ng-container>
+
+                                                                    <tr mat-header-row *matHeaderRowDef="dcView_conc">
+                                                                    </tr>
+                                                                    <tr mat-row *matRowDef="let row; columns: dcView_conc"></tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="dcView_rem"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: dcView_rem" (click)="
+                            expandedElement =
+                              expandedElement === row ? null : row
+                          "></tr>
+                                                <tr mat-row *matRowDef="let row; columns: ['expandedSalario']" [class.example-expanded-row]="expandedElement === row" style="height: 0px; border-top-style: none"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagRem style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <input id="uploadFile" type="file" accept="application/pdf" (change)="uploadFile($event)" style="display: none" />
+    <mat-progress-bar *ngIf="pbView" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

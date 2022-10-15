@@ -1,0 +1,99 @@
+<h5 mat-dialog-title class="card-header">
+    Activos: {{this.data.sNombreCompleto}}
+    <button class="close button-modal-lucky" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Buscar activo:</mat-label>
+                <input type="text" matInput [formControl]="txtFiltroActivo" (input)="fnFiltrarActivo()">
+                <button style="outline: none;" mat-button *ngIf="txtFiltroActivo.value" matSuffix mat-icon-button
+                    aria-label="Clear" (click)="this.txtFiltroActivo.setValue(''); this.fnFiltrarActivo();">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-12">
+            <!--Mat Table Activos-->
+            <div id="listaMobile" class="mat-elevation-z8 ">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSourceActivo" #sortActivo="matSort" matSort>
+
+                        <ng-container matColumnDef="opcion" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            </th>
+                            <td data-label='Ver detalle: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <button mat-stroked-button color="accent" matTooltip="Ver detalle"
+                                    (click)="fnVerDetalleActivo(row);">
+                                    <mat-icon>touch_app</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sTipoActivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Tipo Activo
+                            </th>
+                            <td data-label='Tipo Activo: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sTipoActivo" [term]="txtFiltroActivo.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sActivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Activo
+                            </th>
+                            <td data-label='Activo: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sActivo" [term]="txtFiltroActivo.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sArticulo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Descripción
+                            </th>
+                            <td data-label='Descripción: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sArticulo" [term]="txtFiltroActivo.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dFechaEntrega">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Fecha Asignación
+                            </th>
+                            <td data-label='Fecha Asignación: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.dFechaEntrega | date:'dd/MM/yyyy'"
+                                    [term]="txtFiltroActivo.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEstado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Estado
+                            </th>
+                            <td data-label='Estado: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sEstado" [term]="txtFiltroActivo.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsActivo; sticky: true">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsActivo;">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator #paginatorActivo [pageSizeOptions]="[5,10,20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

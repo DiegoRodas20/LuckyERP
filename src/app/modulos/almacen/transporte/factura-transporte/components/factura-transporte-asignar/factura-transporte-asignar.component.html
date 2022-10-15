@@ -1,0 +1,72 @@
+<div class="col-md-10 offset-md-1">
+  <mat-card class="mb-3 title-card">{{title}}</mat-card>
+  <div mat-dialog-content>
+    <mat-card>
+      <form [formGroup]="form" autocomplete="off">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-12">
+            <ng-select appendTo="body" [clearable]="false" formControlName="nIdProveedor" placeholder="Proveedor"
+              class="pink">
+              <ng-option *ngFor="let proveedor of data.proveedores" [value]="proveedor.nId">
+                {{proveedor.sDescripcion}}
+              </ng-option>
+            </ng-select>
+            <mat-error class="error-select" *ngIf="nIdProveedorError">{{ nIdProveedorError }}</mat-error>
+          </div>
+
+          <div class="col-lg-3 col-md-4 col-12">
+            <mat-form-field>
+              <mat-label>Nro. Factura</mat-label>
+              <input matInput formControlName="sFactura" [maxlength]="longFactura">
+              <mat-error *ngIf="sFacturaError">{{ sFacturaError }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12">
+            <mat-form-field>
+              <mat-label>Fecha de emisión</mat-label>
+              <input matInput (click)="picker.open()" readonly [matDatepicker]="picker" formControlName="dFechaEmision">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker [disabled]="isGenerated"></mat-datepicker>
+              <mat-error *ngIf="dFechaEmisionError">{{ dFechaEmisionError }}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2 col-md-4 col-12">
+            <mat-form-field>
+              <mat-label>Precio Total</mat-label>
+              <input matInput [value]="data?.nPrecio" readonly>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-12">
+            <mat-form-field>
+              <mat-label>Empresa</mat-label>
+              <input matInput [value]="data?.sEmpresa" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Fs generada</mat-label>
+              <input matInput [value]="fsGenerada" class="pink" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-1 col-md-3 col-12"></div>
+
+          <div class="col-lg-2 col-md-4 col-12">
+            <button mat-mini-fab color="accent" (click)="fnGenerar()" matTooltip="Generar" [disabled]="isGenerated">
+              <mat-icon>save</mat-icon>
+            </button>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-12">
+            <button style="margin-right: 5px;" mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+              matTooltip="Salir" color="warn" matDialogClose>
+              <mat-icon>exit_to_app</mat-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

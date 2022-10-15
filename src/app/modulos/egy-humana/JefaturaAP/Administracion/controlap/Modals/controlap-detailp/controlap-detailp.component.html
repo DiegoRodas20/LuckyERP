@@ -1,0 +1,312 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsDetail}">add</i>
+    </button>
+    <div [@speedDialStagger]="abDetail.length">
+        <button *ngFor="let btn of abDetail; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_detail" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Detalle del personal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeDetail()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+    <div class="row">
+
+        <div id="dLeftDetail" class="col-lg-6">
+            <mat-accordion #maDetail="matAccordion">
+                <!-- Información personal -->
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del personal :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+
+                        <div class="col-lg-3 divAvatar">
+                            <a>
+                                <span class="imgBadge">{{getDetail.sCodPlla.value}}</span>
+                                <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                            </a>
+                        </div>
+
+                        <div id="fgDetail" [formGroup]="fgDetail" class="col-lg-9">
+
+                            <div class="form-row">
+
+                                <div class="col-lg-8">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo</mat-label>
+                                        <input type="text" matInput formControlName="sTipo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>N° Documento</mat-label>
+                                        <input type="text" matInput formControlName="sDocumento">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Apellidos y nombres</mat-label>
+                                        <input type="text" matInput formControlName="sNombres">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Ciudad</mat-label>
+                                        <input type="text" matInput formControlName="sCiudad">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha ingreso</mat-label>
+                                        <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechIni></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha término</mat-label>
+                                        <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechFin></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
+        <div id="dRigthDetail" class="icard melevation col-lg" style="margin-right: 15px;">
+
+            <div class="row" style="margin-left: 0px;">
+                <h6>Aplicar filtro por :</h6>
+                <hr style="margin-top: 0px; margin-bottom: 10px;">
+            </div>
+
+            <form autocomplete="off" id="fgFilter" [formGroup]="fgFilter">
+
+                <div class="form-row">
+
+                    <div class="col-lg-6">
+                        <mat-form-field style="width: 100%;" appYearMonthFormat>
+                            <mat-label>Fecha Devengue</mat-label>
+                            <input matInput [matDatepicker]="dFechDevengue" formControlName="dFechDevengue">
+                            <mat-datepicker-toggle matSuffix [for]="dFechDevengue"></mat-datepicker-toggle>
+                            <mat-datepicker #dFechDevengue startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFechDevengue)">
+                            </mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Modo</mat-label>
+                            <mat-select formControlName="nIdModo" (valueChange)="ChangeModo($event)">
+                                <mat-option *ngFor="let item of cboModo" [value]="item.nEleCod">
+                                    {{item.cEleNam}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="col-lg-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Motivo</mat-label>
+                            <mat-select formControlName="nIdMotivo">
+                                <mat-option>--</mat-option>
+                                <mat-option *ngFor="let item of cboMotivo" [value]="item.nIdPC">
+                                    {{item.sDesc}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Respuesta</mat-label>
+                            <mat-select formControlName="nIdRespuesta">
+                                <mat-option>--</mat-option>
+                                <mat-option *ngFor="let item of cboRespuesta" [value]="item.nIdPC">
+                                    {{item.sDesc}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Usuario</mat-label>
+                            <input type="text" (ngModelChange)="updatedVal($event)" matInput formControlName="sRegUser" [matAutocomplete]="sRegUser" class="titlecase">
+
+                            <mat-autocomplete #sRegUser="matAutocomplete" [displayWith]="displayUsuario" (optionSelected)="osUsuario($event)">
+                                <mat-option [ngClass]="{'hide-autocomplete': !saUsuario}" *ngFor="let option of foUsuario | async" [value]="option">
+                                    {{option.sRegUser | titlecase}}
+                                </mat-option>
+                            </mat-autocomplete>
+
+                            <button style="outline: none;" mat-button *ngIf="getFilter.sRegUser.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sRegUser.patchValue('')">
+                                <mat-icon>close</mat-icon>
+                            </button>
+
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-sm">
+            <h6>Histórico de contactaciones :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 20px;">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="dTableDetail" class="melevation">
+                <table mat-table [dataSource]="DetailDS" style="width: 100%;" multiTemplateDataRows>
+
+                    <!-- Devengue Column -->
+                    <ng-container matColumnDef="dFechDevengue">
+                        <th mat-header-cell *matHeaderCellDef> Devengue </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha devengue :'> {{ MomentDate(element.dFechDevengue) }} </td>
+                    </ng-container>
+
+                    <!-- Modo Column -->
+                    <ng-container matColumnDef="sModo">
+                        <th mat-header-cell *matHeaderCellDef> Modo </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Modo :'> {{element.sModo}} </td>
+                    </ng-container>
+
+                    <!-- Motivo Column -->
+                    <ng-container matColumnDef="sMotivo">
+                        <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Motivo :'> {{element.sMotivo}} </td>
+                    </ng-container>
+
+                    <!-- Respuesta Column -->
+                    <ng-container matColumnDef="sRespuesta">
+                        <th mat-header-cell *matHeaderCellDef> Respuesta </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Respuesta :'> {{element.sRespuesta}} </td>
+                    </ng-container>
+
+                    <!-- Usuario Column -->
+                    <ng-container matColumnDef="sRegUser">
+                        <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Usuario :'> {{element.sRegUser}} </td>
+                    </ng-container>
+
+                    <!-- Fecha y hora Column -->
+                    <ng-container matColumnDef="dtReg">
+                        <th mat-header-cell *matHeaderCellDef> Fecha y hora </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha y hora :'> {{element.dtReg | date:"dd/MM/yyyy hh:mm:ss a"}} </td>
+                    </ng-container>
+
+                    <!-- More Column -->
+                    <ng-container matColumnDef="more">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element; let row">
+                            <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;" (click)="expandedMore = (expandedMore === row) ? null : row">expand_more</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- More Expanded -->
+                    <ng-container matColumnDef="expanded_More">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="DetailDC.length">
+                            <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                <div class="row" style="padding: 10px 10px 0px 10px">
+
+                                    <div class="col-lg-12" style="padding-left: 5px;">
+
+                                        <!-- Observacion -->
+                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                            <h6>Observación:</h6>
+                                            <hr style="margin-top: 0px; margin-bottom: 0px;">
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <textarea matInput [value]="element.sObservacion" style="max-height: 50px; min-height: 50px;" disabled></textarea>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="noData">
+                        <mat-footer-cell *matFooterCellDef [attr.colspan]="DetailDC.length">
+                            No se encuentran registros.
+                        </mat-footer-cell>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="DetailDC; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: DetailDC;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                    <mat-footer-row *matFooterRowDef="['noData']" [hidden]="DetailDS && this.DetailDS.filteredData.length > 0"></mat-footer-row>
+                </table>
+            </div>
+            <mat-paginator #pagDetail style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbDetail" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

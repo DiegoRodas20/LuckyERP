@@ -1,0 +1,60 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">{{sTitulo}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form class="row" [formGroup]="formMatriz">
+            <div class="col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false"
+                    formControlName="cboTipoDispositivo" placeholder="Tipo Dispositivo" required>
+                    <ng-option *ngFor="let vTipo of lTipoDispositivo" [value]="vTipo.elementoId">
+                        {{vTipo.nombre}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboTipoDispositivoError">{{ cboTipoDispositivoError }}</mat-error>
+            </div>
+
+            <div class="col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false"
+                    formControlName="cboDispositivoParte" placeholder="Dispositivo Parte" required>
+                    <ng-option *ngFor="let vParte of lTipoDispositivo" [value]="vParte.elementoId">
+                        {{vParte.nombre}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboDispositivoParteError">{{ cboDispositivoParteError }}</mat-error>
+            </div>
+
+            <div class="form-group col-md-3 d-flex align-items-center">
+                <mat-slide-toggle formControlName="stOpcional">¿Es opcional?</mat-slide-toggle>
+            </div>
+
+            <div class="form-group col-md-3 d-flex align-items-center">
+                <mat-slide-toggle formControlName="stDescuento">¿Aplica Descuento?</mat-slide-toggle>
+            </div>
+
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <mat-select formControlName="cboEstado">
+                        <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.estado">
+                            {{vEstado.sDescripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="cboEstadoError">{{ cboEstadoError }}</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,53 @@
+<div id="print-reporte">
+
+    <div style="display: grid; grid-template-columns: 30% 70%; grid-gap: 15px;">
+        <div style="grid-row: 1;">
+            <img src="/assets/img/{{vEmpresaActual.nIdEmp}}.png" width="150px" height="50px"><br>
+            <p style="text-align: center;"><strong>{{vEmpresaActual.sDespEmp}}</strong> <br></p>
+        </div>
+        <div style="grid-row: 1; text-align: left; align-items: flex-start;">
+            <h2 style="text-align: left;"><strong>Reporte consolidado del picking del: {{sFechaPicking}}</strong>
+            </h2>
+        </div>
+
+    </div>
+    <br>
+
+    <div style="width: 100%; border-bottom: 2px solid rgb(0, 0, 0); ;">
+        <br>
+    </div>
+    <p>
+        {{sGuias}}
+    </p>
+    <table style="border: 1px solid black;width:100%">
+        <thead>
+            <tr>
+                <th style="padding: 5px;font-weight: normal;background-color: slategray;"><strong>Codigo:</strong>
+                </th>
+                <th style="padding: 5px;font-weight: normal;background-color: slategray;"><strong>Artículo:</strong>
+                </th>
+                <th style="padding: 5px;font-weight: normal;background-color: slategray;"><strong>F.
+                        Vence:</strong></th>
+                <th style="padding: 5px;font-weight: normal;background-color: slategray;">
+                    <strong>Ubicación:</strong>
+                </th>
+                <th style="padding: 5px;font-weight: normal;background-color: slategray;"><strong>Cantidad:</strong>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let vArticulo of lArticuloPicking">
+                <td style="padding: 5px;font-weight: normal;">{{ vArticulo.sCodArticulo }}</td>
+                <td style="padding: 5px;font-weight: normal;">{{ vArticulo.sArticulo }}</td>
+                <td style="padding: 5px;font-weight: normal;">{{ vArticulo.sFechaExpira }}</td>
+                <td style="padding: 5px;font-weight: normal;">{{ vArticulo.sUbicacion }}</td>
+                <td style="padding: 5px;font-weight: normal;">{{ vArticulo.nCantidad }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <p style="float: right; font-weight: bold;margin-right: 10px;">Imprime: {{ pNom }} - {{ sDiaActual
+        }}</p>
+</div>

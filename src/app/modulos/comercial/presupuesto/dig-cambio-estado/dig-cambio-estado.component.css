@@ -1,0 +1,17 @@
+ 
+  
+  .example-button-row .mat-button-base {
+    margin: 8px 8px 8px 0;
+  }
+
+
+  button{ 
+    width: 200px;
+  }
+
+  .padre { 
+    /*IMPORTANTE*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

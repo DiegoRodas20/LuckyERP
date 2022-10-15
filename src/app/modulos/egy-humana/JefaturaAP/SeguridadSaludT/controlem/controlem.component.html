@@ -1,0 +1,498 @@
+<!-- Spinner -->
+<ngx-spinner
+  name="spi_main"
+  [fullScreen]="true"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<!-- #region FB -->
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="clickGrupoFb()">
+    <i class="material-icons" [@fabToggler]="{ value: animacionFb }">add</i>
+  </button>
+  <div [@speedDialStagger]="opcionesFb.length">
+    <button
+      *ngFor="let btn of opcionesFb; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickOpcionFb()"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+<!-- #endregion -->
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px)">
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">
+        Control de Examenes Medicos: {{ obtenerNombreDelDevengue() }}
+      </h5>
+
+      <!-- #region BODY-->
+      <div id="body-main" class="card-body">
+        <div class="row">
+          <!-- #region LISTA DE RESPONSABLES-->
+          <div class="col-xl-4">
+            <div class="row">
+              <div class="col-sm">
+                <h6>Agrupado por responsable :</h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px" />
+              </div>
+            </div>
+
+            <div id="dTableResp">
+              <table
+                mat-table
+                [dataSource]="dataSourceResponsables"
+                style="width: 100%"
+              >
+                <!-- Imagen Personal -->
+                <ng-container matColumnDef="sRespImg">
+                  <th mat-header-cell *matHeaderCellDef>Perfil</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element; let i = index"
+                    class="has_label_on_mobile"
+                    data-label=""
+                  >
+                    <div class="divImg">
+                      <div
+                        [@divTable]="element == editTable ? 'over' : 'out'"
+                        class="divMouse"
+                        (click)="
+                          cargarPersonalDelResponsable(element);
+                          this.filtroForm.reset()
+                        "
+                        (mouseover)="editTable = element"
+                        (mouseout)="editTable = null"
+                      >
+                        <span
+                          [@editTable]="element == editTable ? 'over' : 'out'"
+                          class="material-icons imgMouse"
+                          >touch_app</span
+                        >
+                      </div>
+                      <img
+                        class="imgTable"
+                        src="../../../../../assets/img/LuckyAvatar.png"
+                        alt=""
+                      />
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Nombres Column -->
+                <ng-container matColumnDef="sResp">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.sResp | titlecase }}
+
+                    <!-- #region Fab opciones-->
+                    <div class="fab-resp">
+                      <button mat-mini-fab class="fab-toggler-resp">
+                        <i
+                          class="material-icons"
+                          [@fabToggler]="
+                            element.nIdResp === seleccionadoResponsable.nIdResp
+                              ? 'active'
+                              : 'inactive'
+                          "
+                          >control_camera</i
+                        >
+                      </button>
+                      <div
+                        *ngIf="
+                          element.nIdResp === seleccionadoResponsable.nIdResp
+                        "
+                        [@speedDialStagger]="element.fb.opciones.length"
+                      >
+                        <button
+                          *ngFor="
+                            let btn of element.fb.opciones;
+                            let ibtn = index
+                          "
+                          mat-mini-fab
+                          class="fab-secondary-resp"
+                          color="secondary"
+                          (click)="
+                            element.fb.ejecucionOpciones(ibtn, element.nIdResp)
+                          "
+                        >
+                          <i
+                            class="material-icons"
+                            matTooltip="{{ btn.tool }}"
+                            matTooltipPosition="below"
+                            >{{ btn.icon }}</i
+                          >
+                        </button>
+                      </div>
+                    </div>
+                    <!-- #endregion -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noData">
+                  <mat-footer-cell
+                    *matFooterCellDef
+                    [attr.colspan]="columnasResponsables.length"
+                  >
+                    No se encuentran registros.
+                  </mat-footer-cell>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="columnasResponsables; sticky: true"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: columnasResponsables"
+                ></tr>
+                <mat-footer-row
+                  *matFooterRowDef="['noData']"
+                  [hidden]="
+                    dataSourceResponsables &&
+                    dataSourceResponsables.filteredData.length > 0
+                  "
+                ></mat-footer-row>
+              </table>
+            </div>
+            <mat-paginator
+              #paginacionResponsableTablaCEM
+              style="display: contents"
+              [hidePageSize]="false"
+              [pageSize]="4"
+            ></mat-paginator>
+          </div>
+          <!-- #endregion -->
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <div class="col-xl">
+            <!-- #region FILTRO-->
+            <mat-accordion #maMain="matAccordion">
+              <mat-expansion-panel [expanded]="false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title> Aplicar filtro por : </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+                </mat-expansion-panel-header>
+
+                <form autocomplete="off" id="fgMain" [formGroup]="filtroForm">
+                  <div class="form-row">
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Nombres o documento de identidad</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="sNombreDoc"
+                          (input)="filtrar()"
+                        />
+                        <button
+                          style="outline: none"
+                          mat-button
+                          *ngIf="getValorCampoFiltro('sNombreDoc')"
+                          matSuffix
+                          mat-icon-button
+                          aria-label="Clear"
+                          (click)="limpiarFiltro()"
+                        >
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Planilla</mat-label>
+                        <mat-select
+                          formControlName="sCodPlla"
+                          (selectionChange)="filtrar()"
+                        >
+                          <mat-option>--</mat-option>
+                          <mat-option
+                            *ngFor="let item of comboPlanilla"
+                            [value]="item.sCodPlla"
+                            >{{ item.sDesc }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Ciudad</mat-label>
+                        <mat-select
+                          formControlName="sCiudad"
+                          (selectionChange)="filtrar()"
+                        >
+                          <mat-option>--</mat-option>
+                          <mat-option
+                            *ngFor="let item of comboCiudad"
+                            [value]="item.sDesc"
+                            >{{ item.sDesc }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select
+                          formControlName="sTipo"
+                          (selectionChange)="tipoComboSeleccionadoFiltro()"
+                        >
+                          <mat-option>--</mat-option>
+                          <mat-option
+                            *ngFor="let item of comboTipo"
+                            [value]="item.nEleCod"
+                            >{{ item.cEleNam }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Direccion/Cliente</mat-label>
+                        <mat-select
+                          formControlName="sDireccionCliente"
+                          (selectionChange)="filtrar()"
+                        >
+                          <mat-option>--</mat-option>
+                          <mat-option
+                            *ngFor="
+                              let item of dataFiltradaDireccionClienteCombo()
+                            "
+                            [value]="item.nIdOrganizacion"
+                            >{{ item.sOrganizacion }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Estado</mat-label>
+                        <mat-select
+                          formControlName="nEstado"
+                          (selectionChange)="filtrar()"
+                        >
+                          <mat-option>--</mat-option>
+                          <mat-option
+                            *ngFor="let item of comboEstadoEm"
+                            [value]="item.nEleCod"
+                            >{{ item.cEleNam }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <div class="row" style="margin-top: 20px">
+              <div class="col-sm">
+                <h6>
+                  Personal a cargo de :
+                  {{ seleccionadoResponsable.sResp }}
+                </h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px" />
+              </div>
+            </div>
+            <!-- #endregion -->
+
+            <!-- #region LISTA DE PERSONAL ASIGNADO AL RESPONSABLE-->
+            <div>
+              <div id="dTableMain" class="melevation">
+                <table
+                  mat-table
+                  [dataSource]="dataSourcePersonal"
+                  style="width: 100%"
+                >
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        matTooltip="Visualizar"
+                        matTooltipPosition="right"
+                        mat-stroked-button
+                        color="accent"
+                        (click)="abrirModalDetallePersonal(element.nIdPersonal)"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!-- Nombres Column -->
+                  <ng-container matColumnDef="sNombres">
+                    <th mat-header-cell *matHeaderCellDef>
+                      Apellidos y nombres
+                    </th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="m-card-title"
+                      data-label="Nombres :"
+                    >
+                      <ngb-highlight
+                        [result]="element.sNombres | titlecase"
+                        [term]="filtroForm.controls.sNombreDoc.value"
+                      ></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <!-- Plla Column -->
+                  <ng-container matColumnDef="sCodPlla">
+                    <th mat-header-cell *matHeaderCellDef>Plla</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Tipo de planilla : "
+                    >
+                      {{ element.sCodPlla }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Tipo Column -->
+                  <ng-container matColumnDef="sTipo">
+                    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Tipo de documento :"
+                    >
+                      {{ element.sTipo }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Documento Column -->
+                  <ng-container matColumnDef="sDocumento">
+                    <th mat-header-cell *matHeaderCellDef>Documento</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="N° Documento : "
+                    >
+                      <ngb-highlight
+                        [result]="element.sDocumento"
+                        [term]="filtroForm.controls.sNombreDoc.value"
+                      ></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <!-- Fecha Inicio Column -->
+                  <ng-container matColumnDef="dFechIni">
+                    <th mat-header-cell *matHeaderCellDef>F. Ingreso</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Fecha ingreso : "
+                    >
+                      {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Fecha Fin Column -->
+                  <ng-container matColumnDef="dFechFin">
+                    <th mat-header-cell *matHeaderCellDef>F. Cese</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Fecha de cese : "
+                    >
+                      {{ element.dFechFin | date: "dd/MM/yyyy" }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Ciudad Column -->
+                  <ng-container matColumnDef="sCiudad">
+                    <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Ciudad :"
+                    >
+                      {{ element.sCiudad }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Estado Column -->
+                  <ng-container matColumnDef="sEstado">
+                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element"
+                      class="has_label_on_mobile"
+                      data-label="Estado :"
+                    >
+                      {{ element.sEstado }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="noData">
+                    <mat-footer-cell
+                      *matFooterCellDef
+                      [attr.colspan]="columnasTablaPersonal.length"
+                    >
+                      No se encuentran registros.
+                    </mat-footer-cell>
+                  </ng-container>
+
+                  <tr
+                    mat-header-row
+                    *matHeaderRowDef="columnasTablaPersonal; sticky: true"
+                  ></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: columnasTablaPersonal"
+                  ></tr>
+                  <mat-footer-row
+                    *matFooterRowDef="['noData']"
+                    [hidden]="
+                      dataSourcePersonal &&
+                      dataSourcePersonal.filteredData.length > 0
+                    "
+                  ></mat-footer-row>
+                </table>
+              </div>
+              <mat-paginator
+                #paginacionPersonalDelResponsableTablaCEM
+                style="display: contents"
+                [hidePageSize]="false"
+                [pageSize]="4"
+              ></mat-paginator>
+            </div>
+            <!-- #endregion -->
+          </div>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+</div>

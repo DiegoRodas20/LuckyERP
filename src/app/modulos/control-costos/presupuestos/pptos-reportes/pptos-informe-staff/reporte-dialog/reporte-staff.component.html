@@ -1,0 +1,50 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+        <div class="form-row">
+            <div class="col-md-4" style="align-self: center; font-size: x-small">
+                <p style="margin-bottom: 0rem;"><strong>ERP GRUPO LUCKY</strong></p>
+                <p>{{this.nEmpresa}}</p>
+            </div>
+            <div class="col-md-4" style="align-self: center;">
+                <h4 style="text-align: center;">Informe del personal de STAFF</h4>
+            </div>
+            <div class="col-md-4" style="align-self: center; font-size: x-small; text-align:end">
+                <p>Fecha: {{this.fechaActual}}</p>
+            </div>
+        </div>
+
+
+        <br>
+
+        <div mat-dialog-content>
+            <div class="form-group col-md-12">
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+                        <table class="tableResponsive table">
+                            <tr class="nombreColumna header-row table-header-row">
+                                <th>MES</th>
+                                <th>PLLA</th>
+                                <th>PERSONAL</th>
+                                <th>CARGO</th>
+                                <th>CIUDAD</th>
+                                <th>FECHA INGRESO</th>
+                                <th>FECHA BAJA</th>
+                                <th>¿SE TAREO?</th>
+                            </tr>
+                            <tr class="table-row" *ngFor="let lista of lReporteStaff">
+                                <td class="has_label_on_mobile table-cell" data-label='Mes: '>{{ lista.sMes }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Plla: '>{{ lista.sPlla }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Personal: '>{{ lista.sNroDocumento }} - {{ lista.sNombreCompleto }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Cargo: '>{{ lista.sCargo }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Ciudad: '>{{ lista.sSucNombre }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Fecha Inicio: '>{{ lista.sFchIngreso }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Fecha Baja: '>{{ lista.sFchBaja }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='¿Se Tareo?: '>{{ lista.sTareo }} </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

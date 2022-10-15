@@ -1,0 +1,79 @@
+/*Titulo*/
+.clsprincipal {
+    padding: 60px 5px 0px 5px;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color           : white;
+    font-size       : 25px;
+    font-weight     : 500;
+}
+
+/*Css Native*/
+.form-row .form-group label {
+    font-size: 12.5px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+th {
+    font-size: 10px;
+}
+
+input [type="button"] {
+    cursor: pointer;
+}
+
+
+/*Tabla responsive*/
+
+.example-container {
+    width   : 100%;
+    overflow: auto;
+    height  : 33rem;
+}
+
+
+td,
+th {
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+}
+
+.ng-tns-c494-1 mat-table-sticky ng-star-inserted {
+    height: 10px !important;
+}
+
+/*Botonera*/
+.fab-container {
+    position      : fixed;
+    top           : 100px;
+    right         : 50px;
+    z-index       : 150;
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+}
+
+.fab-container>div {
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+    margin-bottom : 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline   : none;
+}
+
+/*Columnas*/
+.clsColumnClient {
+    width: 20%;
+}

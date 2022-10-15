@@ -1,0 +1,505 @@
+<ngx-spinner name="spi_incentivo" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+    <button [@tada]="{value: tadaIncentivo}" mat-mini-fab class="fab-toggler"
+        (click)="onToggleFab(toggleIncentivo, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsIncentivo}">add</i>
+    </button>
+    <div [@speedDialStagger]="abIncentivo.length">
+        <button *ngFor="let btn of abIncentivo; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+            (click)="clickFab(toggleIncentivo, ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h4 class="modal-title">Detalle del planning </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span class="material-icons">close</span>
+    </button>
+</div> 
+ 
+<div class="modal-body">
+    <!--#region Principal  -->
+    <div class="row">
+        <div id="dLeftDetail" class="col-lg-6"> 
+            <mat-card>  
+                    <mat-card-header>
+                        <mat-card-title>
+                            Información del planning :
+                        </mat-card-title> 
+                    </mat-card-header>
+
+                    <mat-card-content>
+                        <mat-horizontal-stepper>
+                            <mat-step>
+                                <div class="card__row row">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <div class="row">
+                                                    <div id="fgPresupuesto" [formGroup]="fgPresupuesto" class="col-lg-12">
+                                                        <div class="form-row">
+                                                            <div class="col-lg-4">
+                                                                <mat-form-field style="width: 100%;">
+                                                                    <mat-label>Presupuesto</mat-label>
+                                                                    <input matInput formControlName="nPptos" >
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="col-lg-4">
+                                                                <mat-form-field style="width: 100%;">
+                                                                    <mat-label>Campaña</mat-label>
+                                                                    <input matInput formControlName="sCampania">
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="col-lg-4">
+                                                                <mat-form-field style="width: 100%;">
+                                                                    <mat-label>Cliente</mat-label>
+                                                                    <input matInput formControlName="sCliente">
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div id="fgFecha" [formGroup]="fgFecha" class="col-lg-12">
+                                                        <div class="form-row">
+
+                                                            <div class="col-lg-6">
+                                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                                    <mat-label>Inicio</mat-label>
+                                                                    <input formControlName="sFechaIni" matInput
+                                                                        [matDatepicker]="sFechaIni">
+                                                                    <mat-datepicker-toggle matSuffix [for]="sFechaIni">
+                                                                    </mat-datepicker-toggle>
+                                                                    <mat-datepicker #sFechaIni></mat-datepicker>
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                                    <mat-label>Término</mat-label>
+                                                                    <input formControlName="sFechaFin" matInput
+                                                                        [matDatepicker]="sFechaFin">
+                                                                    <mat-datepicker-toggle matSuffix [for]="sFechaFin">
+                                                                    </mat-datepicker-toggle>
+                                                                    <mat-datepicker #sFechaFin></mat-datepicker>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button mat-button matStepperNext>Siguiente</button>
+                                </div>
+
+                            </mat-step>
+                            <mat-step> 
+                                <div>
+                                    <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [locale]="locale"
+                                        [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays" >
+                                    </mwl-calendar-month-view>
+                                </div>
+                                <div>
+                                    <button mat-button matStepperPrevious>Anterior</button>
+                                    <button mat-button matStepperNext>Siguiente</button>
+                                </div>
+                            </mat-step>
+                        </mat-horizontal-stepper> 
+                    </mat-card-content>
+            </mat-card>
+        </div>
+        <div id="dRightDetail" class="col-lg-6">
+            <mat-card> 
+                    <mat-card-header>
+                        <mat-card-title>
+                            Selección  del personal :
+                        </mat-card-title> 
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="card__row row">
+                            <div id="card_inner2" class="card__inner">
+                                <div class="card__face card__face--front">
+                                    <div class="row">
+                                        <div class="col-xl-3 divAvatar">
+                                            <a>
+                                                <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png"
+                                                    (click)="clickFlipCard()" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="col-xl-9">
+                                            <div class="row">
+                                                <div id="fgInfoPerso" [formGroup]="fgInfoPerso" class="col-lg-12">
+
+                                                    <div class="form-row">
+                                                        <div class="col-lg-12"> 
+                                                            <ng-select 
+                                                                placeholder="Cliente" 
+                                                                appendTo="body"
+                                                                bindLabel="name" 
+                                                                (change)="getCliente()"
+                                                                formControlName="cliente">
+                                                                <ng-option *ngFor="let cliente of lPersonal" [value]="cliente">
+                                                                    {{cliente.sNombre}}
+                                                                </ng-option>
+                                                            </ng-select> 
+                                                        </div>
+                                                    </div> 
+                                                    <div class="form-row">
+
+                                                        <div class="col-lg-6">
+
+                                                            <mat-form-field style="width: 100%;">
+                                                                <mat-label>Perfil</mat-label>
+                                                                <mat-select formControlName="Perfil" (selectionChange)="fnGetPerfil()"> 
+                                                                    <mat-option *ngFor="let item of lCategoria" [value]="item">
+                                                                        {{item.sDet}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field style="width: 100%;">
+                                                                <mat-label>Canal</mat-label>
+                                                                <mat-select formControlName="Canal"> 
+                                                                    <mat-option *ngFor="let item of lCanal" [value]="item">
+                                                                        {{item.sDet}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card__face card__face--back">
+
+                                    <div class="row">
+
+                                        <div class="col-xl-3 divAvatar">
+                                            <a> 
+                                                <img class="imgAvatar" src="../../../../../assets/img/LuckyInfo.png"
+                                                    (click)="clickFlipCard()" alt="">
+                                            </a>
+                                        </div>
+
+                                        <div class="col-xl-9">
+
+                                            <div class="row">
+                                                <div id="fgDocumento" [formGroup]="fgDocumento" class="col-lg-12">
+                                                    <div class="form-row">
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field style="width: 100%;">
+                                                                <mat-label>Tipo </mat-label>
+                                                                <input matInput formControlName="sTipo">
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <mat-form-field style="width: 100%;">
+                                                                <mat-label>N° Documento</mat-label>
+                                                                <input matInput formControlName="documento">
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div id="fgDetalle" [formGroup]="fgDetalle" class="col-lg-12">
+                                                    <div class="form-row">
+                                                        <div class="col-lg-4">
+                                                            <mat-form-field style="width: 100%;">
+                                                                <mat-label>Ciudad</mat-label>
+                                                                <input matInput formControlName="ciudad"
+                                                                    [errorStateMatcher]="matcher"> 
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <mat-form-field style="width: 100%;" appDateFormat>
+                                                                <mat-label>Ingreso</mat-label>
+                                                                <input formControlName="Ingreso" matInput
+                                                                    [matDatepicker]="nIdSucursal">
+                                                                <mat-datepicker-toggle matSuffix [for]="nIdSucursal">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #nIdSucursal></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-lg-4">
+                                                            <mat-form-field style="width: 100%;" appDateFormat>
+                                                                <mat-label>Cese</mat-label>
+                                                                <input formControlName="Cese" matInput
+                                                                    [matDatepicker]="nNeto">
+                                                                <mat-datepicker-toggle matSuffix [for]="nNeto">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #nNeto></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="fab-perso">
+                            <button mat-mini-fab class="fab-toggler-perso">
+                                <i class="material-icons" [@fabToggler]="{value: tsPerso}">control_camera</i>
+                            </button>
+                            <div [@speedDialStagger]="abPerso.length">
+                                <button *ngFor="let btn of abPerso; let ibtn = index;" mat-mini-fab class="fab-secondary-perso" color="secondary" (click)="clickFab(1, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="below">{{btn.icon}}</i>
+                                </button>
+                            </div>
+                        </div> 
+                    </mat-card-content>
+            </mat-card> 
+        </div>
+    </div>
+    <!--#endregion -->
+    
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-sm">
+            <h6> Lista de trabajadores :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 20px;">
+        </div>
+    </div>
+
+    
+    <div id="dTableIncentivo" class="melevation">
+        <table #mtIncentivo mat-table [dataSource]="IncentivoDS" style="width: 100%;" multiTemplateDataRows>
+            <!--#region Tabla  -->
+            <ng-container matColumnDef="sNombres">
+                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Apellidos y nombres :'>
+                    {{element.sNombres}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sCodPlla">
+                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Planilla : '>
+                    {{element.sCodPlla}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sTipoDoc">
+                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Tipo de documento :'>
+                    {{element.sTipoDoc}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sDocumento">
+                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='N° Documento : '>
+                    {{element.sDocumento}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sCiudad">
+                <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Ciudad :'>
+                    {{element.sCiudad}} </td>
+            </ng-container>
+            <ng-container matColumnDef="inicio">
+                <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Inicio :'>
+                    {{element.inicio}} </td>
+            </ng-container>
+            <ng-container matColumnDef="cese">
+                <th mat-header-cell *matHeaderCellDef> Cese </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Cese : '>
+                    {{element.cese}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sCanal">
+                <th mat-header-cell *matHeaderCellDef> Canal</th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Canal: '>
+                    {{element.sCanal}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sPerfil">
+                <th mat-header-cell *matHeaderCellDef> Perfil</th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Perfil : '>
+                    {{element.sPerfil}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pdv">
+                <th mat-header-cell *matHeaderCellDef> PDV </th>
+                <td mat-cell *matCellDef="let element" 
+                    class='has_label_on_mobile' 
+                    data-label='Cant. PDV : '>
+                    {{element.pdv}} </td>
+            </ng-container>
+            <!-- More Column -->
+            <ng-container matColumnDef="more">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                    <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                </td>
+            </ng-container>
+            <!--#endregion -->
+            
+            <!-- More Expanded -->
+            <ng-container matColumnDef="expanded_More">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="IncentivoDC.length">
+                    <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                        <div class="row" style="padding: 10px;" *ngIf=tglistapdv> 
+                            <div class="col-lg-6 ">
+                                <h6>Mapa:</h6> 
+                                <div class="div_expanded"> 
+                                    <google-map width="100%" height="350px" [zoom]="13" [center]="showMap(element.Ipdv)" [options]="optionsMap">
+                                        <map-marker *ngFor="let btn of element.Lpdv; let ibtn = index" [position]="showMap(btn)" [title]="element.sNro"> 
+                                        </map-marker>
+                                    </google-map>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <h6>Lista de PDV:</h6> 
+                                <div> 
+                                    <table #mtIncentivo mat-table [dataSource]="ListaPDVDS" style="width: 100%;">
+                                        <ng-container matColumnDef="sNro">
+                                            <th mat-header-cell *matHeaderCellDef> 
+                                                Nro
+                                            </th>
+                                            <td mat-cell *matCellDef="let row" 
+                                                class='has_label_on_mobile' 
+                                                data-label='Nro :'>
+                                                {{row.sNro}} 
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="sPdv">
+                                            <th mat-header-cell *matHeaderCellDef> 
+                                                Pdv
+                                            </th>
+                                            <td mat-cell *matCellDef="let row" 
+                                                class='has_label_on_mobile' 
+                                                data-label='Pdv :'>
+                                                {{row.sPdv}} 
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="ListaPDVDC; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: ListaPDVDC;"></tr>
+                                    </table>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row" style="padding: 10px;" *ngIf=tgagregarpdv> 
+                            <h6>Lista de PDV:</h6> 
+                            <div class="col-lg-12 ">
+                                <table #mtIncentivo mat-table [dataSource]="AgregarPDVDS" style="width: 100%;">
+                                    <ng-container matColumnDef="sNro">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                            {{Nro}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let row;let i = index" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Nro :'>
+                                            {{i + 1}} 
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sPdv">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                            Pdv
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Pdv :'>
+                                            {{row.sDireccion}} 
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sDepartamento">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                            Departamento
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Pdv :'>
+                                            {{row.sPrimero}} 
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sProvincia">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                            Provincia
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Pdv :'>
+                                            {{row.sSegundo}} 
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sDistrito">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                            Distrito
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Pdv :'>
+                                            {{row.sTercero}} 
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="sAgregar">
+                                        <th mat-header-cell *matHeaderCellDef> 
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" 
+                                            class='has_label_on_mobile' 
+                                            data-label='Pdv :'>
+                                            <button mat-icon-button (click)=AgregarPDv(row,element)>
+                                                <mat-icon>add</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="AgregarPDVDC; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: AgregarPDVDC;"></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="fab-perso">
+                            <button mat-mini-fab class="fab-toggler-perso">
+                                <i class="material-icons" [@fabToggler]="{value: tsPdv}">control_camera</i>
+                            </button>
+                            <div [@speedDialStagger]="abPdv.length">
+                                <button *ngFor="let btn of abPdv; let ibtn = index;" mat-mini-fab class="fab-secondary-perso" color="secondary" (click)="clickFab(2, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="below">{{btn.icon}}</i>
+                                </button>
+                            </div>
+                        </div> 
+                    </div>
+                </td>
+            </ng-container>
+ 
+            <tr mat-header-row *matHeaderRowDef="IncentivoDC; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: IncentivoDC;"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                                
+        </table>
+    </div>
+     
+</div> 

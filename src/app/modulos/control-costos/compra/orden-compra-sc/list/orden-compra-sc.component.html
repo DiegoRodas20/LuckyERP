@@ -1,0 +1,180 @@
+<div class="clsprincipal">
+    <div class="col-md-12 text-center">
+        <div class="titulo">
+            <h4 style="padding: 4px;">
+                Orden de compra desde solicitud de cotización
+            </h4>
+        </div>
+    </div>
+
+
+    <div>
+        <div class="col-md-12">
+            <div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <!-- Inicio del contenido -->
+
+                        <div class="col-md-6 offset-md-3" style="height: 40px;">
+                            <div class="form-row">
+
+                                <div class="col-md-10">
+                                    <mat-form-field style="width: 100%;"
+                                        class="example-full-width text-left search-form-field">
+
+                                        <input matInput (keyup)="applyFilter($event)" autocomplete="off"
+                                            placeholder="Buscar..." #input [(ngModel)]="value">
+
+                                        <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear"
+                                            (click)="actualizarListado();">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Nueva orden de compra"
+                                        (click)="fnCrearOrdenCompra()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                        <!-- nueva tabla material -->
+                        <div id="listaMobile" class="mat-elevation-z8">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="ListComprasSc" id="tablaCampania">
+                                    <div class="mat-elevation-z8 container_tabla">
+
+                                        <ng-container matColumnDef="codigoGastoCosto" sticky>
+                                            <th mat-header-cell *matHeaderCellDef style="background-color: #334d6e; color: white;">Ver</th> 
+
+                                            <td *matCellDef="let element">
+
+                                            <div  style="margin-left: 10px;">
+                                                <button matTooltip="Visualizar" matTooltipPosition="left"
+                                                mat-stroked-button color="accent" (click)="editar(element)">
+                                                <mat-icon>visibility</mat-icon>
+                                            </button>
+                                            </div> 
+                                                
+
+                                            </td>
+
+                                        </ng-container>
+                                        <ng-container matColumnDef="anio">
+                                            <th mat-header-cell *matHeaderCellDef>Año</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="presupuesto">
+                                            <th mat-header-cell *matHeaderCellDef> Presupuesto </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.presupuesto}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="numeroDocumento">
+                                            <th mat-header-cell *matHeaderCellDef> Nro Documento </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="titulo">
+                                            <th mat-header-cell *matHeaderCellDef>Título</th>
+                                            <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="cotizacion">
+                                            <th mat-header-cell *matHeaderCellDef> Sol. Cotización </th>
+                                            <td mat-cell *matCellDef="let element">SC {{element.cotizacion}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="fechaRegistro">
+                                            <th mat-header-cell *matHeaderCellDef> Fecha O.C. </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.fechaRegistro}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="fechaEntrega">
+                                            <th mat-header-cell *matHeaderCellDef> F. Entrega </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.fechaEntrega}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="proveedor">
+                                            <th mat-header-cell *matHeaderCellDef> Proveedor </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.proveedor}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="totalUnidades">
+                                            <th mat-header-cell *matHeaderCellDef> Total unidades </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.totalUnidades}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="totalPrecio">
+                                            <th mat-header-cell *matHeaderCellDef> Total precio </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.totalPrecio}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="moneda">
+                                            <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.moneda}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="tipoCompra">
+                                            <th mat-header-cell *matHeaderCellDef> Tipo Compra </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.tipoCompra}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="estado">
+                                            <th mat-header-cell *matHeaderCellDef> Estado </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                {{element.estado}} </td>
+                                        </ng-container>
+
+
+                                        <ng-container matColumnDef="vb">
+                                            <th mat-header-cell *matHeaderCellDef> VB </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.vb}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="pdf">
+                                            <th mat-header-cell *matHeaderCellDef> PDF </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.pdf}} </td>
+                                        </ng-container>
+
+
+                                        <ng-container matColumnDef="subTipoDoc">
+                                            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                            <td mat-cell *matCellDef="let element"> {{element.subTipoDoc}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef> Editar | Eliminar </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <button matTooltip="Visualizar" matTooltipPosition="right"
+                                                    mat-stroked-button color="accent" type="button"
+                                                    (click)="consultaSerie(id=element.codigoSerie)">
+                                                    <mat-icon>visibility</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="warn" (click)="borrar(element)">
+                                                    <mat-icon>delete_outline</mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row
+                                            *matHeaderRowDef="utilitarios.displayedColumnsList; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: utilitarios.displayedColumnsList;">
+                                        </tr>
+                                    </div>
+                                </table>
+                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="50"
+                                    showFirstLastButtons>
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,41 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: 300px;
+  width: 120%;
+}
+
+.icon-activo-table {
+  position: relative;
+  top: 6px;
+  cursor: pointer;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}

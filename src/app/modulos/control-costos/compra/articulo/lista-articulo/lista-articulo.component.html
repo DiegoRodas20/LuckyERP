@@ -1,0 +1,170 @@
+<br><br><br>
+
+<div class="card">
+  <h3 class="col-md-12  card-header" style="text-align:center;width: 97%;align-self: center;margin-top: 10px;">Catálogo
+    de Artículos/Servicios</h3>
+
+  <!-- Botones Flotantes pantalla -->
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <button *ngIf="abLista.length>0 && nAgregar==1" mat-mini-fab class="fab-secondary" color="secondary" matTooltipPosition="left"
+        (click)="clickFab(0)" matTooltip="Nuevo Artículo">
+        <i class="material-icons">add</i>
+      </button>
+
+      <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="secondary" matTooltipPosition="left"
+        (click)="clickFab(1)" matTooltip="Exporta Excel">
+        <i class="material-icons">cloud_download</i>
+      </button>
+
+      <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="secondary" matTooltipPosition="left"
+        (click)="clickFab(2)" matTooltip="Actualizar Fotos">
+        <i class="material-icons">settings</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12  card-body">
+    <!-- <div class="form-row"> -->
+    <div class="form-group col-md-12">
+      <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-5 col-10 ">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Búsqueda </mat-label>
+            <input matInput (keyup)="applyFilter($event)" [(ngModel)]="searchKey" placeholder="Buscar Artículo" #input>
+            <button style="outline: none;" *ngIf="input.value" mat-button matSuffix mat-icon-button aria-label="Clear"
+              (click)="limpiar()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+          <div *ngIf="nAgregar==1">
+            <button mat-mini-fab class="fab-toggler" (click)="nuevo()" matTooltip="Nuevo Artículo">
+              <i class="material-icons">add</i>
+            </button>
+          </div>
+        </div>
+        <div class="col-lg-1 col-m-1 col-sm-1 col-1">
+          <button mat-mini-fab class="fab-toggler" color="white" matTooltip="Exporta Excel" (click)="exportarExcel()">
+            <i class="material-icons">cloud_download</i>
+          </button>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+          <button *ngIf="esAdministrador" mat-mini-fab class="fab-toggler" color="white" matTooltip="Subir archivos"
+            (click)="fnSubirArchivos()">
+            <i class="material-icons">cloud_upload</i>
+          </button>
+        </div> -->
+        
+        <div class="col-lg-4 col-md-5 col-sm-5 col-10 ">
+          <mat-radio-group [formControl]="radioFiltroEstado" (change)="cambioFiltro($event.value)">
+            <mat-radio-button value="1">Ambos</mat-radio-button>
+            <mat-radio-button value="2">Artículos</mat-radio-button>
+            <mat-radio-button value="3">Servicios</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <div id="listaMobile" class="mat-elevation-z8">
+      <!-- <div class="example-container mat-elevation-z8"></div> -->
+      <div class="example-container">
+        <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+          <ng-container matColumnDef="opciones" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2' data-label='Opción: '>
+
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+                mat-stroked-button color="accent">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="after">
+                <button mat-menu-item (click)="Editar(row.nId)">
+                  <mat-icon color="accent">touch_app</mat-icon>
+                  <span>Ver Detalle</span>
+                </button>
+                <button mat-menu-item (click)="verImagen(row.nId)">
+                  <mat-icon color="accent">image</mat-icon>
+                  <span>Ver Foto</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2' data-label='Tipo: '>
+              <ngb-highlight [result]="row.Tipo" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción Artículo </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaLarge'
+              data-label='Descripción Artículo: '>
+              <ngb-highlight [result]="row.codigo + ' - ' + row.nombre" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lote">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Control Lote </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc' data-label='Tipo Lote: '>
+              <ngb-highlight [result]="row.lote" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Familia </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc' data-label='Familia: '>
+              <ngb-highlight [result]="row.categoria" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sAreaRegistro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Área Creación </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2' data-label='Área Creación: '>
+              <ngb-highlight [result]="row.sAreaRegistro" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="marca">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Marca </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc' data-label='Marca: '>
+              <ngb-highlight [result]="row.marca" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sImagen">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Foto </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2' data-label='Tiene Foto: '>
+              <ngb-highlight [result]="row.sImagen" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+          <!-- Color Column -->
+          <ng-container matColumnDef="sEstado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+            <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2' data-label='Estado :'>
+              <ngb-highlight [result]="row.sEstado" [term]="searchKey"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'make-gris': row.nIdEstado===591}">
+
+            <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+    </div>
+    <!-- </div> -->
+  </div>
+</div>

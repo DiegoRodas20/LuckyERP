@@ -1,0 +1,53 @@
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Estilos del formulario principal */
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+/**/
+
+.center {
+    justify-content: center;
+}
+
+.padding-checkbox {
+    padding-top: 15px !important;
+}
+
+::ng-deep.mat-checkbox-checked.mat-accent.mat-checkbox-disabled .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #ff4081 !important;
+}
+
+.isInvalido {
+    background-color: #FFAAAA;
+}
+
+.isValido {
+    background-color: #91F095;
+}

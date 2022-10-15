@@ -1,0 +1,9 @@
+<mat-form-field class="example-form-field">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    type="text"
+    [(ngModel)]="valor"
+    (input)="registrarEscritura()"
+  />
+</mat-form-field>

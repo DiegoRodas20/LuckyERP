@@ -1,0 +1,584 @@
+<div class="clsprincipal">
+  <!--Modulo Principal-->
+  <div class="" [ngClass]="divList ? 'clsShow' : 'clsHide'">
+
+    <div class="clstituloCrtl">
+      <h3>Evaluación</h3>
+    </div>
+
+    <!--Filtro-->
+    <div class="row" style="padding: 10px;">
+      <div class="col-sm-3">
+        <mat-form-field>
+          <mat-label>Filtro</mat-label>
+          <input matInput (keyup)="applyFilter($event.target.value)" [formControl]="txtControl">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-1" style="margin-top: 15px;">
+        <button mat-raised-button (click)="openDialogHistorico()">Historico</button>
+      </div>
+    </div>
+
+    <!--Tabla Principal-->
+    <div class="col-sm-12">
+      <div class="example-container mat-elevation-z8 clsTablePri">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Opcion -->
+          <ng-container matColumnDef="pCodPostulacion" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion"> Opcion</th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc">
+              <button mat-stroked-button color="accent" (click)="fnDatos(row.pCodPostulacion)">
+                <mat-icon> create</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Tipo Documento -->
+          <ng-container matColumnDef="pTipDoc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion"> Tipo Documento </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.pTipDoc}} </td>
+          </ng-container>
+
+          <!-- Numero Documento -->
+          <ng-container matColumnDef="pNumDoc">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNumDoc"> Numero de Documento </th>
+            <td mat-cell *matCellDef="let row"> {{row.pNumDoc}} </td>
+          </ng-container>
+
+          <!-- Nombres y Apellidos -->
+          <ng-container matColumnDef="pNom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNombre"> Apellidos y Nombres </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaLarge"> {{row.pNom}} </td>
+          </ng-container>
+
+          <!-- Telefono -->
+          <ng-container matColumnDef="pNumCelular">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Tlf. Móvil </th>
+            <td mat-cell *matCellDef="let row"> {{row.pNumCelular}} </td>
+          </ng-container>
+
+          <!-- Correo -->
+          <ng-container matColumnDef="pCorreo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNombre"> Correo </th>
+            <td mat-cell *matCellDef="let row"> {{row.pCorreo}} </td>
+          </ng-container>
+
+          <!-- Puesto -->
+          <ng-container matColumnDef="pPuesto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion"> Puesto </th>
+            <td mat-cell *matCellDef="let row"> {{row.pPuesto}} </td>
+          </ng-container>
+
+          <!-- Fecha Cita -->
+          <ng-container matColumnDef="pFechaCita">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Fecha de Cita </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pFechaCita}} </td>
+          </ng-container>
+
+          <!-- Hora Cita -->
+          <ng-container matColumnDef="pHoraCita">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Hora de Cita </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pHoraCita}} </td>
+          </ng-container>
+
+          <!-- Turno -->
+          <ng-container matColumnDef="pTurno">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNumDoc"> Turno </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pTurno}} </td>
+          </ng-container>
+
+          <!-- Evaluador -->
+          <ng-container matColumnDef="pEvaluador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNombre"> Evaluador </th>
+            <td mat-cell *matCellDef="let row"> {{row.pEvaluador}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+
+      </div>
+      <mat-paginator [pageSizeOptions]="[10]"></mat-paginator>
+    </div>
+
+  </div>
+
+  <!--Modulo Crear/Editar RQ-->
+  <div class="" [ngClass]="divCreate ? 'clsShow' : 'clsHide'">
+    <mat-card>
+      <mat-card-header class="clstituloCrtl">
+        <mat-card-title>Ficha de Postulante</mat-card-title>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-horizontal-stepper #stepper>
+          <mat-step [stepControl]="DatosFormGroup">
+            <form [formGroup]="DatosFormGroup">
+              <ng-template matStepLabel>Datos Personales</ng-template>
+              <div class="row">
+                <div class="col-sm-3">
+                  <mat-form-field>
+                    <mat-label>Tipo de Documento</mat-label>
+                    <mat-select formControlName="TipoDoc">
+                      <mat-option *ngFor="let vMatOpcion of lCboTipoDocumento" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>N° de Documento</mat-label>
+                    <input matInput type="text" name="valueNDoc" formControlName="NumDoc">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Primer Nombre</mat-label>
+                    <input matInput type="text" name="valuePriN" formControlName="PrimerMombre">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Segundo Nombre</mat-label>
+                    <input matInput type="text" name="valueSegN" formControlName="SegundoMombre">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Apellido Paterno</mat-label>
+                    <input matInput type="text" name="valueAPat" formControlName="PrimerApellido">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Apellido Materno</mat-label>
+                    <input matInput type="text" name="valueAMat" formControlName="SegundoApellido">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Celular</mat-label>
+                    <input matInput type="text" name="valueCel" formControlName="Celular">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field class="example-form-field">
+                    <mat-label>Celular Opcional</mat-label>
+                    <input matInput type="text" name="valuePues" formControlName="CelularOpc">
+                  </mat-form-field>
+                </div>
+                <div style="padding-bottom: 10px; width:100%;">
+                  <div class="clsSeparador col-md-12"></div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label>Correo</mat-label>
+                    <input matInput type="text" name="valueNDoc" formControlName="Correo">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label>Puesto</mat-label>
+                    <input matInput type="text" name="valueNDoc" formControlName="Puesto">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <mat-form-field>
+                    <mat-label>Dirección</mat-label>
+                    <input matInput type="text" name="valueNDoc" formControlName="Direccion">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                  <mat-form-field>
+                    <mat-label>Distrito</mat-label>
+                    <input matInput type="text" name="valueNDoc" formControlName="Distrito">
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </mat-step>
+
+          <mat-step [stepControl]="ContactoFormGroup">
+            <form [formGroup]="ContactoFormGroup">
+              <ng-template matStepLabel>Contactación</ng-template>
+              <div class="row">
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Medio de Contacto</mat-label>
+                    <mat-select formControlName="MedioContactacion">
+                      <mat-option *ngFor="let vMatOpcion of lCboMedioCont" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Contactado</mat-label>
+                    <mat-select formControlName="Contactado">
+                      <mat-option *ngFor="let vMatOpcion of estado" [value]="vMatOpcion.id">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Fuente</mat-label>
+                    <mat-select formControlName="Fuente">
+                      <mat-option *ngFor="let vMatOpcion of lCboTipoFuente" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Referido</mat-label>
+                    <input matInput type="text" formControlName="Referido">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Motivo de NO Contactación</mat-label>
+                    <mat-select formControlName="NoContactacion">
+                      <mat-option *ngFor="let vMatOpcion of lCboMotNoCont" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+            <form [formGroup]="CitaFormGroup">
+              <div class="row">
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Citado</mat-label>
+                    <mat-select formControlName="Citado">
+                      <mat-option *ngFor="let vMatOpcion of estado" [value]="vMatOpcion.id">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Fecha de Cita</mat-label>
+                    <input matInput [matDatepicker]="fr" readonly formControlName="Fecha">
+                    <mat-datepicker-toggle matSuffix [for]="fr"></mat-datepicker-toggle>
+                    <mat-datepicker #fr></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Hora de Cita</mat-label>
+                    <mat-select formControlName="Hora">
+                      <mat-option *ngFor="let vMatOpcion of lCboHorario" [value]="vMatOpcion.pIdTurno">
+                        {{vMatOpcion.pHora}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Turno</mat-label>
+                    <input matInput type="text" formControlName="Turno">
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Motivo de NO Citación</mat-label>
+                    <mat-select formControlName="Nocitado">
+                      <mat-option *ngFor="let vMatOpcion of lCboMotNoCita" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-label>Último Estado de Contactación</mat-label>
+                    <input matInput type="text" formControlName="UltEstCont">
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+
+          </mat-step>
+
+          <mat-step [stepControl]="formEvaluacion">
+            <ng-template matStepLabel>Evaluación</ng-template>
+            <form [formGroup]="formEvaluacion">
+              <div class="form-row">
+                <div class="col-md-3">
+                  <div class="clsScrollTable">
+                    <table class="table table-fixed table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Presentación</th>
+                          <th>Puntuación</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style="height: 55.5px">Contextura (C)</td>
+                          <td>
+                            <select class="form-control" #haba
+                              (change)="fnChangeEva(haba.value,habb.value,habc.value,0,0)"
+                              formControlName="cboContextura"
+                              [ngClass]="{'is-valid': submitted && f.cboContextura.valid, 'is-invalid': submitted && f.cboContextura.errors }">
+                              <option *ngFor="let vListaC of lListaCombo" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="height: 55.5px">Sonrisa (S)</td>
+                          <td>
+                            <select class="form-control" #habb
+                              (change)="fnChangeEva(haba.value,habb.value,habc.value,0,0)" formControlName="cboSonrisa"
+                              [ngClass]="{'is-valid': submitted && f.cboSonrisa.valid, 'is-invalid': submitted && f.cboSonrisa.errors }">
+                              <option *ngFor="let vListaC of lListaCombo" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Imagen y Cuidado Personal (I)</td>
+                          <td>
+                            <select class="form-control" #habc
+                              (change)="fnChangeEva(haba.value,habb.value,habc.value,0,0)" formControlName="cboImagen"
+                              [ngClass]="{'is-valid': submitted && f.cboImagen.valid, 'is-invalid': submitted && f.cboImagen.errors }">
+                              <option *ngFor="let vListaC of lListaCombo" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>PUNTUACIÓN</td>
+                          <td>
+                            {{this.puntPre}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="clsScrollTable">
+                    <table class="table table-fixed table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="width:140px">Habilidades</th>
+                          <th style="width:125px">Puntuación</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Comunicación Efectiva</td>
+                          <td>
+                            <select class="form-control" #prea
+                              (change)="fnChangeEva(prea.value,preb.value,prec.value,pred.value,1)"
+                              formControlName="cboComunicacion"
+                              [ngClass]="{'is-valid': submitted && f.cboComunicacion.valid, 'is-invalid': submitted && f.cboComunicacion.errors }">
+                              <option *ngFor="let vListaC of lListaComboH" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Orientación al cliente</td>
+                          <td>
+                            <select class="form-control" #preb
+                              (change)="fnChangeEva(prea.value,preb.value,prec.value,pred.value,1)"
+                              formControlName="cboOrientacion"
+                              [ngClass]="{'is-valid': submitted && f.cboOrientacion.valid, 'is-invalid': submitted && f.cboOrientacion.errors }">
+                              <option *ngFor="let vListaC of lListaComboH" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Negociación Efectiva</td>
+                          <td>
+                            <select class="form-control" #prec
+                              (change)="fnChangeEva(prea.value,preb.value,prec.value,pred.value,1)"
+                              formControlName="cboNegociacion"
+                              [ngClass]="{'is-valid': submitted && f.cboNegociacion.valid, 'is-invalid': submitted && f.cboNegociacion.errors }">
+                              <option *ngFor="let vListaC of lListaComboH" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Flexibilidad y Adaptabilidad</td>
+                          <td>
+                            <select class="form-control" #pred
+                              (change)="fnChangeEva(prea.value,preb.value,prec.value,pred.value,1)"
+                              formControlName="cboFlexibilidad"
+                              [ngClass]="{'is-valid': submitted && f.cboFlexibilidad.valid, 'is-invalid': submitted && f.cboFlexibilidad.errors }">
+                              <option *ngFor="let vListaC of lListaComboH" value="{{vListaC.id}}">{{vListaC.valor}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>PUNTUACIÓN</td>
+                          <td>
+                            {{this.puntHabi}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <div class="clsScrollTable">
+                        <table class="table table-fixed table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Resultado / Presentación</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{this.vpuntPre}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="clsScrollTable">
+                        <table class="table table-fixed table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Resultado / Habilidades</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{{this.vpuntHabi}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="margin-top:15px !important;" class="clsScrollTable">
+                        <table class="table table-fixed table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Resultado / Experiencia</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <select class="form-control select1" formControlName="cboExperiencia"
+                                  [ngClass]="{'is-valid': submitted && f.cboExperiencia.valid, 'is-invalid': submitted && f.cboExperiencia.errors }">
+                                  <option *ngFor="let vListaC of lListaResul" value="{{vListaC.id}}">{{vListaC.valor}}
+                                  </option>
+                                </select>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="margin-top:15px !important;" class="clsScrollTable">
+                        <table class="table table-fixed table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Último Estado de Evaluación</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <select class="form-control select1" formControlName="cboEstEva"
+                                  [ngClass]="{'is-valid': submitted && f.cboEstEva.valid, 'is-invalid': submitted && f.cboEstEva.errors }">
+                                  <option value="">Seleccione</option>
+                                  <option value="0">Pre Calificado</option>
+                                  <option value="1">No Calificado</option>
+                                </select>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                      <label style="width:160px">Fidelizador al que se deriva:</label>
+                      <select class="form-control select2" formControlName="cboFil"
+                        [ngClass]="{'is-valid': submitted && f.cboFil.valid, 'is-invalid': submitted && f.cboFil.errors }">
+                        <option value="">Seleccione</option>
+                        <option *ngFor="let vListaF of lListaFidelizador" [ngValue]="vListaF.codigo">{{vListaF.valor}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <form [formGroup]="CambioCitaFormGroup">
+              <div class="row">
+                <div class="col-sm-3">
+
+                  <ng-select appendTo="body" formControlName="PuestoConsi" placeholder="Puesto considerado:"
+                    [clearable]="true" (clear)="fnLimpiarPuestoCons()">
+                    <ng-option *ngFor="let item of lCboPuesto" [value]="item.codigo">
+                      {{item.valor}}
+                    </ng-option>
+                  </ng-select>
+
+
+                  <!-- <mat-form-field>
+                    <mat-label>Puesto considerado:</mat-label>
+                    <mat-select formControlName="PuestoConsi">
+                      <mat-option *ngFor="let vMatOpcion of lCboPuesto" [value]="vMatOpcion.codigo">
+                        {{vMatOpcion.valor}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+
+
+                </div>
+
+                <div class="col-sm-9" *ngIf="CambioCitaFormGroup.get('PuestoConsi').value!='' ">
+                  <mat-form-field appearance="Motivo">
+                    <mat-label>Motivo</mat-label>
+                    <textarea matInput style="border-style: groove;" formControlName="Motivo" required></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </mat-step>
+        </mat-horizontal-stepper>
+        <mat-divider [inset]="true"></mat-divider>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="warn" (click)="fnChange(0)">Cancelar</button>
+        <button mat-raised-button (click)="openDialogFicha()">Ficha</button>
+        <button mat-raised-button (click)="fnAction(stepper)">Guardar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+</div>

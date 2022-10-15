@@ -1,0 +1,43 @@
+<h1 mat-dialog-title class="clstituloCrtl">Observación de {{titulo}}</h1>
+<div mat-dialog-content class="clsCuerpo"> 
+    <div class="row">
+        <div class="col-sm-5">
+            <form [formGroup]="PrimeraFormGroup">
+                <div>
+                    <mat-form-field appearance="fill" style="width: 100%">
+                        <mat-label>Comentario</mat-label>
+                        <textarea matInput  style="height: 140px;" formControlName="comentario"></textarea>
+                    </mat-form-field> 
+                </div>
+                <div>
+                    <button mat-button  (click)="fnGuardarComentario(opcion)" *ngIf=divValPresupuesto >Devolver</button>
+                </div>
+            </form> 
+        </div>
+        <div class="col-sm-7"> 
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let vMatOpcion of historico"  >
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{vMatOpcion.nombre}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{vMatOpcion.fecha}}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div>
+                  {{vMatOpcion.sComentario}}
+                  </div>
+                </mat-expansion-panel> 
+            </mat-accordion>
+        </div>
+    </div> 
+</div>
+<div mat-dialog-actions> 
+<div mat-dialog-actions> 
+    <button mat-button color="warn" (click)="onNoClick()">Salir</button> 
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+

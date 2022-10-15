@@ -1,0 +1,70 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 28px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+  height: 400px;
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-selected,
+:host /deep/ .mat-step-header .mat-step-icon {
+  background-color: rgb(236, 0, 140);
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-state-error {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+::ng-deep.mat-checkbox-checked.mat-accent.mat-checkbox-disabled
+  .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #ff4081 !important;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}

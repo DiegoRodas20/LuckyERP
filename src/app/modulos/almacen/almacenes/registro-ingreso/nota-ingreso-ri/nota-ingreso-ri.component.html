@@ -1,0 +1,338 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header" style="text-align: center; width: 100%; margin-bottom: 5px">
+            {{sTitulo}}
+        </h5>
+        <!-- <div class="row"><br /></div> -->
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="form-row col-md-12">
+        <!-- Cabecera -->
+        <div class="col-md-10 offset-md-1">
+            <!-- offset-md-3 -->
+            <mat-card>
+                <!--Form cuando se va a ver registrar-->
+                <form class="row" [formGroup]="formIngreso">
+                    <div class="col-md-10">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Solicitante:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtSolicitante" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Presupuesto:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtPresupuesto" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Cliente:</mat-label>
+                                    <input type="text" style="color: rgb(236, 0, 140);" readonly matInput
+                                        formControlName="txtCliente" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12" style="padding-bottom: 7px;">
+                                <mat-expansion-panel #matExpPresupuesto>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                            Información Presupuesto
+                                        </mat-panel-title>
+                                        <button mat-icon-button>
+                                            <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                        </button>
+                                    </mat-expansion-panel-header>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Director:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtDirector" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Canal:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtCanal" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Ejecutivo:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtEjecutivo" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Servicios:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtServicios" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Fecha Inicio:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtFechaInicio" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Fecha Fin:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtFechaFin" />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <ng-select style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body"
+                                    [clearable]="false" formControlName="cboAlmacen" placeholder="Almacen" required>
+                                    <ng-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen.nId">
+                                        {{ vAlmacen.sDescripcion }}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error
+                                    *ngIf="formIngreso.get('cboAlmacen').hasError('required') &&formIngreso.get('cboAlmacen').touched">
+                                    .Obligatorio
+                                </mat-error>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Fecha ingreso:</mat-label>
+                                    <input
+                                        (click)="pickerFechaIngreso.opened?pickerFechaIngreso.close(): pickerFechaIngreso.open()"
+                                        readonly formControlName="cboFechaIngreso" matInput
+                                        [matDatepicker]="pickerFechaIngreso" />
+                                    <mat-datepicker-toggle matSuffix [for]="pickerFechaIngreso">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFechaIngreso></mat-datepicker>
+                                    <mat-error *ngIf="formIngreso.get('cboFechaIngreso').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Hora inicio:</mat-label>
+                                    <mat-select formControlName="cboHora" [errorStateMatcher]="matcher">
+                                        <mat-option *ngFor="let vHora of lHoras" [value]="vHora.sHora">
+                                            {{ vHora.sHora }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="formIngreso.get('cboHora').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Hora fin:</mat-label>
+                                    <mat-select formControlName="cboHoraFin" [errorStateMatcher]="matcher">
+                                        <mat-option *ngFor="let vHora of lHoras" [value]="vHora.sHora">
+                                            {{ vHora.sHora }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="formIngreso.get('cboHoraFin').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-9">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Observación:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtObservacion" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Unidades:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtTotalUnd" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 ocultar-mobile">
+                        <div class="form-row">
+                            <div class="col-md-1">
+                                <div class="clsSeparador">&nbsp;</div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-md-11">
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Documento:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" type="text" readonly matInput
+                                        formControlName="txtDocumento" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Registro:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtRegistro" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Fecha Registro:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtFechaRegistro" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" readonly matInput placeholder="Estado"
+                                        formControlName="txtEstado" style="color: rgb(236, 0, 140)" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Informacion en celular-->
+                    <div class="col-md-12 mostrar-mobile">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                    Información
+                                </mat-panel-title>
+                                <button mat-icon-button>
+                                    <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                </button>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Documento:</mat-label>
+                                        <input style="color: rgb(236, 0, 140)" type="text" readonly matInput
+                                            formControlName="txtDocumento" />
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Registro:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtRegistro" />
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Fecha Registro:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtFechaRegistro" />
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Estado:</mat-label>
+                                        <input type="text" readonly matInput placeholder="Estado"
+                                            formControlName="txtEstado" style="color: rgb(236, 0, 140)" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </div>
+
+                    <div class="col-md-12">
+                        <br>
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+
+        <div class="row">
+            <br />
+        </div>
+
+        <div class="col-md-10 offset-md-1">
+            <div class="row">
+                <!--Table para detalle de registro de ingreso -->
+                <div class="col-12">
+
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="table-container-1">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="sArticulo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Artículo
+                                    </th>
+                                    <td data-label="Artículo: " mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        {{ row.sArticulo }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCantidad">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Unidades
+                                    </th>
+                                    <td data-label="Unidades: " mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        {{ row.nCantidad }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sObservacion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Observación
+                                    </th>
+                                    <td data-label="Observación: " mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        {{ row.sObservacion }}
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <br />
+</div>
+
+
+<!--Zona de botones flotantes-->
+<div class="fab-container">
+    <div>
+        <!--Para guardar-->
+        <button *ngIf="pIdRegistro != 0" matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary"
+            matTooltip="Agendar nota" color="secondary" (click)="fnGuardar()">
+            <i class="material-icons">save</i>
+        </button>
+
+        <!--Para actualizar datos-->
+        <button *ngIf="pIdRegistro!=0" mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+            matTooltip="Actualizar" color="secondary" (click)="fnActualizar()">
+            <mat-icon>refresh</mat-icon>
+        </button>
+
+        <!--Para devolver-->
+        <button *ngIf="pIdRegistro!=0" mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+            matTooltip="Devolver" color="secondary" (click)="fnDevolverNota()"><i
+                class="material-icons">reply</i></button>
+
+        <!--Para rechazar-->
+        <button *ngIf="pIdRegistro!=0" mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+            matTooltip="Rechazar" color="secondary" (click)="fnRechazarNota()"><i
+                class="material-icons">block</i></button>
+
+        <!--Para salir-->
+        <button mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary" matTooltip="Salir"
+            color="warn" (click)="fnRegresar()">
+            <i class="material-icons">exit_to_app</i>
+        </button>
+    </div>
+</div>

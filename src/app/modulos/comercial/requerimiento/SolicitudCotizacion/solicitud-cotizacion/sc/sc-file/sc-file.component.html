@@ -1,0 +1,149 @@
+<mat-dialog-content>
+  <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+    Cotizaciones del proveedor para SC {{data.correlativo}}
+  </h3>
+  <div class="pb-2" *ngIf="Privilegio">
+    <mat-accordion style="width: 100%">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title style="color: #002c4b; font-weight: bold;">
+            Subir PDF:
+          </mat-panel-title>
+          <button mat-icon-button>
+          </button>
+        </mat-expansion-panel-header>
+        <div class="form-row">
+          <div class="form-row col-md-12">
+            <div class="form-group col-md-10">
+              <form>
+
+                <input [formControl]="formControlFileUpload" type="file" accept="application/pdf, image/*"
+                  (change)="SeleccionarArchivo($event, lblName.id)" class="custom-file-input"
+                  aria-describedby="inputGroupFileAddon04">
+                <mat-label class="custom-file-labelX" #lblName id="lblName" style="width: 100%">
+                  Seleccione un Archivo:
+                </mat-label>
+                <mat-error *ngIf="formControlFileUpload.invalid">Debe seleccionar un PDF.</mat-error>
+              </form>
+            </div>
+            <div class="form-group col-md-2">
+              <button mat-raised-button color="accent" matTooltip="Subir Archivo" type="button" (click)="UploadFile()">
+                <mat-icon>cloud_upload</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="">
+    <span style="font-size: 12px"> <b>
+        <span style="color: rgb(255, 0, 157)">{{ contadorObservable | async }}</span>
+      </b> cotizaciones adjuntadas.</span>
+  </div>
+  <div class="mat-elevation-z8 contenedor_tabla">
+
+    <table mat-table style="width: 100%" [dataSource]="dataSourceObservable | async">
+
+      <ng-container matColumnDef="opcion">
+        <th mat-header-cell *matHeaderCellDef class="CpColor"> Opciones</th>
+        <td mat-cell *matCellDef="let element" class="bod">
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+            mat-stroked-button color="accent">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="after">
+            <!--<button mat-menu-item>
+              <mat-icon color="accent">cloud_download</mat-icon>
+              <span>Descargar</span>
+            </button>-->
+            <!-- <span>
+              <button mat-menu-item (click)="openDialog(element.sRutaArchivo)">
+                <mat-icon color="accent"> open_in_browser</mat-icon>
+                <span>Ver Archivo</span>
+              </button>
+            </span> -->
+
+
+            <span *ngIf="validarVerPdfCP()">
+              <button mat-menu-item (click)="openDialog(element.sRutaArchivo)">
+                <mat-icon color="accent"> open_in_browser</mat-icon>
+                <span>Ver Archivos</span>
+              </button>
+            </span>
+
+            <span *ngIf="validarVerPdfSP()">
+              <button mat-menu-item (click)="openDialog(element.sRutaArchivo)">
+                <mat-icon color="accent"> open_in_browser</mat-icon>
+                <span>Ver Archivos</span>
+              </button>
+            </span>
+
+            <!--            *ngIf="!Privilegio && !element.bAprobOper-->
+            <span *ngIf="!test">
+              <span *ngIf="!Privilegio && !element.bAprobOper && validarVerPdfSP()">
+                <button mat-menu-item (click)="AprobarSC(element.nIdDetCP, element.sNombreArchivo)">
+                  <mat-icon color="accent">check_circle</mat-icon>
+                  <span>Aprobar</span>
+                </button>
+              </span>
+            </span>
+
+
+
+            <span *ngIf="Privilegio">
+              <button *ngIf="!element.bAprobOper && validarVerPdfSP()" mat-menu-item
+                (click)="EliminarCot(element.nIdDetCP, element.sRutaArchivo)">
+                <mat-icon color="accent">delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+            </span>
+
+          </mat-menu>
+        </td>
+      </ng-container>
+      <!--
+
+            <ng-container matColumnDef="nIdDetCP">
+              <th mat-header-cell *matHeaderCellDef class="CpColor"> No.</th>
+              <td mat-cell *matCellDef="let element" class="bod"> {{element.nIdDetCP}} </td>
+            </ng-container>
+      -->
+
+      <ng-container matColumnDef="sNombreArchivo">
+        <th mat-header-cell *matHeaderCellDef class="CpColor"> Nombre Archivo</th>
+        <td mat-cell *matCellDef="let element" class="bod">
+          {{element.sNombreArchivo}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cUser">
+        <th mat-header-cell *matHeaderCellDef class="CpColor"> Usuario subió</th>
+        <td mat-cell *matCellDef="let element" class="bod"> {{element.cUser}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dFechaCarga">
+        <th mat-header-cell *matHeaderCellDef class="CpColor"> Fecha Subió</th>
+        <td mat-cell *matCellDef="let element" class="bod"> {{element.dFechaCarga | date: 'dd/MM/yyyy h:mm:ss a'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="bAprobOper">
+        <th mat-header-cell *matHeaderCellDef class="CpColor"> Aprobado</th>
+        <td mat-cell *matCellDef="let element" class="bod"><b>
+            <span style="color: rgb(255, 0, 157)" *ngIf="!element.bAprobOper">
+              Sin aprobación
+            </span>
+          </b>
+          <b>
+            <span style="color: rgb(255, 0, 157)" *ngIf="element.bAprobOper">
+              Aprobado
+            </span>
+          </b>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </div>
+</mat-dialog-content>

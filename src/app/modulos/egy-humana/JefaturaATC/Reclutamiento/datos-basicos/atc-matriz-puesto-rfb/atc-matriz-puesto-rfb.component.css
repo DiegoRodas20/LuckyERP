@@ -1,0 +1,118 @@
+.example-container {
+  height  : 450px;
+  width   : 100%;
+  overflow: auto;
+}
+
+.select-size {
+  width: 100%;
+}
+
+.clstitulo {
+  background-color: #334d6e;
+  color           : #fff;
+  text-align      : center;
+  border-radius   : calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+  height          : 4rem;
+}
+
+table {
+  width: 100%;
+}
+
+.clsColumnaOpc {
+  width: 15%;
+}
+
+.clsColumnaNombre {
+  width: 85%;
+}
+
+mat-radio-button {
+  margin-right: 8px;
+}
+
+mat-form-field {
+  width    : 100%;
+  font-size: 12.5px;
+}
+
+:host /deep/ .mat-form-field-flex {
+  background-color: transparent;
+}
+
+mat-label {
+  font       : 1.3em Arial, sans-serif;
+  font-weight: bold;
+}
+
+mat-card-title {
+  font-size: 33px !important;
+}
+
+:host /deep/ form .ng-invalid label {
+  color: #f44336;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled textarea {
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+
+.clsTituloExp {
+  color      : #002c4b;
+  font-weight: bold;
+  padding-top: 12px;
+}
+
+.mobMostrarTitulo {
+  display: none;
+}
+
+@media (max-width:960px) {
+  .mobOcultarTitulo {
+    display: none;
+  }
+
+  .mobMostrarTitulo {
+    display: initial;
+  }
+}
+
+.fab-container {
+  position      : fixed;
+  top           : 8rem;
+  right         : 2rem;
+  z-index       : 101;
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+  margin-top    : 5px;
+}
+
+.fab-container>div {
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+  margin-bottom : 5px;
+}
+
+.fab-container>div>button {
+  margin-top: 10px;
+  outline   : none;
+}
+
+.clsBotones {
+  background-color: #ff4081;
+  color           : white;
+}

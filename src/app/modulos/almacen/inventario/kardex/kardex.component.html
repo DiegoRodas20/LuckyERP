@@ -1,0 +1,558 @@
+<div class="col-xl-10 mx-auto" style="padding-top: 90px;">
+  <div>
+    <div class="mb-3" style="text-align: center;">
+      <mat-card class="title-card">Reportes del Almacén</mat-card>
+    </div>
+  </div>
+  <mat-tab-group mat-align-tabs="center" #tabs>
+
+    <mat-tab label="Saldos">
+      <mat-card>
+        <app-saldos [formContainer]="formContenido" (formSaldosContainer)="actualizarFormKardex($event)"></app-saldos>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Kardex">
+
+      <div class="fab-container">
+        <div>
+          <!-- Buscar -->
+          <button mat-mini-fab class="fab-secondary" color="white" (click)="fnLlenarTabla()">
+            <i class="material-icons" matTooltip="Buscar" matTooltipPosition="left">search</i>
+          </button>
+          <!-- Generar Excel -->
+          <button mat-mini-fab class="fab-secondary" color="white" (click)="descargarExcel()">
+            <i class="material-icons" matTooltip="Generar Excel" matTooltipPosition="left">cloud_download</i>
+          </button>
+          <!-- Reiniciar filtros -->
+          <button mat-mini-fab class="fab-secondary" color="white" (click)="reiniciarFiltros()">
+            <i class="material-icons" matTooltip="Reiniciar filtros" matTooltipPosition="left">format_strikethrough</i>
+          </button>
+        </div>
+      </div>
+      <mat-card>
+        <div>
+          <div class="kardex-container">
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="true" #kardexFiltersPanel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title
+                    style="justify-content: space-between; line-height: 40px; color: #334D6E; font-weight: bold">
+                    <span style="vertical-align: middle;">Filtros de búsqueda</span>
+                    <button mat-icon-button>
+                      <mat-icon color="accent">search</mat-icon>
+                    </button>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form autocomplete="off" [formGroup]="form">
+                  <div class="row">
+                    <!-- Cliente NgSelect-->
+                    <div class="col-md-6">
+                      <ng-select [clearable]="true" placeholder="Cliente" formControlName="cliente"
+                        notFoundText="No hay clientes registrados">
+                        <ng-option *ngFor="let element of clientes" [value]="element.nId">
+                          {{element.sDescripcion}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                    <!-- Presupuesto NgSelect -->
+                    <div class="col-md-6">
+                      <ng-select [clearable]="true" placeholder="Presupuesto" formControlName="presupuesto"
+                        notFoundText="No hay articulos disponibles" appendTo="body">
+                        <ng-option *ngFor="let element of presupuestos" [value]="element.nId">
+                          {{element.sDescripcion}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                    <!-- Articulo NgSelect -->
+                    <div class="col-md-6">
+                      <ng-select [clearable]="true" placeholder="Articulo" formControlName="articulo"
+                        notFoundText="No hay articulos disponibles" appendTo="body">
+                        <ng-option *ngFor="let element of articulos" [value]="element.nId">
+                          {{element.sDescripcion}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                    <!-- Lote Input-->
+                    <div class="col-md-6" style="padding-top: 13px;">
+                      <mat-form-field style="width: 100%; height: 51.5px;">
+                        <mat-label>Lote</mat-label>
+                        <input matInput formControlName="lote">
+                        <mat-error
+                          *ngIf="(form.get('lote').hasError('minlength') || form.get('lote').hasError('maxlength') ) && form.get('lote').touched">
+                          El lote debe tener una longitud de 8 números
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <!-- Chipset Almacén -->
+                    <div class="col-md-6" style="padding-top: 6px;">
+                      <mat-form-field class="example-chip-list" style="width: 100%">
+                        <mat-label>Almacenes</mat-label>
+                        <mat-chip-list #chipList style="height: 51.5px;">
+                          <mat-chip *ngFor="let chipElement of chipElements" [selectable]="true" [removable]="true"
+                            (removed)="fnEliminarAlmacen(chipElement)">
+                            {{chipElement.sDescripcion}}
+                            <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                          </mat-chip>
+                          <input placeholder="Seleccionar almacén(es)..." #almacenesInput formControlName="almacenes"
+                            [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="fnAgregarAlmacen($event)">
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="fnSeleccionarAlmacen($event)"
+                          [displayWith]="fnDisplayAlmacen">
+                          <mat-option *ngFor="let almacen of filteredAlmacen | async" [value]="almacen">
+                            {{almacen.sDescripcion}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                    <!-- Oper. Log NgSelect -->
+
+                    <div class="col-md-6" style="padding-top: 6px;">
+                      <mat-form-field class="example-chip-list" style="width: 100%">
+                        <mat-label>OperLog</mat-label>
+                        <mat-chip-list #chipListOperLog style="height: 51.5px;">
+                          <mat-chip *ngFor="let chipElement of chipElementsOper" [selectable]="true" [removable]="true"
+                            (removed)="fnEliminarOperLog(chipElement)">
+                            {{chipElement.sDescripcion}}
+                            <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                          </mat-chip>
+                          <input placeholder="Seleccionar Operador(es)..." #OperLogInput formControlName="operLogs"
+                            [matAutocomplete]="autoOper" [matChipInputFor]="chipListOperLog"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodesOper"
+                            (matChipInputTokenEnd)="fnAgregarOperLog($event)">
+                        </mat-chip-list>
+                        <mat-autocomplete #autoOper="matAutocomplete" (optionSelected)="fnSeleccionarOperLog($event)"
+                          [displayWith]="fnDisplayOper">
+                          <mat-option *ngFor="let operLog of filteredOperLog | async" [value]="operLog">
+                            {{operLog.sDescripcion}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+
+                    <!-- <div class="col-md-6" [ngStyle]="{'padding-top': (chipElements.length > 0 ) ? '14px' : '0px' } ">
+                      <ng-select [clearable]="true" placeholder="Oper Log" formControlName="operLog"
+                        notFoundText="No hay ningún Oper Log" appendTo="body">
+                        <ng-option *ngFor="let element of operadoresLogicos" [value]="element.nId">
+                          {{element.sDescripcion}}
+                        </ng-option>
+                      </ng-select>
+                    </div> -->
+
+                    <div class="col-xl-6 ml-auto">
+                      <div class="row">
+                        <div class="col-md-4 mx-auto">
+                          <mat-checkbox class="example-margin" formControlName="traslado">Incluir translado
+                          </mat-checkbox>
+                        </div>
+                        <div class="col-md-4 mx-auto">
+                          <mat-checkbox class="example-margin" formControlName="actualizado">Incluir guias anuladas
+                          </mat-checkbox>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Destino desplegable MatSelect -->
+                  <mat-expansion-panel #matExpUbicacion class="my-2">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title
+                        style="justify-content: space-between; line-height: 40px; color: #334D6E; font-weight: bold">
+                        <span style="vertical-align: middle;">Seleccionar Destino</span>
+                        <button mat-icon-button>
+                          <mat-icon color="accent">location_on</mat-icon>
+                        </button>
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="row mt-3">
+
+                      <!-- Destino -->
+                      <div class="form-group col-md-6">
+                        <ng-select [clearable]="true" formControlName="destino" placeholder="Destino"
+                          (change)="actualizarComboboxDireccion()" appendTo="body">
+                          <ng-option *ngFor="let element of destinos" [value]="element.nId">
+                            {{element.sCodigo}} - {{element.sDescripcion}}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+
+                      <!-- Punto de llegada -->
+                      <div class="form-group col-md-6">
+                        <ng-select [clearable]="true" formControlName="puntoLlegada" placeholder="Punto de llegada"
+                          (change)="actualizarInputUbicacionDireccion();" appendTo="body">
+                          <ng-option *ngFor="let element of direcciones" [value]="element.nId">
+                            {{element.sDescripcion}}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+
+                      <!-- Ubicacion -->
+                      <div class="form-group col-md-6">
+                        <mat-form-field style="width: 100%;">
+                          <mat-label>Ubicación:</mat-label>
+                          <input type="text" readonly matInput formControlName='ubicacion'>
+                        </mat-form-field>
+                      </div>
+
+                      <!-- Direccion -->
+                      <div class="form-group col-md-6">
+                        <mat-form-field style="width: 100%;">
+                          <mat-label>Dirección:</mat-label>
+                          <input type="text" readonly matInput formControlName='direccion'>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel #matExpUbicacion class="mt-2" [expanded]="true">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title
+                        style="justify-content: space-between; line-height: 40px; color:#334D6E; font-weight: bold">
+                        <span style="vertical-align: middle;">Filtrar por fechas</span>
+                        <button mat-icon-button>
+                          <mat-icon color="accent">date_range</mat-icon>
+                        </button>
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="row mt-3">
+                      <div class="col-md-12">
+                        <mat-radio-group formControlName="fechasController" (ngModelChange)="mostrarFiltroFechas();"
+                          class="d-flex justify-content-around">
+                          <mat-radio-button style="margin-left: 5px;" [value]="true">
+                            Por Rango de Meses
+                          </mat-radio-button>
+                          <mat-radio-button [value]="false">
+                            Por Rango de Fechas
+                          </mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <div *ngIf="filtroFecha" class="col-md-10 mt-3 w-100 mx-auto">
+                        <div class="row">
+                          <div class="col-xl-5 mx-auto">
+                            <div class="row">
+                              <div class="col-md-10">
+                                Desde
+                              </div>
+                              <div class="col-md-6">
+                                <ng-select [clearable]="false" formControlName="rangoMesAnhoInicio" placeholder="Año"
+                                  appendTo="body">
+                                  <ng-option *ngFor="let element of anhos" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                  </ng-option>
+                                </ng-select>
+                                <mat-error
+                                  *ngIf="form.get('rangoMesAnhoInicio').hasError('monthRangeValidator') && form.get('rangoMesAnhoInicio').touched">
+                                  El año inicial debe ser menor o igual al año final
+                                </mat-error>
+                              </div>
+                              <div class="col-md-6">
+                                <ng-select [clearable]="false" formControlName="rangoMesMesInicio" placeholder="Mes"
+                                  appendTo="body">
+                                  <ng-option *ngFor="let element of meses" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                  </ng-option>
+                                </ng-select>
+                                <mat-error
+                                  *ngIf="form.get('rangoMesMesInicio').hasError('monthRangeValidator') && form.get('rangoMesMesInicio').touched">
+                                  El mes inicial debe ser menor o igual al mes final
+                                </mat-error>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xl-5 mx-auto">
+                            <div class="row">
+                              <div class="col-md-10">
+                                Hasta
+                              </div>
+                              <div class="col-md-6">
+                                <ng-select [clearable]="false" formControlName="rangoMesAnhoFin" placeholder="Año"
+                                  appendTo="body">
+                                  <ng-option *ngFor="let element of anhos" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                  </ng-option>
+                                </ng-select>
+                                <mat-error
+                                  *ngIf="form.get('rangoMesAnhoFin').hasError('monthRangeValidator') && form.get('rangoMesAnhoFin').touched">
+                                  El año final debe ser mayor o igual al año inicial
+                                </mat-error>
+                              </div>
+                              <div class="col-md-6">
+                                <ng-select [clearable]="false" formControlName="rangoMesMesFin" placeholder="Mes"
+                                  appendTo="body">
+                                  <ng-option *ngFor="let element of meses" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                  </ng-option>
+                                </ng-select>
+                                <mat-error
+                                  *ngIf="form.get('rangoMesMesFin').hasError('monthRangeValidator') && form.get('rangoMesMesFin').touched">
+                                  El mes final debe ser mayor o igual al mes inicial
+                                </mat-error>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="!filtroFecha" class="col-md-10 mt-3 w-100 mx-auto">
+                        <div class="row">
+                          <div class="col-md-5 mx-auto">
+                            <mat-form-field>
+                              <mat-label>Fecha Inicio</mat-label>
+                              <input matInput [matDatepicker]="fechaInicioPicker"
+                                formControlName="rangoFechasFechaInicio" (click)="fechaInicioPicker.open()">
+                              <mat-datepicker-toggle matSuffix [for]="fechaInicioPicker"></mat-datepicker-toggle>
+                              <mat-datepicker #fechaInicioPicker></mat-datepicker>
+                              <mat-error
+                                *ngIf="form.get('rangoFechasFechaInicio').hasError('required') && form.get('rangoFechasFechaInicio').touched">
+                                Ingrese una fecha de nacimiento válida
+                              </mat-error>
+                              <mat-error
+                                *ngIf="form.get('rangoFechasFechaInicio').hasError('dateRangeValidator') && form.get('rangoFechasFechaInicio').touched">
+                                La fecha de inicio no puede ser mayor a la fecha final
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-5 mx-auto">
+                            <mat-form-field>
+                              <mat-label>Fecha Fin</mat-label>
+                              <input matInput [matDatepicker]="fechaFinPicker" formControlName="rangoFechasFechaFin"
+                                (click)="fechaFinPicker.open()">
+                              <mat-datepicker-toggle matSuffix [for]="fechaFinPicker"></mat-datepicker-toggle>
+                              <mat-datepicker #fechaFinPicker></mat-datepicker>
+                              <mat-error
+                                *ngIf="form.get('rangoFechasFechaFin').hasError('required') && form.get('rangoFechasFechaFin').touched">
+                                Ingrese una fecha de nacimiento válida
+                              </mat-error>
+                              <mat-error
+                                *ngIf="form.get('rangoFechasFechaFin').hasError('dateRangeValidator') && form.get('rangoFechasFechaFin').touched">
+                                La fecha final no puede ser menor a la fecha de inicio
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-expansion-panel>
+
+                </form>
+              </mat-expansion-panel>
+              <mat-expansion-panel [disabled]="listaKardex.length == 0" #kardexTablePanel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title
+                    style="justify-content: space-between; line-height: 40px; color: #334D6E; font-weight: bold">
+                    <span style="vertical-align: middle;">Resultado</span>
+                    <button mat-icon-button>
+                      <mat-icon color="accent">table</mat-icon>
+                    </button>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="mt-5">
+                  <div class="row">
+                    <div class="col-lg-6 mx-auto">
+                      <mat-form-field style="width: 100%;">
+                        <mat-label>Buscar:</mat-label>
+                        <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+                        <button mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="this.txtFiltro.setValue('')">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div id="listaMobile" class="mat-elevation-z8 scroll-table">
+                    <div class="example-container">
+                      <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="sCodOperLog">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Operación </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Operación: '>
+                            <ngb-highlight [result]="row.sCodOperLog" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUsuarioMovo">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario Movo </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Usuario Movo: '>
+                            <ngb-highlight [result]="row.sUsuarioMovo" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dFechaOperMov">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Traslado </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='F. Traslado: '>
+                            <ngb-highlight [result]="row.dFechaOperMov | date: 'dd/MM/yyyy'" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCodAlmacenOrigen">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacén Origen </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Almacén Origen: '>
+                            <ngb-highlight [result]="row.sCodAlmacenOrigen" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEjecutivo">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ejecutivo </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Ejecutivo: '>
+                            <ngb-highlight [result]="row.sEjecutivo" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCentroCostoOrigen">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto Origen </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Presupuesto Origen: '>
+                            <ngb-highlight [result]="row.sCentroCostoOrigen" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCodAlmacenDestino">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacén Destino </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Almacén Destino: '>
+                            <ngb-highlight [result]="row.sCodAlmacenDestino" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCentroCostoDestino">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto Destino </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Presupuesto Destino: '>
+                            <ngb-highlight [result]="row.sCentroCostoDestino" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEntidadMovimiento">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente/Proveedor </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Cliente/Proveedor: '>
+                            <ngb-highlight [result]="row.sEntidadMovimiento" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDireccionMovimiento">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Dirección: '>
+                            <ngb-highlight [result]="row.sDireccionMovimiento" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCodArticulo">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Artículo: '>
+                            <ngb-highlight [result]="row.sCodArticulo" [term]="txtFiltro.value"></ngb-highlight>
+
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sArticuloDescripcion">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo Descripción</th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Artículo Descripción: '>
+                            <ngb-highlight [result]="row.sArticuloDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sLote">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Lote: '>
+                            <ngb-highlight [result]="row.sLote" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nPrecioUnidad">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Unidad </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Precio Unidad: '>
+                            <ngb-highlight [result]="row.nPrecioUnidad" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dFechaVence">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Vencimiento </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='F. Vencimiento: '>
+                            <ngb-highlight [result]="row.dFechaVence | date: 'dd/MM/yyyy'" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nStockAnterior">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock Anterior </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Stock Anterior: '>
+                            <ngb-highlight [result]="row.nStockAnterior" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nCantidadIngreso">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingreso </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Ingreso: '>
+                            <ngb-highlight [result]="row.nCantidadIngreso" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nCantidadSalida">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Salida </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Salida: '>
+                            <ngb-highlight [result]="row.nCantidadSalida" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nStockActual">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock Actual </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Stock Actual: '>
+                            <ngb-highlight [result]="row.nStockActual" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sGuiaReferencia">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Guía de Referencia </th>
+                          <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                            data-label='Guía de Referencia: '>
+                            <ngb-highlight [result]="row.sGuiaReferencia" [term]="txtFiltro.value"></ngb-highlight>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" class="paginator-fixed"></mat-paginator>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+          </div>
+
+        </div>
+      </mat-card>
+
+    </mat-tab>
+
+    <mat-tab label="Ingresos/Salidas">
+      <mat-card>
+        <app-ingresos-salidas [formContainer]="formContenido"
+          (formIngresosSalidasContainer)="actualizarFormKardex($event)">
+        </app-ingresos-salidas>
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

@@ -1,0 +1,45 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.breadcrump {
+    font-size: 15px;
+    color: lightslategrey;
+}
+
+mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-icon-button ::ng-deep .mat-button-focus-overlay {
+    display: none;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}

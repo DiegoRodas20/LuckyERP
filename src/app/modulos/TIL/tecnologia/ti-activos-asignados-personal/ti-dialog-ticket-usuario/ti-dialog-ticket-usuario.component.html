@@ -1,0 +1,159 @@
+<h5 mat-dialog-title class="card-header">
+    Tickets Solicitados
+    <button class="close button-modal-lucky" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-xl-3 col-sm-6">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Buscar Ticket:</mat-label>
+                <input type="text" matInput [formControl]="txtFiltroTicket" (input)="fnFiltrarTicket()">
+                <button style="outline: none;" mat-button *ngIf="txtFiltroTicket.value" matSuffix mat-icon-button
+                    aria-label="Clear"
+                    (click)="this.txtFiltroTicket.setValue(''); this.GetTicketSolicitados(this.rbEstado.value);">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 ml-auto mt-4" *ngIf="bExisteTicketSinRevisar">
+            <div class="row color-box-container" style="font-size: 12px;">
+                <div class="col-xl-12 mx-auto">
+                    <div class="color-box box-green"></div>
+                    <span>
+                        Tickets actualizados
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-12 col-12 mt-4">
+            <mat-radio-group [formControl]="rbEstado" (change)="GetTicketSolicitados($event.value)" class="row">
+                <mat-radio-button class="col-lg-3 col-6" *ngFor="let opcion of opciones" [value]="opcion.nNumero">
+                    {{opcion.sDescripcion}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <!--Mat Table Tickets-->
+            <div id="listaMobile" class="mat-elevation-z8 ">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSourceTicket" #sortTicket="matSort" matSort>
+
+                        <ng-container matColumnDef="opcion" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            </th>
+                            <td data-label='Opciones: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+
+                                    <button (click)="fnVerDetalle(row)" mat-menu-item>
+                                        <mat-icon color="accent">touch_app</mat-icon>
+                                        <span>Ver detalle</span>
+                                    </button>
+
+                                    <button *ngIf="row.bReposicion==true" (click)="fnSolicitar(row)" mat-menu-item>
+                                        <mat-icon color="accent">settings</mat-icon>
+                                        <span>Reposición</span>
+                                    </button>
+                                </mat-menu>
+
+                                <!-- <button mat-stroked-button color="accent" matTooltip="Ver detalle"
+                                    (click)="fnVerDetalle(row);">
+                                    <mat-icon>touch_app</mat-icon>
+                                </button> -->
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sTipoTicket">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Tipo Ticket
+                            </th>
+                            <td data-label='Tipo Ticket: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sTipoTicket" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sTicket">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Ticket
+                            </th>
+                            <td data-label='Ticket: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sTicket" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sSolicitante">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Solicitante
+                            </th>
+                            <td data-label='Solicitante: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sSolicitante | titlecase" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sArticulo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Solicitó
+                            </th>
+                            <td data-label='Solicitó: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sArticulo" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="bReposicion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Reposición
+                            </th>
+                            <td data-label='Reposición: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.bReposicion==true?'Si':''" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dFechaCrea">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Fecha Solicitud
+                            </th>
+                            <td data-label='Fecha Solicitud: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.dFechaCrea | date:'dd/MM/yyyy'"
+                                    [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEstado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Estado
+                            </th>
+                            <td data-label='Estado: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sEstado" [term]="txtFiltroTicket.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsTicket; sticky: true">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsTicket;"
+                            [ngClass]="{
+                                'registro-green': !row.bRevisadoTI}">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator #paginatorTicket [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

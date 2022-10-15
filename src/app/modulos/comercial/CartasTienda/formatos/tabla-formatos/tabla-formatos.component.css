@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+}
+
+.contenedor_documento {
+  display: none;
+}
+
+.btn_activo {
+  background-color: #334d6e;
+  color: white;
+}
+
+.btn_pasivo {
+  background-color: white;
+  color: #334d6e;
+}

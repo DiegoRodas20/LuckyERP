@@ -1,0 +1,33 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Reportes de Facturación
+        </h3>
+    </div>
+
+    <mat-tab-group mat-align-tabs="center" #tabs>
+
+        <!-- Reporte Pendientes de facturar -->
+        <mat-tab label="Pendientes de facturar">
+            <app-ppto-pendiente-facturar></app-ppto-pendiente-facturar>
+        </mat-tab>
+
+        <!-- Reporte Registro de ventas -->
+        <mat-tab label="Registro de ventas">
+            <app-registro-ventas></app-registro-ventas>
+        </mat-tab>
+
+        <!-- Reporte Indicador de cobranza -->
+        <mat-tab label="Indicador de cobranza">
+            <app-indicador-cobranza></app-indicador-cobranza>
+        </mat-tab>
+
+        <!-- Exportar Registro de ventas -->
+        <mat-tab label="Exp Registro de Ventas">
+            <app-exp-registro-ventas></app-exp-registro-ventas>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>

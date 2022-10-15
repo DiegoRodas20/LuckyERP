@@ -1,0 +1,72 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+p {
+  color: #999999;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+
+.example-margin {
+  margin: 0 12px;
+}
+
+.margen {
+  margin-top: 10px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+.caja {
+  padding: 15px;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.centroOpciones {
+  justify-content: center;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}

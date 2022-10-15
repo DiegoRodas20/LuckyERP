@@ -1,0 +1,48 @@
+<div class="container" style="padding-top: 80px;">
+
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+                <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+            <!-- <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="editarGrupo()">
+                <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="cancelar()">
+                <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+                <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">exit_to_app</i>
+            </button> -->
+        </div>
+    </div>
+
+    <div class="col-md-12 ">
+        <div class="mb-3 p-3" style="text-align: center;">
+            <mat-card class="title-card">Editar Grupo Partida</mat-card>
+
+        </div>
+    </div>
+    <div style="text-align: -webkit-center;">
+        <div class="col-md-5 col-sm-5 col-lg-5">
+            <mat-form-field class="p-2 ml-4" style="width: 90%;">
+                <mat-label>Tipo del Grupo</mat-label>
+                <input matInput placeholder="Descripcion" [value]="tipoGrupoPartida" readonly>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div style="margin-right: 31px;
+    margin-left: 32px;">
+        <app-table-partida (nombreGrupo)="obtenerNombre($event)" (addButtonAction)="addItemsTable($event)" (partidaSeleccionada)="eliminarPartidaDetalle($event)" [nombreGrupoPadre]="cabecera" [datos]="listaItems" [isDelete]="true" [readOnly]="true"></app-table-partida>
+
+    </div>
+    <!-- <div class="row p-4 justify-content-center">
+        <button mat-raised-button color="primary" class="col-md-4" (click)="editarGrupo()"> Grabar </button>
+        <div class="col-md-1"></div>
+        <button mat-raised-button color="warn" class="col-md-4" (click)="cancelar()"> Cerrar </button>
+    </div> -->
+</div>

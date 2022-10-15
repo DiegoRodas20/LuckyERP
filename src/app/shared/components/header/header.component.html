@@ -1,0 +1,110 @@
+<mat-sidenav class="clsTamano" #sidenav>
+    <!-- mode="push" -->
+
+    <mat-toolbar style="background-color: #334D6E;">
+        <span style="color: #fff">Menú</span>
+        <span style="flex: 1 1 auto;"></span>
+        <button style="color: #fff" mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <mat-nav-list class="list-items">
+
+        <mat-expansion-panel *ngFor="let vMenu of lMenuList">
+            <mat-expansion-panel-header style="height: 40px !important;">
+                <mat-panel-title>
+                    {{ vMenu.cNombre }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-accordion *ngFor="let vModulo of vMenu.sub">
+                <!-- sub menu con items  -->
+                <mat-expansion-panel *ngIf="vModulo.sub?.length > 0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{ vModulo.cNombre }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <mat-accordion *ngFor="let vVista of vModulo.sub">
+                        <!-- sub sub menu con items  -->
+                        <mat-expansion-panel *ngIf="vVista.sub?.length > 0">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{ vVista.cNombre }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-selection-list #shoes [multiple]="false" *ngIf="vVista.sub?.length > 0">
+                                <mat-list-option *ngFor="let vSVista of vVista.sub" style="font-size: 15px;"
+                                    routerLinkActive="selected" class="list-item"
+                                    (click)="fnChange(vSVista.cUrl, vSVista.cId); sidenav.toggle()">
+                                    {{ vSVista.cNombre }}
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </mat-expansion-panel>
+                        <!-- sub sub menu sin items -->
+                        <mat-expansion-panel hideToggle *ngIf="vVista.sub?.length == 0">
+                            <!--hideToggle-->
+                            <mat-expansion-panel-header routerLinkActive="selected" class="list-item"
+                                (click)="fnChange(vVista.cUrl, vVista.cId); sidenav.toggle()">
+                                <mat-panel-title>
+                                    {{ vVista.cNombre }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-expansion-panel>
+                <!-- sub menu sin items -->
+                <mat-expansion-panel hideToggle *ngIf="vModulo.sub?.length == 0">
+                    <!--hideToggle-->
+                    <mat-expansion-panel-header routerLinkActive="selected" class="list-item"
+                        (click)="fnChange(vModulo.cUrl, vModulo.cId); sidenav.toggle()">
+                        <mat-panel-title>
+                            {{ vModulo.cNombre }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+
+    </mat-nav-list>
+
+</mat-sidenav>
+
+<div class="mat-elevation-z8 clscabecera">
+    <mat-toolbar class="clstoolbar">
+        <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+            (mouseover)="sidenav.toggle(); fnMenu()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <img id="imageid" src="../../assets/img/lucky_ico.ico" />
+        <button mat-icon-button [matMenuTriggerFor]="menuEmpresa" class="example-icon"
+            aria-label="Example icon-button with share icon">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu #menuEmpresa="matMenu">
+            <button mat-menu-item *ngFor="let vEmp of lEmpList" (click)="fnList(vEmp.nIdEmp, vEmp.sIdPais)">
+                <span>{{ vEmp.sDespEmp }}</span>
+            </button>
+        </mat-menu>
+        <mat-label>{{ nombreEmpresa }}</mat-label>
+        <span class="example-spacer"></span>
+        <mat-label class="nombre">{{ lMenuName }}</mat-label>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon"
+            aria-label="Example icon-button with share icon">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>perm_identity</mat-icon>
+                <span>Perfil</span>
+            </button>
+            <button mat-menu-item (click)="fnCerrarSesion()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Cerrar Sesion </span>
+            </button>
+        </mat-menu>
+    </mat-toolbar>
+</div>

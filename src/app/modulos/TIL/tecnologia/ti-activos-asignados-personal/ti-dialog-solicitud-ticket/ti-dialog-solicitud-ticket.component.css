@@ -1,0 +1,220 @@
+/*Opcion para poner mostrar y ocultar*/
+
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Estilos del Formulario */
+
+.contenedorAuditoria {
+  display: flex;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.mat-form-field-disabled input,
+.mat-select-disabled .mat-select-value {
+  color: black;
+}
+:host ::ng-deep ng-select-value,
+:host
+  ::ng-deep
+  .ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+/* Estilo del acordeon */
+.mat-expanded > .mat-expansion-panel-header {
+  /* Estilo del acordeon*/
+  background-color: #e1e1e1;
+}
+
+:host ::ng-deep .campoAuditoriaAcordeon mat-panel-title {
+  justify-content: space-between;
+  line-height: 40px;
+  color: #334d6e;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 960px) {
+  /* Campo auditoria */
+  .campoAuditoria {
+    display: none;
+  }
+
+  .contenedorAuditoria {
+    display: block;
+  }
+
+  .clsSeparador {
+    height: 0;
+    border: none;
+  }
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: auto;
+  width: 100%;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 1500px) {
+  /* Tabla */
+  .example-container {
+    width: 150%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  /* Tabla */
+  .example-container {
+    width: 170%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 18px !important;
+  }
+}
+
+.make-green {
+  background-color: rgb(187, 238, 187);
+}
+
+.pink-accordeon {
+  border-top: 2px rgb(236, 0, 140) solid;
+}
+
+.example-container {
+  height: 250px;
+  width: 100%;
+  overflow: auto;
+}
+
+/*Para darle color a los disables*/
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+.alinea-ng-select {
+  padding-bottom: 3.5px !important;
+  bottom: 0.1rem !important;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+::ng-deep
+  .ng-select.ng-invalid.ng-touched
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container:after {
+  border-bottom: thin solid #f44336 !important;
+}
+
+::ng-deep .ng-select.ng-select-disabled span.ng-star-inserted {
+  color: black !important;
+}
+
+ng-select ~ mat-error {
+  font-size: 12px;
+  margin-top: -2px;
+}

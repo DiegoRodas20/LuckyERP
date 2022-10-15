@@ -1,0 +1,427 @@
+<ngx-spinner name="spi_remuneraciones" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsDetail }">add</i>
+  </button>
+  <div [@speedDialStagger]="abDetail.length">
+    <button *ngFor="let btn of abDetail; let index = index" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="clickFab(index)" [disabled]="btn.disabled">
+      <i class="material-icons" matTooltip="{{ btn.tool }}" matTooltipPosition="left">{{ btn.icon }}</i>
+    </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">Remuneraciones</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body" style="padding-bottom: 20px">
+  <div class="row">
+    <div class="col-lg-6">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Periodo laboral </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">date_range</mat-icon>
+          </mat-expansion-panel-header>
+
+          <!-- <div class="row"> -->
+          <div [formGroup]="frmGrpPeriodoLaboral" style="padding-top: 10px">
+            <!-- <div class="form-row"> -->
+            <mat-form-field style="width: 100%">
+              <mat-label>Periodo laboral</mat-label>
+              <mat-select formControlName="selPeriodoLaboral" (selectionChange)="onChangePeriodoLaboral($event.value)">
+                <mat-option *ngFor="let elem of lstPeriodosLaborales" [value]="elem.periodoLaboralId">
+                  Desde : {{ elem.fechaInicio }} - Hasta : {{ elem.fechaFin }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Devengue </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div style="padding-top: 10px">
+            <form autocomplete="off" [formGroup]="frmGrpDevengue">
+              <div class="form-row">
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Año</mat-label>
+                    <mat-select formControlName="selAnio" (selectionChange)="onChangeAnio($event.value)">
+                      <mat-option *ngFor="let elem of lstAnios" [value]="elem.value">
+                        {{ elem.text }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Mes</mat-label>
+                    <mat-select formControlName="selMes" (selectionChange)="onChangeMes($event.value)">
+                      <mat-option *ngFor="let elem of lstMeses" [value]="elem.value">
+                        {{ elem.text }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo de periodo</mat-label>
+                    <mat-select formControlName="selTipoPeriodo" (selectionChange)="onChangeTipoPeriodo($event.value)">
+                      <mat-option *ngFor="let elem of lstTiposPeriodo" [value]="elem.id">
+                        {{ elem.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="row">
+            <!-- <div class="col-lg-4">
+              <table mat-table [dataSource]="dataLeyenda" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Leyenda </th>
+                  <td mat-cell *matCellDef="let element" [style.color]="element.color"> {{element.name}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div> -->
+            <div class="col-lg-12">
+              <mwl-calendar-month-view [viewDate]="subDate" [events]="eventSub" [locale]="locale" [refresh]="refreshSub"
+                [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+              </mwl-calendar-month-view>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6">
+      <!-- <div class="row">
+        <div class="col-sm">
+          <h6>Detalle de remuneración :</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px;">
+        </div>
+      </div> -->
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div [formGroup]="frmGrpTipoRemuneracion" style="padding-top: 10px">
+            <mat-form-field style="width: 100%">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="selTipoRemuneracion"
+                (selectionChange)="onChangeTipoRemuneracion($event.value)">
+                <mat-option *ngFor="let elem of lstTiposRemuneracion" [value]="elem.id">
+                  {{ elem.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div id="dTableMain" class="melevation">
+
+            <table mat-table [dataSource]="searchBS" style="width: 100%" multiTemplateDataRows>
+              <!-- Periodo Column -->
+              <ng-container matColumnDef="periodo">
+                <th mat-header-cell *matHeaderCellDef> Periodo </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.periodo }}
+                </td>
+              </ng-container>
+
+              <!-- Tipo Column -->
+              <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.tipo }}
+                </td>
+              </ng-container>
+
+              <!-- Dias Column -->
+              <ng-container matColumnDef="dias">
+                <th mat-header-cell *matHeaderCellDef> Días </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.dias }}
+                </td>
+              </ng-container>
+
+              <!-- Importe Column -->
+              <ng-container matColumnDef="importe">
+                <th mat-header-cell *matHeaderCellDef> Importe </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.importe | number : '1.2-2' }}
+                </td>
+              </ng-container>
+
+              <!-- More Column -->
+              <ng-container matColumnDef="more">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let row">
+                  <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons"
+                    style="cursor: pointer;" (click)="onClickExpanded(row)">expand_more</span>
+                </td>
+              </ng-container>
+
+              <!-- More Expanded -->
+              <ng-container matColumnDef="expanded_More">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="searchBC.length">
+                  <div style="overflow: hidden" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                    <div class="row div_expanded" style="padding: 10px">
+                      <div class="col-lg-12">
+                        <!-- <div class="row" style="padding-left: 15px">
+                          <div class="col-sm" style="padding: 10px 0px 0px 0px">
+                            <h6>Detalle:</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                          </div>
+                        </div> -->
+
+                        <div id="dTableExpanded" class="melevation" [ngSwitch]="element.tipoId">
+                          <!-- MatTable de Asistencia-->
+                          <table mat-table [dataSource]="ExpandedDS1" style="width: 100%" *ngSwitchCase="1">
+                            <!-- Position Column -->
+                            <!-- <ng-container matColumnDef="position">
+                              <th mat-header-cell *matHeaderCellDef>N°</th>
+                              <td mat-cell *matCellDef="let element; let i = index">
+                                {{ i + 1 }}
+                              </td>
+                            </ng-container> -->
+
+                            <!-- Supervisor Column -->
+                            <ng-container matColumnDef="supervisor">
+                              <th mat-header-cell *matHeaderCellDef> Supervisor </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.supervisor }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Cliente Column -->
+                            <ng-container matColumnDef="cliente">
+                              <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.cliente }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Dias Column -->
+                            <ng-container matColumnDef="dias">
+                              <th mat-header-cell *matHeaderCellDef> N° Días </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.dias }}
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                              <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                                No se encuentran registros.
+                              </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="ExpandedDC1; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ExpandedDC1"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                              [hidden]="ExpandedDS1 && this.ExpandedDS1.filteredData.length > 0">
+                            </mat-footer-row>
+                          </table>
+
+                          <!-- MatTable de Subsidio-->
+                          <table mat-table [dataSource]="ExpandedDS2" style="width: 100%" *ngSwitchCase="2">
+                            <!-- Tipo Column -->
+                            <ng-container matColumnDef="tipo">
+                              <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.tipo }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Fecha Inicio Column -->
+                            <ng-container matColumnDef="fechaInicio">
+                              <th mat-header-cell *matHeaderCellDef> Fecha inicio </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.fechaInicio }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Fecha Fin Column -->
+                            <ng-container matColumnDef="fechaFin">
+                              <th mat-header-cell *matHeaderCellDef> Fecha fin </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.fechaFin }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Dias Column -->
+                            <ng-container matColumnDef="dias">
+                              <th mat-header-cell *matHeaderCellDef> N° Días </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.dias }}
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                              <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                                No se encuentran registros.
+                              </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="ExpandedDC2; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ExpandedDC2"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                              [hidden]="ExpandedDS2 && this.ExpandedDS2.filteredData.length > 0">
+                            </mat-footer-row>
+                          </table>
+
+                          <!-- MatTable de Vacaciones-->
+                          <table mat-table [dataSource]="ExpandedDS3" style="width: 100%" *ngSwitchCase="3">
+                            <!-- Responsable Column -->
+                            <ng-container matColumnDef="responsable">
+                              <th mat-header-cell *matHeaderCellDef> Responsable </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.responsable }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Fecha Inicio Column -->
+                            <ng-container matColumnDef="fechaInicio">
+                              <th mat-header-cell *matHeaderCellDef> Fecha inicio </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.fechaInicio }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Fecha Fin Column -->
+                            <ng-container matColumnDef="fechaFin">
+                              <th mat-header-cell *matHeaderCellDef> Fecha fin </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.fechaFin }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Dias Column -->
+                            <ng-container matColumnDef="dias">
+                              <th mat-header-cell *matHeaderCellDef> N° Días </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.dias }}
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                              <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                                No se encuentran registros.
+                              </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="ExpandedDC3; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ExpandedDC3"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                              [hidden]="ExpandedDS3 && this.ExpandedDS3.filteredData.length > 0">
+                            </mat-footer-row>
+                          </table>
+
+                          <!-- MatTable de KPI-->
+                          <table mat-table [dataSource]="ExpandedDS4" style="width: 100%" *ngSwitchCase="4">
+                            <!-- Tipo Column -->
+                            <ng-container matColumnDef="tipo">
+                              <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.tipo }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Campaña Column -->
+                            <ng-container matColumnDef="campania">
+                              <th mat-header-cell *matHeaderCellDef> Campaña </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.campania }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Cliente Column -->
+                            <ng-container matColumnDef="cliente">
+                              <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.cliente }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Importe Column -->
+                            <ng-container matColumnDef="importe">
+                              <th mat-header-cell *matHeaderCellDef> Importe </th>
+                              <td mat-cell *matCellDef="let element">
+                                {{ element.importe | number : '1.2-2' }}
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                              <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                                No se encuentran registros.
+                              </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="ExpandedDC4; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ExpandedDC4"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                              [hidden]="ExpandedDS4 && this.ExpandedDS4.filteredData.length > 0">
+                            </mat-footer-row>
+                          </table>
+
+                          <!-- <mat-paginator #pagExpanded style="display: contents" [hidePageSize]="false" [pageSize]="4">
+                          </mat-paginator> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                  No se encuentran registros.
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="searchBC; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: searchBC"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['expanded_More']"
+                [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none">
+              </tr>
+
+              <mat-footer-row *matFooterRowDef="['noData']"
+                [hidden]="searchBS && this.searchBS.filteredData.length > 0">
+              </mat-footer-row>
+            </table>
+          </div>
+
+          <mat-paginator #searchB style="display: contents" [hidePageSize]="false" [pageSize]="4">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar *ngIf="pbRemuneraciones" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

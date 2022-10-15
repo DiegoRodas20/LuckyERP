@@ -1,0 +1,36 @@
+<div class="col-xl-12 mx-auto" style="padding-top: 90px; margin-bottom: 10px;" >
+
+  <div>
+    <div class="mb-3" style="text-align: center;">
+      <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">
+          <h3>Rep. pptos y partidas con fee y descuentos prorrateados </h3>
+        </mat-card>
+      </div>
+    </div>
+    <mat-card>
+      <mat-tab-group mat-align-tabs="center" #tabs>
+
+        <mat-tab label="Rentabilidad">
+          <mat-card>
+            <app-rentabilidad></app-rentabilidad>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Rentabilidad por niveles">
+          <mat-card>
+            <app-rentabilidad-niveles></app-rentabilidad-niveles>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Prorrateo">
+          <mat-card>
+            <app-ppto-prorrateo></app-ppto-prorrateo>
+          </mat-card>
+        </mat-tab>
+
+      </mat-tab-group>
+    </mat-card>
+
+  </div>
+</div>

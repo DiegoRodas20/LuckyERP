@@ -1,0 +1,209 @@
+<h5 mat-dialog-title style="margin-bottom: 0px!important; width: 100%;text-align: center;" class="card-header center-text-card">
+    Ubicación de artículos
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form [formGroup]="formArticulo" class="row">
+            <div class="col-md-8">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Artículo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtArticulo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Volumen x Und.:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtVolumenUnd">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Peso x Und.:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtPesoUnd">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>UM:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtUndMedida">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Unidades:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtUnidades">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Volumen Total:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtVolumenTotal">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Peso Total:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtPesoTotal">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Por Ubicar:</mat-label>
+                    <input type="number" readonly matInput formControlName="txtPorUbicar">
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+    <mat-card *ngIf="this.inputModal.bRegistrando" style="margin-bottom: 5px;">
+        <form [formGroup]="formUbicacion" class="row">
+            <div class="col-md-8">
+                <ng-select style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body" [clearable]="false"
+                    formControlName="cboUbicacion" placeholder="Ubicación" required>
+                    <ng-option *ngFor="let vUbicacion of lUbicacion" [value]="vUbicacion">
+                        {{vUbicacion.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formUbicacion.get('cboUbicacion').hasError('required')  && formUbicacion.get('cboUbicacion').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="col-md-2 col-10">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Cantidad:</mat-label>
+                    <input type="number" (input)="fnRedondear('txtCantidad')" matInput formControlName="txtCantidad"
+                        [errorStateMatcher]="matcher">
+                    <mat-error
+                        *ngIf="formUbicacion.get('txtCantidad').hasError('required') || formUbicacion.get('txtCantidad').hasError('min') ">
+                        .Obligatorio
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 col-2 d-flex justify-content-end">
+                <button matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAgregarUbicacion()">
+                    <mat-icon>arrow_downward</mat-icon>
+                </button>
+            </div>
+        </form>
+    </mat-card>
+
+    <div class="row">
+        <div class="col-12">
+
+            <div id="listaMobile" class="mat-elevation-z8">
+
+                <div class="table-container-1">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="opcion">
+                            <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc">
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc">
+                                <button (click)="fnEliminarUbicacion(row)" mat-icon-button color="accent"
+                                    matTooltip="Eliminar">
+                                    <mat-icon> delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEmpresaActual">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Empresa
+                            </th>
+                            <td data-label='Empresa: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sEmpresaActual}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCliente">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Cliente
+                            </th>
+                            <td data-label='Cliente: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaLarge"> {{row.sCliente}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUbicacion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Ubicación
+                            </th>
+                            <td data-label='Ubicación: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sUbicacion}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sArticulo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                Artículo
+                            </th>
+                            <td data-label='Artículo: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaLarge">
+                                {{row.sArticulo}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFechaIngreso">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha
+                                ingreso
+                            </th>
+                            <td data-label='Fecha ingreso: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sFechaIngreso}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFechaVence">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha
+                                expira
+                            </th>
+                            <td data-label='Fecha expira: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sFechaVence}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nIngreso">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                                Unidades
+                            </th>
+                            <td data-label='Unidades: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaLib2">
+                                {{row.nIngreso}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <!--Para guardar-->
+        <button *ngIf="this.inputModal.bRegistrando" matTooltip="Añadir" mat-mini-fab color="accent"
+            (click)="fnGuardar()">
+            <mat-icon>check</mat-icon>
+        </button>
+
+        <!-- <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button> -->
+    </div>
+</mat-dialog-actions>

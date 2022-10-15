@@ -1,0 +1,356 @@
+.clsDivRegistro {
+  background-color: white;
+  border: solid 2px #002c4b;
+  border-radius: 5px;
+}
+/*Opcion para poner mostrar y ocultar*/
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+.clsShow2 {
+  display: inline-block;
+}
+
+.clsHide2 {
+  display: none;
+}
+
+.btnOne {
+  font-size: 12px;
+  width: 120px;
+  height: 30px;
+  font-weight: bold;
+}
+.form-row .form-group label {
+  font-size: 12.5px;
+}
+
+.clsScrollTable {
+  overflow: auto;
+  width: 100%;
+  height: 500px;
+}
+
+.clsScrollTable2 {
+  overflow: auto;
+  width: 100%;
+  height: 200px;
+}
+
+.clsbtnAccion2ed {
+  margin: 5px 0px 5px 0px;
+  border: 0px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.clsbutton2 button {
+  width: 80%;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+  border: 0px;
+  font-size: 10px;
+  color: darkblue;
+}
+
+.clsScrollTable .table tr th {
+  padding: 5px !important;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #334d6e;
+  color: white;
+}
+
+.clsScrollTable .table tr td {
+  padding: 10px !important;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.clsScrollTable2 {
+  overflow: auto;
+  width: 100%;
+  height: 200px;
+}
+
+.clsScrollTable2 .table tr th {
+  padding: 5px !important;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #334d6e;
+  color: white;
+}
+
+.clsScrollTable2 .table tr td {
+  padding: 10px !important;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table {
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.clsbutton button {
+  width: 100%;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+  font-size: 12px;
+}
+
+th {
+  font-size: 10px;
+}
+th label {
+  font-size: 9.5px !important;
+}
+
+.clsMin {
+  width: 63% !important;
+}
+
+.clsMin2 {
+  width: 50% !important;
+}
+
+.clsMin3 {
+  width: 40% !important;
+}
+
+input [type="button"] {
+  cursor: pointer;
+}
+
+select {
+  width: 70%;
+  float: right;
+  font-size: 10.5px;
+  background-color: #d8ebff;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.clsEstatico {
+  position: sticky;
+  top: 0;
+  /* background-color: #7F7F7F; */
+  /* color: white; */
+  font-weight: bold;
+  text-align-last: center;
+}
+
+.clsImg {
+  width: 370px !important;
+  height: 220px !important;
+}
+
+.clsNum {
+  text-align: right;
+}
+
+.clsNum .table tr {
+  text-align: center;
+}
+
+.clsprincipal {
+  padding: 80px 15px 0px 15px;
+}
+
+td,
+th {
+  font-size: 14px;
+  /* text-align: center; */
+}
+
+/* td {
+    font-size: 14px;
+    text-align: center;
+  }
+  th {
+      font-size: 14px;
+      text-align: center;
+  } */
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+.example-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}
+
+.example-container2 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.example-container3 {
+  height: 200px;
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+  /* width: 100%; */
+  width: 1400px;
+}
+
+.table3 {
+  width: 700px;
+}
+
+.clsColumnaOpc {
+  width: 80px;
+}
+.clsColumnaLarge {
+  width: 220px;
+}
+
+.clsColumnaLib {
+  width: 80px;
+}
+
+.clsColumnaOpc2 {
+  width: 40px;
+}
+
+.table2 {
+  width: 1150px;
+}
+
+.clsColumnaOpc3 {
+  width: 60px;
+}
+
+/* .container-fluid {
+    height: 200px;
+  } */
+/* ************************* */
+:host /deep/ .mat-step-header .mat-step-icon-selected,
+:host /deep/ .mat-step-header .mat-step-icon {
+  background-color: rgb(236, 0, 140);
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-state-error {
+  background-color: rgb(51, 77, 110);
+}
+
+:host /deep/ .mat-step-header .mat-step-label.mat-step-label-active,
+:host /deep/ .mat-step-header .mat-step-label {
+  color: white;
+}
+
+:host /deep/ .mat-stepper-horizontal-line {
+  border-top-color: white;
+}
+
+:host /deep/ .mat-horizontal-stepper-header-container {
+  background-color: rgb(51, 77, 110);
+  margin-bottom: 10px;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 149;
+}
+
+:host /deep/ .mat-sort-header-arrow {
+  color: white;
+}
+
+/* :host /deep/ .create-account-form { */
+.mat-focused .mat-form-field-ripple {
+  background-color: red !important;
+}
+.mat-focused .mat-form-field-label {
+  /*change color of label when focused*/
+  color: blue !important;
+}
+/* } */
+
+.selector {
+  /* definir una altura pequeña para forzar el scroll */
+  height: 100px;
+  overflow-y: scroll;
+  width: 300px;
+
+  /* cambiar el estilo por defecto de la barra de scroll */
+  scrollbar-color: yellow #800080;
+  scrollbar-width: 10px;
+}
+
+.clsScrollTable {
+  overflow: auto;
+  width: 100%;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.impresionActiva {
+  display: none;
+}
+
+.impresion {
+  display: none;
+}
+
+@media print {
+
+  .impresionActiva{
+    display: block;
+  }
+
+  .noImpresion{
+    display: none;
+  }
+
+}

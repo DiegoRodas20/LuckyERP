@@ -1,0 +1,301 @@
+<div class="col-xl-10 mx-auto contenedorComponente" style="padding-top: 90px;"
+    [ngStyle]="{'display': (estaCargado) ? 'block' : 'none'}">
+
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">
+                    <h3>Asignación al Personal</h3>
+                </mat-card>
+            </div>
+        </div>
+
+        <mat-expansion-panel [expanded]="!esCelular" class="mat-elevation-z8" class="campoAcordeon" 
+            (opened)="fnCambiarAlturaTabla()"
+            (closed)="fnCambiarAlturaTabla()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Datos del personal
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form [formGroup]="formDetalleInventario">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="row mt-1">
+
+                            <div class="col-lg-9 mt-1" *ngIf="estaCreando">
+                                <ng-select [clearable]="false" placeholder="Colaborador" formControlName="cbColaborador"
+                                    notFoundText="No hay colaboradores disponibles"
+                                    (change)="fnActualizarDetalleColaborador()">
+                                    <ng-option *ngFor="let element of listaColaboradores" [value]="element.nId">
+                                        {{element.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error class="ngSelectError"
+                                    *ngIf="this.formDetalleInventario.get('cbColaborador').hasError('required') && formDetalleInventario.get('cbColaborador').touched">
+                                    Debe seleccionar un colaborador
+                                </mat-error>
+                            </div>
+
+                            <div class="col-lg-3 mt-1" *ngIf="!estaCreando">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nro Documento</mat-label>
+                                    <input matInput formControlName="documento" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-6 mt-1" *ngIf="!estaCreando">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Colaborador</mat-label>
+                                    <input matInput formControlName="colaborador" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Empresa</mat-label>
+                                    <input matInput formControlName="empresa" readonly style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Teléfono</mat-label>
+                                    <input matInput formControlName="telefono" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cuenta/Cliente</mat-label>
+                                    <input matInput formControlName="cuentaCliente" readonly style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Presupuesto</mat-label>
+                                    <input matInput formControlName="presupuesto" readonly>
+                                    <mat-error *ngIf="this.formDetalleInventario.get('presupuesto').hasError('required') && formDetalleInventario.get('presupuesto').touched">
+                                        El colaborador debe estar asignado a un presupuesto
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Canal</mat-label>
+                                    <input matInput formControlName="canal" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cargo</mat-label>
+                                    <input matInput formControlName="cargo" readonly>
+                                </mat-form-field>
+                            </div>                            
+
+                        </div>
+                    </div>
+                    <!-- <div class="col-xl-3 contenedorAuditoria">
+                        <div class="row">
+                            <div class="col-xl-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <div class="col-xl-10 campoAuditoria">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Usuario Creación:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Creacion:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" matInput formControlName="estado" readonly
+                                        style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+
+                            </div>
+
+                            <mat-accordion class="campoAuditoriaAcordeon" style="width: 100%;">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <span style="vertical-align: middle;">Información de creación</span>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div>
+                                        <mat-form-field style="width: 100%;" class="mt-3">
+                                            <mat-label>Usuario Creación:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Creación:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="estado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div> -->
+                </div>
+
+            </form>
+        </mat-expansion-panel>
+
+        <div class="mat-elevation-z8 mt-2">
+            <div id="listaMobile" class="scroll-table">
+                <div class="example-container" [ngClass]="{ 'alturaMaxima' : alturaMaxima }">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="nIdDetActivoAsigna" sticky>
+                            <th mat-header-cell *matHeaderCellDef> Opción </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                data-label='Opción: '>
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button (click)="fnModificarAsignacion(row)" mat-menu-item>
+                                        <mat-icon color="accent">touch_app</mat-icon>
+                                        <span>Ver Asignación</span>
+                                    </button>
+                                    <button (click)="fnDialogDetalleActivo(row)" mat-menu-item>
+                                        <mat-icon color="accent">touch_app</mat-icon>
+                                        <span>Ver Activo</span>
+                                    </button>
+                                    <button (click)="fnDevolverActivoAsignacion(row)" mat-menu-item *ngIf="!estaCreando && !row.nIdTicket && !row.nIdTicketReposicion">
+                                        <mat-icon color="accent">reply</mat-icon>
+                                        <span>Devolver Activo Asignado</span>
+                                    </button>
+                                    <button (click)="fnDevolverActivoAsignacionTicket(row)" mat-menu-item *ngIf="!estaCreando && row.nIdTicket && !row.nIdTicketReposicion">
+                                        <mat-icon color="accent">reply</mat-icon>
+                                        <span>Devolver Activo Asignado</span>
+                                    </button>
+                                    <button (click)="fnReposicionAsignacionDescuento(row)" mat-menu-item *ngIf="row.nIdTicketReposicion">
+                                        <mat-icon color="accent">reply</mat-icon>
+                                        <span>Generar Reposición</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEmpresa">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Empresa: '>
+                                <ngb-highlight [result]="row.sEmpresa" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sTipoActivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Recurso </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Recurso: '>
+                                <ngb-highlight [result]="row.sTipoActivo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sActivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Activo: '>
+                                <ngb-highlight [result]="row.sActivo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sArticulo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Descripción: '>
+                                <ngb-highlight [result]="row.sArticulo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nIdTicketReposicion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' style="width: 50px; text-align: center;">
+                                <mat-icon *ngIf="row.nIdTicketReposicion" color="accent" class="icon-activo-table"
+                                            (click)="fnDialogTicket(row)">warning</mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sImeiSerie">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IMEI / Serie </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='IMEI / Serie: '>
+                                <ngb-highlight [result]="row.sImeiSerie" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUsuarioEntrega">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario Asignación </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                data-label='Usuario Asignación: '>
+                                <ngb-highlight [result]="row.sUsuarioEntrega" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dFechaEntrega">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Asignación </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                data-label='Fecha Asignación: '>
+                                <ngb-highlight [result]="row.dFechaEntrega | date:'dd/MM/yyyy'" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nRepos">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nro Repos </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Nro Repos: '>
+                                <ngb-highlight [result]="row.nRepos" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sAddenda">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Addenda </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Addenda: '>
+                                <ngb-highlight [result]="row.sAddenda" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="paginator-fixed">
+                <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>
+

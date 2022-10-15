@@ -1,0 +1,116 @@
+<div class="container p-4">
+    <div class="row justify-content-center">
+        <mat-form-field class="col-lg-8 col-sm-8">
+            <mat-label>Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+            <button style="outline: none;" mat-button *ngIf="input.value" matSuffix mat-icon-button aria-label="Clear" (click)="input.value='';this.limpiar();">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <button (click)="addButton()" mat-mini-fab>
+            <i class="material-icons" >add</i>
+        </button>
+    </div>
+
+
+    <div id="listaMobile" class=" mat-elevation-z8">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="opciones" sticky *ngIf="tipoLista == 1 || tipoLista == 2">
+                    <th mat-header-cell *matHeaderCellDef>Opción</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="verDetalle(element)">
+                                <mat-icon color="accent">edit</mat-icon>
+                                <span>Editar</span>
+                            </button>
+                            <button mat-menu-item (click)="editar(element)">
+                                <mat-icon color="accent">business</mat-icon>
+                                <span>Ver Clientes</span>
+                            </button>
+                            <button mat-menu-item (click)="eliminar(element)">
+                                <mat-icon color="accent">delete</mat-icon>
+                                <span>Eliminar</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="opciones" sticky *ngIf="tipoLista == 3 || tipoLista ==  4">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Ver Detalle: '>
+                        <button mat-stroked-button color="accent" (click)="verDetalle(element)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+
+                <!-- ID Column -->
+                <ng-container *ngIf="tipoLista == 3" matColumnDef="cargo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Personal </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Dni: '>
+                      <ngb-highlight [result]="row.dni" [term]="input.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container *ngIf="tipoLista == 1 || tipoLista == 2" matColumnDef="cargo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargo </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cargo: '>
+                      <ngb-highlight [result]="row.sCod" [term]="input.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container *ngIf="tipoLista == 4" matColumnDef="cargo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cliente: '> {{row.ruc}} </td>
+                </ng-container>
+
+                <!-- Progress Column -->
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaMedium"> Descripción </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Descripción: '>
+                      <ngb-highlight [result]="row.sDescripcion" [term]="input.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="diario">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Diario </th>
+                    <td mat-cell *matCellDef="let row" class="clsColumnaLib has_label_on_mobile" data-label='Diario: '>
+                      <ngb-highlight [result]="row.diario" [term]="input.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <!-- Color Column -->
+                <ng-container matColumnDef="mensual">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Mensual </th>
+                    <td mat-cell *matCellDef="let row" class="clsColumnaLib has_label_on_mobile" data-label='Mensual: '>
+                      <ngb-highlight [result]="row.mensual" [term]="input.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container *ngIf="tipoLista !== 4" matColumnDef="aplica">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> No Aplica </th>
+                    <td mat-cell *matCellDef="let row" class="clsColumnaLib has_label_on_mobile" data-label='No Aplica: '>
+                        <!-- {{row.mensual}}  -->
+                        <mat-checkbox [disabled]="true" [checked]="!row.bAplica"></mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    </div>
+</div>

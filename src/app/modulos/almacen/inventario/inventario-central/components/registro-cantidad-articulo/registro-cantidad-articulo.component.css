@@ -1,0 +1,48 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+}
+
+mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+.subtitulo {
+    color: #334D6E;
+    font-weight: initial;
+    letter-spacing: 1px;
+}
+
+.titulo-sub {
+    color: #334D6E;
+    font-weight: 500;
+}
+
+.alinear-centro {
+    align-self: center;
+    margin-right: 10px;
+}

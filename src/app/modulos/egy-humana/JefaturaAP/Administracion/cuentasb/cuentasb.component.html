@@ -1,0 +1,1034 @@
+<!-- Div Principal -->
+<div
+  style="
+    padding-top: 80px;
+    min-height: calc(100% - 123px);
+    padding-bottom: 20px;
+  "
+>
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">Cuentas de banco</h5>
+
+      <!-- #region BOTON CON OPCIONES-->
+      <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+          <i class="material-icons" [@fabToggler]="{ value: tsMain }">add</i>
+        </button>
+        <div [@speedDialStagger]="abMain.length">
+          <button
+            *ngFor="let btn of abMain; let ibtn = index"
+            mat-mini-fab
+            class="fab-secondary"
+            color="secondary"
+            (click)="clickFab(1, ibtn)"
+            matBadgeHidden="{{ btn.badge === 0 }}"
+            matBadge="{{ btn.badge }}"
+            matBadgePosition="after"
+            matBadgeColor="accent"
+            [disabled]="btn.disabled"
+          >
+            <i
+              class="material-icons"
+              matTooltip="{{ btn.tool }}"
+              matTooltipPosition="left"
+              >{{ btn.icon }}</i
+            >
+          </button>
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <div
+        id="body-main"
+        class="card-body"
+        style="padding-bottom: 0px; padding-top: 15px"
+      >
+        <!-- #region FILTROS-->
+        <div class="icard melevation col-xl-12">
+          <div class="row" style="margin-left: 0px">
+            <h6>Aplicar filtro por :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 10px" />
+          </div>
+
+          <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+            <div class="form-row">
+              <div class="col-lg-5">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Nombres o documento de identidad</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="sNombres"
+                    (input)="filtrar()"
+                  />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="getMain.sNombres.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="getMain.sNombres.patchValue('')"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Planilla</mat-label>
+                  <mat-select
+                    formControlName="sCodPlla"
+                    (selectionChange)="filtrar()"
+                  >
+                    <mat-option>--</mat-option>
+                    <mat-option
+                      *ngFor="let item of cboPlanilla"
+                      [value]="item.sCodPlla"
+                    >
+                      {{ item.sCodPlla }} - {{ item.sDesc }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-2">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Ciudad</mat-label>
+                  <mat-select
+                    formControlName="sCiudad"
+                    (selectionChange)="filtrar()"
+                  >
+                    <mat-option>--</mat-option>
+                    <mat-option
+                      *ngFor="let item of cboCiudad"
+                      [value]="item.sDesc"
+                    >
+                      {{ item.sDesc }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-2">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select
+                    formControlName="sTipoCta"
+                    (valueChange)="this.hTipoCta = $event"
+                    (selectionChange)="filtrar()"
+                  >
+                    <mat-option
+                      *ngFor="let item of cboTipoCta"
+                      [value]="item.sDesc"
+                    >
+                      {{ item.sDesc }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region LISTA PERSONAL -->
+        <div class="row" style="margin-top: 20px">
+          <div class="col-sm">
+            <h6>Lista de personal sin cuenta : {{ hTipoCta }}</h6>
+            <hr style="margin-top: 0px; margin-bottom: 20px" />
+          </div>
+        </div>
+
+        <ngx-spinner
+          name="spi_main"
+          [fullScreen]="true"
+          type="ball-clip-rotate-multiple"
+          size="medium"
+        >
+          <p style="color: white; padding-top: 50px">Cargando información...</p>
+        </ngx-spinner>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div id="dTableMain" class="melevation">
+              <table mat-table [dataSource]="MainDS" style="width: 100%">
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      matTooltip="Visualizar"
+                      matTooltipPosition="right"
+                      mat-stroked-button
+                      color="accent"
+                      (click)="showModal(2, element, 1)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNombres">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="m-card-title"
+                    data-label="Apellidos y nombres :"
+                  >
+                    <ngb-highlight
+                      [result]="element.sNombres | titlecase"
+                      [term]="getMain.sNombres.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodPlla">
+                  <th mat-header-cell *matHeaderCellDef>Plla</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de planilla :"
+                  >
+                    {{ element.sCodPlla }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDscTipo">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de documento :"
+                  >
+                    {{ element.sDscTipo }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDocumento">
+                  <th mat-header-cell *matHeaderCellDef>Documento</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="N° Documento : "
+                  >
+                    <ngb-highlight
+                      [result]="element.sDocumento"
+                      [term]="getMain.sNombres.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sTipoCta">
+                  <th mat-header-cell *matHeaderCellDef>Tipo Cuenta</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de cuenta : "
+                  >
+                    <ngb-highlight
+                      [result]="element.sTipoCta"
+                      [term]="getMain.sTipoCta.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noData">
+                  <mat-footer-cell
+                    *matFooterCellDef
+                    [attr.colspan]="MainDC.length"
+                  >
+                    No se encuentran registros.
+                  </mat-footer-cell>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: MainDC"></tr>
+                <mat-footer-row
+                  *matFooterRowDef="['noData']"
+                  [hidden]="MainDS && this.MainDS.filteredData.length > 0"
+                ></mat-footer-row>
+              </table>
+            </div>
+            <mat-paginator
+              #pagMain
+              style="display: contents"
+              [hidePageSize]="false"
+              [pageSize]="4"
+            ></mat-paginator>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+
+      <mat-progress-bar
+        *ngIf="pbMain"
+        color="accent"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+</div>
+
+<!-- Div Search -->
+<div
+  style="z-index: 1042"
+  class="modal fade bd-example-modal-lg"
+  id="ModalSearch"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="ModalSearchTitle"
+  aria-hidden="true"
+>
+  <div
+    id="ModalSearchCenter"
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+    role="document"
+  >
+    <div class="modal-content">
+      <!-- Cabecera -->
+      <h5 class="card-header">
+        Busqueda de personal
+        <button
+          type="button"
+          class="close"
+          (click)="clickFab(2, -1)"
+          style="
+            color: white !important;
+            text-shadow: none !important;
+            outline: none;
+          "
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="material-icons">close</span>
+        </button>
+      </h5>
+
+      <!-- Cuerpo  -->
+      <div class="modal-body">
+        <div class="icard melevation col-xl-12" style="padding-bottom: 0px">
+          <div class="row" style="margin-left: 0px">
+            <h6>Aplicar filtro por :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 10px" />
+          </div>
+
+          <form autocomplete="off" id="fgSearch" [formGroup]="fgSearch">
+            <div class="form-row">
+              <div class="col-lg-12">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Nombres o documento de identidad</mat-label>
+                  <input type="text" matInput formControlName="sNombres" />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="getSearch.sNombres.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="getSearch.sNombres.patchValue('')"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="row" style="margin-top: 20px">
+          <div class="col-sm">
+            <h6>Lista de personal :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 20px" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div id="dTableSearch" class="melevation">
+              <table mat-table [dataSource]="SearchDS" style="width: 100%">
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      matTooltip="Visualizar"
+                      matTooltipPosition="right"
+                      mat-stroked-button
+                      color="accent"
+                      (click)="showModal(2, element, 2)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNombres">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="m-card-title"
+                    data-label="Apellidos y nombres :"
+                  >
+                    <ngb-highlight
+                      [result]="element.sNombres | titlecase"
+                      [term]="getSearch.sNombres.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodPlla">
+                  <th mat-header-cell *matHeaderCellDef>Plla</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de planilla :"
+                  >
+                    {{ element.sCodPlla }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sTipo">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de documento :"
+                  >
+                    {{ element.sTipo }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDocumento">
+                  <th mat-header-cell *matHeaderCellDef>Documento</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="N° Documento : "
+                  >
+                    <ngb-highlight
+                      [result]="element.sDocumento"
+                      [term]="getSearch.sNombres.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noData">
+                  <mat-footer-cell
+                    *matFooterCellDef
+                    [attr.colspan]="SearchDC.length"
+                  >
+                    No se encuentran registros.
+                  </mat-footer-cell>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="SearchDC; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: SearchDC"></tr>
+                <mat-footer-row
+                  *matFooterRowDef="['noData']"
+                  [hidden]="SearchDS && this.SearchDS.filteredData.length > 0"
+                ></mat-footer-row>
+              </table>
+            </div>
+            <mat-paginator
+              #pagSearch
+              style="display: contents"
+              [hidePageSize]="false"
+              [pageSize]="4"
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+
+      <mat-progress-bar
+        *ngIf="pbSearch"
+        color="accent"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+</div>
+
+<!-- Div Detail -->
+<div
+  style="z-index: 1042"
+  class="modal fade bd-example-modal-xl"
+  id="ModalDetail"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="ModalDetailTitle"
+  aria-hidden="true"
+>
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(3, -1)">
+      <i class="material-icons" [@fabToggler]="{ value: tsDetail }">add</i>
+    </button>
+    <div [@speedDialStagger]="abDetail.length">
+      <button
+        *ngFor="let btn of abDetail; let ibtn = index"
+        mat-mini-fab
+        class="fab-secondary"
+        color="secondary"
+        (click)="clickFab(3, ibtn)"
+      >
+        <i
+          class="material-icons"
+          matTooltip="{{ btn.tool }}"
+          matTooltipPosition="left"
+          >{{ btn.icon }}</i
+        >
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="ModalDetailCenter"
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl"
+    role="document"
+  >
+    <div class="modal-content">
+      <!-- Cabecera -->
+      <h5 class="card-header">
+        Detalle de personal
+        <button
+          type="button"
+          class="close"
+          (click)="clickFab(3, -1)"
+          style="
+            color: white !important;
+            text-shadow: none !important;
+            outline: none;
+          "
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="material-icons">close</span>
+        </button>
+      </h5>
+
+      <!-- Cuerpo  -->
+      <div class="modal-body">
+        <div class="row">
+          <div id="dLeftDetail" class="col-lg-6">
+            <mat-accordion #maDetail="matAccordion" multi>
+              <!-- Información personal -->
+              <mat-expansion-panel [expanded]="true" [disabled]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Información del personal :
+                  </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+                </mat-expansion-panel-header>
+
+                <div class="row">
+                  <div class="col-lg-3 divAvatar">
+                    <a>
+                      <span class="imgBadge">{{
+                        getDetail.sCodPlla.value
+                      }}</span>
+                      <img
+                        class="imgAvatar"
+                        src="../../../../../assets/img/LuckyAvatar.png"
+                        alt=""
+                      />
+                    </a>
+                  </div>
+
+                  <div id="fgDetail" [formGroup]="fgDetail" class="col-lg-9">
+                    <div class="form-row">
+                      <div class="col-lg-8">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Tipo</mat-label>
+                          <input type="text" matInput formControlName="sTipo" />
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>N° Documento</mat-label>
+                          <input
+                            type="text"
+                            matInput
+                            formControlName="sDocumento"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-lg-12">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Apellidos y nombres</mat-label>
+                          <input
+                            type="text"
+                            matInput
+                            formControlName="sNombres"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Ciudad</mat-label>
+                          <input
+                            type="text"
+                            matInput
+                            formControlName="sCiudad"
+                          />
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Fecha ingreso</mat-label>
+                          <input
+                            formControlName="dFechIni"
+                            matInput
+                            [matDatepicker]="dFechIni"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="dFechIni"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #dFechIni></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Fecha término</mat-label>
+                          <input
+                            formControlName="dFechFin"
+                            matInput
+                            [matDatepicker]="dFechFin"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="dFechFin"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #dFechFin></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+
+              <!-- Filtro -->
+              <mat-expansion-panel id="mep_filtro">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Filtro de cuentas : {{ getFilter.sTipoCta.value }}
+                  </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+                </mat-expansion-panel-header>
+
+                <div class="row">
+                  <div [formGroup]="fgFilter" class="col-lg-12">
+                    <div class="form-row">
+                      <div class="col-lg-12">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Tipo</mat-label>
+                          <mat-select formControlName="sTipoCta">
+                            <mat-option
+                              *ngFor="let item of cboTipoCta"
+                              [value]="item.sDesc"
+                            >
+                              {{ item.sDesc }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-sm">
+                <h6>Histórico de cuentas :</h6>
+                <hr style="margin-top: 0px; margin-bottom: 10px" />
+              </div>
+            </div>
+
+            <div id="dTableDetail" class="melevation">
+              <table mat-table [dataSource]="DetailDS" style="width: 100%">
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Detalle</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      matTooltip="Detalle"
+                      matTooltipPosition="right"
+                      mat-stroked-button
+                      color="accent"
+                      (click)="showModal(3, element, 2)"
+                    >
+                      <mat-icon>account_balance</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sBanco">
+                  <th mat-header-cell *matHeaderCellDef>Banco</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="m-card-title"
+                    data-label="Banco :"
+                  >
+                    {{ element.sBanco }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sNroCuenta">
+                  <th mat-header-cell *matHeaderCellDef>N° Cuenta</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="N° Cuenta :"
+                  >
+                    {{ element.sNroCuenta }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFechIni">
+                  <th mat-header-cell *matHeaderCellDef>Inicio</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Fecha inicio :"
+                  >
+                    {{ element.dFechIni | date: "MM/yyyy" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sTipoCta">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo de cuenta : "
+                  >
+                    <ngb-highlight
+                      [result]="element.sTipoCta"
+                      [term]="getFilter.sTipoCta.value"
+                    ></ngb-highlight>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noData">
+                  <mat-footer-cell
+                    *matFooterCellDef
+                    [attr.colspan]="DetailDC.length"
+                  >
+                    No se encuentran registros.
+                  </mat-footer-cell>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="DetailDC; sticky: true"
+                ></tr>
+                <tr mat-row *matRowDef="let row; columns: DetailDC"></tr>
+                <mat-footer-row
+                  *matFooterRowDef="['noData']"
+                  [hidden]="DetailDS && this.DetailDS.filteredData.length > 0"
+                ></mat-footer-row>
+              </table>
+            </div>
+            <mat-paginator
+              #pagDetail
+              style="display: contents"
+              [hidePageSize]="false"
+              [pageSize]="4"
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+
+      <mat-progress-bar
+        *ngIf="pbDetail"
+        color="accent"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+</div>
+
+<!-- Div Cuenta -->
+<div
+  style="z-index: 1042"
+  class="modal fade bd-example-modal-md"
+  id="ModalCuenta"
+  data-backdrop="static"
+  data-keyboard="false"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="ModalCuentaTitle"
+  aria-hidden="true"
+>
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(4, -1)">
+      <i class="material-icons" [@fabToggler]="{ value: tsCuenta }">add</i>
+    </button>
+    <div [@speedDialStagger]="abCuenta.length">
+      <button
+        *ngFor="let btn of abCuenta; let ibtn = index"
+        mat-mini-fab
+        class="fab-secondary"
+        color="secondary"
+        (click)="clickFab(4, ibtn)"
+      >
+        <i
+          class="material-icons"
+          matTooltip="{{ btn.tool }}"
+          matTooltipPosition="left"
+          >{{ btn.icon }}</i
+        >
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="ModalCuentaCenter"
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
+    role="document"
+  >
+    <div class="modal-content">
+      <!-- Cabecera -->
+      <h5 class="card-header">
+        {{ hCuenta }} Cuenta
+        <button
+          type="button"
+          class="close"
+          (click)="clickFab(4, -1)"
+          style="
+            color: white !important;
+            text-shadow: none !important;
+            outline: none;
+          "
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="material-icons">close</span>
+        </button>
+      </h5>
+
+      <!-- Cuerpo  -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <mat-accordion>
+              <!-- Información subsidio -->
+              <mat-expansion-panel [expanded]="true" [disabled]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title> Información de cuenta : </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <mat-icon style="margin-right: 10px"
+                    >account_balance</mat-icon
+                  >
+                </mat-expansion-panel-header>
+
+                <div class="row">
+                  <div id="fgCuenta" [formGroup]="fgCuenta" class="col-lg-12">
+                    <div class="form-row">
+                      <div class="form-group col-lg-6">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Tipo</mat-label>
+                          <mat-select
+                            formControlName="T1_nIdTipoCta"
+                            [errorStateMatcher]="matcher"
+                          >
+                            <mat-option>--</mat-option>
+                            <mat-option
+                              *ngFor="let item of cboTipoCta"
+                              [value]="item.nIdTipEle"
+                            >
+                              {{ item.sDesc }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="getCuenta.T1_nIdTipoCta.hasError('noSelect')"
+                            >. Obligatorio</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-group col-lg-6">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Banco</mat-label>
+                          <mat-select
+                            formControlName="A1_nIdBanco"
+                            (valueChange)="fnEnabledBanco($event)"
+                            [errorStateMatcher]="matcher"
+                          >
+                            <mat-option>--</mat-option>
+                            <mat-option
+                              *ngFor="let item of cboBanco"
+                              [value]="item"
+                            >
+                              {{ item.sDesc }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="getCuenta.A1_nIdBanco.hasError('noSelect')"
+                            >. Obligatorio</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-lg-8">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>N° Cuenta</mat-label>
+                          <input
+                            type="text"
+                            matInput
+                            formControlName="T1_sNroCuenta"
+                            [errorStateMatcher]="matcher"
+                            autocomplete="off"
+                          />
+                          <mat-error
+                            *ngIf="getCuenta.T1_sNroCuenta.hasError('vString')"
+                            >. vString</mat-error
+                          >
+                          <mat-error
+                            *ngIf="getCuenta.T1_sNroCuenta.hasError('required')"
+                            >. Obligatorio</mat-error
+                          >
+                          <mat-error
+                            *ngIf="
+                              getCuenta.T1_sNroCuenta.hasError('minlength')
+                            "
+                            >. Longitud de caracteres incorrecto</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-group col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Moneda</mat-label>
+                          <mat-select
+                            formControlName="T1_nIdMoneda"
+                            [errorStateMatcher]="matcher"
+                          >
+                            <mat-option>--</mat-option>
+                            <mat-option
+                              *ngFor="let item of cboMoneda"
+                              [value]="item.nIdTipEle"
+                            >
+                              {{ item.sDesc }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="getCuenta.T1_nIdMoneda.hasError('noSelect')"
+                            >. Obligatorio</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group col-lg-8">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Tipo de documento</mat-label>
+                          <mat-select
+                            formControlName="A1_nIdTipoDoc"
+                            (valueChange)="fnEnabledDoc($event)"
+                            [errorStateMatcher]="matcher"
+                          >
+                            <mat-option>--</mat-option>
+                            <mat-option
+                              *ngFor="let item of cboTipoDoc"
+                              [value]="item"
+                            >
+                              {{ item.sDesc }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="getCuenta.A1_nIdTipoDoc.hasError('noSelect')"
+                            >. Obligatorio</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-group col-lg-4">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>N° Documento</mat-label>
+                          <input
+                            type="text"
+                            matInput
+                            formControlName="T1_sDocumento"
+                            [errorStateMatcher]="matcher"
+                            autocomplete="off"
+                          />
+                          <mat-error
+                            *ngIf="getCuenta.T1_sDocumento.hasError('vString')"
+                            >. vString</mat-error
+                          >
+                          <mat-error
+                            *ngIf="getCuenta.T1_sDocumento.hasError('required')"
+                            >. Obligatorio</mat-error
+                          >
+                          <mat-error
+                            *ngIf="
+                              getCuenta.T1_sDocumento.hasError('minlength')
+                            "
+                            >. Longitud de caracteres incorrecto</mat-error
+                          >
+                          <mat-error
+                            *ngIf="getCuenta.T1_sDocumento.hasError('pattern')"
+                            >. Caracteres incorrectos</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+      </div>
+
+      <mat-progress-bar
+        *ngIf="pbCuenta"
+        color="accent"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+/* Titulo Card  */ 
+
+.card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+}
+
+/* Contenedor General */
+
+.classContainer {
+    padding: 80px 30px 0;
+}
+
+/* Mat Table */
+
+table {
+    width: 200%;
+}
+
+td, th {
+    font-size: 14px;
+}
+
+.example-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}
+
+/* Tamaño de Ng Select igual a inputs  */
+
+.ngselect{
+    padding-bottom:3.5px; 
+    bottom:0.35rem
+}
+
+/* Radio Buttons */
+
+mat-radio-button {
+    margin-right: 10px;
+}
+
+
+/* Tamaño de contenedores */
+mat-form-field {
+    width: 100%;
+}
+
+/* Mat Sort Color Blanco */
+
+:host /deep/ .mat-sort-header-arrow {
+  color: white;
+}
+
+:host /deep/ form .ng-invalid label {
+  color: #f44336;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+  color           : black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .mat-form-field-disabled textarea {
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+/* Mat Expansion Panel */
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  color: #002c4b; 
+  font-weight: bold;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}

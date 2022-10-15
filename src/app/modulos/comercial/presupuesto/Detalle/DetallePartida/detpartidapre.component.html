@@ -1,0 +1,187 @@
+<mat-card> 
+    <mat-card-header>
+    </mat-card-header>  
+    <mat-card-content> 
+        <div class="fab-container">
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+            </button>
+            <div [@speedDialStagger]="abLista.length"> 
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnChange(2)">
+                    <i class="material-icons" matTooltip="Atrás" matTooltipPosition="left">cancel</i> 
+                </button>  
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnDescargar()">
+                    <i class="material-icons" matTooltip="Descarga" matTooltipPosition="left">grid_on</i>
+                </button> 
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnActionCalculo(9)" *ngIf=BtnCreacion>
+                    <i class="material-icons" matTooltip="Guardar Partidas" matTooltipPosition="left">save</i> 
+                </button> 
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnCopiar()" *ngIf=BtnCopiar>
+                    <i class="material-icons" matTooltip="Copiar" matTooltipPosition="left">content_copy</i> 
+                </button> 
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAprobacion(15)" *ngIf=divValPresupuesto >
+                    <i class="material-icons" matTooltip="Aprobar Ppto" matTooltipPosition="left">check_circle</i> 
+                </button> 
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAprobacion(13)" *ngIf=divValPresupuesto>
+                    <i class="material-icons" matTooltip="Devolver Ppto" matTooltipPosition="left">assignment_return</i> 
+                </button>  
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAprobacion(13)" *ngIf=BtnEstado>
+                    <i class="material-icons" matTooltip="Comentario Devolución" matTooltipPosition="left">comment</i> 
+                </button>  
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnVerEstado()" >
+                    <i class="material-icons" matTooltip="Histórico de Estado" matTooltipPosition="left">notes
+                    </i> 
+                </button> 
+                 
+            </div>
+          </div>
+        <div class="example-container mat-elevation-z8  table-striped"> 
+            <table id=tablaPartida mat-table [dataSource]="dataSourcePartida" matSort  class="clspartida"
+                #TablePreSort="matSort"  
+                > 
+                <ng-container matColumnDef="pPartidaGen"  >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnapartida">Partida Genérica</th>
+                    <td mat-cell *matCellDef="let row;let i = index;"  >   
+                        <ng-select   appendTo="body"  [(ngModel)]="row.pPartidaGen" [clearable]="false" 
+                        [disabled]="divValidacion==false?(row.pPartidaGen==137? true:(row.registro==1? true:false)):true"
+                        (change)="fnPartidaGem(i,row.pPartidaGen)"
+                        > 
+                            <ng-option *ngFor="let car of lCboPartidaGenerica" [disabled]="car.codigo==137? true:false" [(value)]="car.codigo">{{car.valor}}</ng-option>
+                        </ng-select>
+                    </td>
+                    </ng-container> 
+                    <ng-container matColumnDef="pPartidaEsp">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnapartida">Partida Específica</th>
+                    <td mat-cell *matCellDef="let row;let i = index;" >  
+                        <ng-select  appendTo="body" [(ngModel)]="row.pPartidaEsp" [clearable]="false" 
+                        (change)="fnDisabledPartida()"
+                        [disabled]="divValidacion==false?(row.pPartidaGen==137? true:(row.registro==1? true:false)):true">
+                            <ng-option *ngFor="let car of arrayPartida[row.pPartidaGen]" [disabled]="car.estado==0? true:false" [(value)]="car.pId">{{car.pDesc}}</ng-option>
+                        </ng-select>
+                    </td>
+                    </ng-container>
+                    <ng-container matColumnDef="pParitdaMargen" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header >% Margen</th>
+                    <td mat-cell *matCellDef="let row;let i = index;"  > 
+                        <mat-form-field style="width: 100px;" >
+                            <input matInput type="number"  (change)="fnValidarMargen(i,row)" [disabled]="divValidacion==false? (row.pPartidaGen==137? true:(row.pPartidaGen==128? true:false)):true" [(ngModel)]="row.pParitdaMargen" > 
+                        </mat-form-field> 
+                    </td>
+                    </ng-container> 
+                    <ng-container matColumnDef="pTotal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+                        <td mat-cell *matCellDef="let row"  > 
+                            <mat-form-field style="width: 100px;" >
+                            <input matInput type="text" [(ngModel)]="row.psTotal" [disabled]=true>
+                            </mat-form-field> 
+                        </td>
+                        </ng-container> 
+                    <ng-container *ngFor="let cc of clsColumnaOpc;index as i" matColumnDef="{{cc.col}}"  >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > {{cc.col}}</th>
+                    <td mat-cell *matCellDef="let row;index as ii" > 
+                        <mat-form-field style="width: 100px;" >
+                        <input matInput type="text" [disabled]=true [(ngModel)]="row.lsucursal[cc.id]">
+                        </mat-form-field>
+                    </td>
+                    </ng-container>  
+                    <ng-container matColumnDef="estado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <button mat-icon-button color="accent" type="button" title="new item" [disabled]=divValidacion (click)="openPartida()"> 
+                                <mat-icon>add</mat-icon>
+                              </button> 
+                        </th>
+                        <td mat-cell *matCellDef="let row;let i = index;" class="action-link">    
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar" *ngIf="row.pPartidaGen == 128 ? true : (row.pPartidaGen == 137? false : true)"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after" >
+                                <button mat-menu-item (click)="fnEliminarTPartida(row,i)" [disabled]="divValidacion">
+                                     <mat-icon color="accent">delete</mat-icon> Eliminar
+                                </button>   
+                                <button  
+                                    mat-menu-item (click)="fnDetalle(row,i)" 
+                                    >
+                                    <mat-icon color="accent">add</mat-icon> Agregar detalle 
+                                </button>   
+                           </mat-menu> 
+                          </td>
+                    </ng-container> 
+    
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPartida; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPartida;">
+                    </tr>   
+            </table>
+        </div>
+        <form [formGroup]="totalFormGroup">  
+            <div class="container clsText">  
+                <div class="row" style="margin-top: 15px">
+                    <div class="col-sm-4"> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;">
+                                 <mat-label>Total Personal(Afectos)</mat-label>
+                                <input matInput type="text"   formControlName="totalPer">  
+                            </mat-form-field> 
+                        </div> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;"  >
+                                 <mat-label>FEE Personal</mat-label>
+                                <input matInput type="number"   formControlName="FeePer" (change)="fnCalculoTotal()"
+                                (keyup)="fnCalculoTotal()">   
+                            </mat-form-field> 
+                        </div>
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;"  >
+                                 <mat-label>Total * FEE (Personal)</mat-label>
+                                <input matInput type="text"   formControlName="FeePertotal">  
+                            </mat-form-field> 
+                        </div>
+                    </div>
+                    <div class="col-sm-4"> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;">
+                                 <mat-label>Total Logístico(Afectos)</mat-label>
+                                <input matInput type="text"   formControlName="totalres">  
+                            </mat-form-field> 
+                        </div> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;"  >
+                                 <mat-label>FEE Logístico</mat-label>
+                                <input matInput type="number"   formControlName="Feeres" (change)="fnCalculoTotal()"
+                                (keyup)="fnCalculoTotal()">    
+                            </mat-form-field> 
+                        </div>
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;"  >
+                                 <mat-label>Total * FEE (Logístico)</mat-label>
+                                <input matInput type="text"   formControlName="Feerestotal">  
+                            </mat-form-field> 
+                        </div>
+                    </div>
+                    <div class="col-sm-4"> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;" [hidden]=divPermiso>
+                                 <mat-label>Descuento</mat-label>
+                                <input matInput type="number"   formControlName="descuento" (change)="fnCalculoTotal()"
+                                (keyup)="fnCalculoTotal()">  
+                            </mat-form-field> 
+                        </div> 
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;">
+                                 <mat-label>Costo Total S/.</mat-label>
+                                <input matInput type="text"   formControlName="totalSol">  
+                            </mat-form-field> 
+                        </div>
+                        <div class="row"> 
+                            <mat-form-field style="width: 80% !important;"  [hidden]=divValPais>
+                                 <mat-label>Costo Total $.</mat-label>
+                                <input matInput type="text"   formControlName="totalDol">  
+                            </mat-form-field> 
+                        </div>
+                    </div> 
+                </div>   
+            </div>   
+        </form>
+    </mat-card-content> 
+</mat-card>

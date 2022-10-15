@@ -1,0 +1,123 @@
+<div class="mt-4 mb-4"> 
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="cancelar()">
+            <i class="material-icons" matTooltip="regresar" matTooltipPosition="left">assignment_return</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="registrarNuevaAsignacion()" >
+            <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+        </button>  
+    </div>
+  </div>
+  <div class="example-container-partida mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="">
+      <ng-container matColumnDef="id" sticky>
+        <th mat-header-cell *matHeaderCellDef> 
+          <button mat-menu-item (click)="AgregarPersonalDeLaTabla(element)" >
+            <mat-icon color="warn">add</mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+            <button mat-menu-item (click)="eliminarUnPersonalDeLaTabla(element)" >
+                <mat-icon color="warn">delete_outline</mat-icon>
+            </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ciudad">
+        <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <ng-select appendTo="body" [(ngModel)]="element.ciudad" [clearable]="false" 
+          (change)="fnCiudadChange(i)"  >
+            <ng-option *ngFor="let car of listaCiudades" [(value)]="car.id">{{car.codigo}} -
+            {{car.nombre_ciudad}}</ng-option>
+          </ng-select>  
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="personal_id">
+        <th mat-header-cell *matHeaderCellDef> Apellidos y Nombres </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <ng-select appendTo="body" [(ngModel)]="element.personal_id" [clearable]="false" 
+          (change)="fnChangeBanco(i,element)"  
+          > 
+          <ng-option *ngFor="let car of arrayPersonal[element.ciudad]" [(value)]="car.personal_id">{{car.dni}} -
+            {{car.nombre}}</ng-option>
+          </ng-select>  
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="cargo_id">
+        <th mat-header-cell *matHeaderCellDef>Cargo</th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <mat-form-field class="style-form-field p-1 text-center">
+            <input 
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="element.cargo"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="banco_id">
+        <th mat-header-cell *matHeaderCellDef> Banco </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <mat-form-field class="style-form-field p-1 text-center">
+            <input 
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="element.banco"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="f_inicio">
+        <th mat-header-cell *matHeaderCellDef> F. Inicio </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <mat-form-field class="style-form-field p-1 text-center">
+            <input 
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="element.f_inicio"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="f_fin">
+        <th mat-header-cell *matHeaderCellDef> F. Fin </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <mat-form-field class="style-form-field p-1 text-center">
+            <input 
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="element.f_fin"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="pasaje_por_dia">
+        <th mat-header-cell *matHeaderCellDef> Pasaje por dia </th>
+        <td mat-cell *matCellDef="let element;index as i"> 
+          <mat-form-field
+            class="style-form-field p-1 full-width text-right"
+          >
+            <input 
+              matInput
+              autocomplete="off"
+              type="number"
+              [(ngModel)]="element.pasaje_por_dia"
+              (onChange)="agregarPersonal(i,element)" 
+            />
+          </mat-form-field>
+        </td>
+      </ng-container> 
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
+    </table>
+  </div>  
+</div>

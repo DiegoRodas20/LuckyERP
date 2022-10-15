@@ -1,0 +1,867 @@
+<iframe id="pdf-frameLiq" style="display:none" (load)="printDoc()"></iframe>
+
+<iframe id="pdf-frame" style="display:none"></iframe>
+
+<div class="noImpresion">
+
+    <ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+        <p style="color: white; padding-top: 50px;">Cargando información...</p>
+    </ngx-spinner>
+
+
+    <div class="col-md-12">
+        <!-- <div class="card"> -->
+
+        <mat-horizontal-stepper [linear]="false" #stepper style="height: 500px; overflow-y: auto;" id="stepper">
+
+            <!-- Pestaña para detalle de la Solicitud -->
+            <mat-step [stepControl] errorMessage="Datos incompletos">
+                <ng-template matStepLabel>Solicitud de efectivo</ng-template>
+                <div class="row" id="Scroll_Page1">
+                    <div class="col-md-6">
+                        <h6 style="padding-top: 10px;">Datos del Depósito:</h6>
+                    </div>
+                </div>
+
+                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                <div class="form-row col-md-12">
+                    <!-- Cabecera del Gasto -->
+                    <div class="col-md-12">
+                        <form [formGroup]="efectivoForm">
+                            <div class="form-row">
+
+                                <div class="col-md-10">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Presupuesto:</mat-label>
+                                                <input matInput formControlName="txtPresupuesto" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Cliente:</mat-label>
+                                                <input matInput formControlName="txtCliente" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Ejecutivo:</mat-label>
+                                                <input matInput formControlName="txtEjecutivo" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Depositario:</mat-label>
+                                                <input matInput formControlName="txtSolicitante" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Monto Depósito:</mat-label>
+                                                <input matInput formControlName="txtDeposito" readonly
+                                                    style="color: rgb(236, 0, 140);"
+                                                    [value]="efectivoForm.get('txtDeposito').value | number:'1.2-2' ">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Banco:</mat-label>
+                                                <input matInput formControlName="txtBanco" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Cuenta de Banco:</mat-label>
+                                                <input matInput formControlName="txtCuenta" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Concepto Rq:</mat-label>
+                                                <input matInput formControlName="txtConcepto" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Inicio:</mat-label>
+                                                <input matInput formControlName="txtInicio" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Fin:</mat-label>
+                                                <input matInput formControlName="txtFin" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Depósito:</mat-label>
+                                                <input type="text" matInput formControlName="txtFechaDeposito" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Limite:</mat-label>
+                                                <input type="text" matInput formControlName="txtFechaLimite" readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-row">
+                                        <div class="col-md-1">
+                                            <div class="clsSeparador">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+
+                                        <!-- Campos auditoria -->
+                                        <div class="col-md-11">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label> Número Rq:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtNumero"
+                                                    style="color: rgb(236, 0, 140);">
+                                            </mat-form-field>
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Total Saldo:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtDebe"
+                                                    style="color: rgb(236, 0, 140);"
+                                                    [value]="efectivoForm.get('txtDebe').value | number:'1.2-2' ">
+                                            </mat-form-field>
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Total Liquidado (-):</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtTotalLiquidado"
+                                                    [value]="efectivoForm.get('txtTotalLiquidado').value | number:'1.2-2' ">
+                                            </mat-form-field>
+
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Total RR (+):</mat-label>
+                                                    <input type="text" matInput readonly formControlName="txtTotalSaldo"
+                                                        [value]="efectivoForm.get('txtTotalSaldo').value | number:'1.2-2' ">
+                                                </mat-form-field>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Estado:</mat-label>
+                                                    <input type="text" matInput formControlName="txtEstado" readonly
+                                                        style="color: rgb(236, 0, 140);">
+                                                </mat-form-field>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </mat-step>
+
+            <!-- Pestaña para las liquidaciones -->
+            <mat-step [stepControl] errorMessage="Datos incompletos">
+                <ng-template matStepLabel>Liquidaciones </ng-template>
+
+                <div class="row" id="Scroll_Page2">
+                    <div class="col-md-6">
+                        <h6 style="padding-top: 10px;">Detalle de las Liquidaciones Realizadas:</h6>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-10 col-10">
+                        <h6 style="padding-top: 10px;">Total Liquidado: {{vTotalLiq | number:'1.2-2'}} </h6>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-mini-fab class="fab-toggler" matTooltip="Agregar Liquidación"
+                            (click)="fnAgregarDetalle()">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <input data-toggle="modal" data-target="#modalDetalle" #modalDetalle type="hidden"
+                            name="button">
+                    </div>
+
+                </div>
+                <hr style="margin-top: 0px; margin-bottom: 10px;">
+
+                <div class="col-md-12 ">
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container2">
+                            <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+                                <ng-container matColumnDef="nId" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2"
+                                        data-label='Opción: '>
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="fnDetallePartidas(1, row)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Modificar Registro</span>
+                                            </button>
+                                            <button mat-menu-item (click)="fnDetallePartidas(2, row)">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span>Eliminar Registro</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNroDocumento">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> N°
+                                        Documento </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='N° Documento: '> {{row.sDocumento}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaDoc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Monto
+                                        Liq. </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Monto Liquidación: '> {{row.nMonto | number:'1.2-2'}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sMonto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha
+                                        Doc. </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Fecha Documento: '> {{row.sFechaDoc}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUsuarioLiq">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Usuario
+                                        Liq. </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Usuario Liquido: '> {{row.sUsuarioLiq}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaReg">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha
+                                        Liq. </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Fecha Liquido: '> {{row.sFechaLiq}} - {{row.sHoraLiq}}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20]"></mat-paginator>
+                    </div>
+                </div>
+            </mat-step>
+
+            <!-- Pestaña para Ajuste de la liquidación-->
+            <mat-step [stepControl] errorMessage="Datos incompletos">
+                <ng-template matStepLabel>Ajustes de lo abonado:</ng-template>
+                <div class="row" id="Scroll_Page3">
+
+                </div>
+
+                <!-- Contenido -->
+                <div class="col-md-12">
+                    <form [formGroup]="liquidaForm">
+                        <div class="form-row">
+
+                            <div class="col-md-12">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <mat-radio-group aria-label="Seleccione una opción">
+                                            <mat-radio-button style="padding-top: 10px;" value="1"
+                                                (click)="fnCambiarDescuento(1)" [checked]="true"> Depósito Banco
+                                            </mat-radio-button>
+                                            <mat-radio-button value="2" (click)="fnCambiarDescuento(2)"> Por Caja Chica
+                                            </mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label style="color: #334d6e;">{{vUnaPartidaDesc}}</label>
+                                    </div>
+                                </div>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+
+                                <!-- Devolución a Empresa -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Vaucher Bancario:</mat-label>
+                                            <input matInput formControlName="txtVaucher" maxlength="30" #input2
+                                                [value]="input2.value.toUpperCase()" [readonly]="vModifica">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="!vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Documento Caja Chica:</mat-label>
+                                            <input matInput formControlName="txtOperacion" maxlength="30" #input4
+                                                [value]="input4.value.toUpperCase()" [readonly]="vModifica">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Fecha Operación:</mat-label>
+                                            <input matInput [matDatepicker]="txtFechaOper"
+                                                formControlName="txtFechaOper" [disabled]="vModifica" readonly>
+                                            <button style="outline: none;" [disabled]="vModifica"
+                                                *ngIf="this.liquidaForm.controls.txtFechaOper.value" mat-button
+                                                matSuffix mat-icon-button aria-label="Clear"
+                                                (click)="this.liquidaForm.controls.txtFechaOper.setValue('');">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+
+                                            <mat-datepicker-toggle matSuffix [for]="txtFechaOper">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker [disabled]="vModifica" #txtFechaOper></mat-datepicker>
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="!vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Monto Devolución:</mat-label>
+                                            <input matInput type="number" min="0" formControlName="txtMontoDevolucion"
+                                                (blur)="fnEvitarNegativos(1)" [readonly]="vModifica2">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_1" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Banco:</mat-label>
+                                            <mat-select formControlName="cboBanco" [disabled]="vModifica">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vBanco of lBanco" [value]="vBanco.nId">
+                                                    {{vBanco.sDescripcion}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                        <div class="form-group col-md-1">
+                                            <!-- !vModifica && -->
+                                            <button [ngClass]="!vPorBanco &&  !vUnaPartida ? 'clsShow2' : 'clsHide2'"
+                                                mat-icon-button color="accent" matTooltip="Editar Liquidación"
+                                                (click)="fnNuevoDocumento(2)">
+                                                <i class="material-icons">assignment</i> Partidas
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;"
+                                            [ngClass]="vPorBanco ? 'clsShow2' : 'clsHide2'">
+                                            <mat-label>Monto Devolución:</mat-label>
+                                            <input matInput type="number" formControlName="txtMontoDevolBanco"
+                                                (blur)="fnEvitarNegativos(2)" [readonly]="vModifica2">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_2" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+
+                                    <div class="form-group col-md-1">
+                                        <button [ngClass]="vPorBanco && !vUnaPartida ? 'clsShow2' : 'clsHide2'"
+                                            mat-icon-button color="accent" matTooltip="Editar Liquidación"
+                                            (click)="fnNuevoDocumento(1)">
+                                            <i class="material-icons">assignment</i> Partidas
+                                        </button>
+                                        <input data-toggle="modal" data-target="#modalPartidas" #modalPartidas
+                                            type="hidden" name="button">
+                                    </div>
+
+                                </div>
+
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                <!-- Descuento al Personal-->
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Documento Descuento:</mat-label>
+                                            <input matInput formControlName="txtDocDescuento" maxlength="30" #input3
+                                                [value]="input3.value.toUpperCase()" [readonly]="vModifica"
+                                                (blur)="fnValidarDocumentoExistente()">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Monto Descuento:</mat-label>
+                                            <input matInput type="number" min="0" formControlName="txtMontoDescuento"
+                                                (blur)="fnEvitarNegativos(3)" [readonly]="vModifica2">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_3" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <button [ngClass]="!vUnaPartida ? 'clsShow2' : 'clsHide2'" mat-icon-button
+                                            color="accent" matTooltip="Editar Liquidación"
+                                            (click)="fnNuevoDocumento(3)">
+                                            <i class="material-icons">assignment</i> Partidas
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Crédito Fiscal:</mat-label>
+                                            <input matInput type="number" min="0" formControlName="txtCreditoFiscal"
+                                                (blur)="fnEvitarNegativos(4)" [readonly]="vModifica">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_4" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+                                </div>
+
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                <!-- Monto Reembolsable -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%; padding-top: 13px;">
+                                            <mat-label>Monto Reembolsable:</mat-label>
+                                            <input matInput type="number" min="0" formControlName="txtMontoReembolsable"
+                                                (focusin)="fnEditandoControlValidacion()"
+                                                (blur)="fnEvitarNegativos(5);fnEditandoControlValidacion();fnValidarSaldo(1)"
+                                                [readonly]="vModifica || !fnExisteReembolso()">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_5" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <!-- <mat-form-field style="width: 100%;" >
+                                          <mat-label>Presupuesto del Reembolso:</mat-label>
+                                          <mat-select formControlName="txtCCReembolso" [disabled]="vModifica" (selectionChange)="fnValidarSaldo(1)">
+                                              <mat-option>Seleccione</mat-option>
+                                              <mat-option *ngFor="let vCC of lCentroCostoReembolso" [value]="vCC.nId">{{vCC.sDescripcion}}</mat-option>
+                                          </mat-select>
+                                      </mat-form-field>  -->
+
+                                        <ng-select placeholder="Presupuesto del Reembolso:"
+                                            formControlName="txtCCReembolso" [clearable]="false" style="width: 100%;"
+                                            [readonly]="vModifica || !fnExisteReembolso()">
+                                            <ng-option *ngFor="let vCC of lCentroCostoReembolso" [(value)]="vCC.nId"
+                                                style="padding-top: 13px;">{{vCC.sDescripcion}}</ng-option>
+                                        </ng-select>
+
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%; padding-top: 13px;">
+                                            <mat-label>Reembolso Generado:</mat-label>
+                                            <input matInput formControlName="txtRQReembolso" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- <div class="form-group col-md-1">
+                                      <button  [ngClass]="!vModifica  && !vUnaPartida ? 'clsShow2' : 'clsHide2'" mat-icon-button color="accent"  matTooltip="Editar Liquidación"  (click)="fnNuevoDocumento(4)">
+                                          <i class="material-icons" >assignment</i> Partidas
+                                      </button>
+                                  </div> -->
+                                </div>
+
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                <!-- Gasto Reparado -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Gasto Reparado:</mat-label>
+                                            <input matInput type="number" min="0" formControlName="txtGastoReparado"
+                                                (blur)="fnEvitarNegativos(6);fnEditandoControlValidacion();fnValidarSaldo(2)"
+                                                (focusin)="fnEditandoControlValidacion()" [readonly]="vModifica2">
+                                        </mat-form-field>
+                                        <small *ngIf="formLiq_6" class="text-danger">No puede ser menor a cero.</small>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button [ngClass]="!vUnaPartida ? 'clsShow2' : 'clsHide2'" mat-icon-button
+                                            color="accent" matTooltip="Editar Liquidación"
+                                            (click)="fnNuevoDocumento(5)">
+                                            <i class="material-icons">assignment</i> Partidas
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Registró:</mat-label>
+                                            <input matInput formControlName="txtRegistro" readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Modificó:</mat-label>
+                                            <input matInput formControlName="txtModifico" readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <!-- Zona de Botones -->
+                                <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+                                    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                                        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                                    </button>
+                                    <div [@speedDialStagger]="abLista.length">
+                                        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                                            <button *ngIf="btn.state" [disabled]="btn.disabled" mat-mini-fab
+                                                class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+                                                color="secondary" (click)="clickFab(ibtn)">
+                                                <i class="material-icons">{{btn.icon}}</i>
+                                            </button>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-step>
+
+        </mat-horizontal-stepper>
+
+        <!-- </div> -->
+    </div>
+
+
+    <!-- Modal para indicar las partidas del nuevo documento -->
+    <div class="modal fade  bd-example-modal-xl" id="modalPartidas" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="modalPartidas" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important; ">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalPartidasLongTitle">
+                        <Label>Partidas a considerar en: {{vTipoDesc}}</Label>
+                    </h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="partidaForm">
+                            <div class="form-row container">
+
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-12">
+                                        <h6 style="color: #334d6e;">Presupuesto: {{sCCosto}}, Sucursal: {{sSucursal}}
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Partida del RQ</mat-label>
+                                            <mat-select formControlName="cboPartidas">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vPartidas of lPartidas" [value]="vPartidas.nId">
+                                                    {{vPartidas.sPartida}} - {{vPartidas.sDescripcion}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Monto: </mat-label>
+                                            <input matInput type="number" min="0" autofocus formControlName="txtMonto"
+                                                (blur)="fnEvitarNegativos(7)" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-1">
+                                        <button [disabled]="vModifica ? false : true" mat-mini-fab class="fab-toggler"
+                                            matTooltip="Agregar Partida" [disabled]="vModifica"
+                                            (click)="fnAgregarPartida()">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div id="listaMobile" class="form-row col-md-12">
+                                    <div class="example-container3 mat-elevation-z8">
+                                        <table mat-table [dataSource]="dataSource2" matSort style="width: 100%;">
+
+                                            <ng-container matColumnDef="nId" sticky>
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                    class="clsColumnaOpc2"> Opción</th>
+                                                <td mat-cell *matCellDef="let row;let i = index;"
+                                                    class="clsColumnaOpc2">
+                                                    <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                        matTooltip="Desplegar" matTooltipPosition="right"
+                                                        mat-stroked-button color="accent">
+                                                        <mat-icon>more_vert</mat-icon>
+                                                    </button>
+                                                    <mat-menu #menu="matMenu" xPosition="after">
+                                                        <button mat-menu-item [disabled]="!vModifica ? false : true"
+                                                            (click)="fnEliminaPartidaDocumento(i)">
+                                                            <mat-icon color="accent">delete</mat-icon>
+                                                            <span>Eliminar</span>
+                                                        </button>
+                                                    </mat-menu>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="sPartida">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                    class="clsColumnaOpc2"> Partida </th>
+                                                <td mat-cell *matCellDef="let row"
+                                                    class="has_label_on_mobile clsColumnaOpc2" data-label='Partida: '>
+                                                    {{row.sPartida}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="sDescripcion">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                    class="clsColumnaLarge"> Descripción </th>
+                                                <td mat-cell *matCellDef="let row"
+                                                    class="has_label_on_mobile clsColumnaLarge"
+                                                    data-label='Descripción: '> {{row.sDescripcion}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="sMonto">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                    class="clsColumnaLib"> Monto </th>
+                                                <td mat-cell *matCellDef="let row"
+                                                    class="has_label_on_mobile clsColumnaLib" data-label='Monto: '>
+                                                    {{row.nMonto | number:'1.2-2' }}
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para el detalle de la liquidacion -->
+    <div class="modal fade  bd-example-modal-xl" id="modalDetalle" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="modalDetalle" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important; ">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalDetalleLongTitle">
+                        <Label>Registrar documento y monto de cada liquidación</Label>
+                    </h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close"
+                        (click)="fnCerrarModal()">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="liquidaDetForm">
+                            <div class="form-row container">
+
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-12">
+                                        <h6 style="color: #334d6e;">Presupuesto: {{sCCosto}}, Sucursal: {{sSucursal}}
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Número Documento</mat-label>
+                                            <input matInput type="text" formControlName="txtNumeroLiq" #input
+                                                [value]="input.value.toUpperCase()" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha Operación:</mat-label>
+                                            <input (click)="txtFechaLiq.open()" matInput [matDatepicker]="txtFechaLiq"
+                                                formControlName="txtFechaLiq" readonly>
+                                            <button style="outline: none;"
+                                                *ngIf="this.liquidaDetForm.controls.txtFechaLiq.value" mat-button
+                                                matSuffix mat-icon-button aria-label="Clear"
+                                                (click)="this.liquidaDetForm.controls.txtFechaLiq.setValue('');">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-datepicker-toggle matSuffix [for]="txtFechaLiq">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #txtFechaLiq></mat-datepicker>
+                                        </mat-form-field>
+
+
+                                        <!-- <mat-form-field style="width: 100%">
+                                          <mat-label>Fecha ingreso:</mat-label>
+                                          <input (click)="pickerFechaIngreso.open()" readonly formControlName="cboFechaIngreso"
+                                              matInput [matDatepicker]="pickerFechaIngreso" />
+                                          <mat-datepicker-toggle matSuffix [for]="pickerFechaIngreso"></mat-datepicker-toggle>
+                                          <mat-datepicker #pickerFechaIngreso></mat-datepicker>
+                                          <mat-error *ngIf="formIngreso.get('cboFechaIngreso').hasError('required')">
+                                              .Obligatorio</mat-error>
+                                      </mat-form-field>    -->
+
+
+
+
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Monto Total Liquidado: </mat-label>
+                                            <input matInput type="number" min="0" readonly formControlName="txtMontoLiq"
+                                                style="color: #334d6e; font-weight: bold; " />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Partida del RQ</mat-label>
+                                            <mat-select formControlName="cboPartidas"
+                                                (selectionChange)="fnPendienteLiq_Partida()">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vPartidas of lPartidas" [value]="vPartidas.nId">
+                                                    {{vPartidas.sPartida}} - {{vPartidas.sDescripcion}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Pendiente: </mat-label>
+                                            <input matInput type="number" min="0" readonly
+                                                formControlName="txtPendiente"
+                                                [value]="liquidaDetForm.get('txtPendiente').value | number:'1.2-2' " />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Monto a Liquidar: </mat-label>
+                                            <input matInput type="number" min="0" autofocus formControlName="txtMonto"
+                                                (blur)="fnEvitarNegativos(8)" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <button mat-mini-fab class="fab-toggler" matTooltip="Agregar Partida"
+                                            (click)="fnAgregarLiquidacion()">
+                                            <i class="material-icons">arrow_downward</i>
+                                        </button>
+                                        <button mat-mini-fab class="fab-toggler" matTooltip="Guardar Detalle"
+                                            (click)="fnGuardarDetalle()">
+                                            <i class="material-icons">save</i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <div id="listaMobile" class="mat-elevation-z8">
+                                        <div class="example-container3">
+                                            <table mat-table [dataSource]="dataSource3" matSort style="width: 100%;">
+                                                <ng-container matColumnDef="nId" sticky>
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="clsColumnaOpc2"> Opción</th>
+                                                    <td mat-cell *matCellDef="let row;let i = index;"
+                                                        class='has_label_on_mobile clsColumnaOpc2'
+                                                        data-label='Opción: '>
+                                                        <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                            matTooltip="Desplegar" matTooltipPosition="right"
+                                                            mat-stroked-button color="accent">
+                                                            <mat-icon>more_vert</mat-icon>
+                                                        </button>
+                                                        <mat-menu #menu="matMenu" xPosition="after">
+                                                            <button mat-menu-item (click)="fnEliminarPartida(i)">
+                                                                <mat-icon color="accent">delete</mat-icon>
+                                                                <span>Eliminar</span>
+                                                            </button>
+                                                        </mat-menu>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sPartida">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="clsColumnaOpc2"> Partida </th>
+                                                    <td mat-cell *matCellDef="let row"
+                                                        class='has_label_on_mobile clsColumnaOpc2'
+                                                        data-label='Partida: '> {{row.sPartida}} </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sDescripcion">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="clsColumnaLarge"> Descripción </th>
+                                                    <td mat-cell *matCellDef="let row"
+                                                        class='has_label_on_mobile clsColumnaLarge'
+                                                        data-label='Descripción: '> {{row.sDescripcion}} </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="sMonto">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                        class="clsColumnaLib"> Monto </th>
+                                                    <td mat-cell *matCellDef="let row"
+                                                        class='has_label_on_mobile clsColumnaLib' data-label='Monto: '>
+                                                        {{row.nMonto | number:'1.2-2'}}
+                                                    </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true">
+                                                </tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator [pageSizeOptions]="[10, 20]"></mat-paginator>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div [ngClass]="{'impresionActiva' : vImpresionReporte}" class="impresion">
+    <app-reporte-rq [pGastoCosto]="nIdGasto" *ngIf="vVerReporte"></app-reporte-rq>
+</div>
+
+<div [ngClass]="{'impresionActiva' : vImpresionReporteRR}" class="impresion">
+    <app-reporte-rr [pGastoCosto]="nIdGastoRR" *ngIf="vVerReporteRR"></app-reporte-rr>
+</div>
+
+<div [ngClass]="{'impresionActiva' : vImpresionReporteSM}" class="impresion">
+    <app-reporte-sm [pGastoCosto]="nIdGasto" *ngIf="vVerReporteSM"></app-reporte-sm>
+</div>

@@ -1,0 +1,416 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">
+            Notas Courier
+        </h5>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Cabecera -->
+        <div class="col-md-10 offset-md-1">
+            <!-- offset-md-3 -->
+
+            <mat-card>
+
+                <!--Form-->
+                <form class="row" [formGroup]="formCourier">
+                    <div class="col-md-10">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Solicitante:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtSolicitante" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Presupuesto:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtPresupuesto" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Cliente:</mat-label>
+                                    <input type="text" style="color: rgb(236, 0, 140);" readonly matInput
+                                        formControlName="txtCliente" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Almacén:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtAlmacen" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Fecha:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtFecha" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo Movilidad:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtMovilidad">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12" style="padding-bottom: 7px;">
+                                <mat-expansion-panel #matExpUbicacion>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                            Ubicación destinatario
+                                        </mat-panel-title>
+                                        <button mat-icon-button>
+                                            <mat-icon style="margin-right: 10px;" color="accent">location_on
+                                            </mat-icon>
+                                        </button>
+                                    </mat-expansion-panel-header>
+                                    <div class="row">
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Destinatario:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtDestinatario">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Punto llegada:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtPuntoLLegada">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Punto Recup.:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtPuntoRecup">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Ubicación:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtUbicación">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Dirección:</mat-label>
+                                                <input type="text" readonly matInput formControlName="txtDireccion">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Observaciones:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtObservacion" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2 col-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Unidades:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtTotalUnd" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2 col-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Peso:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtTotalPeso" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2 col-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Volumen:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtTotalVolumen" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-2 col-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Precio Artículos:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtTotalPrecio" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Total Precio Courier:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" type="text" [value]="nPrecioTotalCourier | number: '1.4-4'" readonly matInput
+                                        formControlName="txtTotalPrecioCourier" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-3 col-sm-10 col-10">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Precio courier consolidado:</mat-label>
+                                    <input [readonly]="!bEstaEditando" type="number" matInput
+                                        formControlName="txtRepartirPrecio" />
+                                    <mat-error *ngIf="formCourier.get('txtRepartirPrecio').hasError('min')">
+                                        .Mínimo 0</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-1 col-sm-2 col-2">
+                                <button [disabled]="!bEstaEditando" mat-mini-fab class="fab-toggler"
+                                    matTooltip="Repartir" (click)="fnRepartirPrecioCourier()">
+                                    <i class="material-icons">repeat</i>
+                                </button>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <button (click)="fnPrecioCourier()" [disabled]="!bEstaEditando" mat-raised-button
+                                    color="accent">
+                                    <mat-icon> attach_money</mat-icon>
+                                    Calcular
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <div class="form-row">
+                            <div class="col-md-1">
+                                <div class="clsSeparador">&nbsp;</div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-md-11">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Documento:</mat-label>
+                                    <input style="color: rgb(236, 0, 140)" type="text" readonly matInput
+                                        formControlName="txtDocumento" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Registro:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtRegistro" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Fecha Registro:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtFechaRegistro" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Guia salida:</mat-label>
+                                    <input type="text" readonly matInput placeholder="Guia" formControlName="txtGuia" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" readonly matInput placeholder="Estado"
+                                        formControlName="txtEstado" style="color: rgb(236, 0, 140)" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </mat-card>
+        </div>
+
+
+        <div class="col-md-10 offset-md-1">
+            <div class="row">
+                <!--Table para detalle de nota-->
+                <div class="col-12">
+
+                    <div id="listaMobile" class="mat-elevation-z8">
+
+                        <div class="table-container-1">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="opcion">
+                                    <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="fnVerImagen(row)">
+                                                <mat-icon color="accent">image</mat-icon>
+                                                <span>Ver foto</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sArticulo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Artículo
+                                    </th>
+                                    <td data-label='Artículo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        {{row.sArticulo}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sLote">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Lote
+                                    </th>
+                                    <td data-label='Lote: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        {{row.sLote}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaExpira">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Fecha
+                                        expira
+                                    </th>
+                                    <td data-label='Fecha expira: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2"> {{row.sFechaExpira}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUndMedida">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        U. Medida
+                                    </th>
+                                    <td data-label='U. Medida: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        {{row.sUndMedida}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nUnidades">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Unidades
+                                    </th>
+                                    <td data-label='Unidades: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        {{row.nUnidades}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCostoTotal">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Costo
+                                        Total
+                                    </th>
+                                    <td data-label='Costo Total: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2"> {{ row.nCostoTotal |
+                                        number:'1.4-4' }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nPesoTotal">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Peso
+                                        Total
+                                    </th>
+                                    <td data-label='Peso Total: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2"> {{ row.nPesoTotal |
+                                        number:'1.2-2' }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nVolumenTotal">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Volumen
+                                        Total
+                                    </th>
+                                    <td data-label='Volumen Total: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2"> {{ row.nVolumenTotal |
+                                        number:'1.6-6' }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nEsCotizado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        ¿Es Cotizado?
+                                    </th>
+                                    <td data-label='¿Es Cotizado?: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-checkbox [disabled]="!bEstaEditando"
+                                            [ngModel]="row.nEsCotizado == 1 ? true : row.nEsCotizado == 0 ? false : null"
+                                            (ngModelChange)="row.nEsCotizado = ($event ? 1 : 0)">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCostoCourier">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Costo
+                                        Courier
+                                    </th>
+                                    <td data-label='Costo Courier: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <span *ngIf="row.nEsCotizado==0">{{ row.nCostoCourier | number:'1.4-4' }}</span>
+                                        <mat-form-field *ngIf="row.nEsCotizado==1" style="width: 80px;">
+                                            <input (blur)="fnEvitarNegativos(row)" [readonly]="!bEstaEditando" min="0"
+                                                matInput type="number" [(ngModel)]="row.nCostoCourier">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <br>
+</div>
+
+<!--Zona de botones flotantes-->
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista">
+
+        <button *ngIf="bEstaEditando==false && abLista>0" matTooltipPosition="left" matTooltip="Ver historial" mat-mini-fab
+            color="secondary" (click)="fnVerHistorial()">
+            <mat-icon>history</mat-icon>
+        </button>
+
+        <!--Para editar-->
+        <button *ngIf="bEstaEditando==false && abLista>0" matTooltipPosition="left" matTooltip="Editar" mat-mini-fab
+            color="secondary" (click)="fnEditar()">
+            <mat-icon>edit</mat-icon>
+        </button>
+
+        <!--Para guardar precio courier-->
+        <button *ngIf="bEstaEditando==true && abLista>0" matTooltipPosition="left" matTooltip="Guardar" mat-mini-fab
+            color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+        <!--Para cancelar-->
+        <button matTooltipPosition="left" *ngIf="bEstaEditando==true && abLista>0" mat-raised-button mat-mini-fab
+            class="fab-secondary" matTooltip="Cancelar" color="secondary" (click)="fnCancelar()"><i
+                class="material-icons">close</i></button>
+
+        <!--Para Enviar -->
+        <button *ngIf="vRegistroDetalle?.nIdEstado==2227  && bEstaEditando==false && abLista>0"
+            matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" color="secondary"
+            matTooltip="Enviar" (click)="fnEnviarNota()"><i class="material-icons">send</i></button>
+
+        <!--Para salir-->
+        <button *ngIf="abLista>0" mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+            matTooltip="Salir" color="warn" (click)="fnRegresar()"><i class="material-icons">exit_to_app</i></button>
+    </div>
+</div>

@@ -1,0 +1,237 @@
+.clsdiv {
+  padding-top: 65px;
+  padding-right: 0px;
+  padding-left: 0px;
+} 
+
+.clsTItutlo{
+  background-color: #334D6E;
+  text-align: center;
+  color: white;
+}
+
+.clsControl{
+  width: 150px;
+}
+
+.clsbtnAccion {
+  height: 22px;
+  width: 35px !important;
+  border-left-width: medium;
+  line-height: normal;
+}
+
+.lblone {
+  font-size: 12px !important;
+  width: 100% !important;
+}
+
+.lbltwo {
+  font-size: 12px !important;
+  width: 100px !important;
+}
+
+.btnOne {
+  font-size: 12px;
+  width: 120px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.clsEstatico{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0; 
+}
+.centrado {
+  text-align: center;
+}
+
+#contentTo table {
+  margin-bottom: 0px !important;
+} 
+.form-row .form-group label {
+  font-size: 12px;
+  width: 80px;
+}
+
+tbody tr{
+  height: 40px;
+}
+
+select {
+  font-size: 12px; 
+  background-color: #D8EBFF;
+  width: 80px;
+  display: inline-block;
+  /* color: white; */
+}
+
+.clsSelect{
+  width:233px;
+  height: 95px;
+  padding-left:5px; 
+  padding-right:5px;
+}
+
+.div1 {
+  float: right;
+  padding-top: 4px;
+  padding-right: 65px;
+}
+
+.select1 {
+  font-size: 12px;  
+  display: inline-block;
+  width: 80%;
+  /* color: white; */
+}
+
+.select2 {
+  font-size: 12px; 
+  display: inline-block;
+  width: 60%;
+  float: right;
+  /* color: white; */
+}
+
+.clsbutton button {
+  width: 100%;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+  font-size: 12px;
+}
+
+
+.clsbutton input {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.clsScrollTable > table > tbody > tr > td > button {
+  padding: 0px;
+  width: 100px;
+}
+
+.clstext {
+  width: 80%;
+}
+.clstextMin {
+  width: 60%;
+}
+
+input[type=text] {
+  font-size: 12px;
+  float: right;
+  background-color: #e9ecef;
+  /* color: white; */
+}
+
+input[type=date] {
+  width: 200px;
+  font-size: 12px;
+  float: right;
+  background-color: #e9ecef;
+  /* color: white; */
+}
+
+.color {
+  background-color: #D8EBFF !important;
+}
+.nocolor{
+  background-color: #e9ecef !important;
+}
+
+.clsSeparador {
+  border-color: #D8EBFF;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.table tr th {
+  padding: 5px !important;
+  font-size: 10px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #334D6E;
+  color: white;
+}
+
+#contentTo .table tr th {
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(237, 235, 235, 0.8);
+  color: black;
+}
+#contentTo .table tr td {
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(255, 255, 255, 0.993);
+}
+
+.table tr td {
+  padding: 5px !important;
+  font-size: 10px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(237, 235, 235, 0.8);
+}
+
+.clsScrollTable {
+  overflow: auto;
+  width: 100%;
+}
+
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+
+@media (max-width: 1200px) {
+  .clstext {
+    width: 65% !important;
+  }
+  .clstextMin {
+    width: 55% !important;
+  }
+}
+
+
+/* @media (max-width: 1030px) {
+  .clsdiv { 
+    padding-left: 25px;
+  } 
+} */
+
+/* @media (max-width: 770px) {
+  .clsdiv { 
+    padding-left: 25px;
+  }
+} */
+@media (max-width: 700px) {
+  .clstext {
+    width: 70% !important;
+  }
+  .clstextMin {
+    width: 70% !important;
+  }
+  #contentTo {
+    width: 960px;
+  }
+}
+
+.clsFoto{
+max-width: 6rem;
+max-height: 6rem;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color           : white;
+}

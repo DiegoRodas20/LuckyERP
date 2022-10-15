@@ -1,0 +1,89 @@
+<div class="mb-3" style="text-align: center;">
+  <mat-card class="title-card">Aviso de útiles de oficina</mat-card>
+</div>
+<mat-dialog-content>
+
+  <div class="row mx-auto my-auto">
+    <div class="col-md-12">
+      <mat-form-field style="width: 100%;">
+        <mat-label>Buscar Articulo</mat-label>
+        <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrarPresupuestos($event)">
+        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="this.txtFiltro.setValue(''); fnCrearTablaArticulosStockMinimo()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="col-md-8 my-3" style="padding-top: 6px">
+      <mat-radio-group aria-label="Seleccione una opción" [formControl]="rbFiltro"
+        (change)="fnCrearTablaArticulosStockMinimo()" class="row">
+        <div class="col-md-6">
+          <mat-radio-button value="1" [checked]="true">Todos</mat-radio-button>
+        </div>
+        <div class="col-md-6">
+          <mat-radio-button value="2">Stock minimo superado</mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div class="col-md-4">
+      <div class="ml-auto mt-3">
+        <button mat-raised-button color="primary" (click)="fnCerrarDialog()" >Aceptar</button>
+      </div>
+    </div>
+    <div>
+      <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <!-- ID Column -->
+
+            <ng-container matColumnDef="sCodArticulo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Artículo: '>
+                <ngb-highlight [result]="row.sCodArticulo" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sArticulo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripcion
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Descripcion: '>
+                <ngb-highlight [result]="row.sArticulo" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sRutaImagen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Imagen
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Imagen: '>
+                <img src="{{row.sRutaImagen || '/assets/img/SinImagen.jpg'}}" (click)="verImagen(row.sRutaImagen)" class="imageRow">
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nCantMin">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock Mínimo
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Stock Minimo: '>
+                <ngb-highlight [result]="row.nCantMin" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nStockActual">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock Actual
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Stock Actual: '>
+                <ngb-highlight [result]="row.nStockActual" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [ngClass]="{'make-red': row.nStockActual < row.nCantMin}"></tr>
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>

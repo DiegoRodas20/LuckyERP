@@ -1,0 +1,204 @@
+<div class="mb-3" style="text-align: center;">
+  <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card"><h3>Detalle Kardex</h3></mat-card>
+  </div>
+</div>
+<div class="col-lg-4 mt-1 mx-auto">
+  <mat-form-field style="width: 80%;">
+    <mat-label>Buscar:</mat-label>
+    <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+    <button mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+      (click)="this.txtFiltro.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+<mat-dialog-content>
+  <div class="mt-1">
+    <div id="listaMobile" class="mat-elevation-z8 scroll-table">
+      <div class="example-container">
+        <table mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="opciones" sticky  *ngIf="!data.modoCliente">
+            <th mat-header-cell *matHeaderCellDef> Opción</th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                    matTooltipPosition="right" mat-stroked-button color="accent">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="after">
+                    <button mat-menu-item (click)="verImagen(element.sRutaFotoSustento)">
+                        <mat-icon color="accent">image</mat-icon>
+                        <span>Ver Foto</span>
+                    </button>
+                    <button mat-menu-item (click)="fnDescargar(element)">
+                        <mat-icon color="accent">cloud_download</mat-icon>
+                        <span>Descargar</span>
+                    </button>
+                    <button mat-menu-item (click)="fnVerMensaje(element)">
+                        <mat-icon color="accent">mail_outline </mat-icon>
+                        <span>Ver mensaje</span>
+                    </button>
+                </mat-menu>
+            </td>
+        </ng-container>
+
+          <ng-container matColumnDef="almacen">
+            <th mat-header-cell *matHeaderCellDef> Almacén base </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Almacén Base : '>
+              <ngb-highlight [result]="element.sAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="codAlmacen">
+            <th mat-header-cell *matHeaderCellDef> Almacén </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Almacén: '>
+              <ngb-highlight [result]="element.sCodAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="centroCosto">
+            <th mat-header-cell *matHeaderCellDef> Presupuesto </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Presupuesto: '>
+              <ngb-highlight [result]="element.sCentroCosto" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="codArticulo">
+            <th mat-header-cell *matHeaderCellDef> Artículo</th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Artículo: '>
+              <ngb-highlight [result]="element.sCodArticulo" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="articuloDescripcion">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;">
+              Descripción del artículo
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Descripcion del articulo: '>
+              <ngb-highlight [result]="element.sArticuloDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lote">
+            <th mat-header-cell *matHeaderCellDef> Lote </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Lote: '>
+              <ngb-highlight [result]="element.sLote" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="stockAnterior" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Stock</div>
+              <div>anterior</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Stock anterior: '>
+              <ngb-highlight [result]="element.nStockAnterior" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="unidadMedida" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Unidad de</div>
+              <div>medida</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Unidad de medida: '>
+              <ngb-highlight [result]="element.sUidadMedida" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidadIngreso" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Cantidad de</div>
+              <div>ingreso</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cantidad de ingreso: '>
+              <ngb-highlight [result]="element.nCantidadIngreso" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaIngreso" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Fecha de Ingreso</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha de Ingreso: '>
+              <ngb-highlight [result]="element.sFechaIngreso" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidadSalida" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Cantidad de</div>
+              <div>salida</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cantidad de Salida: '>
+              <ngb-highlight [result]="element.nCantidadSalida" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaSalida" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Fecha de Salida</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha de Salida: '>
+              <ngb-highlight [result]="element.sFechaSalida" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="entidadDestino">
+            <th mat-header-cell *matHeaderCellDef> Entidad destino </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Entidad Destino: '>
+              <ngb-highlight [result]="element.sEntidadDestino" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="destino" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              Destino
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Destino: '>
+              <ngb-highlight [result]="element.sDestino" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="stockActual" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef>
+              <div>Stock</div>
+              <div>actual</div>
+            </th>
+            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Stock actual: '>
+              <ngb-highlight [result]="element.nStockActual" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+      </div>
+      <div class="paginator-fixed">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+      <button *ngIf="btn.state" mat-mini-fab
+        class="fab-secondary"
+        [matTooltip]="btn.tool"
+        matTooltipPosition="left"
+        color="secondary"
+        (click)="clickFab(ibtn)">
+        <i class="material-icons" >{{btn.icon}}</i>
+      </button>
+    </ng-container>
+  </div>
+</div>

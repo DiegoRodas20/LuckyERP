@@ -1,0 +1,64 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">
+    Historial de asignación de costos
+</h5>
+
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-12">
+
+            <div id="listaMobile" class="mat-elevation-z8">
+
+                <div class="table-container-1">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+
+                        <ng-container matColumnDef="sUsuario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Usuario
+                            </th>
+                            <td data-label='Usuario: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sUsuario}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFecha">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha y hora
+                            </th>
+                            <td data-label='Fecha y hora: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sFecha}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nPrecio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Precio
+                            </th>
+                            <td data-label='Precio: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.nPrecio | number:'1.4-4'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sEstado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Estado
+                            </th>
+                            <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sEstado}}
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button>
+    </div>
+</mat-dialog-actions>

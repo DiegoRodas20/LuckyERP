@@ -1,0 +1,173 @@
+<div class="clsprincipal">
+    <div class="col-md-8 offset-md-2">
+        <h5 class="card-header center-text-card">{{pCanal.sDescripcion}} - Sub canales</h5>
+        <div class="row"><br /></div>
+    </div>
+    <div>
+        <div class="col-md-8 offset-md-2">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-9 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-8 col-sm-8 col-8">
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Buscar sub canal:</mat-label>
+                                        <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar()">
+                                        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                            mat-icon-button aria-label="Clear"
+                                            (click)="this.txtFiltro.setValue(''); fnListarSubCanal(1);">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo sub canal"
+                                        (click)="fnAbrirModal()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <input data-toggle="modal" data-target="#modalSubCanal" #modalSubCanal type="hidden"
+                                        name="button">
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Regresar"
+                                        (click)="fnRegresar()">
+                                        <i class="material-icons">keyboard_arrow_left</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <!-- <div class="example-container mat-elevation-z8 clsTablePri"> style="overflow: auto; margin-top: 10px; height: 305px;" -->
+                    <div class="mat-elevation-z8 example-container">
+                        <table mat-table [dataSource]="dataSource" matSort>
+
+                            <!-- ID Column -->
+                            <ng-container matColumnDef="nId" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Opción</th>
+                                <td mat-cell *matCellDef="let row" class="clsColumnaOpc">
+                                    <button (click)="fnSeleccionarSubCanal(row)" mat-stroked-button color="accent"
+                                        matTooltip="Ver detalle">
+                                        <mat-icon> create</mat-icon>
+                                    </button> </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCodigo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Código
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="clsColumnaLib">
+                                  <ngb-highlight [result]="row.sCodigo" [term]="txtFiltro.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sDescripcion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Sub Canal
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="clsColumnaLarge">
+                                  <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sEstado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="clsColumnaLib2">
+                                  <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal para añadir  sub canal-->
+<div class="modal fade  bd-example-modal-xl" id="modalSubCanal" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalSubCanal"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalCanalLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky " data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form class="row col-md-12" [formGroup]="formSubCanal">
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Código:</mat-label>
+                                <input type="text" matInput placeholder="00" formControlName="txtCodigo"
+                                    [errorStateMatcher]="matcher" readonly>
+                                <mat-error *ngIf="formSubCanal.get('txtCodigo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Descripcion:</mat-label>
+                                <input type="text" (keyup)="fnEvitarEspacios()" matInput placeholder="Descripcion"
+                                    formControlName="txtDescripcion" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formSubCanal.get('txtDescripcion').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formSubCanal.get('txtDescripcion').hasError('maxlength')">
+                                    .Max. 50 digitos</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </form>
+
+                    <div class="row col-md-12 d-flex justify-content-end">
+                        <div *ngIf="pOpcion==2" class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select [formControl]="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstados" [value]="vEstado.nEstado">
+                                        {{vEstado.sEstado}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button mat-mini-fab color="accent" (click)="fnAnadirSubCanal()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button mat-mini-fab color="accent" (click)="fnModificarSubCanal()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button mat-mini-fab color="accent" (click)="fnGuardarSubCanal()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <div class="form-row col-md-12 justify-content-end align-items-end">
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

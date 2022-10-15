@@ -1,0 +1,14 @@
+.example-container {
+    height: 300px;
+    width: 100%;
+    overflow: auto;
+  }
+
+  .example-container table{ 
+    width: 100%;
+  }
+
+  label{
+    color: crimson;
+    font-weight: bold;
+  }

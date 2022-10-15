@@ -1,0 +1,76 @@
+<div class="transporte">
+  <h5 class="col-md-12 card-header">Asignación de Vehículoss</h5>
+  <br />
+  <!-- <div class="col-md-12 fondo">Asignación de Vehículos</div>
+  <br /> -->
+  <div class="form-group col-md-12">
+    <div class="row">
+      <div class="col-md-8 offset-md-4">
+        <div class="form-row">
+          <div class="col-md-6 col-sm-6 col-12">
+            <mat-form-field color="primary">
+              <mat-label>Tipo de Proveedor</mat-label>
+              <mat-select [formControl]="ProveedorControl">
+                <mat-option *ngFor="let item of proveedores" [value]="item.nId">
+                  {{ item.sDescripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-4 col-md-6 col-12">
+      <mat-form-field>
+        <mat-label>Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event.target.value)" #input>
+        <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <button mat-mini-fab class="fab-toggler" matTooltip="Registrar Vehículo" (click)="fnOpenRegistroVehiculo()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+    <div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="350">
+      <table mat-table [dataSource]="dsVehiculo" matSort>
+        <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type"
+          [sticky]="col.type == 'accion'">
+
+          <!-- #region Designación de sort en header -->
+          <ng-template [ngIf]="col.type == 'opcion'" [ngIfElse]="withSort">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width" [style.textAlign]="'center'">
+              {{col.header}} </th>
+          </ng-template>
+          <ng-template #withSort>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+          </ng-template>
+          <!-- #endregion -->
+
+          <!-- #region Formación de rows dependiendo del tipo -->
+          <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: " [style.textAlign]="col.align">
+            <span *ngSwitchCase="'accion'">
+              <button mat-icon-button matTooltip="Asignar" matTooltipPosition="right" mat-stroked-button color="accent"
+                (click)="agregarVehiculo(row)">
+                <mat-icon>forward</mat-icon>
+              </button>
+            </span>
+            <span *ngSwitchCase="null">
+              <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+            </span>
+          </td>
+          <!-- #endregion -->
+
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    </div>
+  </mat-dialog-content>
+</div>

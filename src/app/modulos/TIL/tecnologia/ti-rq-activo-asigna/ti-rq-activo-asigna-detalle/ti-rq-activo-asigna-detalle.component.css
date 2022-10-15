@@ -1,0 +1,170 @@
+.contenedorComponente {
+  height: 100vh;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: 300px;
+  width: 100%;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+/* Estilos del Formulario */
+
+.contenedorAuditoria {
+  display: flex;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.mat-form-field-disabled input,
+.mat-select-disabled .mat-select-value {
+  color: black;
+}
+:host ::ng-deep ng-select-value,
+:host
+  ::ng-deep
+  .ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+/* Estilo del acordeon */
+.mat-expanded > .mat-expansion-panel-header {
+  /* Estilo del acordeon*/
+  background-color: #e1e1e1;
+}
+
+.campoAuditoriaAcordeon {
+  display: none;
+}
+
+:host ::ng-deep .campoAuditoriaAcordeon mat-panel-title {
+  justify-content: space-between;
+  line-height: 40px;
+  color: #334d6e;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1199px) {
+  /* Campo auditoria */
+  .campoAuditoria {
+    display: none;
+  }
+
+  .contenedorAuditoria {
+    display: block;
+  }
+
+  .campoAuditoriaAcordeon {
+    display: block;
+    margin: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .clsSeparador {
+    height: 0;
+    border: none;
+  }
+}
+
+::ng-deep
+  .ng-select.ng-invalid.ng-touched
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container:after {
+  border-bottom: thin solid #f44336 !important;
+}
+
+::ng-deep .ng-select.ng-select-disabled span.ng-star-inserted {
+  color: black !important;
+}
+
+@media only screen and (min-width: 960px) {
+  .boton-MatTable {
+    position: absolute;
+    top: 0px;
+    z-index: 120;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .boton-MatTable {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 120;
+  }
+}

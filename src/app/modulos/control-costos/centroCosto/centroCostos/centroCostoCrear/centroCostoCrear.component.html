@@ -1,0 +1,500 @@
+<div class="container-fluid">
+    <div class="form-row col-md-12">
+        <!-- Cabecera Centro costo -->
+        <div class="col-md-10 offset-md-1">
+            <!---->
+            <!-- offset-md-3 -->
+            <form [formGroup]="centroCostoForm">
+                <div class="form-row">
+
+                    <div class="col-md-10">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <ng-select appendTo="body" (change)="fnGeneracionCodigo($event,1); fnListarAreas(0)"
+                                    [clearable]="false" formControlName="cboDireccion" placeholder="Dirección" required>
+                                    <ng-option *ngFor="let vDireccion of lDireccion" [value]="vDireccion.nIdDireccion">
+                                        {{vDireccion.sCodigoDireccion}} - {{vDireccion.sDescripcion}}</ng-option>
+                                </ng-select>
+
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <ng-select (change)="fnGeneracionCodigo($event,2)" appendTo="body" [clearable]="false"
+                                    formControlName="cboArea" placeholder="Área" required>
+                                    <ng-option *ngFor="let vArea of lArea" [value]="vArea.nIdArea">
+                                        {{vArea.sCodigoArea}} -
+                                        {{vArea.sDescripcion}}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <ng-select (change)="fnGeneracionCodigo($event,3); fnListarPuestos(0)" appendTo="body"
+                                    [clearable]="false" formControlName="cboCargo" placeholder="Cargo" required>
+                                    <ng-option *ngFor="let vCargo of lCargo" [value]="vCargo.nIdCargo">
+                                        {{vCargo.sCodigoCargo}} - {{vCargo.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+
+                            </div>
+
+                        </div>
+                        <!--Codigo Sub Cargo-->
+                        <div class="form-row">
+
+                            <div class="form-group col-md-2">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Código Puesto:</mat-label>
+                                    <input [readonly]="pOpcion==1 || bDireccionPersona"
+                                        (input)="fnGeneracionCodigo(0,4)" type="text" matInput placeholder="0"
+                                        formControlName="txtCodigoSubCargo" [errorStateMatcher]="matcher"
+                                        onkeydown="return /[0-9]/i.test(event.key)">
+                                    <button style="outline: none;" mat-button
+                                        *ngIf="centroCostoForm.controls.txtCodigoSubCargo.value" matSuffix
+                                        mat-icon-button aria-label="Clear"
+                                        (click)="centroCostoForm.controls.txtCodigoSubCargo.setValue(''); fnRedondearCodigoSub(0,4)">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="centroCostoForm.get('txtCodigoSubCargo').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                    <mat-error
+                                        *ngIf="centroCostoForm.get('txtCodigoSubCargo').hasError('min') || centroCostoForm.get('txtCodigoSubCargo').hasError('max')">
+                                        .De 00 a 99</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!--Nombre Sub Cargo-->
+                            <div class="form-group col-md-5" *ngIf="!bDireccionPersona">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nombre Puesto:</mat-label>
+                                    <input [readonly]="this.pOpcion==1 && this.pTipo==1" (keyup)="fnEvitarEspacios()"
+                                        type="text" matInput placeholder="Puesto" formControlName="txtSubcargo"
+                                        [errorStateMatcher]="matcher" appCaracterValidador>
+                                    <mat-error *ngIf="centroCostoForm.get('txtSubcargo').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                    <mat-error *ngIf="centroCostoForm.get('txtSubcargo').errors?.caracterValidator">
+                                        .El texto no debe contener: "/", "|", "?"</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!--Nombre Puesto-->
+                            <div class="form-group col-md-5 form-ngselect" *ngIf="bDireccionPersona">
+                                <ng-select (change)="fnSetCodPuesto()" appendTo="body" [clearable]="false"
+                                    formControlName="cboPuesto" placeholder="Puesto" required>
+                                    <ng-option *ngFor="let opc of listPuesto" [value]="opc.nIdPuesto">
+                                        {{opc.sNombrePuesto}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+
+                            <div class="form-group col-md-5">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Moneda:</mat-label>
+                                    <mat-select formControlName="cboMoneda" [errorStateMatcher]="matcher">
+                                        <mat-option>Seleccione</mat-option>
+                                        <mat-option *ngFor="let vMoneda of lMoneda" [value]="vMoneda.nIdMoneda">
+                                            {{vMoneda.sDescripcion}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="centroCostoForm.get('cboMoneda').hasError('required')">
+                                        .Obligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+
+                            <div class="form-group col-md-4">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Código:</mat-label>
+                                    <input readonly style="color: rgb(236, 0, 140);" type="text" matInput
+                                        placeholder="0000" formControlName="txtCodigo" [errorStateMatcher]="matcher">
+                                    <mat-error *ngIf="centroCostoForm.get('txtCodigo').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-8">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Descripción:</mat-label>
+                                    <input [readonly]="this.pOpcion==1 && this.pTipo==1" (keyup)="fnEvitarEspacios()"
+                                        type="text" matInput placeholder="Descripcion" formControlName="txtDescripcion"
+                                        [errorStateMatcher]="matcher" appCaracterValidador>
+                                    <mat-error *ngIf="centroCostoForm.get('txtDescripcion').hasError('required')">
+                                        .Obligatorio</mat-error>
+                                    <mat-error *ngIf="centroCostoForm.get('txtDescripcion').errors?.caracterValidator">
+                                        .El texto no debe contener: "/", "|", "?"</mat-error>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+
+                        <!-- Calendarios   -->
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Inicio:</mat-label>
+                                    <input matInput [matDatepicker]="fechaIni" formControlName="cboFechaIni">
+                                    <mat-datepicker-toggle matSuffix [for]="fechaIni"></mat-datepicker-toggle>
+                                    <mat-datepicker #fechaIni></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-md-6">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Fin:</mat-label>
+                                    <input
+                                        [min]="centroCostoForm.controls.cboFechaFin.value==''?null: centroCostoForm.controls.cboFechaIni.value"
+                                        matInput [matDatepicker]="fechaFin" formControlName="cboFechaFin" readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
+                                    <mat-datepicker #fechaFin></mat-datepicker>
+                                    <button style="outline: none;" mat-button
+                                        *ngIf="centroCostoForm.controls.cboFechaFin.value" matSuffix mat-icon-button
+                                        aria-label="Clear" (click)="centroCostoForm.controls.cboFechaFin.setValue('')">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <button [disabled]="pOpcion==2" type="button" mat-raised-button color="primary"
+                                    (click)="fnAbrirModalDetalleCC()">
+                                    <mat-icon> add</mat-icon>Sucursal
+                                </button>
+                                <input data-toggle="modal" data-target="#modalDetalleCC" #modalDetalleCC type="hidden"
+                                    name="button">
+                            </div>
+                            <div *ngIf="pOpcion==2" class="form-group col-md-8">
+                                <mat-label>
+                                    Para añadir sucursales a un centro de costo primero se debe añadir.
+                                </mat-label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-2 ocultar-mobile">
+                        <div class="form-row">
+                            <div class="col-md-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-md-11">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Creado:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtCreado">
+                                </mat-form-field>
+
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtFechaCrea">
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Modificado:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtModificado">
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtFechaMod">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Estado:</mat-label>
+                                        <input type="text" style="color: rgb(236, 0, 140);" readonly matInput
+                                            formControlName="cboEstado">
+                                    </mat-form-field>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Informacion en celular-->
+                    <div class="col-md-12 mostrar-mobile">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                    Información
+                                </mat-panel-title>
+                                <button mat-icon-button>
+                                    <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                </button>
+                            </mat-expansion-panel-header>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Creado:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtCreado">
+                                    </mat-form-field>
+
+                                    <div class="form-group">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtFechaCrea">
+                                        </mat-form-field>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Modificado:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtModificado">
+                                        </mat-form-field>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtFechaMod">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" style="color: rgb(236, 0, 140);" readonly matInput
+                                                formControlName="cboEstado">
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </div>
+
+                    <div class="col-md-12 mostrar-mobile">
+                        <br>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="col-md-10 offset-md-1">
+        <div class="row">
+            <!--Table para sucursales -->
+            <div class="col-md">
+                <div id="listaMobile" class="mat-elevation-z8 ">
+                    <div class="table-container-1">
+                        <table mat-table [dataSource]="dataSource" matSort>
+                            <ng-container matColumnDef="nIdCCS" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Opción</th>
+                                <td [ngClass]="vSucursalSeleccionada?.nIdSucursal==row?.nIdSucursal?'selected-row':''"
+                                    mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc"
+                                    data-label='Opción: '>
+                                    <button [disabled]="pTipo==1" mat-icon-button [matMenuTriggerFor]="menu"
+                                        matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button
+                                        color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu" xPosition="after">
+                                        <button mat-menu-item (click)="fnEliminarSucursalTemp(row)">
+                                            <mat-icon color="accent">delete</mat-icon>
+                                            <span>Eliminar</span>
+                                        </button>
+                                        <button name="button" data-toggle="modal" data-target="#modalPersonal"
+                                            #modalPersonal mat-menu-item (click)="fnAbrirModalPersonal(row);  fnSeleccionarCCSucursal(row);
+                                            fnSelecSucursal(row.nIdCCS); ">
+                                            <mat-icon color="accent">person_add</mat-icon>
+                                            <span>Personal</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCodEmpS">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Código
+                                </th>
+                                <td (click)="fnSelecSucursal(row.nIdCCS); fnSeleccionarCCSucursal(row);" mat-cell
+                                    *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                    data-label='Código: '> {{row.sCodEmpS}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sDescSucursal">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Sucursal
+                                </th>
+                                <td mat-cell (click)="fnSelecSucursal(row.nIdCCS); fnSeleccionarCCSucursal(row);"
+                                    *matCellDef="let row" class=" has_label_on_mobile clsColumnaLarge"
+                                    data-label='Sucursal: '> {{row.sDescSucursal}} </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                [ngClass]="vSucursalSeleccionada?.nIdSucursal==row?.nIdSucursal?'selected-row':''">
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!--Table para personal -->
+            <div class="col-md">
+                <div id="listaMobile" class="mat-elevation-z8 ">
+                    <div class="table-container-1">
+                        <table mat-table [dataSource]="dataSource2" matSort>
+                            <ng-container matColumnDef="nIdCCSP" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Opción</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc"
+                                    data-label='Opción: '>
+                                    <button (click)="fnEliminarPersonalTemp(row)" mat-stroked-button
+                                        [disabled]="pTipo==1" color="warn" matTooltip="Eliminar personal">
+                                        <mat-icon> delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sDocumentoPersonal">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> DNI
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                    data-label='DNI: '> {{row.sDocumentoPersonal}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sDescPers">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Personal
+                                </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge"
+                                    data-label='Personal: '> {{row.sDescPers}} </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal para asignar nueva sucursal-->
+<div class="modal fade  bd-example-modal-xl" id="modalDetalleCC" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="modalDetalleCC" aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example-1">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalPartidaRemunLongTitle"><Label>Sucursal del Costo Fijo</Label>
+                </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <div class="form-row col-md-12">
+                        <form class="row col-md-12" [formGroup]="detalleCCForm">
+                            <div class="form-group col-md-10">
+                                <ng-select appendTo="body" [clearable]="false" formControlName="cboSucursal"
+                                    placeholder="Sucursal" required>
+                                    <ng-option *ngFor="let vEmpSuc of lEmpSucursal" [value]="vEmpSuc">
+                                        {{vEmpSuc.sCodSucursal}} - {{vEmpSuc.sDescSucursal}}</ng-option>
+                                </ng-select>
+                                <small class="text-danger"
+                                    *ngIf="detalleCCForm.get('cboSucursal').hasError('required')">
+                                    .Obligatorio
+                                </small>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div class="container-fluid">
+                                    <div class="form-row col-md-12 d-flex justify-content-end">
+                                        <div class="col-md-3">
+                                            <button mat-mini-fab color="accent" (click)="fnAnadirSucursalTemp()">
+                                                <mat-icon>check</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal para asignar nuevo personal a la sucursal-->
+<div class="modal fade  bd-example-modal-xl" id="modalPersonal" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="modalPersonal" aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example-2">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalPersonalLongTitle"><Label>Personal para la
+                        sucursal de: {{vDetalleCCSeleccionado?.sDescSucursal}}</Label>
+                </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <div *ngIf="lCboPersonal.length>0" class="form-row col-md-12">
+                        <form class="row col-md-12" [formGroup]="formPersonal">
+                            <!-- <div class="form-group d-flex  align-items-center col-md-3">
+                                <p class="d-flex align-items-center">Añadir Personal:</p>
+                            </div> -->
+                            <div class="form-group col-md-12">
+                                <ng-select appendTo="body" [clearable]="false" formControlName="cboPersonal"
+                                    placeholder="Personal" required>
+                                    <ng-option *ngFor="let vPer of lCboPersonal" [value]="vPer">
+                                        {{vPer.sDescripcion}}</ng-option>
+                                </ng-select>
+                                <small *ngIf="formPersonal.get('cboPersonal').hasError('required')" class="text-danger">
+                                    .Obligatorio
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div *ngIf="lCboPersonal.length==0" class="form-row col-md-12 d-flex justify-content-center">
+                        <p>
+                            La sucursal seleccionada no tiene personal asignado.
+                        </p>
+                    </div>
+
+                    <div class="container-fluid">
+                        <div class="form-row col-md-12 d-flex justify-content-end">
+                            <div *ngIf="lCboPersonal.length>0" class="col-md-3">
+                                <button mat-mini-fab color="accent" (click)="fnAnadirPersonalTemp()">
+                                    <mat-icon>check</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

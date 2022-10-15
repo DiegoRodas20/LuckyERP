@@ -1,0 +1,24 @@
+ 
+  :host /deep/ table thead{ 
+    background-color: #334D6E;   
+  }  
+
+  mat-form-field{ 
+    width: 100%;
+    font-size: 18px;
+  }
+
+  mat-card-title{
+    font-size: 33px !important;
+  }
+  
+
+  :host /deep/  .mat-form-field-disabled input{
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  } 
+  :host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  

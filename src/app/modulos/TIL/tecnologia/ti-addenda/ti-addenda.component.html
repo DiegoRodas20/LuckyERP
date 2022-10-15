@@ -1,0 +1,170 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Registro de Addenda</h5>
+    </div>
+
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="col-md-10 offset-md-1">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 mx-auto">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar addenda:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="this.txtFiltro.setValue(''); GetAll();">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!--tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="tabla-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+
+                                            <button (click)="fnSeleccionarRegistro(row)" mat-menu-item>
+                                                <mat-icon color="accent"> touch_app</mat-icon>
+                                                <span>Ver detalle</span>
+                                            </button>
+
+                                            <button mat-menu-item (click)="fnArchivo(row)">
+                                                <mat-icon color="accent">attach_file</mat-icon>
+                                                <span>Adjuntar archivo</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="sProveedor">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge2">
+                                        Proveedor
+                                    </th>
+                                    <td data-label='Proveedor: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge2">
+                                        <ngb-highlight [result]="row.sProveedor" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNumero">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">Número
+                                    </th>
+                                    <td data-label='Número: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sNumero" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTipoActivo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="has_label_on_mobile clsColumnaLarge"> Tipo Activo
+                                    </th>
+                                    <td data-label='Tipo Activo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sTipoActivo" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCantidad">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                                        Cantidad Total
+                                    </th>
+                                    <td data-label='Cantidad Total: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.nCantidad" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCantidadRestante">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                                        Pendiente Ingresar
+                                    </th>
+                                    <td data-label='Pendiente Ingresar: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.nCantidadRestante" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaInicio">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha
+                                        inicio
+                                    </th>
+                                    <td data-label='Fecha inicio: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sFechaInicio" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaFin">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha
+                                        fin
+                                    </th>
+                                    <td data-label='Fecha fin: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sFechaFin" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="row.nIdEstado==0 ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-ti-addenda-detalle [pIdRegistro]="pIdRegistro" (pMostrar)="fnOcultar($event)" *ngIf="pMostrar==1">
+</app-ti-addenda-detalle>

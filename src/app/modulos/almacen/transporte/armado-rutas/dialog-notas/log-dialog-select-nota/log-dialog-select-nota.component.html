@@ -1,0 +1,71 @@
+<div class="transporte">
+  <mat-card class="title-card">Selección de notas</mat-card>
+  <br>
+  <div class="row" style="display: none;">
+    <div class="col-lg-4 col-md-6 col-12">
+      <mat-form-field>
+        <mat-label>Filtrar</mat-label>
+        <input matInput [formControl]="txtFiltro" (keyup)="applyFilter($event.target.value)">
+        <button *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button (click)="fnClean()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-dialog-content>
+    <div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="300">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type"
+          [sticky]="col.type == 'accion'">
+
+          <!-- #region Designación de sort en header -->
+          <ng-template [ngIf]="col.type == 'opcion'" [ngIfElse]="withSort">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+          </ng-template>
+          <ng-template #withSort>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+          </ng-template>
+          <!-- #endregion -->
+
+          <!-- #region Formación de rows dependiendo del tipo -->
+          <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: " [style.textAlign]="col.align">
+            <span *ngSwitchCase="'accion'">
+              <mat-checkbox [checked]="row.isCheck" (change)="select(row.nIdOperMov)"> </mat-checkbox>
+            </span>
+            <span *ngSwitchCase="null">
+              <ngb-highlight [result]="row[col.field]" [term]="txtFiltro.value"></ngb-highlight>
+            </span>
+            <span *ngSwitchCase="'deci2'">
+              <ngb-highlight [result]="row[col.field] | number :'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+            </span>
+            <span *ngSwitchCase="'deci6'">
+              <ngb-highlight [result]="row[col.field] | number :'1.6-6'" [term]="txtFiltro.value"></ngb-highlight>
+            </span>
+          </td>
+          <!-- #endregion -->
+
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    </div>
+  </mat-dialog-content>
+  <div class="row">
+    <div class="col-lg-2 col-md-6 col-12 mt">
+      <button mat-raised-button class="button clean" color="white" matDialogClose>
+        <mat-icon class="pink">cancel</mat-icon>
+        Salir
+      </button>
+    </div>
+    <div class="col-lg-2 col-md-6 col-12 mt">
+      <button mat-raised-button class="button" color="accent" [disabled]="hasSelected" (click)="fnGuardar()">
+        <mat-icon>save</mat-icon>
+        Guardar
+      </button>
+    </div>
+    <div class="col-lg-8 col-md-6 col-12">
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</div>

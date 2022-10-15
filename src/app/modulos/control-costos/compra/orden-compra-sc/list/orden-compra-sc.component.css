@@ -1,0 +1,60 @@
+
+.form-row .form-group label {
+  font-size: 12.5px;
+}
+
+th {
+  font-size: 10px;
+}
+
+input [type="button"] {
+  cursor: pointer;
+}
+
+/*Tabla responsive*/
+
+.example-container {
+  min-height: 200px;
+  width: 100%;
+  overflow: auto;
+}
+
+.clsprincipal {
+  padding: 60px 5px 0px 5px;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+  height: 40px;
+  margin-left: 10px
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+  height: 40px;
+  margin-left: 10px
+  ;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+
+}
+
+table {
+  width: 100%;
+}
+
+.titulo {
+  background-color: #334d6e;
+  color: white;
+  text-align: center;
+  min-width: 100%;
+  margin: 10px;    
+}

@@ -1,0 +1,91 @@
+<div class="container">
+    <h5 class="col-md-10 offset-md-1 card-header" style="text-align:center">Registro de Banco</h5>
+</div>
+<br>
+
+<form [formGroup]="forma" class="container col-md-10 offset-md-1">
+    <div class="form-row">
+
+        <div class="form-group col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Banco</mat-label>
+                <mat-select formControlName="nBanco" [class.is-invalid]="bancoNoValido" (selectionChange)="capturarBanco($event)">
+                    <mat-option *ngFor="let item of banco" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> Es necesario seleccionar el banco</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Tipo Cuenta</mat-label>
+                <mat-select formControlName="tipoCuenta">
+                    <mat-option *ngFor="let item of listaTipoCuenta" [value]="item.nIdTipEle">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+                <!-- <mat-error> Debe seleccionar la moneda</mat-error> -->
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>N° Cuenta</mat-label>
+                <input matInput placeholder="coloque el nro Cuenta" formControlName="sCuenta" [class.is-invalid]="cuentaNoValido" appCaracterValidador>
+                <mat-error> El N° cuenta es necesario</mat-error>
+                <mat-error *ngIf="forma.get('sCuenta').errors?.caracterValidator">
+                    .El texto no debe contener: "/", "|", "?"</mat-error>
+            </mat-form-field>
+        </div>
+
+
+
+        <div class="form-group col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>N° Cuenta Interbancaria</mat-label>
+                <input matInput placeholder="coloque el Cuenta Interbancaria" formControlName="sCuentaInter" appCaracterValidador>
+                <mat-error> La Cuenta Interbancaria es necesaria</mat-error>
+                <mat-error *ngIf="forma.get('sCuentaInter').errors?.caracterValidator">
+                    .El texto no debe contener: "/", "|", "?"</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-4">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Moneda</mat-label>
+                <mat-select formControlName="nMoneda" [class.is-invalid]="monedaNoValido" (selectionChange)="capturarMoneda($event)">
+                    <mat-option *ngFor="let item of moneda" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> Debe seleccionar la moneda</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-4">
+            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Grabar" color="accent" (click)="guardar()"><i class="material-icons">save</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Salir" color="warn" (click)="salir()"><i class="material-icons">exit_to_app</i>
+            </button>
+
+            <!-- <button type="button" class="btn btn-dark" t-stroked-button (click)="guardar()"> Grabar </button>
+            <button type="button" class="btn btn-danger" at-stroked-buttons (click)="salir()"> Salir </button> -->
+        </div>
+    </div>
+</form>
+<!-- <div class="form-row">
+    <div class="form-group col-md-12">
+        <div class="col-md-8 offset-md-2 text-center">
+            <div class="form-row clsbutton">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-dark" t-stroked-button (click)="guardar()"> Grabar </button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger" at-stroked-buttons (click)="salir()"> Salir </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

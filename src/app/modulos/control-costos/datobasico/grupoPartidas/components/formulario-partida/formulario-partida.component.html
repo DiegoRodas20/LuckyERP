@@ -1,0 +1,55 @@
+<form autocomplete="off" [formGroup]="form" class="example-form" (ngSubmit)="save()">
+    <mat-form-field class="example-full-width p-2">
+        <mat-label>Nombre del Grupo</mat-label>
+        <input matInput placeholder="Descripcion" formControlName="descripcion">
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="fill" class="example-full-width p-2">
+        <mat-label>Partida Genérica</mat-label>
+        <mat-select formControlName="IdDadTipEle" (selectionChange)="mostrarPartidaEspecifica()">
+            <mat-option>Escoja una partida genérica</mat-option>
+            <mat-option *ngFor="let item of lPartidaEspecifica" [value]="item.idTipEle">{{item.descripcion}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="example-full-width p-2">
+        <mat-label>Partida Específica</mat-label>
+        <mat-select formControlName="especificaItem">
+            <mat-option>Escoja una partida genérica</mat-option>
+            <mat-option *ngFor="let item of lPartidaEspecificaItem" [value]="item.idTipEle">{{item.descripcion}}</mat-option>
+        </mat-select>
+    </mat-form-field> -->
+
+    <!-- <div>
+        <mat-form-field class="example-full-width p-2">
+            <input type="text" matInput placeholder="Partida Genéricas" formControlName="IdDadTipEle" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" >
+                <mat-option *ngFor="let item of filteredPartidaEspecifica | async" [value]="item.descripcion">
+                    {{ item.descripcion }}
+                </mat-option>
+            </mat-autocomplete>
+            <small *ngIf="grupoPartidaNotFound" class="text-danger"> Error, ese campo no existe </small>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-form-field class="example-full-width p-2">
+            <input type="text" matInput placeholder="Partida Específica" formControlName="especificaItem" [matAutocomplete]="auto2">
+            <mat-autocomplete #auto2="matAutocomplete">
+                <mat-option *ngFor="let item of filteredPartidaEspecificaItem | async" [value]="item.descripcion">
+                    {{ item.descripcion }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div> -->
+</form>
+
+<!-- <pre>
+  Estado del formulario {{form.valid}}
+<br />
+  Status: {{form.status}}
+</pre>
+
+<pre>
+{{ form.value | json }}
+</pre> -->

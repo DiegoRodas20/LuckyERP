@@ -1,0 +1,117 @@
+<div *ngIf="!isDetalleView" class=" col-md-12">
+    <form autocomplete="off" [formGroup]="form">
+        <div style="padding-top: 70px;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="card-header"><h3>Notas a Logística</h3></mat-card>
+                <!-- <h3 class="col-md-10 offset-md-1 card-header" style="text-align:center">Notas Logísticas</h3> -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5">
+                <mat-form-field class="select-size">
+                    <mat-label>Tipo de documentos</mat-label>
+                    <mat-select formControlName="tipo" (selectionChange)="cambioTipo($event.value)">
+                        <mat-option *ngFor="let item of listaTipoDocumento" [value]="item.nId"> {{ item.sCod }} - {{ item.sDescripcion }} </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+         
+        </div>
+
+       
+    </form>
+
+    <!-- <div *ngIf="isDetalleView" id="listaMobile" class=" mat-elevation-z8">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource">
+
+                <ng-container matColumnDef="opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                    <td mat-cell *matCellDef="let element" class="clsColumnaOpc">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="editarElemento(element)">
+                                <mat-icon color="accent">touch_app</mat-icon>
+                                <span>Revisar</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="presupuesto">
+                    <th mat-header-cell *matHeaderCellDef> Presupuesto </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge" data-label='Presupuesto: '> {{element.sCodCC}} - {{element.sDescCC}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="documento">
+                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle" data-label='Documento: '> {{ element.numeroCabecera }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib" data-label='Cliente: '> {{element.sNombreComercial}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="titulo">
+                    <th mat-header-cell *matHeaderCellDef> Titulo </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib" data-label='Título: '> {{element.sTitulo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="aprobadoCliente">
+                    <th mat-header-cell *matHeaderCellDef> Aprobado Comercial </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib" data-label='Aprobado Comercial: '> {{ element.sAprobacoComercial }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="moneda">
+                    <th mat-header-cell *matHeaderCellDef> Moneda </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle" data-label='Moneda: '> {{element.sDesc}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef> Total </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle" data-label='Total: '>{{ element.total | number:'1.2-2' }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib" data-label='Estado: '> {{element.cEleNam}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+    </div> -->
+
+    
+</div>
+
+<div >
+    
+    <div *ngIf="sTipoDocumento == 'NS' ">
+        <app-nota-salida (verNotaEspecifica)="fnAbrirNota($event)"></app-nota-salida>
+    </div>
+    <div *ngIf="sTipoDocumento == 'NU' ">
+        <app-nota-utiles (verNotaEspecifica)="fnAbrirNota($event)" ></app-nota-utiles>
+    </div>
+    <div *ngIf="sTipoDocumento == 'NR' ">
+        <app-nota-recojo (verNotaEspecifica)="fnAbrirNota($event)" ></app-nota-recojo>
+    </div>
+    <div *ngIf="sTipoDocumento == 'NT' ">
+        <app-nota-traslado (verNotaEspecifica)="fnAbrirNota($event)"></app-nota-traslado>
+    </div>
+    <div *ngIf="sTipoDocumento == 'NI' ">
+        <app-nota-ingreso (verNotaEspecifica)="fnAbrirNota($event)" ></app-nota-ingreso>
+    </div>
+ 
+</div>

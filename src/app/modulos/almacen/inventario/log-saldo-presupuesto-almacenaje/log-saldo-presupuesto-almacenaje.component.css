@@ -1,0 +1,165 @@
+/* Header de componente */
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex{
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container{
+  min-height: 536px;
+  width: 120%;
+}
+
+.scroll-table{
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed{
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+:host ::ng-deep td.mat-cell,
+:host ::ng-deep th.mat-header-cell {
+  padding-right: 10px;
+}
+
+/* Color registro tabla*/
+.registro-red{
+  background-color:rgb(255, 97, 97)
+}
+.registro-bisque{
+  background-color:rgb(255, 231, 203)
+}
+.registro-orange{
+  background-color:rgb(255, 195, 85)
+}
+
+/* Medalla para la imagen del articulo*/
+
+.campoTablaSelection{
+  cursor: pointer;
+  color:rgb(51, 77, 110)
+}
+
+.campoTablaSelection:hover{
+  color:rgb(51, 77, 110);
+  font-weight: bold;
+}
+
+.badgeCampoTabla{
+  display: none;
+  position: absolute;
+}
+
+.campoTablaSelection:hover + .badgeCampoTabla{
+  display: initial;
+}
+
+:host /deep/ .badgeCampoTabla .mat-badge-content {
+  font-family: 'Material Icons';
+  font-weight: normal;
+}
+
+/* Checkbox */
+:host ::ng-deep .mat-checkbox-checked.mat-accent.mat-checkbox-disabled .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #ff4081 !important;
+}
+
+:host ::ng-deep .mat-checkbox-layout{
+  margin: 0
+}
+
+.checkbox-container{
+  display: flex;
+  justify-content: space-between;
+  line-height: 65px;
+}
+
+/* Color registro tabla*/
+.registro-red{
+  background-color:rgb(255, 145, 145)
+}
+
+@media screen and (max-width: 1500px) {
+
+  /* Tabla */
+  .example-container{
+    width: 150%;
+  }
+
+}
+
+@media screen and (max-width: 1200px) {
+
+  /* Tabla */
+  .example-container{
+    width: 170%;
+  }
+
+}
+
+@media screen and (max-width: 990px) {
+
+  /* Checkbox */
+  .checkbox-container{
+    display: block;
+    line-height: 20px;
+  }
+
+}
+
+@media screen and (max-width: 960px) {
+
+  /* Checkbox */
+  .example-container{
+    width: 100%;
+  }
+
+}
+
+@media screen and (max-width: 550px) {
+
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 18px !important;
+  }
+}

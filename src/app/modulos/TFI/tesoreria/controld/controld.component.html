@@ -1,0 +1,313 @@
+<ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+  <div class="container-fluid">
+    <div class="card">
+
+      <h5 class="card-header">Control de depósitos</h5>
+
+      <!-- Fab --> 
+      <!-- <div class="fab-container">
+        <button [@tada]="{value: tadaMain}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+          <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+        </button>
+        <div [@speedDialStagger]="abMain.length">
+          <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+            (click)="clickFab(ibtn)" [disabled]="btn.dis" matBadgeHidden="{{btn.badge === 0}}" matBadge="{{btn.badge}}"
+            matBadgePosition="after" matBadgeColor="accent">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+          </button>
+        </div>
+      </div> -->
+
+      <!-- Body -->
+      <div id="body-main" class="card-body" style="padding-bottom: 0px;">
+
+        <!-- <div class="icard melevation col-xl-12"> -->
+         
+      <!-- </div> -->
+      <div class="row">
+        <div class="col-xl-6">
+          <!-- <div class="row" style="margin-top: 20px;"> -->
+            <mat-accordion style="direction: ltr">
+              <mat-expansion-panel [expanded]="true"  style="overflow: unset">
+    
+                <mat-expansion-panel-header >
+                    <mat-panel-title>
+                        Aplicar filtro por :
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px;">
+    
+                    </mat-panel-description>
+                    <mat-icon style="margin-right: 10px;">psychology</mat-icon>
+                </mat-expansion-panel-header>
+              <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+                <div class="form-row">
+    
+                  <div class="col-lg-3">
+                    <mat-form-field style="width: 100%;">
+                      <mat-label  style="color: black;">Empresa</mat-label>
+                      <mat-select formControlName="empresaId"  [disabled]="true" style="color: black;">
+                        <mat-option *ngFor="let elem of lstEmpresas" [value]="elem.empresaId"  style="color: black;">
+                          {{ elem.razonSocial }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+    
+                  <div class="col-lg-3">
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Direccion</mat-label>
+                      <mat-select formControlName="direccionId" (selectionChange)="ChangeDireccion($event)">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let elem of lstDirecciones" [value]="elem.tipoElementoId">
+                          {{ elem.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+    
+                  <div class="col-lg-3">
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Area</mat-label>
+                      <mat-select formControlName="areaId"  (selectionChange)="ChangeArea($event)" >
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let elem of lstAreas" [value]="elem.tipoElementoId">
+                          {{ elem.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+    
+                  <div class="col-lg-3">
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Tipo de deposito</mat-label>
+                      <mat-select formControlName="tipoDepositoId" >
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let elem of lstTiposDeposito" [value]="elem.tipoElementoId">
+                          {{ elem.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+    
+                </div>
+    
+                <div class="form-row">
+                  <div class="col-lg-6">
+                    <ng-select
+                    [items]="lstUsuarios"
+                    bindLabel="nNombreCompleto"
+                    bindValue="nCodUser"
+                    placeholder="Nombre del Usuario"
+                    formControlName="usuarioId"
+                    >
+                  </ng-select>
+                </div>
+    
+                <div class="col-lg-3">
+                  <mat-form-field style="width: 100%;" appYearMonthFormat>
+                      <mat-label>Fecha devengue</mat-label>
+                      <input matInput [matDatepicker]="dFecha" formControlName="dFecha">
+                      <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                      <mat-datepicker #dFecha startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFecha)" >
+                      </mat-datepicker>
+                  </mat-form-field>
+                </div>
+                
+                  <div class="col-lg-3">
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Estado</mat-label>
+                      <mat-select formControlName="estadoId" >
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let elem of lstEstados" [value]="elem.elementoId">
+                          {{ elem.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+    
+    
+              </form>
+         
+              </mat-expansion-panel>
+            </mat-accordion>
+          <!-- </div> -->
+          <!-- titulo del grid -->
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-sm">
+              <h6>Listado de depositos</h6>
+              <hr style="margin-top: 0px; margin-bottom: 20px;">
+            </div>
+          </div>
+
+          <div id="dTableResp">
+            <table #mtResp mat-table [dataSource]="searchBS" style="width: 100%;" >
+                <!-- Imagen Personal -->
+                <ng-container matColumnDef="sPersoImg">
+                  <th mat-header-cell *matHeaderCellDef> Perfil </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label=''>
+                      <div class="divImg" matTooltip="{{element.nombreUsuario}}" >
+                        <!-- (click)="editPerso(element)" -->
+                          <div [@divTable]="element == editTable ? 'over' : 'out'" class="divMouse" (click)="DetDeposito(element)" (mouseover)="editTable = element;" (mouseout)="editTable = null">
+                              <span [@editTable]="element == editTable ? 'over' : 'out'" class="material-icons imgMouse">view_list</span>
+                          </div>
+                          <img class="imgTable" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                      </div>
+                  </td>
+              </ng-container>
+
+                <!-- Apellidos y nombres Column -->
+                <ng-container matColumnDef="nombreUsuario">
+                    <th mat-header-cell *matHeaderCellDef > Apellidos y nombres </th>
+                    <td mat-cell *matCellDef="let element">
+                      <br style="display:block;line-height:5px;">
+                      <label >  Dirección: {{ element.direccion }} </label>
+                      <br style="display:block;line-height:5px;">
+                      <label >  Área: {{ element.area }} </label>
+                      <br style="display:block;line-height:5px;">
+                      <label >  Tipo Deposito: {{ element.tipoDeposito }} </label>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="nOtros">
+                  <th mat-header-cell *matHeaderCellDef > Otros </th>
+                  <td  mat-cell *matCellDef="let element">
+                    <br style="display:block;line-height:5px;">
+                    <label >  # Personas: {{ element.nPersonas }} </label>
+                    <br style="display:block;line-height:5px;">
+                    <label >  Total (S/.): {{ element.nTotal }} </label>
+                    <br style="display:block;line-height:5px;">
+                    <label >  Fecha deposito: {{ element.dFechaDeposito }} </label>
+                  </td>
+                </ng-container>
+
+                 <ng-container matColumnDef="action" style="text-align: right;" >
+                  <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="openModal('realizarDeposito',element)">
+                           <mat-icon>visibility</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+          <mat-divider [vertical]="true"></mat-divider>
+              
+                <ng-container matColumnDef="noData">
+                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                        No se encuentran registros.
+                    </mat-footer-cell>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="searchBS && this.searchBS.filteredData.length > 0" ></mat-footer-row>
+                <!-- [hidden]="PersonalDS && this.PersonalDS.filteredData.length > 0" -->
+            </table>
+          </div>
+          <mat-paginator  #searchB style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div class="col-xl">
+
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-sm">
+              <h6>Listado de Trabajadores</h6>
+              <hr style="margin-top: 0px; margin-bottom: 20px;">
+            </div>
+          </div>
+
+          <form autocomplete="off" id="fgTrabajador" [formGroup]="fgTrabajador">
+            <div class="form-row">
+              <div class="col-lg-6">
+                <ng-select
+                [items]="lstDetalleDepositos"
+                bindLabel="trabajador"
+                bindValue="trabajadorId"
+                placeholder="Nombre del Trabajador"
+                formControlName="trabajadorId"
+                >
+              </ng-select>
+            </div>
+            <div class="col-lg-6">
+              <mat-form-field style="width: 100%;">
+                <mat-label>Banco</mat-label>
+                <mat-select formControlName="bancoId" >
+                  <mat-option>--</mat-option>
+                  <mat-option *ngFor="let elem of lstBancosFiltro"  [value]="elem.bancoId">
+                    {{ elem.banco }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            </div>
+          </form>
+         
+         
+
+          <div class="row">
+            <div class="col-lg-12">
+              <div id="dTableMain2" class="melevation">
+                <table  mat-table [dataSource]="ExpandedDS2" style="width: 100%;"  >
+
+                  <ng-container matColumnDef="trabajador">
+                    <th  mat-header-cell *matHeaderCellDef > Trabajador </th>
+                      <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                          data-label='Trabajador: '> {{element.trabajador}} </td>
+                      <td mat-footer-cell *matFooterCellDef>Total </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tipoDocumento">
+                    <th  mat-header-cell *matHeaderCellDef > Tipo Documento </th>
+                    <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                    data-label='Tipo documento: '> {{element.tipoDocumento}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nroDocumento">
+                    <th mat-header-cell *matHeaderCellDef > # Documento </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                    data-label='# Documento: '> {{element.nroDocumento}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="banco">
+                    <th  mat-header-cell *matHeaderCellDef > Banco </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                    data-label='Banco: '> {{element.banco}} </td>
+                    <td mat-footer-cell *matFooterCellDef  ></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="importe">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Importe </th>
+                    <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                    data-label='Importe: '> {{ (element.monto * 1) | number : '1.2-2' }} </td>
+                    <td style="text-align: center;" mat-footer-cell *matFooterCellDef> {{ SumarFiltrado() }} </td>
+
+                  </ng-container>
+
+                    <ng-container matColumnDef="noData">
+                    <mat-footer-cell *matFooterCellDef [attr.colspan]="ExpandedDC1.length">
+                        No se encuentran registros.
+                    </mat-footer-cell>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="ExpandedDC1; "></tr>
+                    <tr mat-footer-row *matFooterRowDef="ExpandedDC1; sticky: true" [hidden]="ExpandedDS2 && this.ExpandedDS2.filteredData.length === 0" ></tr>
+                    <tr mat-row style="border-top: 1px solid dimgray;" *matRowDef="let row; columns: ExpandedDC1;"></tr>
+
+                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ExpandedDS2 && this.ExpandedDS2.filteredData.length > 0" ></mat-footer-row>
+                </table>
+              </div>
+            
+                <mat-paginator  #pagDetDeposito  style="display: contents;" [hidePageSize]="false" [pageSize]="10"></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

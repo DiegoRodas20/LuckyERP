@@ -1,0 +1,57 @@
+<div class="mb-3 p-3" style="text-align: center;">
+    <mat-card class="title-card"> {{ titulo }} por Cliente </mat-card>
+</div>
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="agregarCliente()">
+            <i class="material-icons" [matTooltip]="nameButton" matTooltipPosition="left">save</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="onNoClick()">
+            <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+        </button>
+    </div>
+</div>
+<form autocomplete="off" [formGroup]="form" class="example-form">
+
+
+
+    <mat-form-field *ngIf="titulo == 'Agregar'" class="example-full-width p-2">
+        <input type="text" matInput placeholder="Cliente" formControlName="cliente" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filterCliente | async" [value]="option.sDescripcion">
+                {{ option.sDescripcion }}
+            </mat-option>
+        </mat-autocomplete>
+        <small *ngIf="clienteNotFound" class="text-danger"> El nombre del cliente no está registrado</small>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="titulo == 'Editar'" class="example-full-width p-2">
+        <input type="text" matInput placeholder="Cliente" formControlName="cliente" [matAutocomplete]="auto" readonly>
+        <!-- <small *ngIf="clienteNotFound" class="text-danger"> El nombre del personal no está registrado</small> -->
+    </mat-form-field>
+
+    <div class="row  px-2">
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <input type="number" matInput placeholder="Monto Diario" formControlName="diario" [readOnly]="true">
+            </mat-form-field>
+            <small *ngIf="montoDiario" class="text-danger"> El monto tiene que ser mayor a 0 </small>
+        </div>
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <input type="number" matInput placeholder="Monto Mensual" formControlName="mensual" [readOnly]="true">
+            </mat-form-field>
+            <small *ngIf="montoMensual" class="text-danger"> El monto tiene que ser mayor a 0</small>
+        </div>
+    </div>
+</form>
+<!-- <div mat-dialog-actions align="center">
+
+    <button mat-raised-button color="primary" (click)="agregarCliente()">{{ nameButton }}</button>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+
+
+</div> -->

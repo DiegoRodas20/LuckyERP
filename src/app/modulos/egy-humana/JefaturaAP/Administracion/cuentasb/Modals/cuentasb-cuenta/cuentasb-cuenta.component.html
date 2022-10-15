@@ -1,0 +1,216 @@
+<!-- Spinner -->
+<ngx-spinner
+  name="spi_cuentasb_cuenta"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(4, -1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsCuenta }">add</i>
+  </button>
+  <div [@speedDialStagger]="abCuenta.length">
+    <button
+      *ngFor="let btn of abCuenta; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickFab(4, ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+
+<!-- Cabecera -->
+<h5 class="card-header">
+  {{ hCuenta }} Cuenta
+  <button
+    type="button"
+    class="close"
+    (click)="activeModal.dismiss()"
+    style="color: white !important; text-shadow: none !important; outline: none"
+    data-dismiss="modal"
+    aria-label="Close"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</h5>
+
+<!-- Cuerpo  -->
+<div class="modal-body">
+  <div class="row">
+    <div class="col-lg-12">
+      <mat-accordion>
+        <!-- Información subsidio -->
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información de cuenta : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">account_balance</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div id="fgCuenta" [formGroup]="fgCuenta" class="col-lg-12">
+              <div class="form-row">
+                <div class="form-group col-lg-6">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select
+                      formControlName="T1_nIdTipoCta"
+                      [errorStateMatcher]="matcher"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option
+                        *ngFor="let item of cboTipoCta"
+                        [value]="item.nIdTipEle"
+                      >
+                        {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="getCuenta.T1_nIdTipoCta.hasError('noSelect')"
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-6">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Banco</mat-label>
+                    <mat-select
+                      formControlName="A1_nIdBanco"
+                      (valueChange)="fnEnabledBanco($event)"
+                      [errorStateMatcher]="matcher"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let item of cboBanco" [value]="item">
+                        {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="getCuenta.A1_nIdBanco.hasError('noSelect')"
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>N° Cuenta</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="T1_sNroCuenta"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <mat-error
+                      *ngIf="getCuenta.T1_sNroCuenta.hasError('vString')"
+                      >. vString</mat-error
+                    >
+                    <mat-error
+                      *ngIf="getCuenta.T1_sNroCuenta.hasError('required')"
+                      >. Obligatorio</mat-error
+                    >
+                    <mat-error
+                      *ngIf="getCuenta.T1_sNroCuenta.hasError('minlength')"
+                      >. Longitud de caracteres incorrecto</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Moneda</mat-label>
+                    <mat-select
+                      formControlName="T1_nIdMoneda"
+                      [errorStateMatcher]="matcher"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option
+                        *ngFor="let item of cboMoneda"
+                        [value]="item.nIdTipEle"
+                      >
+                        {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="getCuenta.T1_nIdMoneda.hasError('noSelect')"
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo de documento</mat-label>
+                    <mat-select
+                      formControlName="A1_nIdTipoDoc"
+                      (valueChange)="fnEnabledDoc($event)"
+                      [errorStateMatcher]="matcher"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option
+                        *ngFor="let item of cboTipoDoc"
+                        [value]="item"
+                      >
+                        {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="getCuenta.A1_nIdTipoDoc.hasError('noSelect')"
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>N° Documento</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="T1_sDocumento"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <mat-error
+                      *ngIf="getCuenta.T1_sDocumento.hasError('vString')"
+                      >. vString</mat-error
+                    >
+                    <mat-error
+                      *ngIf="getCuenta.T1_sDocumento.hasError('required')"
+                      >. Obligatorio</mat-error
+                    >
+                    <mat-error
+                      *ngIf="getCuenta.T1_sDocumento.hasError('minlength')"
+                      >. Longitud de caracteres incorrecto</mat-error
+                    >
+                    <mat-error
+                      *ngIf="getCuenta.T1_sDocumento.hasError('pattern')"
+                      >. Caracteres incorrectos</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

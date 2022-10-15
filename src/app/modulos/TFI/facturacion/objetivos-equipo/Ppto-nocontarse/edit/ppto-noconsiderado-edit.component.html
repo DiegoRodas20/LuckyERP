@@ -1,0 +1,132 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Registro de Presupuestos que no se deben considerar (Dashboard)
+        </h3>
+    </div>
+
+    <!-- Zona de botones flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1,-1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}"> add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Inputs -->
+    <mat-card class="mb-4">
+        <form [formGroup]="formRegistro" autocomplete="off">
+            <div class="form-row">
+
+                <!-- Empresa -->
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label>Empresa</mat-label>
+                        <mat-select formControlName="sEmpresa">
+                            <mat-option *ngFor="let item of lEmpresa" [value]="item.empresaID">
+                                {{item.razonSocial}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error> Es necesario seleccionar la Empresa</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Año -->
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label>Año</mat-label>
+                        <input matInput readonly placeholder="" formControlName="sAno">
+                        <mat-error>El año es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Estado -->
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-label>Estado:</mat-label>
+                        <input matInput readonly type="text" style="color: rgb(236, 0, 140);" formControlName="sEstado">
+                    </mat-form-field>
+                </div>
+
+                <!-- Busqueda -->
+                <div class="col-md-12 d-flex justify-content-center mt-2">
+                    <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                            <mat-label>Buscar:</mat-label>
+                            <input matInput [formControl]="tFiltro" (keyup)="applyFilter($event)"
+                                [(ngModel)]="searchKey" #input />
+                            <button mat-button style="outline: none" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="limpiarFiltro()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Agregar Presupuesto -->
+                <div class="col-md-12 text-right align-self-center">
+                    <button mat-raised-button color="accent" type="button" (click)="agregarPresupuesto()">
+                        Agregar Presupuesto
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </mat-card>
+
+    <!-- Listado de Presupuestos x Empresa -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- Columna Presupuesto-->
+                <ng-container matColumnDef="presupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Presupuesto</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Presupuesto: '>
+                        {{row.codigoPresupuesto}}</td>
+                </ng-container>
+
+                <!-- Columna Descripcion Presupuesto-->
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción
+                        Presupuesto</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                        data-label='Descripción Presupuesto: '>
+                        {{row.descripcionPresupuesto}}</td>
+                </ng-container>
+
+                <!-- Columna Cliente-->
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cliente: '>
+                        {{row.razonSocial}}</td>
+                </ng-container>
+
+                <!-- Columna Opciones-->
+                <ng-container matColumnDef="opciones">
+                    <th mat-header-cell *matHeaderCellDef>Opción</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Opción: '>
+                        <button mat-icon-button color="accent" (click)="eliminarPresupuesto(row.presupuestoDetalleID)"
+                            matTooltip="Eliminar Presupuesto" matTooltipPosition="right">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>

@@ -1,0 +1,456 @@
+<div>
+    <!-- ========================== -->
+    <!-- Botones Funcionalidad -->
+    <!-- ========================== -->
+
+    <div *ngIf="!bDialogOpen" class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ========================== -->
+    <!-- End Botones Funcionalidad -->
+    <!-- ========================== -->
+
+
+    <div class=" col-md-12 ">
+        <div style="padding-top: 70px;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">Inventario de Almacén</mat-card>
+            </div>
+        </div>
+
+        <!-- ========================== -->
+        <!-- Formulario -->
+        <!-- ========================== -->
+        <div class="card">
+            <div class="card-body">
+                <form autocomplete="off" [formGroup]="formUbicacion">
+                    <div class="row" style="padding-left: 15px;padding-right: 15px;">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                            <ng-select appendTo="body" [clearable]="false" placeholder="Almacen Base"
+                                formControlName="idDireccion" (change)="cambioAlmacenBase()">
+                                <ng-option *ngFor="let item of listaAlmacenBase" [value]="item.nIdAlmacenBase">
+                                    {{item.sDesc}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div *ngIf="formUbicacion.get('tipo').value === '1'" class="col-lg-1 col-md-1 col-sm-2 col-2"
+                            style="padding-top: 15px;">
+                            <button mat-mini-fab class="fab-secondary" color="white" (click)="activarCamara()">
+                                <i class="material-icons" matTooltip="Leer QR"
+                                    matTooltipPosition="left">center_focus_weak</i>
+                            </button>
+                        </div>
+
+                        <div class="col-lg-7 col-md-7 col-sm-10 col-10">
+                            <ng-select appendTo="body" [clearable]="false" placeholder="Ubicación"
+                                formControlName="codigo" (change)="endAutocomplete()">
+                                <ng-option *ngFor="let item of listaUbicacionesCompletas" [value]="item.nombre">
+                                    {{item.nombre}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div style="padding-left: 13px;" *ngIf="tipoDiseno === 1">
+                        <mat-radio-group aria-label="Select an option" formControlName="tipo"
+                            (change)="cambioUbicacion($event)">
+                            <mat-radio-button value="1">Ubicación Pallet</mat-radio-button>
+                            <mat-radio-button value="2">Ubicación General</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div *ngIf="!mobile">
+                        <div *ngIf="formUbicacion.get('tipo').value === '1'" class="row"
+                            style="padding-left: 15px;padding-right: 15px;">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <mat-form-field>
+                                    <mat-label>Pasillo</mat-label>
+                                    <mat-select formControlName="pasillo"
+                                        (selectionChange)="cambioPasillo($event.value)">
+                                        <mat-option *ngFor="let item of listaPasillo" [value]="item.codigo"> {{
+                                            item.nombre }} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12">
+                                <mat-form-field>
+                                    <mat-label>Bloque</mat-label>
+                                    <mat-select formControlName="bloque" (selectionChange)="cambioBloque($event.value)">
+                                        <mat-option *ngFor="let item of listaBloque" [value]="item.codigo"> {{
+                                            item.nombre }} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12">
+                                <mat-form-field>
+                                    <mat-label>Columna</mat-label>
+                                    <mat-select formControlName="columna"
+                                        (selectionChange)="cambioColumna($event.value)">
+                                        <mat-option *ngFor="let item of listaColumna" [value]="item.codigo"> {{
+                                            item.nombre }} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-12">
+                                <mat-form-field>
+                                    <mat-label>Fila</mat-label>
+                                    <mat-select formControlName="fila" (selectionChange)="cambioFila($event.value)">
+                                        <mat-option *ngFor="let item of listaFila" [value]="item.codigo"> {{ item.nombre
+                                            }} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <mat-form-field>
+                                    <mat-label>Pallet</mat-label>
+                                    <mat-select formControlName="pallet" (selectionChange)="cambioPallet($event.value)">
+                                        <mat-option *ngFor="let item of listaPallet" [value]="item.codigo"> {{
+                                            item.nombre }} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div *ngIf="formUbicacion.get('tipo').value === '2'"
+                            style="padding-left: 15px;padding-right: 15px;">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                                    <mat-form-field>
+                                        <mat-label>Ubicación General</mat-label>
+                                        <mat-select formControlName="ubicacionGeneral"
+                                            (selectionChange)="cambioUbicacionGeneral($event.value)">
+                                            <mat-option *ngFor="let item of listaUbicacionGeneral"
+                                                [value]="item.codigo"> {{ item.nombre }} </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="padding-left: 15px;padding-right: 15px;">
+                        <div class="col-lg-3 col-md-6 col-12" *ngIf="formUbicacion.get('tipo').value === '1'">
+                            <mat-form-field class="style-form-field">
+                                <mat-label>Buscar</mat-label>
+                                <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                                <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix
+                                    mat-icon-button aria-label="Clear" (click)="clean()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-12" *ngIf="formUbicacion.get('tipo').value === '2'">
+                            <mat-form-field class="style-form-field">
+                                <mat-label>Buscar</mat-label>
+                                <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                                <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix
+                                    mat-icon-button aria-label="Clear" (click)="clean()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12" style="align-self: center;">
+                            <mat-slide-toggle formControlName="vistaPresupuesto" (change)="cambioSlider($event)">Vista
+                                con presupuesto</mat-slide-toggle>
+                        </div>
+                    </div>
+
+
+
+                </form>
+            </div>
+        </div>
+        <!-- ========================== -->
+        <!-- End Formulario -->
+        <!-- ========================== -->
+
+
+        <!-- ========================== -->
+        <!-- Tabla Articulos por Pallet -->
+        <!-- ========================== -->
+        <div id="listaMobile" class="mat-elevation-z8">
+
+            <div class="example-container">
+
+                <div class="boton-MatTable borde" style="margin: 5px;">
+                    <button (click)="marcarTodos()" matTooltipPosition="left" matTooltip='Marcar todos los artículos'
+                        mat-raised-button mat-mini-fab color="accent"><i
+                            class="material-icons">check_circle_outline</i></button>
+                </div>
+                <table mat-table [dataSource]="dataSource" matSort>
+
+
+
+                    <ng-container matColumnDef="opciones" sticky
+                        *ngIf="formUbicacion.get('tipo').value === '1' && formUbicacion.get('vistaPresupuesto').value === true">
+                        <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Opciones: '>
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <!-- Si está en merma los botones estarán bloqueados -->
+                                <div *ngIf="element.nMerma === 1">
+                                    <button mat-menu-item (click)="agregarMerma(element)" disabled>
+                                        <mat-icon color="accent">add</mat-icon>
+                                        <span>Agregar Merma</span>
+                                    </button>
+                                    <button mat-menu-item (click)="agregarMarcado(element)" disabled>
+                                        <mat-icon color="accent">add</mat-icon>
+                                        <span>Agregar Marcado</span>
+                                    </button>
+                                </div>
+                                <!-- Sino tiene merma -->
+                                <div *ngIf="element.nMerma === 0">
+                                    <div>
+                                        <button mat-menu-item (click)="agregarMerma(element)">
+                                            <mat-icon color="accent">add</mat-icon>
+                                            <span>Agregar Merma</span>
+                                        </button>
+                                    </div>
+                                    <!-- Si está marcado el botón estará habilitado -->
+                                    <div *ngIf="element.nMarcado === 0">
+                                        <button mat-menu-item (click)="agregarMarcado(element)">
+                                            <mat-icon color="accent">add</mat-icon>
+                                            <span>Agregar Marcado</span>
+                                        </button>
+                                    </div>
+                                    <!-- Si está marcado el botón estará bloqueado -->
+                                    <div *ngIf="element.nMarcado === 1">
+                                        <button mat-menu-item (click)="agregarMarcado(element)" disabled>
+                                            <mat-icon color="accent">add</mat-icon>
+                                            <span>Agregar Marcado</span>
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <button mat-menu-item (click)="visualizarHistorial(element)">
+                                            <mat-icon color="accent">search</mat-icon>
+                                            <span>Visualizar Historial</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </mat-menu>
+
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="opciones" sticky
+                        *ngIf="formUbicacion.get('tipo').value === '2' || formUbicacion.get('vistaPresupuesto').value === false">
+                        <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Opciones: '>
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button mat-menu-item (click)="agregarMerma(element)" disabled>
+                                    <mat-icon color="accent">add</mat-icon>
+                                    <span>Agregar Merma</span>
+                                </button>
+                                <button mat-menu-item (click)="agregarMarcado(element)" disabled>
+                                    <mat-icon color="accent">add</mat-icon>
+                                    <span>Agregar Marcado</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sRazonSocial">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                            data-label='Empresa: '>
+                            <!-- {{element.sRazonSocial}}  -->
+                            <ngb-highlight [result]="element.sRazonSocial" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cliente">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                            data-label='Cliente: '>
+                            <!-- {{element.cliente}}  -->
+                            <ngb-highlight [result]="element.cliente" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codigoPresupuesto"
+                        *ngIf="this.formUbicacion.get('vistaPresupuesto').value === true">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Presupuesto: '>
+                            <!-- {{element.codigoPresupuesto}}  -->
+                            <ngb-highlight [result]="element.codigoPresupuesto" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sCodAlmacen">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacen </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Almacen: '>
+                            <!-- {{element.sCodAlmacen}}  -->
+                            <ngb-highlight [result]="element.sCodAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codigoArticulo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Artículo: '>
+                            <!-- {{element.codigoArticulo}}  -->
+                            <ngb-highlight [result]="element.codigoArticulo" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreArticulo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge"
+                            data-label='Descripción: '>
+                            <!-- {{element.nombreArticulo}}  -->
+                            <ngb-highlight [result]="element.nombreArticulo" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sLote">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Lote: '>
+                            <!-- {{element.sLote}}  -->
+                            <ngb-highlight [result]="element.sLote" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaIngreso">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Ingreso </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Fecha Ingreso: '>
+                            <!-- {{element.fechaIngreso | date:'dd/MM/yyyy'}}  -->
+                            <ngb-highlight [result]="element.fechaIngreso | date:'dd/MM/yyyy'" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaVencimiento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Vencimiento </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLittle"
+                            data-label='Fecha Vencimiento: '>
+                            <!-- {{ (element.fechaVencimiento | date: 'yyyy') === "0001" || (element.fechaVencimiento | date: 'yyyy') === "1900" ? "" : (element.fechaVencimiento | date:'dd/MM/yyyy') }}  -->
+                            <ngb-highlight [result]="element.fechaVencimiento | date:'dd/MM/yyyy'"
+                                [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sObservacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Observación </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                            data-label='Observación: '>
+                            <!-- {{element.sObservacion}}  -->
+                            <ngb-highlight [result]="element.sObservacion" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="saldo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                            data-label='Cantidad: '>
+                            <!-- {{(element.saldo)}}  -->
+                            <ngb-highlight [result]="element.saldo" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nMerma">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Merma </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                            data-label='Merma: '>
+                            <!-- {{element.nMerma === 0 ? '' : 'Si'}}  -->
+                            <ngb-highlight [result]="element.nMerma === 0 ? '' : 'Si'" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nMarcado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Marcado </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                            data-label='Marcado: '>
+                            <!-- {{element.nMarcado === 0 ? '' : 'Si'}}  -->
+                            <ngb-highlight [result]="element.nMarcado === 0 ? '' : 'Si'" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="imagen">
+                        <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                            data-label='Imagen: '>
+                            <button mat-icon-button class="fab-secondary" color="accent"
+                                (click)="verImagen(element.imagenArticulo)">
+                                <!-- <i class="material-icons" matTooltip="Salida Artículo"  matTooltipPosition="left">insert_photo</i> -->
+                                <div *ngIf="element.imagenArticulo === ''" class="caja">
+                                    <div class="box">
+                                        <img src="../../../../../assets/img/SinImagen.jpg">
+
+                                    </div>
+                                </div>
+                                <div *ngIf="element.imagenArticulo !== ''" style="width: 40px;height: 40px;">
+                                    <div class="box">
+                                        <img [src]="element.imagenArticulo">
+                                    </div>
+                                </div>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef style="padding-top: 9px;">
+                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="articulosSeleccionados.hasValue() && isAllSelected()"
+                                [indeterminate]="articulosSeleccionados.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" style="padding-top: 9px;"
+                            class=" has_label_on_mobile clsColumnaOpc" data-label='Seleccionar: '>
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? articulosSeleccionados.toggle(row) : null"
+                                [checked]="articulosSeleccionados.isSelected(row)">
+                                <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? articulosSeleccionados.toggle(row) : null" [checked]="articulosSeleccionados.isSelected(row)" [aria-label]="checkboxLabel(row)"> -->
+                                <!-- <mat-checkbox (click)="$event.stopPropagation()" (dblclick)="$event.stopPropagation()" (change)="$event ? articulosSeleccionados.toggle(row) : null" [checked]="articulosSeleccionados.isSelected(row)" [aria-label]="checkboxLabel(row)"> -->
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{isMerma: row.nMerma === 1, isMarcado: row.nMarcado === 1}"
+                        (dblclick)="articulosSeleccionados.toggle(row)">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+        </div>
+
+        <!-- ============================== -->
+        <!-- End Tabla Articulos por Pallet -->
+        <!-- ============================== -->
+    </div>
+
+</div>

@@ -1,0 +1,128 @@
+<div id="print-prueba">
+    <div style="display: grid; grid-template-columns: repeat(3, 2fr);grid-gap: 15px;">
+        <div style="grid-column: 1;grid-row: 1;">
+            <img src="../../../../../../assets/img/{{this.idEmp}}.png" width="250px" height="100px"  ><br>
+            Jr. GRAL MANUEL DE MENDIBURU N* 1230 INT.102<br>
+            20304269759
+        </div>
+        <div style="grid-column: 2;grid-row: 1;">
+            <h3>ORDEN N*</h3>
+            <h3 style="color:red; font-weight: bold;" >203330 - 0002</h3>
+            FECHA DE EMISION 11/12/2020
+        </div>
+        <div style="grid-column: 3;grid-row: 1;">
+            <p>PEDIDO DE ARTICULOS</p>
+        </div>
+    </div>
+    <br>
+    <table style="border: 1px solid black;width:100%">
+        <tr>
+            <th colspan="4" style="text-align: center;" >DATOS DEL PROVEEDOR</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>RUC:</strong> {{ listaCabecera.ruc }}</th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Razon Social:</strong> {{ listaCabecera.razon_social }} </th>
+        </tr>
+        <tr>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Direccion:</strong> {{ listaCabecera.direccion }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Distrito:</strong>  {{ listaCabecera.distrito }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Provincia:</strong>  {{ listaCabecera.provincia }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Departamento:</strong>  {{ listaCabecera.departamento }}</th>
+        </tr>
+        <tr>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Contacto Nombre:</strong>  {{ listaCabecera.contacto_nombre }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Contacto Cargo:</strong>  {{ listaCabecera.contacto_cargo }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Contacto Telefono:</strong>  {{ listaCabecera.contacto_telefono }}</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Contacto Email:</strong>  {{ listaCabecera.contacto_email }}</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Cuenta de Banco:</strong>  {{ listaCabecera.cuenta_banco }}</th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Cuenta Nro:</strong>  {{ listaCabecera.cuenta_nro }}</th>
+        </tr>
+        <tr>
+            <th colspan="4" style="text-align: center;" >CONTACTO EMPRESA CONTROL INTERNO</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Comprador:</strong>  {{ listaCabecera.comprador }}</th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Email:</strong>  {{ listaCabecera.email }}</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Cliente:</strong>  {{ listaCabecera.cliente }} <br> <strong>Ppto:</strong>  {{ listaCabecera.ppto }} </th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Solicitante:</strong>  {{ listaCabecera.solicitante }}</th>
+        </tr>
+        <tr>
+            <th colspan="4" style="text-align: center;" >TERMINOS Y CONDICIONES</th>
+        </tr>
+        <tr>
+            <th colspan="4" style="border: 1px solid black;padding: 5px;font-weight: normal;"><strong>Lugar de Entrega:</strong>  {{ listaCabecera.lugar_entrega }}</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Plaza Pago:</strong>  {{ listaCabecera.plazo_pago }}</th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Moneda:</strong>  {{ listaCabecera.moneda }}</th>
+        </tr>
+        <tr>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Observaciones:</strong>  {{ listaCabecera.observaciones }} </th>
+            <th colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Fecha Entrega:</strong>  {{ listaCabecera.fecha_entrega }}</th>
+        </tr>
+    </table>
+    <br>
+
+    <table style="border: 1px solid black;width:100%">
+        <tr>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Item</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Codigo:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Descripcion:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Detalle:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Cant:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>U.Med:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Precio:</strong></th>
+            <th style="padding: 5px;font-weight: normal;background-color: slategray;" ><strong>Total:</strong></th>
+        </tr>
+        <tr *ngFor="let lista of listaDetalle">
+            <td style="padding: 5px;font-weight: normal;">{{ lista.item }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.codigo }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.descripcion }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.detalle }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.cant }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.u_med }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.precio }}</td>
+            <td style="padding: 5px;font-weight: normal;">{{ lista.total | number:'1.2-2'}}</td>
+        </tr>
+    </table>
+    <br>
+
+    <table style="border: 1px solid black;width:90%;margin-left: 50px;">
+        <tr>
+            <td rowspan="4" style="border: 1px solid black;padding: 5px;font-weight: normal;"><strong>Importante:</strong><br>
+                -El numero de la presente orden debe figurar en su facturas,guias y certificados.<br>
+                -Para la aceptacion de su factura debera adjuntar copia del presente documento,guias yo certificados.<br>
+                -Para entrega de su mercaderr o prestacion de servicios es independencias.
+            </td>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">SUB TOTAL OC</td>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">S/. {{ listaCabecera.subtotal | number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">SERVICIO (%) 0</td>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">S/. {{ listaCabecera.servicios }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">IGV (%) 18</td>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">S/. {{ listaCabecera.igv }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">TOTAL OC</td>
+            <td style="border: 1px solid black;padding: 5px;font-weight: normal;">S/. {{ listaCabecera.total | number:'1.2-2'}}</td>
+        </tr>
+    </table>
+
+    <br>
+    <table style="border: 1px solid black;width:90%;margin-left: 50px;">
+        <tr>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;width: 50%;" ><strong>ELABORADO POR:</strong> SANCHEZ ESTRADA RAUL ALEXANDER</th>
+            <th style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>REVISADO:</strong></th>
+        </tr>
+    </table>
+    <br>
+    <p style="float: right; font-weight: bold;margin-right: 10px;">Imprime: {{ listaCabecera.usuario }} - {{ horaActual }}</p>
+
+</div>

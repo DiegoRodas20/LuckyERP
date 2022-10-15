@@ -1,0 +1,162 @@
+<!--Cargo-->
+<!-- <div *ngIf="nTipoModal == 1">
+
+    <h1 mat-dialog-title>{{sTituloModal}} CARGO</h1>
+
+    <form [formGroup]="formCargo" (ngSubmit)="onSubmitCargo()" autocomplete="off">
+
+        <div class="row">
+            <div class="col">
+
+                <ng-select placeholder="Grupo" appendTo="body" formControlName="nIdGrupo" style="bottom:0.4rem">
+                    <ng-option *ngFor="let obj of listaGrupos" [(value)]="obj.nIdGrupo">{{obj.sNombreGrupo}}</ng-option>
+                </ng-select>
+
+            </div>
+
+            <div class="col">
+                <mat-form-field>
+                    <mat-label>Nuevo Cargo</mat-label>
+                    <input matInput formControlName="sNombreCargo" type="text" autocomplete="off">
+                </mat-form-field>
+            </div>
+
+            <div class="col">
+                <mat-form-field style="display:initial">
+                    <mat-label> Estado </mat-label>
+                    <mat-select formControlName="bEstado">
+                        <mat-option value="true">Activo</mat-option>
+                        <mat-option value="false">Inactivo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+            <button type="submit" color="primary" mat-raised-button>Grabar</button>
+        </div>
+
+    </form>
+
+</div> -->
+
+<!--Puesto-->
+<div *ngIf="nTipoModal == 1">
+
+    <h1 mat-dialog-title>{{sAccionModal}} {{sOpcionModal}}</h1>
+
+    <form [formGroup]="formPuesto" ngNativeValidate (ngSubmit)="onSubmitPuesto()" autocomplete="off">
+        <ng-template matStepLabel>Puesto</ng-template>
+
+        <div class="row">
+            <div class="col-md-6">
+
+                <ng-select placeholder="Grupo" appendTo="body" formControlName="nIdGrupo">
+                    <ng-option *ngFor="let obj of listaGrupos" [(value)]="obj.nIdGrupo">{{obj.sNombreGrupo}}</ng-option>
+                </ng-select>
+
+            </div>
+
+            <div class="col-md-6" *ngIf="nOpcionModal==1">
+                <mat-form-field style="display:initial">
+                    <mat-label>Nuevo Cargo</mat-label>
+                    <input matInput type="text" formControlName="sNombreCargo" (keyup)="fnNombrePuesto()"
+                        autocomplete="off">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="nOpcionModal==2">
+
+                <ng-select placeholder="Cargo" appendTo="body" formControlName="nIdCargo" (change)="fnNombrePuesto()">
+                    <ng-option *ngFor="let obj of listaCargos" [(value)]="obj.nIdCargo">{{obj.sNombreCargo}}</ng-option>
+                </ng-select>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field style="display:initial">
+                    <mat-label>Nuevo Puesto</mat-label>
+                    <input matInput type="text" formControlName="sPuesto" (keyup)="fnNombrePuesto()" autocomplete="off">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <mat-form-field style="display:initial">
+                    <mat-label> Estado </mat-label>
+                    <mat-select formControlName="bEstado">
+                        <mat-option value="true">Activo</mat-option>
+                        <mat-option value="false">Inactivo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <mat-form-field style="display:initial">
+                    <mat-label>Nombre del Puesto</mat-label>
+                    <input matInput type="text" formControlName="sNombrePuesto" autocomplete="off" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <div class="row d-flex justify-content-center ">
+            <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+            <button type="submit" color="primary" mat-raised-button>Grabar</button>
+        </div>
+
+    </form>
+
+</div>
+
+<!--Especializacion-->
+<div *ngIf="nTipoModal == 2">
+
+    <h1 mat-dialog-title>Agregar Especialidad al Puesto </h1>
+
+    <form [formGroup]="formEspecializacion" ngNativeValidate (ngSubmit)="onSubmitEspecializacion()" autocomplete="off">
+        <ng-template matStepLabel>Puesto</ng-template>
+
+        <div class="row">
+
+            <div class="col-md-12" *ngIf="data.accion==0">
+                <mat-form-field style="display:initial">
+                    <mat-label>Nueva Especialización</mat-label>
+                    <input matInput type="text" formControlName="sNombreEspecializacion" autocomplete="off">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="data.accion==1">
+                <mat-form-field style="display:initial">
+                    <mat-label>Nueva Especialización</mat-label>
+                    <input matInput type="text" formControlName="sNombreEspecializacion" autocomplete="off">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="data.accion==1">
+                <mat-form-field style="display:initial">
+                    <mat-label> Estado </mat-label>
+                    <mat-select formControlName="bEstado">
+                        <mat-option value="true">Activo</mat-option>
+                        <mat-option value="false">Inactivo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+
+        </div>
+
+
+        <div class="row d-flex justify-content-center ">
+            <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+            <button type="submit" color="primary" mat-raised-button>Grabar</button>
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,13 @@
+.mt mat-label {
+  color: #002c4b;
+  font-weight: bold;
+}
+
+.paint_row {
+  background-color: #f4ac80;
+  color: snow;
+}
+
+.color_white {
+  color: black;
+}

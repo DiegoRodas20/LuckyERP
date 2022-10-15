@@ -1,0 +1,21 @@
+<div class="transporte">
+    <mat-card class="mb-1 title-card">
+        {{title}}
+        <button class="close button-modal-lucky" matDialogClose>
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card>
+    <mat-dialog-content *ngIf="hasData">
+        El Excel seleccionado tiene las siguientes validaciones:
+        <mat-list role="list">
+            <mat-list-item *ngFor="let item of data.data" role="listitem">{{ item }}</mat-list-item>
+        </mat-list>
+    </mat-dialog-content>
+    <mat-dialog-content *ngIf="!hasData">
+        El Excel seleccionado tiene las siguientes observaciones de registro:
+        <mat-list role="list">
+            <mat-list-item *ngFor="let item of data.data2" role="listitem">{{observacion(item)}}
+            </mat-list-item>
+        </mat-list>
+    </mat-dialog-content>
+</div>

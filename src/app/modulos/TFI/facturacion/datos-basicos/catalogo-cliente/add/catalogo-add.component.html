@@ -1,0 +1,318 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Registro de Cliente
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <form [formGroup]="formRegistro" autocomplete="off">
+
+        <!-- Inputs Cliente -->
+        <mat-card class="mb-4">
+            <div class="form-row col-md-12">
+
+                <!-- Tipo Entidad -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input w-100">
+                        <mat-label>Tipo Entidad</mat-label>
+                        <mat-select formControlName="cliente">
+                            <mat-option *ngFor="let item of lTipoEntidad" [value]="item.codigoEntidad">
+                                {{item.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>Es necesario seleccionar la Entidad</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Tipo Contribuyente -->
+                <div class="form-group col-md-3">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Tipo Persona"
+                        formControlName="contribuyente" notFoundText="No hay datos registrados"
+                        (ngModelChange)="cambioTipoPersona($event)">
+                        <ng-option *ngFor="let item of lTipoContribuyente" [value]="item.codigoContribuyente">
+                            {{item.descripcion}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Tipo Documento -->
+                <div class="form-group col-md-3">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="false" placeholder="Tipo Documento"
+                        formControlName="tipoDoc" notFoundText="No hay datos registrados"
+                        (change)="cambioTipoDocumento($event)">
+                        <ng-option *ngFor="let item of lTipoDocumento" [value]="item.codigoDocumento">
+                            {{item.descripcion}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error *ngIf="">El tipo de documento es obligatorio</mat-error>
+                </div>
+
+                <!-- Numero de Documento -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>N° Documento</mat-label>
+                        <input type="text" matInput placeholder="Ingrese el número de documento" (blur)="validarRuc()"
+                            formControlName="ruc">
+                        <mat-error *ngIf="formRegistro.get('ruc').hasError('required')">El N° Documento es necesario
+                        </mat-error>
+                        <mat-error
+                            *ngIf="(longitudMin === longitudMax) && (formRegistro.get('ruc').hasError('maxlength') || formRegistro.get('ruc').hasError('minlength'))">
+                            El N° Documento debe tener {{this.longitudMax}} caracteres</mat-error>
+                        <mat-error
+                            *ngIf="(longitudMin !== longitudMax) && (formRegistro.get('ruc').hasError('maxlength') || formRegistro.get('ruc').hasError('minlength'))">
+                            El N° Documento debe tener entre {{this.longitudMin}} y {{this.longitudMax}} caracteres
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Razón Social -->
+                <div class="form-group col-md-6">
+                    <mat-form-field class="input">
+                        <mat-label> Razón Social/Nombre Completo </mat-label>
+                        <input matInput placeholder="Ingrese el nombre del Razón Social" formControlName="razonSocial"
+                            (blur)="validarRazonSocial()">
+                        <mat-error>La Razón Social o Nombre Completo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Nombre Comercial -->
+                <div class="form-group col-md-6">
+                    <mat-form-field class="input">
+                        <mat-label>Nombre Comercial</mat-label>
+                        <input matInput placeholder="Ingrese el nombre del comercial" formControlName="nombreComercial">
+                        <mat-error>El Nombre Comercial es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Telefono 1 -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Telefono 1</mat-label>
+                        <input matInput placeholder="Ingrese el numero de telefono" formControlName="telefono1">
+                        <mat-error>El Telefono 1 es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Telefono 2 -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Telefono 2</mat-label>
+                        <input matInput placeholder="Ingrese el numero de telefono" formControlName="telefono2">
+                        <mat-error>El Telefono 2 es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Pagina Web -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label> Pagina web</mat-label>
+                        <input matInput placeholder="Pagina web" formControlName="paginaWeb">
+                        <mat-error>La Pagina web es necesaria</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto</mat-label>
+                        <input matInput placeholder="Contacto" formControlName="contacto">
+                        <mat-error>El contacto es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto Correo -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto Correo</mat-label>
+                        <input matInput placeholder="Contacto Correo" formControlName="contactoCorreo">
+                        <mat-error>El Contacto Correo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Correo Cliente Facturas -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Correo para Facturas</mat-label>
+                        <input matInput placehoder="Ingresar correo para facturas" formControlName="correoFacturas">
+                        <mat-error>El Correo para facturas es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto Telefono -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto Teléfono</mat-label>
+                        <input matInput placeholder="Contacto Telefono" formControlName="contactoTelefono">
+                        <mat-error>El Contacto Teléfono es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto Cargo -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto cargo</mat-label>
+                        <input matInput placehoder="Cargo" formControlName="contactoCargo">
+                        <mat-error>El cargo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Negocio/Actividad -->
+                <div class="form-group col-md-6">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Negocio/Actividad"
+                        formControlName="negocio" notFoundText="No hay datos registrados" required>
+                        <ng-option *ngFor="let item of lNegocioActividad" [value]="item.codigoNegocio">
+                            {{item.descripcion}}</ng-option>
+                    </ng-select>
+                    <mat-error style="font-size: 12px;"
+                        *ngIf="formRegistro.get('negocio').hasError('required') && formRegistro.get('negocio').touched">
+                        Es necesario seleccionar el negocio o actividad</mat-error>
+                </div>
+
+                <!-- Plazo Pago -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Plazo Pago</mat-label>
+                        <input matInput placehoder="0" type="number" formControlName="plazoPago">
+                        <mat-error>El Plazo Pago es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Usuario Creación -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Usuario Creación</mat-label>
+                        <input matInput formControlName="usuarioCreado" readonly>
+                    </mat-form-field>
+                </div>
+
+                <!-- Usuario Modificado -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Usuario Modifico</mat-label>
+                        <input matInput formControlName="usuarioModificado" readonly>
+                    </mat-form-field>
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group col-md-2">
+                    <mat-form-field class="w-100">
+                        <mat-label>Estado</mat-label>
+                        <input matInput readonly type="text" style="color: rgb(236, 0, 140);" formControlName="estado">
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </mat-card>
+
+        <mat-accordion class="example-headers-align">
+
+            <!-- Direccion Principal -->
+            <mat-expansion-panel>
+
+                <!-- Expansion Panel Header -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Direcciones del Cliente </mat-panel-title>
+                    <mat-panel-description>
+                        <mat-icon color="accent">location_on</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="w-100">
+
+                    <!-- Card Header Titulo-->
+                    <div class="text-center mt-0 mb-2">
+                        <h5 class="col-md-10 offset-md-1 card-header mb-4">
+                            Direccion Principal
+                        </h5>
+                    </div>
+
+                    <!-- Inputs Dirección -->
+                    <mat-card class="mb-4 select">
+
+                        <div class="form-row">
+
+                            <!-- Departamento -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Departamento" formControlName="departamento"
+                                    (ngModelChange)="listaProvincia($event)" notFoundText="No hay datos registrados"
+                                    required>
+                                    <ng-option *ngFor="let item of lDepartamento" [value]="item.codigoUbigeo">
+                                        {{item.descripcion}}</ng-option>
+                                </ng-select>
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formRegistro.get('departamento').hasError('required') && formRegistro.get('departamento').touched">
+                                    Es necesario seleccionar el Departamento</mat-error>
+                            </div>
+
+                            <!-- Provincia -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Provincia" formControlName="provincia"
+                                    (ngModelChange)="listaDistrito($event)" notFoundText="No hay datos registrados"
+                                    required>
+                                    <ng-option *ngFor="let item of lProvincia" [value]="item.codigoUbigeo">
+                                        {{item.descripcion}}</ng-option>
+                                </ng-select>
+
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formRegistro.get('provincia').hasError('required') && formRegistro.get('provincia').touched">
+                                    Es necesario seleccionar la Provincia
+                                </mat-error>
+                            </div>
+
+                            <!-- Distrito -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Distrito" formControlName="distrito"
+                                    notFoundText="No hay datos registrados" required>
+                                    <ng-option *ngFor="let item of lDistrito" [value]="item.codigoUbigeo">
+                                        {{item.descripcion}}</ng-option>
+                                </ng-select>
+
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formRegistro.get('distrito').hasError('required') && formRegistro.get('distrito').touched">
+                                    Es necesario seleccionar el Distrito
+                                </mat-error>
+                            </div>
+
+                            <!-- Direccion -->
+                            <div class="form-group col-md-7">
+                                <mat-form-field class="input">
+                                    <mat-label>Dirección</mat-label>
+                                    <input matInput placeholder="Coloque la dirección" formControlName="direccion">
+                                    <mat-error>La dirección es necesaria</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Referencia -->
+                            <div class="form-group col-md-5">
+                                <mat-form-field class="input">
+                                    <mat-label>Referencia</mat-label>
+                                    <input matInput placeholder="Coloque la referencia" formControlName="referencia">
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </mat-card>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <br>
+    </form>
+</div>

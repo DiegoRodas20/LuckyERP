@@ -1,0 +1,393 @@
+<!-- Spinner -->
+<ngx-spinner name="spi_calculog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+<div class="fab-container">
+    <button [@tada]="{value: tadaCalculog}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleCalculog, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsCalculog}">add</i>
+    </button>
+    <div [@speedDialStagger]="abCalculog.length">
+        <button *ngFor="let btn of abCalculog; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleCalculog, ibtn )" [disabled]="btn.dis">
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h4 class="modal-title">Cálculo de liquidación</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+
+        <div id="dLeftDetail" class="col-lg-6">
+            <mat-accordion #maDetail="matAccordion" multi>
+
+                <!-- Información Cálculo -->
+                <mat-expansion-panel>
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del cálculo :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">psychology</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgInfo" [formGroup]="fgInfo" class="col-xl-12">
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appYearMonthFormat>
+                                        <mat-label>Devengue</mat-label>
+                                        <input matInput [matDatepicker]="dFechDev_Info" formControlName="dDevengue">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechDev_Info"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechDev_Info></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo de periodo</mat-label>
+                                        <input type="text" matInput formControlName="sTipoPeriodo">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Planilla</mat-label>
+                                        <input type="text" matInput formControlName="sPlla">
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha pago</mat-label>
+                                        <input formControlName="dFechPago" matInput [matDatepicker]="dFechPago_Info">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechPago_Info"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechPago_Info></mat-datepicker>
+                                    </mat-form-field>
+                                </div> -->
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Inicio proceso</mat-label>
+                                        <input type="text" matInput formControlName="sInicio">
+                                        <mat-datepicker-toggle matSuffix [for]="sInicio" disabled>
+                                            <mat-icon matDatepickerToggleIcon>schedule</mat-icon>
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #sInicio></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Término proceso</mat-label>
+                                        <input type="text" matInput formControlName="sTermino">
+                                        <mat-datepicker-toggle matSuffix [for]="sTermino" disabled>
+                                            <mat-icon matDatepickerToggleIcon>schedule</mat-icon>
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #sTermino></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+                <!-- Información personal -->
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del personal :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+                            <a>{{getDetail.sNombres.value}}</a>
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <mat-horizontal-stepper>
+
+                        <mat-step>
+
+                            <div class="row">
+
+                                <div class="col-xl-12 divAvatar">
+                                    <a>
+                                        <span class="imgBadge">{{getDetail.sCodPlla.value}}</span>
+                                        <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                    </a>
+                                </div>  
+                                    <div class="col-xl-12">
+                                            <ng-select
+                                            [items]="Personal_sCodplla"
+                                            bindLabel="sNombres"
+                                            bindValue="nIdPersonal"
+                                            placeholder="Apellidos y Nombres"
+                                            (change)="osPerso($event)"
+                                            ng-selected="true"
+                                            [(ngModel)]="selectedPersonId"
+                                          >
+                                          </ng-select>
+                                    </div>
+        
+                                <div id="fgDetail" [formGroup]="fgDetail" class="col-xl-12">
+                                    <div class="form-row">
+        
+                                        <div class="col-lg-8">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Tipo</mat-label>
+                                                <input type="text" matInput formControlName="sTipo">
+                                            </mat-form-field>
+                                        </div>
+        
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>N° Documento</mat-label>
+                                                <input type="text" matInput formControlName="sDocumento">
+                                            </mat-form-field>
+                                        </div>
+        
+                                    </div>
+
+                                    <div class="form-row">
+        
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%;" appDateFormat>
+                                                <mat-label>Fecha ingreso</mat-label>
+                                                <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                                <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                                <mat-datepicker #dFechIni></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+        
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%;" appDateFormat>
+                                                <mat-label>Fecha término</mat-label>
+                                                <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                                <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                                <mat-datepicker #dFechFin></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+        
+                                    </div>
+
+                                    <div class="form-row">
+        
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Ciudad</mat-label>
+                                                <input type="text" matInput formControlName="sCiudad">
+                                            </mat-form-field>
+                                        </div>
+        
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label># Celular</mat-label>
+                                                <input type="text" matInput formControlName="nTelMovil">
+                                            </mat-form-field>
+                                        </div>
+        
+                                    </div>
+        
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Cliente / Dirección</mat-label>
+                                                <input type="text" matInput formControlName="sOrganizacion">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+        
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Campaña / Área</mat-label>
+                                                <input type="text" matInput formControlName="sCentroCosto">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+        
+                                  
+        
+                                    
+        
+                                </div>
+        
+                            </div>
+
+                            <div class="dStep row">
+                                <button style="float: right;" mat-button matStepperNext>Siguiente</button>
+                            </div>
+
+                        </mat-step>
+
+                        <mat-step>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="dTableMain2" class="melevation">
+                                        <table  mat-table [dataSource]="ConceptoDS2" style="width: 100%;" >
+                
+                                            <ng-container matColumnDef="sCodConcepto">
+                                                <th mat-header-cell *matHeaderCellDef> Concepto</th>
+                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cod. Concepto: '> {{element.sCodConcepto}}  </td>
+                                                <td mat-footer-cell *matFooterCellDef> Total </td>
+                                            </ng-container>
+                
+                                            <ng-container matColumnDef="sConcepto">
+                                                <th mat-header-cell *matHeaderCellDef > Descripción </th>
+                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Concepto: '> {{element.sDescripcion}} </td>
+                                                <td mat-footer-cell *matFooterCellDef></td>
+                                            </ng-container>
+                
+                                            <ng-container matColumnDef="nUnidad">
+                                                <th mat-header-cell *matHeaderCellDef > Unidad </th>
+                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Unidad: '> {{element.nUnidad}} </td>
+                                                <td mat-footer-cell *matFooterCellDef></td>
+                                            </ng-container>
+                
+                                            <ng-container matColumnDef="nImporte">
+                                                <th mat-header-cell *matHeaderCellDef > Importe </th>
+                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe: '> {{element.nImporte}} </td>
+                                                <td mat-footer-cell *matFooterCellDef> {{ nImporteTotal }} </td>
+                                            </ng-container>
+
+                                            <!-- <ng-container matColumnDef="noData">
+                                                <mat-footer-cell *matFooterCellDef [attr.colspan]="ConceptoDC.length">
+                                                    No se encuentran registros.
+                                                </mat-footer-cell>
+                                            </ng-container> -->
+
+                                            <tr mat-header-row *matHeaderRowDef="ConceptoDC2; sticky: true"></tr>
+                                            <tr mat-footer-row *matFooterRowDef="ConceptoDC2; sticky: true"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ConceptoDC2;"></tr>
+                
+                                            <!-- <tr mat-header-row *matHeaderRowDef="ConceptoDC2"></tr>
+                                            <tr mat-row *matRowDef="let element; columns: ConceptoDC2;"></tr>
+                                            <tr mat-footer-row *matFooterRowDef="ConceptoDC2; sticky: true"></tr> -->
+                                            <!-- <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ConceptoDS2 && this.ConceptoDS2.filteredData.length > 0">
+                                            </mat-footer-row> -->
+                                         </table>
+                                    </div>
+                                    <!-- <mat-paginator  #pagMain  style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator> -->
+                                </div>
+                            </div>
+                            <div class="dStep row">
+                                <button style="float: left;" mat-button matStepperPrevious>Anterior</button>
+                            </div>
+
+                        </mat-step>
+
+                    </mat-horizontal-stepper>
+
+                </mat-expansion-panel>
+
+            </mat-accordion>
+        </div>
+
+      
+
+        <div class="col-lg-6">
+            <mat-accordion #maDetail="matAccordion" multi>
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+        
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Lista de conceptos :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                    </mat-expansion-panel-header>
+            <!-- <div class="row">
+                <div class="col-sm">
+                    <h6>Lista de conceptos :</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="dTableMain3" class="melevation">
+                        <table  mat-table [dataSource]="ConceptoDS" style="width: 100%;" >
+
+                            <ng-container matColumnDef="sCodConcepto">
+                                <th mat-header-cell *matHeaderCellDef> Concepto</th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cod. Concepto: '> {{element.sCodConcepto}}  </td>
+                                <td mat-footer-cell *matFooterCellDef> Total </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sConcepto">
+                                <th mat-header-cell *matHeaderCellDef > Descripción </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Concepto: '> {{element.sDescripcion}} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nUnidad">
+                                <th mat-header-cell *matHeaderCellDef > Unidad </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Unidad: '> {{element.nUnidad}} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nImporte">
+                                <th mat-header-cell *matHeaderCellDef > Importe </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe: '> {{element.nImporte}} </td>
+                                <td mat-footer-cell *matFooterCellDef>{{ nImporteTotal }}</td>
+                            </ng-container>
+                            
+                            <!-- <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="ConceptoDC.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container> -->
+
+
+                            <tr mat-header-row *matHeaderRowDef="ConceptoDC; sticky: true"></tr>
+                            <tr mat-footer-row *matFooterRowDef="ConceptoDC; sticky: true"></tr>
+                            <tr mat-row style="border-top: 1px solid dimgray;" *matRowDef="let row; columns: ConceptoDC;"></tr>
+ 
+                            <!-- <tr mat-header-row *matHeaderRowDef="ConceptoDC"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ConceptoDC;"></tr>
+                            <tr mat-footer-row *matFooterRowDef="ConceptoDC; sticky: true"></tr> -->
+
+                            <!-- <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ConceptoDS && this.ConceptoDS.filteredData.length > 0">
+                            </mat-footer-row> -->
+
+                         </table>
+                    </div>
+                    <!-- <mat-paginator  #pagMain  style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator> -->
+                </div>
+            </div>
+            
+
+                </mat-expansion-panel>
+
+        </mat-accordion>
+
+        </div>
+  
+
+    </div>
+</div>
+  
+<!-- <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar> -->

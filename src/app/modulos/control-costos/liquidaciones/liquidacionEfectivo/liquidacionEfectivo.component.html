@@ -1,0 +1,213 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+
+    <p style="color: white; padding-top: 50px;">Cargando información...</p> -->
+
+</ngx-spinner>
+<div class="col-xl-10 mx-auto" style="padding-top: 90px; padding-bottom: 90px;">
+  <div class="noImpresion">
+    <div class="mb-3" style="text-align: center;">
+      <mat-card class="title-card">
+        <h3>Liquidación de Efectivo</h3>
+      </mat-card>
+    </div>
+  </div>
+  <mat-accordion class="example-headers-align">
+      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle class="noImpresion">
+          <mat-expansion-panel-header>
+              <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+                  Buscar Solicitud de Efectivo
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button><mat-icon style="margin-right: 10px;"color="accent" >list</mat-icon></button>
+          </mat-expansion-panel-header>
+
+          <form [formGroup]="buscarForm">
+              <div class="form-row">
+                  <div class="col-md-12">
+                      <div class="form-row">
+
+                          <div class="form-group col-md-4">
+                              <ng-select placeholder="Sucursal" formControlName="txtSucursal" [clearable]="true">
+                                  <ng-option *ngFor="let list of lcboSucursal" [(value)]="list.nId">{{list.sDescripcion}}</ng-option>
+                              </ng-select>
+                          </div>
+
+                          <div class="form-group col-md-4" style="padding-top: 13px;">
+                              <mat-form-field style="width: 100%;">
+                                  <mat-label>Presupuesto</mat-label>
+                                  <input matInput formControlName="txtCentroCosto" placeholder="Escribir" style="color: rgb(51, 77, 110);" appCaracterValidador>
+                                  <button style="outline: none;" mat-button *ngIf="this.buscarForm.controls.txtCentroCosto.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.buscarForm.controls.txtCentroCosto.setValue('');">
+                                          <mat-icon>close</mat-icon>
+                                      </button>
+                                  <mat-error *ngIf="buscarForm.get('txtCentroCosto').errors?.caracterValidator">
+                                      .El texto no debe contener: "/", "|", "?"</mat-error>
+                              </mat-form-field>
+                          </div>
+
+                          <div class="form-group col-md-4" style="padding-top: 13px;">
+                              <mat-form-field style="width: 100%;">
+                                  <mat-label>Depositario</mat-label>
+                                  <input matInput formControlName="txtDepositario" placeholder="Escribir" style="color: rgb(51, 77, 110);" appCaracterValidador>
+                                  <button style="outline: none;" mat-button *ngIf="this.buscarForm.controls.txtDepositario.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.buscarForm.controls.txtDepositario.setValue('');">
+                                          <mat-icon>close</mat-icon>
+                                      </button>
+                                  <mat-error *ngIf="buscarForm.get('txtDepositario').errors?.caracterValidator">
+                                      .El texto no debe contener: "/", "|", "?"</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="form-group col-md-4">
+                      <mat-form-field style="width: 100%;">
+                          <mat-label>Año:</mat-label>
+                          <mat-select formControlName="cboAnio">
+                              <mat-option>Seleccione</mat-option>
+                              <mat-option *ngFor="let vAnio of lAnio" [value]="vAnio.nId">{{vAnio.sDescripcion}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+
+                  </div>
+
+                  <div class="form-group col-md-6" style="padding-top: 13px;">
+                      <mat-radio-group aria-label="Seleccione una opción">
+                          <mat-radio-button value="1" (click)="fnEstadoFiltro(0)" [checked]="true"> Todos </mat-radio-button>
+                          <mat-radio-button value="2" (click)="fnEstadoFiltro(1)"> Pendiente </mat-radio-button>
+                          <mat-radio-button value="3" (click)="fnEstadoFiltro(2)"> Liquidado </mat-radio-button>
+                      </mat-radio-group>
+                  </div>
+
+                  <div class="form-group col-md-1">
+                      <button mat-button color="accent" (click)="nextStep(1, 0)"><mat-icon style="margin-right: 10px;"color="accent" >search</mat-icon></button>
+                  </div>
+
+                  <div class="form-group col-md-1">
+                      <button mat-button color="accent" (click)="verInformeControlCosto()"> <mat-icon style="margin-right: 10px;" color="accent">cloud_download</mat-icon> </button>
+                  </div>
+
+              </div>
+          </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle class="noImpresion">
+          <mat-expansion-panel-header (click)="fnLimpiarPanelLiq();nextStep(1, 0)">
+              <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+                  Solicitudes Encontradas
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button><mat-icon style="margin-right: 10px;"color="accent" >payment</mat-icon></button>
+          </mat-expansion-panel-header>
+
+          <div class="col-md-12">
+              <div class="form-row">
+                  <div class="col-md-6">
+                      <mat-form-field style="width: 100%;">
+                          <mat-label>Buscar Rq de Efectivo:</mat-label>
+                          <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+                          <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.txtFiltro.setValue('');fnListarSolicitud()">
+                                  <mat-icon>close</mat-icon>
+                              </button>
+                      </mat-form-field>
+                  </div>
+
+                  <div class="col-md-1">
+                    <button type="button" mat-raised-button color="accent" (click)="fnDescargarExcel()" matTooltip="Descargar Excel">
+                        <i class="material-icons">cloud_download</i> Descargar
+                    </button>
+                  </div>
+              </div>
+
+              <div id="listaMobile" class="mat-elevation-z8">
+                  <div class="example-container2">
+                      <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+                          <ng-container matColumnDef="nIdGastoCosto" sticky>
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Opción: '>
+                                <button mat-stroked-button (click)="nextStep(2, row)" matTooltip="Liquidar">
+                                    <mat-icon color="accent">settings</mat-icon>
+                                </button>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sCentroCosto">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Presup. </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Presupuesto: '>
+                                  <ngb-highlight [result]="row.sCentroCosto" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sNumero">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Nro. Dcto. </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Documento: '>
+                                  <ngb-highlight [result]="row.sNumero" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sSucursal">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Ciudad </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Sucursal: '>
+                                  <ngb-highlight [result]="row.sSucursal" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sNombreCompletoDepositario">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Depositario </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Depositario: '>
+                                  <ngb-highlight [result]="row.sNombreCompletoDepositario" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="nTotal">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Total Depósito </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Total Deposito: '>
+                                  <ngb-highlight [result]="row.nTotalRq | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="nDebe">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Total Saldo </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Total Debe: '>
+                                  <ngb-highlight [result]="row.nDebe < 0 ? '0.00' : (row.nDebe | number:'1.2-2')" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sEstadoRq">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Estado </th>
+                              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaExt" data-label='Estado: '>
+                                  <ngb-highlight [result]="row.sEstadoRq" [term]="txtFiltro.value"></ngb-highlight>
+                              </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                  </div>
+                  <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+              </div>
+          </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" [disabled]="!vSecundario" hideToggle>
+          <mat-expansion-panel-header class="noImpresion">
+              <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+                  Liquidación&nbsp;<span *ngIf="vSecundario"> de {{datosDepositario.nombreDepositario}} - {{datosDepositario.documentoDepositario}}</span>
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button><mat-icon style="margin-right: 10px;"color="accent" >card_travel</mat-icon></button>
+          </mat-expansion-panel-header>
+
+          <app-liquidacion [pLiquidacion]="vLiquidacion" *ngIf="vSecundario"></app-liquidacion>
+
+      </mat-expansion-panel>
+
+  </mat-accordion>
+</div>

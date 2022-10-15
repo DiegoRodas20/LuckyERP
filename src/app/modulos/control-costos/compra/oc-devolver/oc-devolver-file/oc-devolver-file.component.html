@@ -1,0 +1,90 @@
+
+<!-- Cabecera Orden de compra -->
+<div class="row ">
+    <h5 class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">Documentos de la Orden de compra {{sNumero}}
+    </h5>
+</div>
+
+<div mat-dialog-content>
+    <div class="row d-flex justify-content-center">
+        <p>Visualización de facturas cargadas</p>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md">
+            <div id="listaMobile" class="mat-elevation-z8">
+                <div class="table-container-1">
+                    <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                        <ng-container matColumnDef="nId" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+                            <td mat-cell *matCellDef="let row" class="clsColumnaOpc2">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button mat-menu-item (click)="fnDescargar(row)">
+                                        <mat-icon color="accent">cloud_download</mat-icon>
+                                        <span>Descargar</span>
+                                    </button>
+                                    <button mat-menu-item (click)="fnVerFile(row)">
+                                        <mat-icon color="accent">open_in_browser </mat-icon>
+                                        <span>Ver Archivo</span>
+                                    </button>
+                                    <button mat-menu-item (click)="fnActulizarEstado(row.nIdArchivo)">
+                                        <mat-icon color="accent">check_circle </mat-icon>
+                                        <span>Visto Bueno</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tipo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Tipo
+                            </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaLib has_label_on_mobile' data-label='Tipo: '> {{row.stipoDoc}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sNombreArchivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nombre Archivo
+                            </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaLib has_label_on_mobile' data-label='Nombre Archivo: '> {{row.sArchvo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="emision">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Emisión
+                            </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaLib has_label_on_mobile' data-label='Emisión: '> {{row.fecheEmision}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="recepcion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Recepción
+                            </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaLib has_label_on_mobile' data-label='Recepción: '> {{row.fecheRecepcion}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="vence">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Vence
+                            </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaLib has_label_on_mobile' data-label='Vence: '> {{row.fechavence}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="estado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> V.B </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaExt has_label_on_mobile' data-label='V.B: '> {{row.Estado}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUsuario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Usuario Subió </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaOpc has_label_on_mobile' data-label='Usuario Subió: '> {{row.sUsuario}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFechaSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> Fecha Subió </th>
+                            <td mat-cell *matCellDef="let row" class='clsColumnaExt has_label_on_mobile' data-label='Fecha Subió: '> {{row.sFecha}} - {{row.sHora}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>

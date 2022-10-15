@@ -1,0 +1,383 @@
+<!-- Spinner -->
+<ngx-spinner
+  name="spi_cuentasb_import"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+    <i class="material-icons" [@fabToggler]="{ value: tsImport }">add</i>
+  </button>
+  <div [@speedDialStagger]="abImport.length">
+    <button
+      *ngFor="let btn of abImport; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickFab(ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+
+<h5 class="card-header">
+  Importar Excel
+  <button
+    type="button"
+    class="close"
+    (click)="cerrarModal()"
+    style="color: white !important; text-shadow: none !important; outline: none"
+    data-dismiss="modal"
+    aria-label="Close"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</h5>
+
+<!-- Cuerpo  -->
+<div class="modal-body">
+  <div class="row">
+    <div class="col-lg-12">
+      <div>
+        <mat-horizontal-stepper #stepper>
+          <mat-step [completed]="false" [editable]="false">
+            <form [formGroup]="firstStepperFormGroup">
+              <ng-template matStepLabel>Importar Excel</ng-template>
+
+              <mat-accordion multi>
+                <mat-expansion-panel
+                  [expanded]="true"
+                  style="margin-bottom: 16px"
+                >
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Seleccione el banco y tipo de cuenta :
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px">
+                    </mat-panel-description>
+                    <mat-icon style="margin-right: 10px"
+                      >account_balance</mat-icon
+                    >
+                  </mat-expansion-panel-header>
+
+                  <!-- #region BANCO Y TIPO DE CUENTA-->
+                  <div class="row">
+                    <div class="col-md-6">
+                      <!-- #region BANCO COMBO-->
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Banco</mat-label>
+                        <mat-select
+                          [errorStateMatcher]="matcher"
+                          name="bancos"
+                          formControlName="banco"
+                        >
+                          <mat-option
+                            *ngFor="let banco of dataComboBancos"
+                            [value]="banco.nIdBanco_"
+                          >
+                            {{ banco.sDesc }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- #endregion -->
+                    </div>
+                    <div class="col-md-6">
+                      <!-- #region TIPO CUENTA-->
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Tipo de Cuenta</mat-label>
+                        <mat-select
+                          [errorStateMatcher]="matcher"
+                          name="bancos"
+                          formControlName="cuenta"
+                        >
+                          <mat-option
+                            *ngFor="let tipoCuenta of dataComboTipoCuenta"
+                            [value]="tipoCuenta.nIdTipEle"
+                          >
+                            {{ tipoCuenta.sDesc }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- #endregion -->
+                    </div>
+                  </div>
+
+                  <div
+                    *ngIf="msgValidacionBanco !== ''"
+                    class="alert alert-danger"
+                    role="alert"
+                  >
+                    {{ msgValidacionBanco }}
+                  </div>
+
+                  <div>
+                    <button
+                      mat-button
+                      matStepperNext
+                      id="btn_siguiente_stepper"
+                    ></button>
+                  </div>
+                  <!-- #endregion -->
+                </mat-expansion-panel>
+              </mat-accordion>
+            </form>
+          </mat-step>
+          <mat-step [completed]="false" [editable]="false">
+            <ng-template matStepLabel>Datos extraidos del excel</ng-template>
+
+            <div class="row" style="margin-top: 20px">
+              <div class="col-sm">
+                <h6>Lista de personal entraido del excel :</h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px" />
+              </div>
+            </div>
+
+            <!-- #region TABLA DE PREVISUALIZACION-->
+            <div>
+              <table
+                mat-table
+                [dataSource]="dataSourceTablaPersonal"
+                multiTemplateDataRows
+                style="width: 100%"
+              >
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Buscar</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      matTooltip="Buscar"
+                      matTooltipPosition="right"
+                      mat-stroked-button
+                      [disabled]="element.nIdPersonal !== 0"
+                      color="accent"
+                      (click)="abrirModalEditar(element)"
+                    >
+                      <mat-icon>search</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <!-- sNombres Column -->
+                <ng-container matColumnDef="sNombres">
+                  <th mat-header-cell *matHeaderCellDef>Apellidos y Nombre</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="m-card-title"
+                    data-label="Apellidos y nombres :"
+                  >
+                    {{ element.sNombres | titlecase }}
+                  </td>
+                </ng-container>
+
+                <!-- nIdPlla Column -->
+                <ng-container matColumnDef="nIdPlla">
+                  <th mat-header-cell *matHeaderCellDef>Plla</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Plla : "
+                  >
+                    {{ element.nIdPlla }}
+                  </td>
+                </ng-container>
+
+                <!-- sAbrev Column -->
+                <ng-container matColumnDef="sAbrev">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Tipo : "
+                  >
+                    {{ element.sAbrev }}
+                  </td>
+                </ng-container>
+
+                <!-- sDocumento Column -->
+                <ng-container matColumnDef="sDocumento">
+                  <th mat-header-cell *matHeaderCellDef>Documento</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Documento : "
+                  >
+                    {{ element.sDocumento }}
+                  </td>
+                </ng-container>
+
+                <!-- dFechaIniCuenta Column -->
+                <ng-container matColumnDef="dFechaIniCuenta">
+                  <th mat-header-cell *matHeaderCellDef>Fech Inicial</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Fech Inicial : "
+                  >
+                    {{ formatoFecha(element.dFechaIniCuenta) }}
+                  </td>
+                </ng-container>
+
+                <!-- sNroCuenta Column -->
+                <ng-container matColumnDef="sNroCuenta">
+                  <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Cuenta : "
+                  >
+                    {{ element.sNroCuenta }}
+                  </td>
+                </ng-container>
+
+                <!-- nStatus Column -->
+                <ng-container matColumnDef="nStatus">
+                  <th mat-header-cell *matHeaderCellDef>Estado</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="has_label_on_mobile"
+                    data-label="Estado : "
+                  >
+                    <span
+                      *ngIf="element.nStatus !== 0"
+                      class="badge badge-pill badge-success"
+                      >Válido</span
+                    >
+                    <span
+                      *ngIf="element.nStatus == 0"
+                      class="badge badge-pill badge-danger"
+                      >No válido</span
+                    >
+                  </td>
+                </ng-container>
+
+                <!-- More Column -->
+                <ng-container matColumnDef="more">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element; let row">
+                    <span
+                      [@fabToggler]="
+                        element == expandedElement ? 'active3' : 'inactive'
+                      "
+                      class="material-icons"
+                      style="cursor: pointer"
+                      (click)="clickExpanded(element)"
+                      >expand_more</span
+                    >
+                  </td>
+                </ng-container>
+
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expanded_More">
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    [attr.colspan]="displayedColumnsTablaPersonal.length"
+                  >
+                    <div
+                      style="overflow: hidden"
+                      [@detailExpand]="
+                        element == expandedElement ? 'expanded' : 'collapsed'
+                      "
+                    >
+                      <div class="row" style="padding: 10px 10px 0px 10px">
+                        <div class="col-lg-12" style="padding-left: 5px">
+                          <!-- Observacion -->
+                          <div class="col-sm" style="padding: 10px 0px 0px 0px">
+                            <h6>Observación:</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 0px" />
+                          </div>
+
+                          <div class="form-row">
+                            <div class="col-lg-12">
+                              <mat-form-field style="width: 100%">
+                                <textarea
+                                  matInput
+                                  [value]="element.sObservacion"
+                                  style="max-height: 50px; min-height: 50px"
+                                  disabled
+                                ></textarea>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="noData">
+                  <mat-footer-cell
+                    *matFooterCellDef
+                    [attr.colspan]="displayedColumnsTablaPersonal.length"
+                  >
+                    No se encuentran registros.
+                  </mat-footer-cell>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="displayedColumnsTablaPersonal"
+                ></tr>
+
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumnsTablaPersonal"
+                ></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: ['expanded_More']"
+                  [class.example-expanded-row]="expandedElement === row"
+                  style="height: 0px; border-top-style: none"
+                ></tr>
+                <mat-footer-row
+                  *matFooterRowDef="['noData']"
+                  [hidden]="
+                    dataSourceTablaPersonal &&
+                    this.dataSourceTablaPersonal.filteredData.length > 0
+                  "
+                ></mat-footer-row>
+              </table>
+              <mat-paginator
+                #pagListaPersonal
+                [hidePageSize]="false"
+                [pageSize]="4"
+              ></mat-paginator>
+            </div>
+            <!-- #endregion -->
+
+            <button
+              id="stepperResetId"
+              mat-button
+              (click)="stepper.reset()"
+            ></button>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer" style="padding: 0px">
+  <mat-progress-bar
+    *ngIf="pbDetail"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

@@ -1,0 +1,300 @@
+<iframe id="pdf-frame" style="display:none"></iframe>
+
+<div class="fab-container noImpresion">
+    <button mat-mini-fab class="fab-toggler" (click)="(ocultarBotones = !ocultarBotones); onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length" *ngIf="ocultarBotones">
+        <button mat-mini-fab class="fab-toggler" color="white" *ngFor="let item of listaEstado"
+            (click)="actualizarEstado(item.accion)" [disabled]="item.disabled">
+            <i class="material-icons" [matTooltip]="item.name" matTooltipPosition="left">{{item.icon}}</i>
+        </button>
+        <button mat-mini-fab class="fab-secondary" color="white" (click)="verHistorial()">
+            <i class="material-icons" matTooltip="Ver Historial" matTooltipPosition="left">assignment</i>
+        </button>
+
+        <!-- <button mat-mini-fab class="fab-secondary" color="white" *ngIf="!vDispEsCelular"
+            (click)="fnImprimirReporteRq()">
+            <i class="material-icons" matTooltip="Imprimir" matTooltipPosition="left">print</i>
+        </button>
+        <button mat-mini-fab class="fab-secondary" color="white" *ngIf="vDispEsCelular"
+            (click)="fnImprimirCelularReporteRq()">
+            <i class="material-icons" matTooltip="Imprimir" matTooltipPosition="left">print</i>
+        </button> -->
+        <button mat-mini-fab class="fab-secondary" color="warn" (click)="actualizarEstado(4)">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+<div class="col-md-10 offset-md-1 noImpresion" style="padding-top: 70px;">
+    <div class="">
+        <div class="mb-3" style="text-align: center;">
+            <mat-card class="title-card">Requerimiento de Reposición (TI)</mat-card>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form autocomplete="off" [formGroup]="form">
+                <div class="form-row">
+                    <div class="col-lg-10 col-md-10">
+                        <div class="form-row">
+                            <div class="form-group col-lg-6 col-md-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Solicitante</mat-label>
+                                    <input matInput formControlName="solicitante" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-6 col-md-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cliente</mat-label>
+                                    <input matInput formControlName="cliente" readonly style="color: rgb(236,0,140);">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                            <div class="form-group col-lg-3 col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Título</mat-label>
+                                    <input matInput formControlName="titulo" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-3 col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Solicitud</mat-label>
+                                    <input matInput formControlName="fechaSolicitud" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-3 col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Moneda</mat-label>
+                                    <input matInput formControlName="moneda" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-3 col-md-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo Cambio</mat-label>
+                                    <input matInput formControlName="tipoCambio" readonly>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+
+                            <div class="form-group col-lg-8 col-md-8">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Observaciones:</mat-label>
+                                    <input matInput readonly formControlName="observaciones">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-4 col-md-4">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Monto Total</mat-label>
+                                    <input matInput readonly formControlName="montoTotal"
+                                        [value]="form.get('montoTotal').value | number:'1.2-2' ">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-2 col-md-2">
+                        <!-- Vista cuando no es celular -->
+                        <div class="form-row" *ngIf="!vDispEsCelular">
+                            <div class="col-lg-1 col-md-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="col-lg-11 col-md-11">
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Número</mat-label>
+                                        <input matInput readonly formControlName="numero"
+                                            style="color: rgb(236,0,140);">
+                                    </mat-form-field>
+                                </div>
+                                <!-- <div class="form-group" *ngIf="nIdPais === '604'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo de Cambio</mat-label>
+                                        <input matInput readonly formControlName="cambio">
+                                    </mat-form-field>
+                                </div> -->
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Usuario Creación</mat-label>
+                                        <input matInput readonly formControlName="usuarioCreacion">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha de Creación</mat-label>
+                                        <input matInput readonly formControlName="fechaCreacion">
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Estado</mat-label>
+                                    <input matInput readonly formControlName="estado" style="color: rgb(236,0,140);">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <!-- Vista celular -->
+                        <div *ngIf="vDispEsCelular" style="margin-bottom: 20px;">
+                            <mat-accordion class="example-header-align">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title class="title-panel">
+                                            Información
+                                        </mat-panel-title>
+                                        <mat-panel-description style="margin-right: 0px">
+                                        </mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    <div class="row">
+                                        <div class="col-lg-11 col-md-11">
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Número</mat-label>
+                                                    <input matInput readonly formControlName="numero"
+                                                        style="color: rgb(236,0,140);">
+                                                </mat-form-field>
+                                            </div>
+                                            <!-- <div class="form-group" *ngIf="nIdPais === '604'">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Tipo de Cambio</mat-label>
+                                                    <input matInput readonly formControlName="cambio">
+                                                </mat-form-field>
+                                            </div> -->
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Usuario Creación</mat-label>
+                                                    <input matInput readonly formControlName="usuarioCreacion">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Fecha de Creación</mat-label>
+                                                    <input matInput readonly formControlName="fechaCreacion">
+                                                </mat-form-field>
+                                            </div>
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Estado</mat-label>
+                                                <input matInput readonly formControlName="estado"
+                                                    style="color: rgb(236,0,140);">
+                                            </mat-form-field>
+
+                                            <!-- <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Número</mat-label>
+                                                    <input matInput readonly formControlName="numeroCabecera"
+                                                        style="color: rgb(236,0,140);">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="form-group" *ngIf="nIdPais === '604'">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Tipo de Cambio</mat-label>
+                                                    <input matInput readonly formControlName="cambio">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="form-group">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Fecha de Creación</mat-label>
+                                                    <input matInput readonly formControlName="fecha">
+                                                </mat-form-field>
+                                            </div>
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Estado</mat-label>
+                                                <input matInput readonly formControlName="estado"
+                                                    style="color: rgb(236,0,140);">
+                                            </mat-form-field> -->
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </form>
+            <div id="listaMobile" class="mat-elevation-z8">
+                <div class="example-container" id=" Scroll_Page1 ">
+                    <table mat-table [dataSource]="dataSource " matSort>
+
+                        <ng-container matColumnDef="sCentroCosto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Presupuesto: '>
+                                <ngb-highlight [result]="row.sCentroCosto | titlecase">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDepositario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Personal </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Personal: '>
+                                <ngb-highlight [result]="row.sDepositario | titlecase">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCargo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargo </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Cargo: '>
+                                <ngb-highlight [result]="row.sCargo"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sSucursal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sucursal </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Sucursal: '>
+                                <ngb-highlight [result]="row.sSucursal"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sHerramienta">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Herramienta </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Herramienta: '>
+                                <ngb-highlight [result]="row.sHerramienta"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sPartida">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Partida: '>
+                                <ngb-highlight [result]="row.sPartida"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nUnidades">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Total: '>
+                                <ngb-highlight [result]="row.nUnidades"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nTotal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Total: '>
+                                <ngb-highlight [result]="row.nTotal | number: '1.4-4'">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns "></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                </div>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100] "></mat-paginator>
+        </div>
+
+    </div>
+</div>
+<!-- <div [ngClass]="{'impresionActiva' : vVerReporteImpresionRq}" class="impresion">
+    <app-reporte-rq [pGastoCosto]="nIdGastoCosto " *ngIf="vVerReporte "></app-reporte-rq>
+</div> -->

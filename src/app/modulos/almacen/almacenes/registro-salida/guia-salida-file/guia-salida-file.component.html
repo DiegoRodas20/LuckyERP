@@ -1,0 +1,175 @@
+<h5 mat-dialog-title class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">Archivos de la guía
+    de salida: {{this.vRegistro.sDescripcion}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<div mat-dialog-content>
+    <div class="row" style="margin-top: 15px;">
+        <mat-accordion style="width: 100%;">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="color: #002c4b; font-weight: bold;">
+                        Subir archivo:
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px">
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="form-row">
+                    <div class="form-row col-md-12">
+                        <div class="form-group col-md-10">
+                            <form [formGroup]="formArchivo">
+                                <input type="file" #archivoFile [accept]="this.sFormato"
+                                    (change)="fnSeleccionarArchivo($event,lblName.id)" formControlName="fileUpload"
+                                    class="custom-file-input" aria-describedby="inputGroupFileAddon04">
+                                <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">
+                                    Seleccione Archivo:</mat-label>
+                            </form>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <button mat-raised-button color="primary" matTooltip="Subir Archivo"
+                                (click)="fnSubirArchivo(lblName.id)" type="button">
+                                <mat-icon>cloud_upload</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="vArchivoSeleccioado.length == 0" class="col-md-12 alert alert-info">
+                        ¡No selecciono nigun archivo!
+                    </div>
+                </div>
+                <div class="col-12">
+                    <form [formGroup]="formArchivoRegistro">
+                        <div class="form-row col-md-12 ">
+                            <div class="form-group col-md-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo archivo:</mat-label>
+                                    <mat-select (ngModelChange)="fnCambiarFormato($event,lblName.id)"
+                                        formControlName="cboTipo">
+                                        <mat-option *ngFor="let item of lTipoDocumento" [value]="item.nId">
+                                            {{item.sDescripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="formArchivoRegistro.controls['cboTipo'].hasError('required')">
+                                        .Obligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Documento:</mat-label>
+                                    <input (input)="fnEvitarEspacios('txtNombre')" type="text" matInput
+                                        formControlName="txtNombre">
+                                    <mat-error *ngIf="formArchivoRegistro.controls['txtNombre'].hasError('required')">
+                                        .Obligatorio
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="formArchivoRegistro.get('txtNombre').hasError('caracterValidator')">
+                                        .El texto no debe contener: "/", "|", "?"</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md">
+            <div id="listaMobile" class="mat-elevation-z8">
+
+                <div class="table-container-1">
+                    <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                        <ng-container matColumnDef="nId" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+                            <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button mat-menu-item (click)="fnDescargar(row)">
+                                        <mat-icon color="accent">cloud_download</mat-icon>
+                                        <span>Descargar</span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="row.sExtension!='msg'" (click)="fnVerFile(row)">
+                                        <mat-icon color="accent">open_in_browser </mat-icon>
+                                        <span>Ver Archivo</span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="row.sExtension=='msg'" (click)="fnVerMensaje(row)">
+                                        <mat-icon color="accent">mail_outline </mat-icon>
+                                        <span>Ver mensaje</span>
+                                    </button>
+                                    <button mat-menu-item (click)="fnEliminar(row)">
+                                        <mat-icon color="accent">delete </mat-icon>
+                                        <span>Eliminar</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sTipoDoc">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Tipo
+                            </th>
+                            <td data-label='Tipo: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sTipoDoc}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sNombreArchivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nombre Archivo
+                            </th>
+                            <td data-label='Nombre Archivo: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaLib"> {{row.sNombreArchivo}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sExtension">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Extensión
+                            </th>
+                            <td data-label='Extensión: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sExtension}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUser">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Usuario Subió
+                            </th>
+                            <td data-label='Usuario Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc"> {{row.sUser}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFechaSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha Subió
+                            </th>
+                            <td data-label='Fecha Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sFechaSubio}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sHoraSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Hora Subió
+                            </th>
+                            <td data-label='Hora Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.sHoraSubio}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- <mat-dialog-actions>
+
+    <div class="col-md-12 d-flex justify-content-end">
+        <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button>
+    </div>
+</mat-dialog-actions> -->

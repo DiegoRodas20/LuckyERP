@@ -1,0 +1,37 @@
+.center-text-card {
+  text-align: center;
+}
+
+.form-row .form-group label {
+  font-size: 12.5px;
+}
+
+/*Para darle color a los disables*/
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+/* .container-fluid {
+                      height: 200px;
+                    } */

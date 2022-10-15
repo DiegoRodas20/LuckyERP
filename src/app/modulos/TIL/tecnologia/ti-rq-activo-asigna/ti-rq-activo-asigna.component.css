@@ -1,0 +1,133 @@
+.contenedorComponente {
+  max-height: 97vh;
+  margin-bottom: 20px;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+
+.example-container {
+  height: 429px;
+  width: 100%;
+}
+
+.icon-activo-table {
+  position: relative;
+  top: 6px;
+  cursor: pointer;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.registro-gray {
+  background-color: rgb(180, 180, 180);
+}
+
+.registro-orange {
+  background-color: rgb(236, 169, 68);
+}
+
+@media screen and (max-width: 1500px) {
+  /* Tabla */
+  /* .example-container {
+      width: 150%;
+    } */
+}
+
+@media screen and (max-width: 1200px) {
+  /* Tabla */
+  .example-container {
+    width: 170%;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  /* Checkbox */
+  .checkbox-container {
+    display: block;
+    line-height: 20px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  /* Checkbox */
+  .example-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 18px !important;
+  }
+}
+
+.clsColumnaOpc {
+  width: 110px;
+}
+
+.clsColumnaLarge2 {
+  width: 200px;
+}
+
+.clsColumnaLarge {
+  width: 100px;
+}
+
+.clsColumnaLib {
+  width: 60px;
+}
+
+.clsColumnaOpc2 {
+  width: 60px;
+}

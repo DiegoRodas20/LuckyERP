@@ -1,0 +1,85 @@
+<div class="transporte">
+  <form [formGroup]="form" autocomplete="off">
+    <mat-card class="mb-1 title-card">Prorrateo de precios por presupuesto</mat-card>
+    <mat-dialog-content>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-9">
+          <mat-form-field>
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" #input>
+            <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <button mat-mini-fab class="fab-toggler" color="warn" matTooltip="Salir" matDialogClose>
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+        <div class="col-lg-3 col-md-3"></div>
+        <div class="col-lg-2 col-md-2 col-6">
+          <mat-form-field>
+            <mat-label>Precio del transporte</mat-label>
+            <input matInput formControlName="nPrecioTotal" readonly>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-2 col-md-2 col-6">
+          <mat-form-field>
+            <mat-label>Calculado</mat-label>
+            <input matInput formControlName="calculado" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+      <div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="300">
+        <table mat-table [dataSource]="dsProrrateos" formArrayName="costos" matSort>
+          <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+            <!-- #region Designación de sort en header -->
+            <ng-template [ngIf]="col.type == 'reactivo'" [ngIfElse]="withSort">
+              <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width">
+                {{col.header}} </th>
+            </ng-template>
+            <ng-template #withSort>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+            </ng-template>
+            <!-- #endregion -->
+
+            <!-- #region Formación de rows dependiendo del tipo -->
+            <td mat-cell *matCellDef="let row; let i = index" class='header_mobile' id="{{col.header}}: "
+              [style.textAlign]="col.align" [formGroupName]="i">
+              <span *ngSwitchCase="null">
+                <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+              </span>
+              <span *ngSwitchCase="'deci2'">
+                <ngb-highlight [result]="row[col.field] | number :'1.2-2'" [term]="input.value"></ngb-highlight>
+              </span>
+              <span *ngSwitchCase="'deci6'">
+                <ngb-highlight [result]="row[col.field] | number :'1.6-6'" [term]="input.value"></ngb-highlight>
+              </span>
+              <span *ngSwitchCase="'reactivo'">
+                <mat-form-field>
+                  <input matInput formControlName="nCostoTraslado" (keyup)="fnPlusValues()" />
+                  <mat-error *ngIf="nCostoError(i)">{{ nCostoError(i) }}</mat-error>
+                </mat-form-field>
+              </span>
+            </td>
+            <!-- #endregion -->
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-dialog-content>
+    <div class="row">
+      <div class="col-lg-2 col-md-4 mt">
+        <button mat-raised-button class="button" color="accent" (click)="fnTerminar()">
+          <mat-icon>save</mat-icon>
+          Terminar
+        </button>
+      </div>
+      <div class="col-lg-2 col-md-2">
+      </div>
+      <div class="col-lg-8 col-md-6 col-12">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </form>
+</div>

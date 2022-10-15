@@ -1,0 +1,95 @@
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Estilos del Formulario */
+
+.contenedorAuditoria {
+  display: flex;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.mat-form-field-disabled input,
+.mat-select-disabled .mat-select-value {
+  color: black;
+}
+:host ::ng-deep ng-select-value,
+:host
+  ::ng-deep
+  .ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: auto;
+  width: 100%;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 550px) {
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 18px !important;
+  }
+}
+
+::ng-deep
+  .ng-select.ng-invalid.ng-touched
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container:after {
+  border-bottom: thin solid #f44336 !important;
+}

@@ -1,0 +1,47 @@
+<h5>
+    Banco</h5>
+<form [formGroup]="forma" (ngSubmit)="guardar()" class="container">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <mat-form-field>
+                <mat-label>banco</mat-label>
+                <mat-select formControlName="nBanco" [class.is-invalid]="bancoNoValido" (selectionChange)="capturarBanco($event)">
+                    <mat-option *ngFor="let item of banco" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> es necesario seleccionar el banco</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-4">
+            <mat-form-field>
+                <mat-label>N° cuenta</mat-label>
+                <input matInput placeholder="coloque el nro Cuenta" formControlName="sCuenta" [class.is-invalid]="cuentaNoValido">
+                <mat-error> el N° cuenta es necesario</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-4">
+            <mat-form-field>
+                <mat-label>N° Cuenta Interbancaria</mat-label>
+                <input matInput placeholder="coloque el Cuenta Interbancaria" formControlName="sCuentaInter" [class.is-invalid]="cuentaInterNoValido">
+                <mat-error> el Cuenta Interbancaria es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field>
+                <mat-label>Moneda</mat-label>
+                <mat-select formControlName="nMoneda" [class.is-invalid]="monedaNoValido" (selectionChange)="capturarMoneda($event)">
+                    <mat-option *ngFor="let item of moneda" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> es necesario seleccionar la moneda</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+<button mat-stroked-button color="primary" (click)="guardar()">    <mat-icon>save</mat-icon>
+    guardar</button>
+<button mat-stroked-button color="primary" (click)="guardar()">    <mat-icon>delete</mat-icon>
+        salir</button>

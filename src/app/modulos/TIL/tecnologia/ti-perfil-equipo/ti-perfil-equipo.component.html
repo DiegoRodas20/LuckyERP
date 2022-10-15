@@ -1,0 +1,158 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="clsprincipal">
+    <div class="col-md-12">
+        <h5 class="card-header center-text-card">Perfiles de Equipos</h5>
+    </div>
+
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="col-md-12">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 mx-auto col-10">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar perfil equipo:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="this.txtFiltro.setValue(''); GetAll();">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!--tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="tabla-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+
+                                            <button (click)="fnSeleccionarRegistro(row)" mat-menu-item>
+                                                <mat-icon color="accent"> touch_app</mat-icon>
+                                                <span>Ver detalle</span>
+                                            </button>
+
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="sSubFamilia">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">Tipo
+                                        Activo
+                                    </th>
+                                    <td data-label='Tipo Activo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sSubFamilia" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombrePerfil">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">Perfil
+                                    </th>
+                                    <td data-label='Perfil: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sNombrePerfil" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombreProducto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Equipo
+                                    </th>
+                                    <td data-label='Equipo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sNombreProducto" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCargos">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge2">
+                                        Cargos
+                                    </th>
+                                    <td data-label='Cargos: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge2">
+                                        <ngb-highlight [result]="row.sCargos" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nCosto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="has_label_on_mobile clsColumnaOpc"> Costo/Descuento
+                                    </th>
+                                    <td data-label='Costo/Descuento: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.nCosto | number:'1.2-2'" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTiempoGarantia">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Tiempo
+                                        Garantía
+                                    </th>
+                                    <td data-label='Tiempo Garantía: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sTiempoGarantia" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="!row.bEstado ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-ti-perfil-equipo-detalle [pIdRegistro]="pIdRegistro" (pMostrar)="fnOcultar($event)" *ngIf="pMostrar==1">
+</app-ti-perfil-equipo-detalle>

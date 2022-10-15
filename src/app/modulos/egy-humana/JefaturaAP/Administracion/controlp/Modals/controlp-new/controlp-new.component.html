@@ -1,0 +1,758 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsNew }">add</i>
+  </button>
+    <div [@speedDialStagger]="abNew.length">
+        <button *ngFor="let btn of abNew; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_new" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Nuevo personal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<div class="modal-body" style="padding-top: 0px; padding-bottom: 0px">
+    <mat-tab-group #mtg_new dynamicHeight [selectedIndex]="tabNew" (selectedIndexChange)="tabNew = $event">
+        <!-- #region DATOS PERSONALES TAB-->
+        <mat-tab label="Datos personales">
+            <div class="row" style="padding: 10px 20px 10px 15px">
+                <!-- #region Left section -->
+                <div class="col-xl-6 p-0">
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Personal</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                        </div>
+                    </div>
+
+                    <div class="row fdiv-personal" style="padding: 5px 15px 5px 5px; direction: rtl; margin-left: 0px">
+                        <mat-accordion style="direction: ltr">
+                            <!-- Información -->
+                            <mat-expansion-panel #epNew_info [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Información : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_nombres | titlecase }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">account_box</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_info" [formGroup]="fgNew_info" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Apellido Paterno</mat-label>
+                                                <input type="text" matInput formControlName="T1_sApePa" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_sApePa.hasError('required')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_sApePa.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Apellido Materno</mat-label>
+                                                <input type="text" matInput formControlName="T1_sApeMa" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_sApeMa.hasError('required')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_sApeMa.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Primer Nombre</mat-label>
+                                                <input type="text" matInput formControlName="T1_sPriNom" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_sPriNom.hasError('required')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_sPriNom.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Segundo Nombre</mat-label>
+                                                <input type="text" matInput formControlName="T1_sSegNom" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_sSegNom.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%" appDateFormat>
+                                                <mat-label>Fecha Nacimiento</mat-label>
+                                                <input formControlName="T1_dFechNac" matInput [matDatepicker]="mdpNewInfo" [errorStateMatcher]="matcher" />
+                                                <mat-datepicker-toggle matSuffix [for]="mdpNewInfo"></mat-datepicker-toggle>
+                                                <mat-datepicker #mdpNewInfo></mat-datepicker>
+                                                <mat-error *ngIf="getNew_info.T1_dFechNac.hasError('required')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Género</mat-label>
+                                                <mat-select formControlName="T1_nIdSexo" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboGenero" [value]="item.nEleCod">
+                                                        {{ item.cEleNam }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_info.T1_nIdSexo.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Estado civil</mat-label>
+                                                <mat-select formControlName="T1_nIdEstCiv" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboEstadoCivil" [value]="item.nEleCod">
+                                                        {{ item.cEleNam }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_info.T1_nIdEstCiv.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label># Celular</mat-label>
+                                                <input type="text" matInput formControlName="T1_nTelMovil" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_nTelMovil.hasError('required')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_nTelMovil.hasError('pattern')">. # Celular inválido</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_nTelMovil.hasError('maxlength')">. Lóngitud inválida</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Correo electrónico</mat-label>
+                                                <input type="text" matInput formControlName="T1_sCorreo" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_info.T1_sCorreo.hasError('required')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_info.T1_sCorreo.hasError('email')">. Correo inválido</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-6" [ngClass]="{'ng-select-required': getNew_info.T1_nIdResp.hasError('required')}">
+                                            <ng-select [items]="aResponsable" appendTo="body" bindLabel="sNombres" bindValue="nIdResp_" formControlName="T1_nIdResp" placeholder="Jefe inmediato">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_info.T1_nIdResp.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Nacionalidad</mat-label>
+                                                <mat-select formControlName="T1_nIdNacion" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboNacion" [value]="item.nNatCode">
+                                                        {{ item.cNatDes }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_info.T1_nIdNacion.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+
+                            <!-- Documento de identidad -->
+                            <mat-expansion-panel #epNew_doc>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Documento de identidad : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_doc.T3_sDocumento.value }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">fingerprint</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_doc" [formGroup]="fgNew_doc" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-7">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Tipo de documento</mat-label>
+                                                <mat-select formControlName="A3_nIdTipoDoc" (valueChange)="EnabledDoc($event)" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboTipoDoc" [value]="item">
+                                                        {{ item.sDesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_doc.A3_nIdTipoDoc.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>N° Documento</mat-label>
+                                                <input type="text" matInput formControlName="T3_sDocumento" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="
+                            getNew_doc.T3_sDocumento.hasError('required') ||
+                            getNew_doc.T3_sDocumento.hasError('vString')
+                          ">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_doc.T3_sDocumento.hasError('minlength')">. Longitud de caracteres incorrecto</mat-error>
+                                                <mat-error *ngIf="getNew_doc.T3_sDocumento.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="getNew_doc.vExiste.hasError('esIgual')" class="alert alert-danger" role="alert" style="margin-bottom: 0px !important">
+                                        El documento de identidad le pertenece a otro personal.
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+
+                            <!-- Direcciones -->
+                            <mat-expansion-panel #epNew_dom>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Domicilio : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_dom.T9_sDireccion.value }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">house</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_dom" [formGroup]="fgNew_dom" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-4" [ngClass]="{'ng-select-required': getNew_dom.codUbigeo1.hasError('required')}">
+                                            <ng-select [items]="cboUbigeo1" appendTo="body" bindLabel="cEntNamSecond" bindValue="cEntCod" formControlName="codUbigeo1" (ngModelChange)="ChangeUbigeo($event, 2, 1)" placeholder="Departamento">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_dom.codUbigeo1.hasError('required')">
+                                                . Obligatorio
+                                            </mat-error>
+                                        </div>
+                                        <div class="col-lg-4" [ngClass]="{'ng-select-required': getNew_dom.codUbigeo2.hasError('required')}">
+                                            <ng-select [items]="cboUbigeo2" appendTo="body" bindLabel="cEntNamThird" bindValue="cEntCod" formControlName="codUbigeo2" (ngModelChange)="ChangeUbigeo($event, 3, 1)" placeholder="Provincia">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_dom.codUbigeo2.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+                                        <div class="col-lg-4" [ngClass]="{'ng-select-required': getNew_dom.T9_sIdUbigeo.hasError('required')}">
+                                            <ng-select [items]="cboUbigeo3" appendTo="body" bindLabel="cEntNamFourth" bindValue="cEntCod" formControlName="T9_sIdUbigeo" placeholder="Distrito">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_dom.T9_sIdUbigeo.hasError('required')">
+                                                . Obligatorio
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Dirección</mat-label>
+                                                <input type="text" matInput formControlName="T9_sDireccion" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_dom.T9_sDireccion.hasError('required')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Referencia</mat-label>
+                                                <input type="text" matInput formControlName="T9_sReferencia" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_dom.T9_sReferencia.hasError('required')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+                <!-- #endregion -->
+
+                <!-- #region right section -->
+                <div class="col-xl-6 fdiv-right" style="padding-right: 0px">
+                    <!-- #region DETALLE-->
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Detalle</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                        </div>
+                    </div>
+
+                    <div class="fdiv-detalle" style="padding: 5px 10px 5px 5px">
+                        <mat-accordion>
+                            <!-- Planilla -->
+                            <mat-expansion-panel #epNew_plla>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Planilla : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_pllaDesc }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">groups</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_plla" [formGroup]="fgNew_plla" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-select formControlName="T4_nIdPlla" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboPlanilla" [value]="item.nIdPlla">
+                                                        {{item.sCodPlla}} - {{item.sDesc}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_plla.T4_nIdPlla.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+
+                            <!-- Organización -->
+                            <mat-expansion-panel #epNew_org>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Organización : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <!-- <a>{{ organizacionSeleccionada }}</a> -->
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">work</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_org" [formGroup]="fgNew_org" style="padding-bottom: 10px">
+
+                                    <div class="form-row">
+
+                                        <div class="col-lg-6" [ngClass]="{'ng-select-required': getNew_org.T12_nIdDireccion.hasError('required')}">
+                                            <ng-select [items]="cboDireccion" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdDireccion" placeholder="Dirección" (change)="ChangeDireccion($event)">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_org.T12_nIdDireccion.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                        <div class="col-lg-6" [ngClass]="{'ng-select-required': getNew_org.T12_nIdArea.hasError('required')}">
+                                            <ng-select [items]="cboArea" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdArea" placeholder="Area">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_org.T12_nIdArea.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row">
+
+                                        <div class="col-lg-6" [ngClass]="{'ng-select-required': getNew_org.T12_nIdCargo.hasError('required')}">
+                                            <ng-select [items]="cboCargo" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdCargo" placeholder="Cargo" (change)="ChangeCargo($event)">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_org.T12_nIdCargo.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                        <div class="col-lg-6" [ngClass]="{'ng-select-required': getNew_org.T12_nIdPuesto.hasError('required')}">
+                                            <ng-select [items]="cboPuesto" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdPuesto" placeholder="Puesto" (change)="ChangePuesto($event)">
+                                            </ng-select>
+                                            <mat-error *ngIf="getNew_org.T12_nIdPuesto.hasError('required')">. Obligatorio</mat-error>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <ng-select [items]="cboEspecialidad" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdEspecialidad" placeholder="Especialidad">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </mat-expansion-panel>
+
+                            <!-- Sistema pensionario -->
+                            <mat-expansion-panel #epNew_sp>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Sistema pensionario : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_spDesc }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">location_city</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_sp" [formGroup]="fgNew_sp" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Tipo</mat-label>
+                                                <mat-select formControlName="tipoSisPen" (valueChange)="ChangeAFP($event)" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboTipoSP" [value]="item.nEleCod">
+                                                        {{ item.cEleNam }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_sp.tipoSisPen.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>AFP</mat-label>
+                                                <mat-select formControlName="A6_nIdRegPen" (valueChange)="EnabledCuspp($event)" [errorStateMatcher]="matcher">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboAFP" [value]="item">
+                                                        {{ item.sDesc }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="getNew_sp.A6_nIdRegPen.hasError('noSelect')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%">
+                                                <mat-label>Código único</mat-label>
+                                                <input type="text" matInput formControlName="T6_sCuspp" [errorStateMatcher]="matcher" />
+                                                <mat-error *ngIf="getNew_sp.T6_sCuspp.hasError('vCuspp')">. Obligatorio</mat-error>
+                                                <mat-error *ngIf="getNew_sp.T6_sCuspp.hasError('maxlength')">. Lóngitud inválida</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+
+                            <!-- Banco -->
+                            <mat-expansion-panel #epNew_banco>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Banco : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{ getNew_bancoDesc }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">account_balance</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <mat-tab-group #mtg_new_banco mat-align-tabs="center">
+                                    <mat-tab *ngFor="
+                      let eTipoCuenta of cboTipoCuenta;
+                      let iTipoCuenta = index
+                    " [label]="eTipoCuenta.sDesc">
+                                        <div [formGroup]="fgNew_banco" style="padding-top: 10px">
+                                            <div formArrayName="L2_nIdPerLab">
+                                                <div *ngFor="
+                            let eBanco of getNew_banco_fa.controls;
+                            let iArray = index
+                          ">
+                                                    <ng-container [formGroupName]="iArray" *ngIf="
+                              eBanco.get('nIdTipoCta').value ===
+                                eTipoCuenta.nIdTipEle &&
+                              eBanco.get('nIndex_').value === 0
+                            ">
+                                                        <div class="form-row">
+                                                            <div class="form-group col-lg-6">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>Tipo</mat-label>
+                                                                    <mat-select formControlName="nIdTipoCta" [errorStateMatcher]="matcher">
+                                                                        <mat-option>--</mat-option>
+                                                                        <mat-option *ngFor="let item of cboTipoCuenta" [value]="item.nIdTipEle">
+                                                                            {{ item.sDesc }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="form-group col-lg-6">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>Banco</mat-label>
+                                                                    <mat-select formControlName="A_nIdBanco" (valueChange)="EnabledBanco($event, iArray)" [errorStateMatcher]="matcher">
+                                                                        <mat-option>--</mat-option>
+                                                                        <mat-option *ngFor="let item of cboBanco" [value]="item">
+                                                                            {{ item.sDesc }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('A_nIdBanco')
+                                        .hasError('noSelect')
+                                    ">. Obligatorio</mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-row">
+                                                            <div class="form-group col-lg-8">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>N° Cuenta</mat-label>
+                                                                    <input type="text" matInput formControlName="sNroCuenta" [errorStateMatcher]="matcher" />
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sNroCuenta')
+                                        .hasError('vString')
+                                    ">. vString</mat-error>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sNroCuenta')
+                                        .hasError('required')
+                                    ">. Obligatorio</mat-error>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sNroCuenta')
+                                        .hasError('minlength')
+                                    ">. Longitud de caracteres incorrecto
+                                                                    </mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>Moneda</mat-label>
+                                                                    <mat-select formControlName="nIdMoneda" [errorStateMatcher]="matcher">
+                                                                        <mat-option>--</mat-option>
+                                                                        <mat-option *ngFor="let item of cboMoneda" [value]="item.nIdTipEle">
+                                                                            {{ item.sDesc }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('nIdMoneda')
+                                        .hasError('noSelect')
+                                    ">. Obligatorio</mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-row">
+                                                            <div class="form-group col-lg-8">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>Tipo de documento</mat-label>
+                                                                    <mat-select formControlName="A_nIdTipoDoc" (valueChange)="
+                                      EnabledBancoDoc($event, iArray)
+                                    " [errorStateMatcher]="matcher">
+                                                                        <mat-option>--</mat-option>
+                                                                        <mat-option *ngFor="let item of cboTipoDoc" [value]="item">
+                                                                            {{ item.sDesc }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('A_nIdTipoDoc')
+                                        .hasError('noSelect')
+                                    ">. Obligatorio</mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <mat-form-field style="width: 100%">
+                                                                    <mat-label>N° Documento</mat-label>
+                                                                    <input type="text" matInput formControlName="sDocumento" [errorStateMatcher]="matcher" />
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sDocumento')
+                                        .hasError('vString')
+                                    ">. vString</mat-error>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sDocumento')
+                                        .hasError('required')
+                                    ">. Obligatorio</mat-error>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sDocumento')
+                                        .hasError('minlength')
+                                    ">. Longitud de caracteres incorrecto
+                                                                    </mat-error>
+                                                                    <mat-error *ngIf="
+                                      eBanco
+                                        .get('sDocumento')
+                                        .hasError('pattern')
+                                    ">. Caracteres incorrectos</mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-tab>
+                                </mat-tab-group>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region PERIODO LABORAL-->
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm">
+                            <h6>Periodo laboral</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                        </div>
+                    </div>
+
+                    <div class="fdiv-plab" style="padding: 5px 10px 5px 5px">
+                        <mat-accordion>
+                            <!-- Periodo laboral -->
+                            <mat-expansion-panel #epNew_plab [expanded]="true">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title> Fecha de ingreso : </mat-panel-title>
+                                    <mat-panel-description>
+                                        <a>{{
+                      getNew_plab.T0_dFechIni.value | date: "dd/MM/yyyy"
+                    }}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px">date_range</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <form autocomplete="off" id="fgNew_plab" [formGroup]="fgNew_plab" style="padding-bottom: 10px">
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+                                            <mat-form-field style="width: 100%" appDateFormat>
+                                                <input formControlName="T0_dFechIni" matInput [matDatepicker]="mdpNewPlab" [errorStateMatcher]="matcher" />
+                                                <mat-datepicker-toggle matSuffix [for]="mdpNewPlab"></mat-datepicker-toggle>
+                                                <mat-datepicker #mdpNewPlab></mat-datepicker>
+                                                <mat-error *ngIf="getNew_plab.T0_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                    <!-- #endregion -->
+                </div>
+                <!-- #endregion -->
+            </div>
+        </mat-tab>
+        <!-- #endregion -->
+
+        <!-- #region REMUNERACION-->
+        <mat-tab label="Remuneración">
+            <div class="row" style="padding: 20px 20px 15px; padding-bottom: 2px">
+                <!-- #region left section -->
+                <div class="col-xl-6 fdiv-left" style="padding-bottom: 15px; padding-left: 0px">
+                    <div id="fgNew_rem" [formGroup]="fgNew_rem">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Salario</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-lg-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Tipo</mat-label>
+                                    <mat-select formControlName="A7_nTipoSalario" (valueChange)="EnabledMonto($event)" [errorStateMatcher]="matcher">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboTipoSalario" [value]="item">
+                                            {{ item.sDesc }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="getNew_rem.A7_nTipoSalario.hasError('noSelect')">. Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Monto</mat-label>
+                                    <span matPrefix>S/ &nbsp;</span>
+                                    <input type="number" matInput formControlName="T7_nMonto" [errorStateMatcher]="matcher" />
+                                    <mat-error *ngIf="getNew_rem.T7_nMonto.hasError('vMonto')">. Obligatorio</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Estructura salarial</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px" />
+                            </div>
+                        </div>
+
+                        <div id="dTableNewRem" class="melevation">
+                            <table #tNew_rem mat-table [dataSource]="dsNew_rem" style="width: 100%" cdkDropList [cdkDropListData]="dsNew_rem" (cdkDropListDropped)="dropConcepto($event)">
+                                <ng-container matColumnDef="action">
+                                    <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                        Acción
+                                    </th>
+                                    <td style="text-align: center" mat-cell *matCellDef="let element">
+                                        <button matTooltip="Editar" matTooltipPosition="left" mat-icon-button color="accent" (click)="editConcepto(element)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                                        <button matTooltip="Remover" matTooltipPosition="right" mat-icon-button color="accent" (click)="removeConcepto(element)">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="position">
+                                    <th mat-header-cell *matHeaderCellDef>No.</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <mat-icon style="pointer-events: all" cdkDragHandle>reorder</mat-icon>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dsc_">
+                                    <th mat-header-cell *matHeaderCellDef>Concepto</th>
+                                    <td mat-cell *matCellDef="let element" class="m-card-title" data-label="Concepto :">
+                                        {{ element.dsc_ }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nImporte">
+                                    <th mat-header-cell *matHeaderCellDef>Importe ( S/ )</th>
+                                    <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Importe ( S/ ) :">
+                                        {{ element.nImporte * 1 | number: "1.2-2" }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="dcNew_rem.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="dcNew_rem"></tr>
+                                <tr mat-row *matRowDef="let row; columns: dcNew_rem" cdkDragLockAxis="y" cdkDrag [cdkDragData]="row"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dsNew_rem && this.dsNew_rem.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- #endregion -->
+
+                <!-- #region right section -->
+                <div class="col-xl-6 p-0">
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Selección</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                        </div>
+                    </div>
+
+                    <div class="fdiv-select" style="height: 50px" id="fgNew_select" [formGroup]="fgNew_select">
+                        <div class="form-row">
+                            <div class="form-group col-lg-5">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Concepto</mat-label>
+                                    <input type="string" matInput formControlName="dsc" [readonly]="true" />
+                                    <button style="outline: none" mat-button *ngIf="getNew_select.dsc.value" matSuffix mat-icon-button aria-label="Clear" (click)="selectConcepto('', 0)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Importe</mat-label>
+                                    <span matPrefix>S/ &nbsp;</span>
+                                    <input type="number" matInput formControlName="nImporte" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-group col-lg-4" style="padding-top: 5px">
+                                <button mat-raised-button color="accent" style="width: 100%; padding-left: 5px; outline: none" [disabled]="fgNew_select.invalid" (click)="addConcepto()">
+                  <mat-icon>add</mat-icon>
+                  Añadir
+                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <mat-selection-list style="padding-bottom: 15px" [multiple]="false">
+                        <mat-list-option style="margin-top: 5px" class="card" *ngFor="let item of aConceptos" (click)="selectConcepto(item, 1)" [value]="item.nIdConcepto" [disabled]="item.dis">
+                            <div class="row" style="align-items: center">
+                                <button mat-icon-button color="accent" [disabled]="item.dis">
+                  <mat-icon>add</mat-icon>
+                </button>
+                                <a>{{ item.dsc }}</a>
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+                <!-- #endregion -->
+            </div>
+        </mat-tab>
+        <!-- #endregion -->
+    </mat-tab-group>
+</div>
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbNew" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

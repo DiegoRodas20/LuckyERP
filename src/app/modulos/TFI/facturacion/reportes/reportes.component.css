@@ -1,0 +1,39 @@
+
+  /* Titulo Card  */
+
+  .card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+  }
+  
+  /* Estilos del texto tabs*/
+  
+  :host ::ng-deep .mat-ink-bar{
+    max-width: 140px !important;
+    margin-left: 10px;
+    background-color: #334D6E !important;
+  }
+  
+  :host ::ng-deep .mat-tab-label-active{
+    opacity: 1 !important;
+    background-color: #334D6E;
+  }
+  
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content{
+    font-size: 18px !important;
+    font-weight:normal !important;
+    color: #334D6E;
+  }
+  
+  :host ::ng-deep .mat-tab-label-active .mat-tab-label-content{
+    color: white;
+  }
+  
+  @media (max-width: 959px){
+    :host ::ng-deep .mat-ink-bar{
+      margin-left: 0px;
+    }
+  }
+  

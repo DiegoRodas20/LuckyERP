@@ -1,0 +1,279 @@
+<iframe id="pdf-frame" style="display:none" (load)="printDoc()"></iframe>
+
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Solicitud de vacaciones</h5>
+
+            <!-- Fab -->
+            <div class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="body-main" class="card-body">
+
+                <div class="icard melevation col-xl-12">
+                    <div class="row">
+
+                        <!-- Imagen -->
+                        <div class="col-lg-2" style="text-align: center;">
+                            <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                        </div>
+
+                        <!-- Información del personal -->
+                        <div class="col-lg-4" style="padding-top: 25px; padding-bottom: 20px;">
+                            <h4 style="font-size: 20px;">{{this.getInfoPerso.sNombres.value}}</h4>
+                            <h6 style="font-size: 14px; color: rgba(0,0,0,.54);">{{this.getInfoPerso.sTipo.value}} : {{this.getInfoPerso.sDocumento.value}}</h6>
+                        </div>
+
+                        <mat-divider [vertical]="true"></mat-divider>
+
+                        <!-- Filtro -->
+                        <div class="col-lg">
+
+                            <div class="row" style="margin-left: 0px;">
+                                <h6>Aplicar filtro por :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+                                <div class="form-row">
+
+                                    <!-- Fecha vacación -->
+                                    <div class="col-lg-6">
+                                        <mat-form-field style="width: 100%;" appYearMonthFormat>
+                                            <mat-label>Fecha vacación</mat-label>
+                                            <input matInput [matDatepicker]="dFecha" formControlName="dFecha">
+                                            <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                                            <mat-datepicker #dFecha startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFecha)">
+                                            </mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Estado -->
+                                    <div class="col-lg-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select formControlName="nEstado">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of cboEstado" [value]="item.nEleCod">
+                                                    {{item.cEleNam}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Lista de solicitudes :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+
+                <div class="row">
+
+                    <div id="dLeftMain" class="col-lg-7">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="MainDS" style="width: 100%;">
+
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(1, element, 2)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Responsable Column -->
+                                <ng-container matColumnDef="sResp">
+                                    <th mat-header-cell *matHeaderCellDef> Responsable </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Responsable :'> {{element.sResp}} </td>
+                                </ng-container>
+
+                                <!-- Fecha inicio Column -->
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha inicio :'> {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Fecha fin Column -->
+                                <ng-container matColumnDef="dFechFin">
+                                    <th mat-header-cell *matHeaderCellDef> Término </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha término :'> {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Estado Column -->
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado :'> {{element.sEstado}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.filteredData.length > 0"></mat-footer-row>
+
+                            </table>
+                        </div>
+                        <mat-paginator #pagMain style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <mwl-calendar-month-view [viewDate]="viewDate" [events]="eventMain" [locale]="locale" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                        </mwl-calendar-month-view>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>
+
+<!-- Div Vacacion -->
+<div style="z-index: 1042" class="modal fade bd-example-modal-lg" id="ModalVac" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ModalVacTitle" aria-hidden="true">
+
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleVac, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsVac}">add</i>
+        </button>
+        <div [@speedDialStagger]="abVac.length">
+            <button *ngFor="let btn of abVac; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleVac, ibtn)" [disabled]="btn.dis">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div id="ModalVacCenter" class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Cabecera -->
+            <h5 class="card-header">
+                {{hVac}} Vacación
+                <button type="button" class="close" (click)="clickFab(toggleVac,-1)" style="color: white !important; text-shadow: none !important; outline: none;" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </h5>
+
+            <!-- Cuerpo  -->
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div id="dLeftVac" class="col-lg-6">
+                        <mat-accordion multi>
+
+                            <!-- Información vacacion -->
+                            <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Información de vacación :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">flight_takeoff</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <div class="row">
+
+                                    <div id="fgVac" [formGroup]="fgVac" class="col-lg-12">
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Responsable</mat-label>
+                                                    <input type="text" matInput formControlName="sResp" [errorStateMatcher]="matcher">
+                                                    <mat-error *ngIf="getVac.sResp.hasError('required')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Inicio</mat-label>
+                                                    <input formControlName="T1_dFechIni" matInput [matDatepicker]="T1_dFechIni" [errorStateMatcher]="matcher">
+                                                    <mat-datepicker-toggle matSuffix [for]="T1_dFechIni"></mat-datepicker-toggle>
+                                                    <mat-datepicker #T1_dFechIni></mat-datepicker>
+                                                    <mat-error *ngIf="getVac.T1_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Término</mat-label>
+                                                    <input formControlName="T1_dFechFin" matInput [matDatepicker]="T1_dFechFin" [errorStateMatcher]="matcher">
+                                                    <mat-datepicker-toggle matSuffix [for]="T1_dFechFin"></mat-datepicker-toggle>
+                                                    <mat-datepicker #T1_dFechFin></mat-datepicker>
+                                                    <mat-error *ngIf="getVac.T1_dFechFin.hasError('required')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-row">
+
+                                            <div class="col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Observacion</mat-label>
+                                                    <input type="text" matInput formControlName="sObservacion" [errorStateMatcher]="matcher">
+                                                    <mat-error *ngIf="getVac.sObservacion.hasError('required')"></mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <mwl-calendar-month-view [viewDate]="vacDate" [events]="eventVac" [locale]="locale" [refresh]="refreshVac" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                        </mwl-calendar-month-view>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbVac" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+</div>

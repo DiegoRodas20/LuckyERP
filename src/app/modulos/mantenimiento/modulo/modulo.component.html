@@ -1,0 +1,195 @@
+<div class="clsprincipal">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Mantenimiento de Modulo</h5>
+            <div id="body-listap" class="card-body row">
+
+
+
+
+                <div id="listap2" class="col-lg-3 example-container">
+                    <table mat-table [dataSource]="moduloProyectoDS" style="width: 100%;" matSort>
+                        <ng-container matColumnDef="nameMod">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <button mat-icon-button color="accent" (click)="openDialogProyectoNew()">
+                                    <mat-icon>add</mat-icon>
+                                </button> Proyecto
+                            </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Pais :'>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="openDialog(element)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Actualizar</span>
+                                            </button>
+                                            <button mat-menu-item (click)="btnEliminar(element)">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span>Eliminar</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                    <div class="col-sm-8 centrar-col">
+                                        {{element.nameMod}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button (click)="btnlistarModulo(element)" mat-icon-button>
+                                            <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="moduloDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: moduloDC;"></tr>
+                    </table>
+                </div>
+
+                <div id="listap2" class="col-lg-3 example-container">
+                    <table mat-table [dataSource]="moduloModuloDS" style="width: 100%;" matSort>
+                        <ng-container matColumnDef="nameMod">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <span *ngIf="esProyecto(); then thenBlock"></span>
+                                <ng-template #thenBlock>
+                                    <button mat-icon-button color="accent" (click)="openDialogNew()">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                </ng-template> 
+                                Modulo
+                            </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Pais :'>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="openDialog(element)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Actualizar</span>
+                                            </button>
+                                            <button mat-menu-item (click)="btnEliminar(element)">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span>Eliminar</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                    <div class="col-sm-8 centrar-col">
+                                        {{element.nameMod}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button (click)="btnlistarVista(element)" mat-icon-button>
+                                            <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="moduloDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: moduloDC;"></tr>
+                    </table>
+                </div>
+
+                <div id="listap2" class="col-lg-3 example-container">
+                    <table mat-table [dataSource]="moduloVistaDS" style="width: 100%;" matSort>
+                        <ng-container matColumnDef="nameMod">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <span *ngIf="esModulo(); then thenBlock"></span>
+                                <ng-template #thenBlock>
+                                    <button mat-icon-button color="accent" (click)="openDialogNew()">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                </ng-template>
+                                Vista
+                            </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Pais :'>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="openDialog(element)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Actualizar</span>
+                                            </button>
+                                            <button mat-menu-item (click)="btnEliminar(element)">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span>Eliminar</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                    <div class="col-sm-8 centrar-col">
+                                        {{element.nameMod}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button (click)="btnlistarSubVista(element)" mat-icon-button>
+                                            <mat-icon color="accent">keyboard_arrow_right</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="moduloDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: moduloDC;"></tr>
+                    </table>
+                </div>
+
+                <div id="listap2" class="col-lg-3 example-container">
+                    <table mat-table [dataSource]="moduloSubVistaDS" style="width: 100%;" matSort>
+                        <ng-container matColumnDef="nameMod">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <span *ngIf="esVista(); then thenBlock"></span>
+                                <ng-template #thenBlock>
+                                    <button mat-icon-button color="accent" (click)="openDialogNew()">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                </ng-template>
+                                Sub vista
+                            </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Pais :'
+                                (mouseenter)="mouseOverSubVista(element)">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="openDialog(element)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Actualizar</span>
+                                            </button>
+                                            <button mat-menu-item (click)="btnEliminar(element)">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span>Eliminar</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                    <div class="col-sm-10 centrar-col">
+                                        {{element.nameMod}}
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="moduloDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: moduloDC;"></tr>
+                    </table>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

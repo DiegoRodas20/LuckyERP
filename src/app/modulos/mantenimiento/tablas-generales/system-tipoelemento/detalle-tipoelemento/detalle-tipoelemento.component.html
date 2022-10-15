@@ -1,0 +1,241 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Padre nIdTipEle: {{this.nIdTipEleDad}} - sDesc: {{this.sDesc}}
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+            <div class="col-lg-4">
+                <mat-form-field class="w-100">
+                    <mat-label>Buscar:</mat-label>
+                    <input matInput [formControl]="tFiltro" (keyup)="applyFilter($event)" [(ngModel)]="searchKey"
+                        #input />
+                    <button mat-button style="outline: none" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="limpiar()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Tbl Tipo Elemento -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- Columna Opciones -->
+                <ng-container matColumnDef="opcion">
+                    <th mat-header-cell *matHeaderCellDef> Opción </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="listaHijosTipoElemento(row.nIdTipEle)">
+                                <mat-icon color="accent"> remove_red_eye </mat-icon>
+                                <span> Ver Hijos</span>
+                            </button>
+
+                            <button mat-menu-item (click)="editarTipoElemento(row.nIdTipEle)">
+                                <mat-icon color="accent"> edit </mat-icon>
+                                <span> Editar </span>
+                            </button>
+                        </mat-menu>
+
+                    </td>
+                </ng-container>
+
+                <!-- Columna nIdTipEle -->
+                <ng-container matColumnDef="nIdTipEle">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nIdTipEle
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nIdTipEle: '>
+                        {{row.nIdTipEle}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna sCod -->
+                <ng-container matColumnDef="sCod">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        sCod
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='sCod: '>
+                        {{row.sCod}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna sDesc -->
+                <ng-container matColumnDef="sDesc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        sDesc
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='sDesc: '>
+                        {{row.sDesc}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna sAbrev -->
+                <ng-container matColumnDef="sAbrev">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        sAbrev
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='sAbrev: '>
+                        {{row.sAbrev}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna bEstado -->
+                <ng-container matColumnDef="bEstado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        bEstado
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='bEstado: '>
+                        {{row.bEstado}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nDadTipEle -->
+                <ng-container matColumnDef="nDadTipEle">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nDadTipEle
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nDadTipEle: '>
+                        {{row.nDadTipEle}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nIdPais -->
+                <ng-container matColumnDef="nIdPais">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nIdPais
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nIdPais: '>
+                        {{row.nIdPais}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nNotocar -->
+                <ng-container matColumnDef="nNotocar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nNotocar
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nNotocar: '>
+                        {{row.nNotocar}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nTipo -->
+                <ng-container matColumnDef="nTipo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nTipo
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nTipo: '>
+                        {{row.nTipo}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna bDis -->
+                <ng-container matColumnDef="bDis">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        bDis
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='bDis: '>
+                        {{row.bDis}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nParam -->
+                <ng-container matColumnDef="nParam">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nParam
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nParam: '>
+                        {{row.nParam}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna sParam -->
+                <ng-container matColumnDef="sParam">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        sParam
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='sParam: '>
+                        {{row.sParam}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nParam2 -->
+                <ng-container matColumnDef="nParam2">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nParam2
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nParam2: '>
+                        {{row.nParam2}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nameUser -->
+                <ng-container matColumnDef="nameUser">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nameUser
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nameUser: '>
+                        {{row.nameUser}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna dcreaFecha -->
+                <ng-container matColumnDef="dcreaFecha">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        dcreaFecha
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='dcreaFecha: '>
+                        {{row.dcreaFecha}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Eliminar -->
+                <ng-container matColumnDef="eliminar">
+                    <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                        <button mat-icon-button color="accent" matTooltip="eliminar" matTooltipPosition="right"
+                            (click)="eliminarTipoElemento(row.nIdTipEle)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>

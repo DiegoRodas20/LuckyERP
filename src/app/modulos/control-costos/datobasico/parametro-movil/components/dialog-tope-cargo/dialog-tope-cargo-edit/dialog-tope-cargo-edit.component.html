@@ -1,0 +1,59 @@
+<div class="mb-3 p-3" style="text-align: center;">
+    <mat-card class="title-card">Actualizar Cargo</mat-card>
+</div>
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" [mat-dialog-close]="form">
+            <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="onNoClick()">
+            <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+        </button>
+    </div>
+</div>
+<form autocomplete="off" [formGroup]="form" class="example-form" (ngSubmit)="update()">
+
+    <!-- Nombre de la Persona -->
+    <mat-form-field class="example-full-width p-2">
+        <input type="text" matInput placeholder="Cargo" formControlName="cargo" readonly>
+    </mat-form-field>
+
+    <div class="row  px-2">
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <input type="text" matInput placeholder="Nombre" formControlName="cargo" readonly>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <mat-label>Aplica</mat-label>
+                <mat-select formControlName="aplica">
+                    <mat-option *ngFor="let estado of listEstados" [value]="estado.value">
+                        {{estado.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row  px-2">
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <input type="number" matInput placeholder="Monto Diario" formControlName="diario" [readOnly]="true">
+            </mat-form-field>
+        </div>
+        <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+            <mat-form-field class="example-half-width">
+                <input type="number" matInput placeholder="Monto Mensual" formControlName="mensual" [readOnly]="true">
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+
+<!-- <div mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" [mat-dialog-close]="form">Guardar</button>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+</div> -->

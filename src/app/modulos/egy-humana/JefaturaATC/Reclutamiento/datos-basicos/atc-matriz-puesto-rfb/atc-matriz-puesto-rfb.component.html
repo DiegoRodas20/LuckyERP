@@ -1,0 +1,566 @@
+<div class="clsprincipal">
+  <div class="container" style="max-width: 100%;" [ngClass]="divList ? 'clsShow' : 'clsHide'">
+    <div class="clstituloCrtl">
+      <h3 class="mobOcultarTitulo">Matriz Puesto/Requisitos/Funciones/Beneficios</h3>
+      <h3 class="mobMostrarTitulo">Matriz Puesto / Requisitos / Funciones / Beneficios</h3>
+    </div>
+
+    <br>
+    <h5>Aquí podrás definir los requisitos, funciones y beneficios para cada puesto de la organización</h5>
+    <br>
+
+    <form [formGroup]="formPuesto" autocomplete="off">
+      <div class="row">
+
+        <div class="col-md-2">
+
+          <ng-select placeholder="Grupo" appendTo="body" formControlName="nIdGrupo" (change)="fnListarPuestos()">
+            <ng-option *ngFor="let obj of listaGrupos" [(value)]="obj.nIdGrupo">{{obj.sNombreGrupo}}</ng-option>
+          </ng-select>
+
+        </div>
+
+        <div class="col-md-2">
+
+          <ng-select placeholder="Cargo" appendTo="body" formControlName="nIdCargo" (change)="fnListarPuestos()">
+            <ng-option *ngFor="let obj of listaCargos" [(value)]="obj.nIdCargo">{{obj.sNombreCargo}}</ng-option>
+          </ng-select>
+
+        </div>
+
+        <div class="col-md-2">
+
+          <ng-select placeholder="Puesto" appendTo="body" formControlName="nIdPuesto"
+            (change)="fnElegirPuesto($event)" [clearable]="true" (clear)="fnLimpiarPuesto()">
+            <ng-option *ngFor=" let obj of listaPuestos" [(value)]="obj.nIdPuesto">{{obj.sNombrePuesto}}</ng-option>
+          </ng-select>
+
+        </div>
+
+
+        <div class="col-lg-6 col-md-6 col-sm-6" style="align-self: center;">
+          <mat-radio-group style="padding-top: 3px;" [formControl]="fTipoMatriz">
+            <mat-radio-button style="margin-left: 16px;" *ngFor="let item of listaTipoMatriz"
+              [value]="item.nIdTipoMatriz" (change)="fnMostrarMatrizDisp($event.value)"> {{ item.sDescripcion }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+      </div>
+    </form>
+
+    <div class="row">
+
+      <!--Actuales-->
+      <div class="col-md-6">
+        <mat-accordion class="example-headers-align" [multi]="true">
+
+          <!--Requisitos Actuales-->
+          <mat-expansion-panel [expanded]="bExpReq" (opened)="setStep(0)" hideToggle class="noImpresion">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Requisitos Actuales:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+
+            </mat-expansion-panel-header>
+
+            <!--Tabla Requisitos Actuales-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div>
+                <table mat-table [dataSource]="listaReqTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnQuitarRequisito(row.nIdRequisito,row.sNombreRequisito)">
+                        <mat-icon> remove</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Requisito-->
+                  <ng-container matColumnDef="sNombreRequisito">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Requisito: '>
+                      <ngb-highlight [result]="element.sNombreRequisito"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaReqTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaReqPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+          <br>
+
+          <!--Funciones Actuales-->
+          <mat-expansion-panel [expanded]="bExpFun" hideToggle>
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Funciones Actuales:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <!--Tabla Funciones Actuales-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div>
+                <table mat-table [dataSource]="listaFunTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnQuitarFuncion(row.nIdFuncion,row.sNombreFuncion)">
+                        <mat-icon> remove</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Funcion-->
+                  <ng-container matColumnDef="sNombreFuncion">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Función: '>
+                      <ngb-highlight [result]="element.sNombreFuncion"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaFunTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaFunPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+          <br>
+
+          <!--Beneficios Actuales-->
+          <mat-expansion-panel [expanded]="bExpBen" hideToggle>
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Beneficios Actuales:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <!--Tabla Beneficios Actuales-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div>
+                <table mat-table [dataSource]="listaBenTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnQuitarBeneficio(row.nIdBeneficio,row.sNombreBeneficio)">
+                        <mat-icon> remove</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Beneficio-->
+                  <ng-container matColumnDef="sNombreBeneficio">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Beneficio: '>
+                      <ngb-highlight [result]="element.sNombreBeneficio"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaBenTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaBenPaginator="matPaginator" [pageSizeOptions]="[10, 15, 20]"></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+          <br>
+
+          <!--Lugar de Trabajo Actual-->
+          <mat-expansion-panel [expanded]="bExpLugar" hideToggle>
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Lugar de Trabajo:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <!--Tabla Lugar de Trabajo Actuales-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div>
+                <table mat-table [dataSource]="listaLugarTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnQuitarLugar(row.nIdLugarTrabajo,row.sNombreLugarTrab)">
+                        <mat-icon> remove</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Lugar de Trabajo-->
+                  <ng-container matColumnDef="sNombreLugarTrab">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Lugar: '>
+                      <ngb-highlight [result]="element.sNombreLugarTrab"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaLugarTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaLugarPaginator="matPaginator" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+
+        </mat-accordion>
+      </div>
+
+      <!--Requisitos Disponibles-->
+      <div class="col-md-6" *ngIf="nMostrarMatriz==1">
+
+        <mat-accordion class="example-headers-align">
+
+          <mat-expansion-panel [expanded]="true" (opened)="setStep(0)" hideToggle class="noImpresion">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Requisitos Disponibles:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <div class="row" style="padding: 10px;">
+
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Filtro</mat-label>
+                  <input matInput [formControl]="txtFiltroReq" (keyup)="fnFiltrarRequisitos($event)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center ">
+                <button mat-mini-fab color="accent" (click)="fnAbrirModal(1)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!--Tabla Requisitos Disponibles-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div class="example-container" style="height: 25rem;">
+                <table mat-table [dataSource]="listaReqDispTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnAgregarRequisito(row.nIdRequisito, row.sNombreRequisito)">
+                        <mat-icon> add</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Requisito-->
+                  <ng-container matColumnDef="sNombreRequisito">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Requisitos: '>
+                      <ngb-highlight [result]="element.sNombreRequisito" [term]="txtFiltroReq.value"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaReqDispTableColumns;"> </tr>
+
+                </table>
+
+              </div>
+              <mat-paginator #listaReqDispPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </div>
+
+      <!--Funciones Disponibles-->
+      <div class="col-md-6" *ngIf="nMostrarMatriz==2">
+
+        <mat-accordion class="example-headers-align">
+
+          <mat-expansion-panel [expanded]="true" (opened)="setStep(0)" hideToggle class="noImpresion">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Funciones Disponibles:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <div class="row" style="padding: 10px;">
+
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Filtro</mat-label>
+                  <input matInput [formControl]="txtFiltroFun" (keyup)="fnFiltrarFunciones($event)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center ">
+                <button mat-mini-fab color="accent" (click)="fnAbrirModal(2)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!--Tabla Funciones Disponibles-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div class="example-container" style="height: 25rem;">
+                <table mat-table [dataSource]="listaFunDispTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnAgregarFuncion(row.nIdFuncion, row.sNombreFuncion)">
+                        <mat-icon> add</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Funcion-->
+                  <ng-container matColumnDef="sNombreFuncion">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Función: '>
+                      <ngb-highlight [result]="element.sNombreFuncion" [term]="txtFiltroFun.value"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaFunDispTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaFunDispPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </div>
+
+      <!--Beneficios Disponibles-->
+      <div class="col-md-6" *ngIf="nMostrarMatriz==3">
+
+        <mat-accordion class="example-headers-align">
+
+          <mat-expansion-panel [expanded]="true" (opened)="setStep(0)" hideToggle class="noImpresion">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Beneficios Disponibles:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <div class="row" style="padding: 10px;">
+
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Filtro</mat-label>
+                  <input matInput [formControl]="txtFiltroBen" (keyup)="fnFiltrarBeneficios($event)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center ">
+                <button mat-mini-fab color="accent" (click)="fnAbrirModal(3)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!--Tabla Beneficios Disponibles-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div class="example-container" style="height: 25rem;">
+                <table mat-table [dataSource]="listaBenDispTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnAgregarBeneficio(row.nIdBeneficio, row.sNombreBeneficio)">
+                        <mat-icon> add</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Requisito-->
+                  <ng-container matColumnDef="sNombreBeneficio">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Requisitos: '>
+                      <ngb-highlight [result]="element.sNombreBeneficio" [term]="txtFiltroBen.value"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaBenDispTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaBenDispPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]"
+                showFirstLastButtons></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </div>
+
+      <!--Lugares de Trabajo Disponibles-->
+      <div class="col-md-6" *ngIf="nMostrarMatriz==92">
+
+        <mat-accordion class="example-headers-align">
+
+          <mat-expansion-panel [expanded]="true" (opened)="setStep(0)" hideToggle class="noImpresion">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title class="clsTituloExp">
+                Lugares de Trabajo Disponibles:
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+
+              </mat-panel-description>
+              <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <div class="row" style="padding: 10px;">
+
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Filtro</mat-label>
+                  <input matInput [formControl]="txtFiltroLugar" (keyup)="fnFiltrarLugarTrab($event)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center ">
+                <button mat-mini-fab color="accent" (click)="fnAbrirModal(92)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!--Tabla Lugares Disponibles-->
+            <div id="listaMobile" class="mat-elevation-z8">
+              <div class="example-container" style="height: 25rem;">
+                <table mat-table [dataSource]="listaLugarDispTableData" matSort style="width: 100%;">
+
+                  <!--Opciones-->
+                  <ng-container matColumnDef="opcion" sticky>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+                      <button mat-raised-button color="accent"
+                        (click)="fnAgregarLugar(row.nIdLugarTrabajo, row.sNombreLugarTrab)">
+                        <mat-icon> add</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!--Nombre de Lugar-->
+                  <ng-container matColumnDef="sNombreLugarTrab">
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile clsColumnaNombre'
+                      data-label='Lugar: '>
+                      <ngb-highlight [result]="element.sNombreLugarTrab" [term]="txtFiltroLugar.value"></ngb-highlight>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-row *matRowDef="let row; columns: listaLugarDispTableColumns;"> </tr>
+
+                </table>
+              </div>
+              <mat-paginator #listaLugarDispPaginator="matPaginator" [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+            <!--Fin Tabla-->
+
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+      </div>
+
+    </div>
+
+    <br>
+
+  </div>
+
+</div>
+
+<!--Zona de botones flotantes-->
+<div class="fab-container">
+  <div>
+    <!--Para Guardar -->
+    <button matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary clsBotones"
+      matTooltip="Guardar" (click)="fnGuardar()">
+      <span class="material-icons"> save </span>
+    </button>
+
+  </div>
+</div>

@@ -1,0 +1,515 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsReclut }">add</i>
+  </button>
+    <div [@speedDialStagger]="abReclut.length">
+        <button *ngFor="let btn of abReclut; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_reclut" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px">
+        Cargando información...
+    </p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+        Detalle del personal ( Reclutamiento )
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeReclut()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body">
+    <div class="row" style="margin-right: 0px; margin-left: 0px">
+        <div class="col-xl-7 fix-col">
+            <div class="card">
+                <mat-horizontal-stepper [linear]="false" #stepper style="height: 415px; overflow-y: auto" id="stepper">
+                    <!-- #region POSTULANTE-->
+                    <mat-step [stepControl]="fgReclut_postu" errorMessage="Datos incompletos">
+                        <ng-template matStepLabel>Postulante</ng-template>
+
+                        <form autocomplete="off" id="fgReclut_postu" [formGroup]="fgReclut_postu">
+                            <div class="row" id="Scroll_Page1">
+                                <div class="col-sm">
+                                    <h6 style="padding-top: 10px">Información básica:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Tipo de documento y Documento -->
+                            <div class="form-row">
+                                <div class="col-lg-7">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Tipo de documento</mat-label>
+                                        <mat-select formControlName="A3_nIdTipoDoc" (valueChange)="EnabledDoc($event)" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboTipoDoc" [value]="item">
+                                                {{ item.sDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_postu.A3_nIdTipoDoc.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>N° Documento</mat-label>
+                                        <input type="text" matInput formControlName="T3_sDocumento" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T3_sDocumento.hasError('vString')">. vString</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T3_sDocumento.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="
+                        getReclut_postu.T3_sDocumento.hasError('minlength')
+                      ">. Longitud de caracteres incorrecto</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T3_sDocumento.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- Apellido Paterno, materno y nombres -->
+                            <div class="form-row">
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Apellido Paterno</mat-label>
+                                        <input type="text" matInput formControlName="T1_sApePa" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_sApePa.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_sApePa.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Apellido Materno</mat-label>
+                                        <input type="text" matInput formControlName="T1_sApeMa" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_sApeMa.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_sApeMa.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Primer Nombre</mat-label>
+                                        <input type="text" matInput formControlName="T1_sPriNom" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_sPriNom.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_sPriNom.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Segundo Nombre</mat-label>
+                                        <input type="text" matInput formControlName="T1_sSegNom" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_sSegNom.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- Fecha nacimiento, género y estado civil -->
+                            <div class="form-row">
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%" appDateFormat>
+                                        <mat-label>Fecha Nacimiento</mat-label>
+                                        <input formControlName="T1_dFechNac" matInput [matDatepicker]="mdpReclutPostu" [errorStateMatcher]="matcher" />
+                                        <mat-datepicker-toggle matSuffix [for]="mdpReclutPostu"></mat-datepicker-toggle>
+                                        <mat-datepicker #mdpReclutPostu></mat-datepicker>
+                                        <mat-error *ngIf="getReclut_postu.T1_dFechNac.hasError('required')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Género</mat-label>
+                                        <mat-select formControlName="T1_nIdSexo" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboGenero" [value]="item.nEleCod">
+                                                {{ item.cEleNam }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_postu.T1_nIdSexo.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Estado civil</mat-label>
+                                        <mat-select formControlName="T1_nIdEstCiv" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboEstadoCivil" [value]="item.nEleCod">
+                                                {{ item.cEleNam }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_postu.T1_nIdEstCiv.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- Celular y email -->
+                            <div class="form-row">
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label># Celular</mat-label>
+                                        <input type="text" matInput formControlName="T1_nTelMovil" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_nTelMovil.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_nTelMovil.hasError('pattern')">. # Celular inválido</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_nTelMovil.hasError('maxlength')">. Lóngitud inválida</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-8">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Correo electrónico</mat-label>
+                                        <input type="text" matInput formControlName="T1_sCorreo" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T1_sCorreo.hasError('required')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_postu.T1_sCorreo.hasError('email')">. Correo inválido</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6>Dirección:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Departamento, provincia y distrito -->
+                            <div class="form-row">
+                                <div class="col-lg-4" [ngClass]="{
+                    'ng-select-required':
+                      getReclut_postu.codUbigeo1.hasError('required')
+                  }">
+                                    <ng-select [items]="cboUbigeo1" bindLabel="cEntNamSecond" bindValue="cEntCod" labelForId="state" formControlName="codUbigeo1" placeholder="Departamento" (change)="ChangeUbigeo($event, 2, 1)">
+                                    </ng-select>
+                                    <mat-error style="font-size: 12.5px" *ngIf="getReclut_postu.codUbigeo1.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+
+                                <div class="col-lg-4" [ngClass]="{
+                    'ng-select-required':
+                      getReclut_postu.codUbigeo2.hasError('required')
+                  }">
+                                    <div style="padding-bottom: 1.25em">
+                                        <ng-select [items]="cboUbigeo2" bindLabel="cEntNamThird" bindValue="cEntCod" formControlName="codUbigeo2" placeholder="Provincia" (change)="ChangeUbigeo($event, 3, 1)">
+                                        </ng-select>
+                                        <mat-error style="font-size: 12.5px" *ngIf="getReclut_postu.codUbigeo2.hasError('required')">. Obligatorio</mat-error>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4" [ngClass]="{
+                    'ng-select-required':
+                      getReclut_postu.T9_sIdUbigeo.hasError('required')
+                  }">
+                                    <ng-select [searchable]="true" [items]="cboUbigeo3" bindLabel="cEntNamFourth" bindValue="cEntCod" clearAllText="Limpiar" formControlName="T9_sIdUbigeo" placeholder="Distrito">
+                                    </ng-select>
+                                    <mat-error style="font-size: 12.5px" *ngIf="getReclut_postu.T9_sIdUbigeo.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+                            </div>
+
+                            <!-- Dirección y referencia -->
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Dirección</mat-label>
+                                        <input type="text" matInput formControlName="T9_sDireccion" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_postu.T9_sDireccion.hasError('required')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Referencia</mat-label>
+                                        <input type="text" matInput formControlName="T9_sReferencia" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="
+                        getReclut_postu.T9_sReferencia.hasError('required')
+                      ">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-step>
+                    <!-- #endregion -->
+
+                    <!-- #region REQUERIMIENTO-->
+                    <mat-step [stepControl]="fgReclut_rq" errorMessage="Datos incompletos">
+                        <ng-template matStepLabel>Requerimiento</ng-template>
+
+                        <form autocomplete="off" id="fgReclut_rq" [formGroup]="fgReclut_rq">
+                            <div class="row" id="Scroll_Page2">
+                                <div class="col-sm">
+                                    <h6 style="padding-top: 10px">Organización:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Direccion y Area -->
+                            <div class="form-row">
+
+                                <div class="col-lg-6" [ngClass]="{'ng-select-required': getReclut_rq.T12_nIdDireccion.hasError('required')}">
+                                    <ng-select [items]="cboDireccion" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdDireccion" placeholder="Dirección" (change)="ChangeDireccion($event)">
+                                    </ng-select>
+                                    <mat-error *ngIf="getReclut_rq.T12_nIdDireccion.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+
+                                <div class="col-lg-6" [ngClass]="{'ng-select-required': getReclut_rq.T12_nIdArea.hasError('required')}">
+                                    <ng-select [items]="cboArea" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdArea" placeholder="Area">
+                                    </ng-select>
+                                    <mat-error *ngIf="getReclut_rq.T12_nIdArea.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+
+                            </div>
+
+                            <!-- Cargo y Puesto -->
+                            <div class="form-row">
+
+                                <div class="col-lg-6" [ngClass]="{'ng-select-required': getReclut_rq.T12_nIdCargo.hasError('required')}">
+                                    <ng-select [items]="cboCargo" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdCargo" placeholder="Cargo" (change)="ChangeCargo($event)">
+                                    </ng-select>
+                                    <mat-error *ngIf="getReclut_rq.T12_nIdCargo.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+
+                                <div class="col-lg-6" [ngClass]="{'ng-select-required': getReclut_rq.T12_nIdPuesto.hasError('required')}">
+                                    <ng-select [items]="cboPuesto" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdPuesto" placeholder="Puesto" (change)="ChangePuesto($event)">
+                                    </ng-select>
+                                    <mat-error *ngIf="getReclut_rq.T12_nIdPuesto.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+
+                            </div>
+
+                            <!-- Especialidad y responsable -->
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <ng-select [items]="cboEspecialidad" appendTo="body" bindLabel="sDesc" bindValue="nIdTipEle" formControlName="T12_nIdEspecialidad" placeholder="Especialidad">
+                                    </ng-select>
+                                </div>
+
+                                <div class="col-lg-6" [ngClass]="{'ng-select-required': getReclut_rq.T1_nIdResp.hasError('required')}">
+                                    <ng-select [searchable]="true" [items]="aResponsable" bindLabel="sNombres" bindValue="nIdResp_" clearAllText="Limpiar" formControlName="T1_nIdResp" placeholder="Jefe inmediato">
+                                    </ng-select>
+                                    <mat-error style="font-size: 12.5px" *ngIf="getReclut_rq.T1_nIdResp.hasError('required')">. Obligatorio</mat-error>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6>Datos laborales:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Planilla y  Fecha ingreso -->
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Planilla</mat-label>
+                                        <mat-select formControlName="T4_nIdPlla" (selectionChange)="loadConceptos()" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboPlanilla" [value]="item.nIdPlla">
+                                                {{ item.sCodPlla }} - {{ item.sDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_rq.T4_nIdPlla.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%" appDateFormat>
+                                        <mat-label>Fecha de ingreso</mat-label>
+                                        <input formControlName="T0_dFechIni" matInput [matDatepicker]="mdpReclutRq" [errorStateMatcher]="matcher" />
+                                        <mat-datepicker-toggle matSuffix [for]="mdpReclutRq"></mat-datepicker-toggle>
+                                        <mat-datepicker #mdpReclutRq></mat-datepicker>
+                                        <mat-error *ngIf="getReclut_rq.T0_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div *ngIf="getReclut_rq.sCliente.value !== null" class="alert alert-info" role="info" style="margin-bottom: 0px !important">
+                                Cliente relacionado al requerimiento : {{ getReclut_rq.sCliente.value }}
+                            </div>
+
+                        </form>
+                    </mat-step>
+                    <!-- #endregion -->
+
+                    <!-- #region REMUNERACION-->
+                    <mat-step [stepControl]="fgReclut_rem" errorMessage="Datos incompletos">
+                        <ng-template matStepLabel>Remuneración</ng-template>
+
+                        <form autocomplete="off" id="fgReclut_rem" [formGroup]="fgReclut_rem">
+                            <div class="row" id="Scroll_Page3">
+                                <div class="col-sm">
+                                    <h6 style="padding-top: 10px">Sistema pensionario:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Sistema pensionario -->
+                            <div class="form-row">
+                                <div class="form-group col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Tipo</mat-label>
+                                        <mat-select formControlName="tipoSisPen" (valueChange)="ChangeAFP($event)" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboTipoSP" [value]="item.nEleCod">
+                                                {{ item.cEleNam }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_rem.tipoSisPen.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>AFP</mat-label>
+                                        <mat-select formControlName="A6_nIdRegPen" (valueChange)="EnabledCuspp($event)" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboAFP" [value]="item">
+                                                {{ item.sDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_rem.A6_nIdRegPen.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Código único</mat-label>
+                                        <input type="text" matInput formControlName="T6_sCuspp" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_rem.T6_sCuspp.hasError('vCuspp')">. Obligatorio</mat-error>
+                                        <mat-error *ngIf="getReclut_rem.T6_sCuspp.hasError('maxlength')">. Lóngitud inválida</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6>Salario:</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px" />
+                                </div>
+                            </div>
+
+                            <!-- Tipo y monto -->
+                            <div class="form-row">
+                                <div class="form-group col-lg-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Tipo</mat-label>
+                                        <mat-select formControlName="A7_nTipoSalario" (valueChange)="EnabledMonto($event)" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboTipoSalario" [value]="item">
+                                                {{ item.sDesc }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getReclut_rem.A7_nTipoSalario.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-lg-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Monto</mat-label>
+                                        <span matPrefix>S/ &nbsp;</span>
+                                        <input type="number" matInput formControlName="T7_nMonto" [errorStateMatcher]="matcher" />
+                                        <mat-error *ngIf="getReclut_rem.T7_nMonto.hasError('vMonto')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6 style="padding-top: 10px">Estructura salarial:</h6>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="melevation">
+                                        <table #tReclut_rem mat-table [dataSource]="dsReclut_rem" style="width: 100%">
+                                            <ng-container matColumnDef="action">
+                                                <th style="padding-left: 35px" mat-header-cell *matHeaderCellDef>
+                                                    N°
+                                                </th>
+                                                <td mat-cell *matCellDef="let element; let i = index">
+                                                    <button class="fixMiniFab" mat-mini-fab color="accent">
+                            {{ i + 1 }}
+                          </button>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="dsc">
+                                                <th mat-header-cell *matHeaderCellDef>Concepto</th>
+                                                <td mat-cell *matCellDef="let element" class="m-card-title" data-label="Concepto :">
+                                                    {{ element.dsc }}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="nImporte">
+                                                <th style="text-align: center" mat-header-cell *matHeaderCellDef>
+                                                    Importe ( S/ )
+                                                </th>
+                                                <td style="text-align: center" mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Importe ( S/ ) :">
+                                                    {{ element.nImporte * 1 | number: "1.2-2" }}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="noData">
+                                                <mat-footer-cell *matFooterCellDef [attr.colspan]="dcReclut_rem.length">
+                                                    No se encuentran registros.
+                                                </mat-footer-cell>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="dcReclut_rem"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: dcReclut_rem"></tr>
+                                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dsReclut_rem && this.dsReclut_rem.length > 0"></mat-footer-row>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-step>
+                    <!-- #endregion -->
+                </mat-horizontal-stepper>
+            </div>
+        </div>
+
+        <div class="col-xl-5">
+            <div class="row">
+                <div class="card" style="width: 100%">
+                    <div class="card-header">Documentación</div>
+
+                    <div class="card-body" style="padding-top: 10px; padding-bottom: 10px">
+                        <div class="form-row">
+                            <div class="form-group col-lg-12">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Seleccionar</mat-label>
+                                    <mat-select [(ngModel)]="documentoPorDefecto" (valueChange)="ChangeDocPostu($event)">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboDocPostu" [value]="item">
+                                            {{ item.sDoc }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg">
+                            <!-- <ngx-doc-viewer [url]="urlDocPostu" viewer="google" style="width:100%;height:250px;border-style: groove;" [googleCheckContentLoaded]=true [googleCheckInterval]=3000></ngx-doc-viewer> -->
+                            <iframe id="iframe-reclut" style="width: 100%; height: 250px; border-style: groove"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbReclut" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

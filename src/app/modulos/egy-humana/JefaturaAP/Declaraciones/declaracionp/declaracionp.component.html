@@ -1,0 +1,89 @@
+<div style="padding: 80px 0px 0px 0px; min-height: calc(100% - 123px);">
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">Declaración PDT - PLAME: {{ sHeaderDevengue }}</h5>
+
+      <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+          <i class="material-icons" [@fabToggler]="{ value: tsDetail }">add</i>
+        </button>
+        <div [@speedDialStagger]="abDetail.length">
+          <button *ngFor="let btn of abDetail; let index = index" mat-mini-fab class="fab-secondary" color="secondary"
+            (click)="onClickFab(index)">
+            <i class="material-icons" matTooltip="{{ btn.tool }}" matTooltipPosition="left">{{ btn.icon }}</i>
+          </button>
+        </div>
+      </div>
+
+      <div id="body-main" class="card-body">
+
+        <div class="row">
+          <div class="col-xl-6 divLeft">
+            <div class="row">
+              <div class="col-sm">
+                <h6>Resumen de PDT</h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg">
+                <iframe id="pdf-resumen" style="width: 100%; height: 500px" (load)="onHideSpinner();"></iframe>
+              </div>
+            </div>
+          </div>
+
+          <div [formGroup]="fgDeclaracion" class="col-xl-6">
+            <div class="row">
+              <div class="col-sm">
+                <h6>Generación de archivos</h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px" />
+              </div>
+            </div>
+
+            <div class="dListDoc">
+              <mat-selection-list class="mslDoc" [multiple]="false">
+                <mat-list-option style="margin-top: 10px;" class="card">
+                  <mat-checkbox formControlName="chkREM">
+                    Detalle de ingresos, tributos y descuentos, archivo con extensión
+                    '.REM'
+                  </mat-checkbox>
+                </mat-list-option>
+
+
+                <mat-list-option style="margin-top: 10px;" class="card">
+                  <mat-checkbox formControlName="chkJOR">
+                    Datos de la jornada laboral, archivo con extensión '.JOR'
+                  </mat-checkbox>
+                </mat-list-option>
+
+                <mat-list-option style="margin-top: 10px;" class="card">
+                  <mat-checkbox formControlName="chkSNL">
+                    Días subsidiados y otros no laborados, archivo con extensión '.SNL'
+                  </mat-checkbox>
+                </mat-list-option>
+
+                <mat-list-option style="margin-top: 10px;" class="card">
+                  <mat-checkbox formControlName="chkTOC">
+                    Otras condiciones '.TOC'
+                  </mat-checkbox>
+                </mat-list-option>
+
+                <mat-list-option style="margin-top: 10px;" class="card">
+                  <mat-checkbox formControlName="chkFOR">
+                    Modalidad formativa laboral y otros, archivo con extensión '.FOR'
+                  </mat-checkbox>
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+          </div>
+        </div>
+
+        <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+          <p style="color: white; padding-top: 50px">Cargando información...</p>
+        </ngx-spinner>
+      </div>
+
+      <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+  </div>

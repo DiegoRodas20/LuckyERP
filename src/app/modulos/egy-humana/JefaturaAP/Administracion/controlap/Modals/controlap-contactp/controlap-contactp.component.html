@@ -1,0 +1,233 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsDetail}">add</i>
+    </button>
+    <div [@speedDialStagger]="abDetail.length">
+        <button *ngFor="let btn of abDetail; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" [disabled]="btn.dis" (click)="clickFab(ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_contactp" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Contactar al personal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+
+        <div id="dLeftDetail" class="col-lg-6">
+            <mat-accordion #maDetail="matAccordion">
+                <!-- Información personal -->
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del personal :
+                        </mat-panel-title>
+                        <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+
+                        <div class="col-xl-12 divAvatar">
+                            <a>
+                                <span class="imgBadge">{{getDetail.sCodPlla.value}}</span>
+                                <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                            </a>
+                        </div>
+
+                        <div id="fgDetail" [formGroup]="fgDetail" class="col-xl-12">
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Apellidos y nombres</mat-label>
+                                        <input type="text" matInput formControlName="sNombres">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-8">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo</mat-label>
+                                        <input type="text" matInput formControlName="sTipo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>N° Documento</mat-label>
+                                        <input type="text" matInput formControlName="sDocumento">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Cliente / Dirección</mat-label>
+                                        <input type="text" matInput formControlName="sOrganizacion">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Campaña / Área</mat-label>
+                                        <input type="text" matInput formControlName="sCentroCosto">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Ciudad</mat-label>
+                                        <input type="text" matInput formControlName="sCiudad">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label># Celular</mat-label>
+                                        <input type="text" matInput formControlName="nTelMovil">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha ingreso</mat-label>
+                                        <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechIni></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha término</mat-label>
+                                        <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechFin></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <div class="col-lg">
+            <mat-accordion>
+
+                <!-- Asistencia -->
+                <mat-expansion-panel [expanded]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Asistencia :
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <a>{{ getTotalDias }}</a>
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">event</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <mwl-calendar-month-view [viewDate]="viewDate" [events]="eventContact" [locale]="locale" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                            </mwl-calendar-month-view>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+                <!-- Contacto -->
+                <mat-expansion-panel>
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Contacto :
+                        </mat-panel-title>
+                        <mat-icon style="margin-right: 10px;">call</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgContacto" [formGroup]="fgContacto" class="col-xl-12">
+
+                            <div class="form-row">
+
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Motivo</mat-label>
+                                        <mat-select formControlName="T1_nIdMotivo" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboMotivo" [value]="item.nIdPC">
+                                                {{item.sDesc}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getContacto.T1_nIdMotivo.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Observación</mat-label>
+                                        <textarea matInput formControlName="T1_sObservacion" style="max-height: 75px; min-height: 75px;" [errorStateMatcher]="matcher"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Respuesta</mat-label>
+                                        <mat-select formControlName="T1_nIdRespuesta" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboRespuesta" [value]="item.nIdPC">
+                                                {{item.sDesc}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getContacto.T1_nIdRespuesta.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+            </mat-accordion>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbDetail" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

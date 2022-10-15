@@ -1,0 +1,22 @@
+<h1 mat-dialog-title class="clstituloCrtl">Continuación de Presupuesto</h1>
+<div mat-dialog-content >  
+    <div class="col-sm-12"> 
+        Ingresar el N° del presupuesto en donde se cargará la plantilla.
+    </div> 
+    <div class="col-sm-12"> 
+        <ng-select placeholder="Escribir presupuesto aquí..." appendTo="body" [formControl]="txtControl" [clearable]="false" > 
+            <ng-option *ngFor="let car of lCboPresupuesto" [(value)]="car.codigo">{{car.valor}}</ng-option>
+        </ng-select> 
+        </div> 
+        <ng-container>
+            <mat-error *ngIf="Val">{{Mensaje}}</mat-error> 
+        </ng-container> 
+</div>
+<div mat-dialog-actions style="display: flex;justify-content: center;"> 
+    <button mat-button color="warn" (click)="onNoClick()">Salir</button>
+    <button mat-button color="primary"  (click)="fnSeleccionar()"  >Ok</button>
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+

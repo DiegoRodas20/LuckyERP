@@ -1,0 +1,202 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Solicitud de Cotización
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container" *ngIf="!Privilegio" id="scToggle" style="display: none">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+            <i class="material-icons" [@fabToggler]="{value: fabTogglerState}">add</i>
+        </button>
+        <div [@speedDialStagger]="buttons.length">
+            <button [matTooltip]="tapColumns(i)" *ngFor="let btn of buttons; let i = index" mat-mini-fab
+                class="fab-secondary" color="secondary">
+                <i class="material-icons" (click)="tap(btn, i)">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row">
+            <div class="col-lg-4">
+                <mat-form-field class="w-100">
+                    <mat-label>Buscar:</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-8 centercol">
+                <span>Filtrar por:</span>
+                <mat-radio-group>
+                    <mat-radio-button class="example-margin" value="0" (click)="changeColumnFilter(0)" checked>
+                        Cliente
+                    </mat-radio-button>
+                    <mat-radio-button class="example-margin" value="1" (click)="changeColumnFilter(1)">
+                        Ppto
+                    </mat-radio-button>
+                    <mat-radio-button class="example-margin" value="2">
+                        Comprador
+                    </mat-radio-button>
+                    <mat-radio-button class="example-margin" value="3" (click)="changeColumnFilter(3)">
+                        Estado
+                    </mat-radio-button>
+                    <mat-radio-button class="example-margin" value="4" (click)="changeColumnFilter(4)">
+                        PDF Cotización P.
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Solicitud de Cotizaciones -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="opcion">
+                    <th mat-header-cell *matHeaderCellDef> Opción </th>
+                    <td mat-cell *matCellDef="let element">
+
+                        <div *ngIf="Privilegio">
+
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button [disabled]="element.estado == 'Operaciones aprobó una CP'" mat-menu-item
+                                    (click)="openDialog(element.id, element.correlativo,element.codPresupuesto,element.codigoCliente)">
+                                    <mat-icon color="accent">attach_file</mat-icon>
+                                    <span>Adjuntar Archivo</span>
+                                </button>
+
+                                <button *ngIf="!Privilegio"
+                                    [disabled]="verCotizacionesPrivilegioOff(element.estado,element.sPDF )"
+                                    mat-menu-item
+                                    (click)="openDialog(element.id, element.correlativo,element.codigoCliente)">
+                                    <mat-icon color="accent">visibility</mat-icon>
+                                    <span>Ver cotizaciones</span>
+                                </button>
+                            </mat-menu>
+
+                        </div>
+
+                        <div *ngIf="!Privilegio && element.sPDF === 'SI'">
+
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" color="accent">
+                                <mat-icon> more_vert </mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button mat-menu-item (click)="dobleClickVerCotizacion(element)">
+                                    <mat-icon color="accent"> edit </mat-icon>
+                                    <span> Ver detalle </span>
+                                </button>
+                                <button mat-menu-item *ngIf="!Privilegio"
+                                    (click)="openDialog(element.id, element.correlativo,element.codPresupuesto,element.codigoCliente)">
+                                    <mat-icon color="accent"> visibility </mat-icon>
+                                    <span> Ver cotizaciones adjuntas</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                        <div *ngIf="!Privilegio && element.sPDF === 'NO'">
+
+                            <span matTooltip="Sin cotizaciones" *ngIf="!Privilegio">
+                                <mat-icon color="accent">visibility_off</mat-icon>
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="correlativo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Correlativo
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.correlativo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="anio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Año
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Presupuesto
+                    </th>
+                    <td mat-cell *matCellDef="let element"> <span
+                            *ngIf="element.codPresupuesto === '' || element.codPresupuesto === null">
+                            --
+                        </span>
+                        <span *ngIf="element.codPresupuesto !== '' || element.codPresupuesto !== null">
+                            {{element.codPresupuesto}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaEnvio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Fecha de Envío
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.fechaEnvio ===''"> --</span>
+                        <span *ngIf="element.fechaEnvio !==''">
+                            {{element.fechaEnvio}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaDeseada">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Fecha Entrega Máx
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaDeseada | date: 'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Cliente
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cliente}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="comprador">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Comprador
+                    </th>
+                    <td mat-cell *matCellDef="let element"> --</td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Estado
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PDF CP">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        PDF CP
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.sPDF}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>

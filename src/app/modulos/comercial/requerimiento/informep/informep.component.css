@@ -1,0 +1,99 @@
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+}
+
+.fab-toggler {
+    float: right;
+    z-index: 100;
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 2px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: rgba(255, 64, 129, 0.8);
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); */
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255, 64, 129, 0.4);
+}
+
+.imgAvatar {
+    background-size: cover;
+    height: 85px;
+    width: 85px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border-style: outset;
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+}
+
+.hr_tittle {
+    margin-top: 0px;
+    margin-bottom: 20px;
+    border-top-style: outset;
+    border-top-width: 2px;
+    border-top-color: rgb(255, 64, 129);
+}
+
+:host ::ng-deep #frow_Obs .mat-form-field-infix {
+    border-top: 0px;
+}
+
+:host ::ng-deep #frow_Obs .mat-form-field-wrapper {
+    padding-bottom: 0px;
+    padding-top: 15px;
+}
+
+:host ::ng-deep #frow_Tipo .mat-checkbox-label {
+    display: inline-flex;
+}
+
+:host ::ng-deep.mat-checkbox-checked.mat-accent.mat-checkbox-disabled .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: rgba(255, 64, 129, 0.8);
+}

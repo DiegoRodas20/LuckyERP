@@ -1,0 +1,117 @@
+<h1 mat-dialog-title class="clstituloCrtl"> ENVIAR POSTULANTE A FIRMAR CONTRATO</h1>
+<div mat-dialog-content >  
+        <form [formGroup]="PrimeraFormGroup">
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field>
+                <mat-label>Nro Requerimiento</mat-label>
+                <input matInput formControlName="NroRQ" (change)=onRq() autocomplete="off" readonly>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field>
+                <mat-label>Estado</mat-label>
+                <input matInput   formControlName="Estado" readonly>
+              </mat-form-field>
+            </div> 
+            <div class="col-sm-6">
+              <mat-form-field>
+                <mat-label>Fecha / Hora</mat-label>
+                <input matInput   formControlName="Fecha" readonly>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field>
+                <mat-label>Ciudad</mat-label>
+                <input matInput   formControlName="Ciudad" readonly>
+              </mat-form-field>
+            </div> 
+            <div class="col-sm-12">
+              <mat-form-field>
+                <mat-label>Presupuesto</mat-label>
+                <input matInput   formControlName="Presupuesto" readonly>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <mat-label>Cargo</mat-label>
+                <input matInput   formControlName="Cargo" readonly >
+              </mat-form-field>
+            </div> 
+            <div class="col-sm-6"> 
+              <mat-form-field>
+                <mat-label>Motivo</mat-label>
+                <mat-select formControlName="Motivo">
+                  <mat-option *ngFor="let objMotivo of sltMotivo" [value]="objMotivo.codigo">{{objMotivo.valor}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field> 
+            </div>   
+            <div class="col-sm-6"> 
+              <mat-form-field>
+                <mat-label>Fecha Inicio</mat-label>
+                <input matInput [matDatepicker]="fi" formControlName="FecIni"  readonly>
+                <mat-datepicker-toggle matSuffix [for]="fi"></mat-datepicker-toggle>
+                <mat-datepicker #fi disabled="false"></mat-datepicker>
+              </mat-form-field>  
+            </div>  
+            <div class="col-sm-12">
+              <section class="example-section"> 
+                  <mat-checkbox formControlName="LunesChk" class="example-margin" [value]="1826">Lunes</mat-checkbox> 
+                  <mat-checkbox formControlName="MartesChk" class="example-margin" [value]="1827" >Martes</mat-checkbox> 
+                  <mat-checkbox formControlName="MiercolesChk" class="example-margin" [value]="1828">Miércoles</mat-checkbox> 
+                  <mat-checkbox formControlName="JuevesChk" class="example-margin" [value]="1829">Jueves</mat-checkbox>  
+                  <mat-checkbox formControlName="ViernesChk" class="example-margin" [value]="1830">Viernes</mat-checkbox> 
+                  <mat-checkbox formControlName="SabadoChk" class="example-margin" [value]="1831">Sabado</mat-checkbox> 
+                  <mat-checkbox formControlName="DomingoChk" class="example-margin"[value]="1832">Domingo</mat-checkbox> 
+              </section>
+            </div> 
+            <div class="col-sm-12">
+              <mat-form-field>
+                <mat-label>Observacion</mat-label>
+                <textarea matInput   formControlName="Observacion"  > </textarea>
+              </mat-form-field>
+            </div> 
+            <div class="col-sm-12"> 
+              <mat-form-field>
+                <mat-label>Supervisor</mat-label>
+                <mat-select formControlName="Supervisor">
+                  <mat-option *ngFor="let objMotivo of sltSupervisor" [value]="objMotivo.id">{{objMotivo.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>  
+            </div> 
+            <div class="col-sm-12"> 
+              <mat-form-field>
+                <mat-label>Controller</mat-label>
+                <mat-select formControlName="Controller">
+                  <mat-option *ngFor="let objMotivo of sltController" [value]="objMotivo.id">{{objMotivo.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>   
+            </div> 
+            <div class="col-sm-6"> 
+              <mat-form-field>
+                <mat-label>Tipo Contrato</mat-label>
+                <mat-select formControlName="Contrato">
+                  <mat-option *ngFor="let objMotivo of sltContrato" [value]="objMotivo.codigo">{{objMotivo.valor}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field> 
+            </div>   
+            <div class="col-sm-6"> 
+              <mat-form-field>
+                <mat-label>Neto</mat-label>
+                <input matInput   formControlName="Neto">
+              </mat-form-field> 
+            </div>  
+          </div>
+        </form>  
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Salir</button>
+  <button mat-button (click)="onEnviar()" [disabled]="Enviar">Enviar</button>
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

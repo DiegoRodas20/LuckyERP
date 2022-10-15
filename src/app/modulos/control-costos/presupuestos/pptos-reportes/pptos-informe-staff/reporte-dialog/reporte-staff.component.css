@@ -1,0 +1,43 @@
+.form-group{
+    margin-bottom: 0.4rem;
+}
+
+.mat-cell, .mat-footer-cell {
+    font-size: 12px;
+}
+.mat-dialog-content {
+    margin: 0 -14px; 
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+}
+
+tr.nombreColumna{
+    background-color: #334d6e; 
+    color: white; 
+    text-align: center;
+    height: 56px;
+}
+th{
+    padding: 5px;
+    font-weight: normal;
+}
+table{
+    width:100%; 
+    border-collapse: collapse; 
+    font-size: 12px;
+    border-spacing: 0;
+}
+.table td, .table th {
+    padding: .75rem;
+    vertical-align: inherit;
+    border-top: 1px solid #dee2e6;
+}
+
+.cabecera{
+    padding-right: 45px;
+    padding-left: 45px;
+}
+

@@ -1,0 +1,48 @@
+<div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Historial de Actividades
+        <button class="close button-modal-lucky" (click)="dialogRef.close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card>
+</div>
+<div id="listaMobile" class="mat-elevation-z8">
+    <div class="example-container">
+        <table mat-table [dataSource]="dataSource">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Estado -->
+            <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Estado: '>
+                    {{element.sEstado}} </td>
+            </ng-container>
+
+            <!-- Fecha -->
+            <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Fecha: '>
+                    {{element.sFecha}} </td>
+            </ng-container>
+
+            <!-- Mensaje -->
+            <ng-container matColumnDef="sMensaje">
+                <th mat-header-cell *matHeaderCellDef> Mensaje </th>
+                <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Mensaje: '>
+                    {{element.sMensaje}} </td>
+            </ng-container>
+
+            <!-- Usuario -->
+            <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Usuario: '>
+                    {{element.sUsuario}} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+<h5 mat-dialog-title style="margin-bottom: 0px!important; width: 100%;text-align: center;" class="card-header center-text-card">Detalle de Registro
+    Ingreso
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form class="row" [formGroup]="formArticulo">
+                    <div class="col-md-10">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Artículo:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtArticulo">
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="!this.vInputModal.bEsLogisticoSatelite" class="col-md-2 d-flex justify-content-end">
+                        <button matTooltip="Ver artículo" mat-mini-fab color="accent" (click)="fnVerDetalleArticulo()">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Fecha ingreso:</mat-label>
+                            <input (ngModelChange)="fnGenerarLote()"
+                                (click)="pickerFechaIngreso.opened?pickerFechaIngreso.close(): pickerFechaIngreso.open()"
+                                readonly formControlName="cboFechaIngreso" matInput
+                                [matDatepicker]="pickerFechaIngreso">
+                            <mat-datepicker-toggle matSuffix [for]="pickerFechaIngreso"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerFechaIngreso></mat-datepicker>
+                            <mat-error *ngIf="formArticulo.get('cboFechaIngreso').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Fecha Vencimiento:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtFechaVence">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Lote:</mat-label>
+                            <input (ngModelChange)="fnListarStockActual($event)" type="text" readonly matInput
+                                formControlName="txtLote">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Stock Actual:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtStockActual">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Cantidad Ingresada:</mat-label>
+                            <input (input)="fnRedondear('txtCantidad', formArticulo); fnGenerarPrecioTotal()"
+                                type="number" matInput formControlName="txtCantidad">
+                            <mat-error *ngIf="formArticulo.get('txtCantidad').hasError('required')">
+                                .Obligatorio</mat-error>
+                            <mat-error *ngIf="formArticulo.get('txtCantidad').hasError('min')">
+                                .Minimo 1</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Precio unitario:</mat-label>
+                            <input (input)="fnGenerarPrecioTotal()" type="number" readonly matInput
+                                formControlName="txtPrecioUnd">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Precio total:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtPrecioTotal">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Observación:</mat-label>
+                            <input type="text" matInput formControlName="txtObservacion">
+                            <mat-error *ngIf="formArticulo.get('txtObservacion').hasError('caracterValidator')">
+                                .El texto no debe contener: "/", "|", "?"</mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+                <img matRipple matTooltipPosition="left" matTooltip="Para ampliar la imagen presione"
+                    (click)="fnAbrirImagen(urlImagen)" [src]="urlImagen" width="95%" height="200px"><br>
+            </div>
+        </div>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <!--Para guardar-->
+        <button matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAgregarArticulo()">
+            <mat-icon>check</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

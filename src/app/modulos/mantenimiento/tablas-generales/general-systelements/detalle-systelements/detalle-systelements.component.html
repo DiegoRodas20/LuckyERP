@@ -1,0 +1,201 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Padre nEleCod: {{this.nEleCod}} - cEleNam: {{this.cEleNam}}
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+            <div class="col-lg-4">
+                <mat-form-field class="w-100">
+                    <mat-label>Buscar:</mat-label>
+                    <input matInput [formControl]="tFiltro" (keyup)="applyFilter($event)" [(ngModel)]="searchKey"
+                        #input />
+                    <button mat-button style="outline: none" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="limpiar()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de General System Elemnts -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- Columna Opciones -->
+                <ng-container matColumnDef="opcion">
+                    <th mat-header-cell *matHeaderCellDef> Opción </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="listaHijosSystElements(row.nEleCod)">
+                                <mat-icon color="accent"> remove_red_eye </mat-icon>
+                                <span> Ver Hijos</span>
+                            </button>
+
+                            <button mat-menu-item (click)="editarSystElements(row.nEleCod)">
+                                <mat-icon color="accent"> edit </mat-icon>
+                                <span> Editar </span>
+                            </button>
+                        </mat-menu>
+
+                    </td>
+                </ng-container>
+
+                <!-- Columna nEleCod -->
+                <ng-container matColumnDef="nEleCod">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nEleCod
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nEleCod: '>
+                        {{row.nEleCod}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna cEleCod -->
+                <ng-container matColumnDef="cEleCod">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        cEleCod
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='cEleCod: '>
+                        {{row.cEleCod}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna cEleNam -->
+                <ng-container matColumnDef="cEleNam">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        cEleNam
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='cEleNam: '>
+                        {{row.cEleNam}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna cEleIni -->
+                <ng-container matColumnDef="cEleIni">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        cEleIni
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='cEleIni: '>
+                        {{row.cEleIni}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna cEleDes -->
+                <ng-container matColumnDef="cEleDes">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        cEleDes
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='cEleDes: '>
+                        {{row.cEleDes}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna bStatus -->
+                <ng-container matColumnDef="bStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        bStatus
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='bStatus: '>
+                        {{row.bStatus}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nEleCodDad -->
+                <ng-container matColumnDef="nEleCodDad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nEleCodDad
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nEleCodDad: '>
+                        {{row.nEleCodDad}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna sParam -->
+                <ng-container matColumnDef="sParam">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        sParam
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='sParam: '>
+                        {{row.sParam}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nParam -->
+                <ng-container matColumnDef="nParam">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nParam
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nParam: '>
+                        {{row.nParam}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna nameUser -->
+                <ng-container matColumnDef="nameUser">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        nameUser
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='nameUser: '>
+                        {{row.nameUser}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna dcreaFecha -->
+                <ng-container matColumnDef="dcreaFecha">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        dcreaFecha
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='dcreaFecha: '>
+                        {{row.dcreaFecha}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Eliminar -->
+                <ng-container matColumnDef="eliminar">
+                    <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                        <button mat-icon-button color="accent" matTooltip="Eliminar" matTooltipPosition="right"
+                            (click)="eliminarHijosSystElements(row.nEleCod)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>

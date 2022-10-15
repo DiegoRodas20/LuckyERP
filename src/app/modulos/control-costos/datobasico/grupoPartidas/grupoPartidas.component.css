@@ -1,0 +1,74 @@
+.flex-item-bottom {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.flex-buttom-bottom {
+    z-index: 5;
+    position: fixed;
+    display: flex;
+    align-self: flex-end;
+    bottom: 10%;
+}
+
+.example-button-container {
+    display: flex;
+    justify-content: center;
+    width: 120px;
+}
+
+.margen {
+    padding-top: 70px;
+}
+
+.mat-secondary {
+    background-color: rgb(236, 0, 140);
+}
+
+.mat-white {
+    background-color: white;
+}
+
+.white-icon {
+    color: white;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+h5 {
+    font-weight: 600;
+}
+
+
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+
+.white-icon svg {
+    fill: white;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}

@@ -1,0 +1,208 @@
+
+.clsprincipal {
+    padding: 60px 5px 0px 5px;
+}
+
+.clsShow {
+    display: block;
+  }
+  
+  .clsHide {
+    display: none;
+  }
+  
+
+/*Titulo*/
+
+.card-header {
+    padding         : 0px;
+    background-color: rgb(51, 77, 110);
+    color           : white;
+}
+
+.titulo {
+    background-color: #334d6e;
+    color           : white;
+    text-align      : center;
+    margin-top      : 10px;
+}
+
+/*Tabla */
+.container_tabla {
+    overflow: auto;
+}
+
+.contenedor_tabla {
+    min-height: 200px;
+    overflow  : auto;
+}
+
+table {
+    width: 100%;
+}
+
+.example-container {
+    min-height: 8rem;
+    width     : 100%;
+    overflow  : auto;
+}
+
+.example-container table {
+    width: 100%;
+}
+
+table th {
+    background-color: #334D6E;
+    color           : white;
+}
+
+/* CSS Native*/
+
+mat-form-field {
+    width: 100%;
+}
+
+:host /deep/ table thead {
+    background-color: #334D6E;
+}
+
+:host /deep/ form .ng-invalid label {
+    color: #f44336;
+}
+
+:host /deep/ .mat-form-field-disabled label {
+    color           : black;
+    BACKGROUND-COLOR: #fff;
+}
+
+:host /deep/ .mat-form-field-disabled textarea {
+    color: black;
+}
+
+.mat-input-element:disabled,
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+    color: black;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+    padding-right: 20% !important;
+    padding-left : 20% !important;
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+    height          : 3rem;
+}
+
+.mat-header-row .mat-header-cell {
+    color : white;
+    height: 3rem;
+}
+
+.matFormEdit {
+    width: 80%;
+}
+
+.matTdEdit {
+    max-width: 6rem;
+}
+
+/*Botones*/
+.fab-container {
+    position      : fixed;
+    top           : 85px;
+    right         : 35px;
+    z-index       : 101;
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+    margin-top    : 5px;
+}
+
+.fab-container>div {
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+    margin-bottom : 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline   : none;
+}
+
+.fab-toggler {
+    float  : right;
+    z-index: 101;
+    outline: none;
+}
+
+/*Columnas*/
+
+.clsOpcion {
+    width: 10%;
+}
+
+.clsPptoTotal {
+    width: 34%;
+}
+
+.clsColumnShort {
+    width: 11%;
+}
+
+.clsArticuloTotal {
+    width: 18%;
+}
+
+.clsDetArtTotal {
+    width: 16%;
+}
+
+.clsPptoParcial {
+    width: 30%;
+}
+
+.clsArtParcial {
+    width: 20%;
+}
+
+
+.centerTotales {
+    text-align: center;
+}
+
+
+/* Responsive */
+@media only screen and (min-width: 960px) {
+
+    .boton-MatTable {
+        position: absolute;
+        top     : 2%;
+        left    : 40px;
+        z-index : 120;
+    }
+
+    .mostrar-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+
+    .boton-MatTable {
+        position: absolute;
+        top     : 0px;
+        right   : 0px;
+        z-index : 120;
+        left    : auto;
+    }
+
+    .ocultar-mobile {
+        display: none;
+    }
+}

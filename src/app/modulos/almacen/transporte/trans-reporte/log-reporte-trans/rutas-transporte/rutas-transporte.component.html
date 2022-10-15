@@ -1,0 +1,114 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+
+<div class="col-md-12" style="margin-top: 15px;">
+  <div class="card">
+    <h5 class="col-md-12 card-header" style="text-align: center">
+      Reporte de Rutas por Transporte
+    </h5>
+
+    <div class="card-body">
+      <div class="form-group col-md-12">
+        <div class="row">
+          <div class="col-md-8 offset-md-4">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Búsqueda </mat-label>
+                  <input matInput (keyup)="applyFilter($event)" placeholder="Buscar Ruta" #input
+                    [formControl]="searchKey" />
+                  <button *ngIf="input.value" matSuffix mat-icon-button (click)="fnClean()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="listaMobile" class="example-container mat-elevation-z8">
+        <table mat-table [dataSource]="dsRutas" matSort style="width: 100%">
+          <ng-container matColumnDef="opcion" sticky>
+            <th mat-header-cell *matHeaderCellDef>Opción</th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label="Opción: ">
+              <button *ngIf="row.nCantPunto > 0" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                matTooltipPosition="right" mat-stroked-button color="accent"
+                (click)="mostrarReportes(row.sCodTransporte)">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="after">
+                <button mat-menu-item [useExistingCss]="true" printSectionId="print-reporte-ruta" ngxPrint>
+                  <mat-icon color="accent">print</mat-icon>
+                  <span>Reporte de Transportista</span>
+                </button>
+                <button mat-menu-item (click)="hideReportMovilidad = true" [useExistingCss]="true"
+                  printSectionId="print-reporte-movilidad" ngxPrint>
+                  <mat-icon color="accent">print</mat-icon>
+                  <span>Reporte de movilidad</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sCodTransporte">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Código Transporte
+            </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Codigo Transporte: ">
+              <ngb-highlight [result]="row.sCodTransporte" [term]="searchKey.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sBrevete">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Brevete</th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Brevete: ">
+              <ngb-highlight [result]="row.sBrevete" [term]="searchKey.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sDescripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Descripción Chofer
+            </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Descripcion chofer: ">
+              <ngb-highlight [result]="row.sDescripcion" [term]="searchKey.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nCantPunto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Nro. Puntos
+            </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Numero de  Puntos: ">
+              <ngb-highlight [result]="row.nCantPunto" [term]="searchKey.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sPLaca">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Placa</th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="PLaca : ">
+              <ngb-highlight [result]="row.sPLaca" [term]="searchKey.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+    </div>
+  </div>
+</div>
+
+<div style="display: none">
+  <app-reporte-ruta-transporte [cabecera]="cabReporteTranporte" [detalle]="detReporteTransporte">
+  </app-reporte-ruta-transporte>
+</div>
+
+<div style="display: none">
+  <app-reporte-carga-movilidad [cabecera]="cabReporteMovilidad" [detaPunto]="detPuntoReportePunto"
+    [detalle]="detReporteMovilidad">
+  </app-reporte-carga-movilidad>
+</div>

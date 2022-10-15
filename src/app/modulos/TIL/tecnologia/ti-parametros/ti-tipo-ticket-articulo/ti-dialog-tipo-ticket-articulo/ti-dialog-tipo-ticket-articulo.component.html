@@ -1,0 +1,51 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">{{sTitulo}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form class="row" [formGroup]="formMatrizTicketArticulo">
+            <div class="col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false" formControlName="cboTipoTicket"
+                    placeholder="Tipo Ticket" required>
+                    <ng-option *ngFor="let vTipo of lTipoTicket" [value]="vTipo.elementoId">
+                        {{vTipo.nombre}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboTipoTicketError">{{ cboTipoTicketError }}</mat-error>
+            </div>
+
+            <div class="col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false" formControlName="cboArticulo"
+                    placeholder="Artículo" required>
+                    <ng-option *ngFor="let vArticulo of lArticulo" [value]="vArticulo.nIdArticulo">
+                        {{vArticulo.sCodArticulo + ' - ' + vArticulo.sNombreProducto}}</ng-option>
+                </ng-select>
+                <mat-error *ngIf="cboArticuloError">{{ cboArticuloError }}</mat-error>
+            </div>
+
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <mat-select formControlName="cboEstado">
+                        <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.estado">
+                            {{vEstado.sDescripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="cboEstadoError">{{ cboEstadoError }}</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+    </div>
+</mat-dialog-actions>

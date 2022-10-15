@@ -1,0 +1,413 @@
+<div class="clsprincipal">
+    <!-- Grilla Principal -->
+    <div class="container-fluid" [ngClass]="divList ? 'clsShow' : 'clsHide'">
+        <div class="card">
+            <div>
+                <h3 class="card-header text-center">{{sTituloModulo}}</h3>
+                <!--Boton Flotante: Nuevo-->
+                <div class="fab-container" *ngIf="!bPerfilRRHH">
+                    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+                        <i class="material-icons" [@fabToggler]="{value: fabTogglerState}">add</i>
+                    </button>
+                    <div [@speedDialStagger]="buttons.length">
+                        <button *ngFor="let btn of buttons" mat-mini-fab class="fab-secondary" color="secondary"
+                            (click)="btnAbrirNuevo()">
+                            <i class="material-icons" matTooltip="{{btn.tool}}"
+                                matTooltipPosition="left">{{btn.icon}}</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="body-listap" class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <mat-form-field>
+                                <input matInput (keyup)="fnControlFiltro($event.target.value)" placeholder="Filtro" />
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Empieza la tabla con las solicitudes que ha realizado el usuario o a las que tenga acceso de ver -->
+                <div class="example-container mat-elevation-z8 clsTablePri">
+
+                    <table mat-table #listaFotocheckTableSort="matSort" [dataSource]="listaFotocheckTableData" matSort>
+
+                        <!-- Id  -->
+                        <ng-container matColumnDef="btnAccion" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> </th>
+                            <td mat-cell *matCellDef="let element" class="clsColumnaOpc">
+                                <button mat-icon-button matTooltip="Ver" matTooltipPosition="right" color="accent"
+                                    (click)="btnVerFotocheck(element.nIdGastoCosto)">
+                                    <mat-icon> create</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <!-- Nombre de Usuario -->
+                        <ng-container matColumnDef="sNombreUsuario" *ngIf="bPerfilRRHH">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Usuario </th>
+                            <td mat-cell *matCellDef="let element"> {{element.sNombreUsuario}} </td>
+                        </ng-container>
+
+                        <!-- Id Presupuesto  -->
+                        <ng-container matColumnDef="nPresupuesto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.nPresupuesto}} </td>
+                        </ng-container>
+
+                        <!-- Nombre de Presupuesto -->
+                        <ng-container matColumnDef="sNomPresupuesto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom. Presupuesto </th>
+                            <td mat-cell *matCellDef="let element"> {{element.sNomPresupuesto}} </td>
+                        </ng-container>
+
+                        <!-- Nro. Ped -->
+                        <ng-container matColumnDef="nNumPedido">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nro. Ped </th>
+                            <td mat-cell *matCellDef="let element"> {{element.sNumeroPedido}} </td>
+                        </ng-container>
+
+                        <!-- Fecha Solic -->
+                        <ng-container matColumnDef="dFechaSolic">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Fecha Solic
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="clsColumnaLarge"> {{element.dFechaSolic}}
+                            </td>
+                        </ng-container>
+
+                        <!-- T. Personas -->
+                        <ng-container matColumnDef="nTotalPers">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> T. Pers</th>
+                            <td mat-cell *matCellDef="let element"> {{element.nTotalPers}} </td>
+                        </ng-container>
+
+                        <!-- Total Precio  -->
+                        <ng-container matColumnDef="nTotalPrecio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> T. Precio </th>
+                            <td mat-cell *matCellDef="let element" class="clsColumnaLib"> {{element.nTotalPrecio}} </td>
+                        </ng-container>
+
+                        <!-- Estado -->
+                        <ng-container matColumnDef="sEstado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Estado </th>
+                            <td mat-cell *matCellDef="let element" class="clsColumnaOpc"> {{element.sEstado}} </td>
+                        </ng-container>
+
+                        <!-- Header and Row Declarations -->
+                        <tr mat-header-row *matHeaderRowDef="listaFotocheckColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: listaFotocheckColumns;"></tr>
+                    </table>
+
+                    <mat-paginator #listaFotocheckTablePaginator="matPaginator" [pageSize]="10"></mat-paginator>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Requerimiento de Fotocheck-->
+    <div class="container-fluid" [ngClass]="divCreate ? 'clsShow' : 'clsHide'">
+
+        <div class="card">
+
+            <div>
+                <h3 class="card-header text-center">{{sTituloModulo}}</h3>
+                <!--Botones Flotantes-->
+                <div class="fab-container">
+                    <button mat-mini-fab class="fab-toggler" (click)="fnOnToggleFab(1, -1)">
+                        <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                    </button>
+                    <div [@speedDialStagger]="abMain.length"
+                        *ngIf="nEstadoPedido!=2057||(!bPerfilRRHH && nEstadoPedido==2057) ">
+                        <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary"
+                            color="secondary" (click)="clickFab(1, ibtn)">
+                            <i class="material-icons" matTooltip="{{btn.tool}}"
+                                matTooltipPosition="left">{{btn.icon}}</i>
+                        </button>
+                    </div>
+                    <!--Aprobado-->
+                    <div [@speedDialStagger]="abMain.length" *ngIf="bPerfilRRHH && nEstadoPedido==2057">
+
+                        <button [useExistingCss]="true" ngxPrint printSectionId="print-fotocheck"
+                            [disabled]="!nEstadoImpresion || listaImprimir.length==0" mat-mini-fab class="fab-secondary"
+                            color="secondary" (click)="clickFab(1, 0)">
+                            <i class="material-icons" matTooltip="Imprimir Fotocheck"
+                                matTooltipPosition="left">print</i>
+                        </button>
+
+                        <button mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, 1)">
+                            <i class="material-icons" matTooltip="Estado RQ-Fotocheck"
+                                matTooltipPosition="left">list_alt</i>
+                        </button>
+                        <button mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, 2)">
+                            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+                        </button>
+                        <!--Fin Aprobado-->
+                    </div>
+                </div>
+            </div>
+
+            <div id="body-listap" class="card-body">
+                <div class="container-fluid">
+
+                    <!--Formulario Numero de Pedido y Fecha-->
+                    <form [formGroup]="FormPedidoFecha">
+                        <div class="row d-flex bd-highlight">
+                            <div class="col-sm-3 mr-md-auto bd-highlight">
+                                <mat-form-field class="example-width" style="width: 100%;">
+                                    <mat-label>Nro Pedido</mat-label>
+                                    <input matInput type="text" formControlName="pedido">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-3 ml-auto bd-highlight">
+                                <mat-form-field class="example-width">
+                                    <mat-label>Fecha Solicitud</mat-label>
+                                    <input matInput type="text" formControlName="fecha">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!--Cabecera-->
+                    <form [formGroup]="formGroupFotocheck">
+                        <div class="row d-flex bd-highlight">
+                            <div class="col-sm-8 mr-auto bd-highlight">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Solicitante</mat-label>
+                                    <input matInput [readonly]="true" formControlName="fSolicitante" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3 ml-auto bd-highlight">
+                                <mat-form-field class="example-width">
+                                    <mat-label>Partida</mat-label>
+                                    <input matInput type="text" formControlName="fPartida">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row d-flex bd-highlight">
+                            <div class="col-sm-8 mr-auto bd-highlight">
+                                <ng-select placeholder="Presupuesto" name="fPresupuesto" formControlName="idPresupuesto"
+                                    (change)="fnValidarPresupuesto($event)">
+                                    <ng-option *ngFor="let element of lCboPresupuesto"
+                                        [(value)]="element.nIdPresupuesto">
+                                        {{element.sCodPresupuesto}}- {{element.sNomPresupuesto}}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-sm-3 ml-auto bd-highlight">
+                                <mat-form-field>
+                                    <mat-label>Tipo Planilla</mat-label>
+                                    <mat-select formControlName="idPlanillas"
+                                        (selectionChange)="fnValidarPlanillas($event.value)">
+                                        <mat-option *ngFor="let plla of lCboPlanillas" [value]="plla.nIdPlanillas">
+                                            {{plla.sNomPlanillas}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <div class="row" style="margin-top: -10px;">
+                        <div class="col-sm mr-auto p-2 bd-highlight">
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+
+                    <!--Detalle Req.-->
+                    <form [formGroup]="FormGroupDetalleNuevo">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <mat-form-field>
+                                    <mat-label>Est. Pedidos</mat-label>
+                                    <input matInput type="text" name="valueNDoc" formControlName="estado">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field>
+                                    <mat-label>Tot. Personas</mat-label>
+                                    <input matInput type="text" name="tot" formControlName="totalPersonas"
+                                        ngDefaultControl>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field>
+                                    <mat-label>Costo Total</mat-label>
+                                    <input matInput type="text" name="valueNDoc" formControlName="costoTotal"
+                                        ngDefaultControl>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!--Detalle(Tabla)-->
+                <div class="example-container mat-elevation-z8 clsTableCreate">
+                    <table mat-table #nuevoDetFotocheckTableSort="matSort" [dataSource]="nuevoDetFotocheckTableData"
+                        matSort>
+                        <!-- Botones -->
+                        <ng-container matColumnDef="pEstado" sticky>
+                            <!-- Agregar -->
+                            <th mat-header-cell *matHeaderCellDef style="width: 80px !important;">
+                                <button mat-icon-button color="accent" type="button" title="Nuevo Fotocheck"
+                                    (click)="btnAgregarLineaDetalle()" *ngIf="!bPerfilRRHH">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </th>
+                            <!-- Eliminar -->
+                            <td mat-cell *matCellDef="let element;let i = index;" class="action-link"
+                                style="width: 80px !important;">
+                                <button mat-menu-item (click)="btnEliminarLineaDetalle(i,element)" *ngIf="!bPerfilRRHH">
+                                    <mat-icon color="accent">delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <!-- Ciudad -->
+                        <ng-container matColumnDef="ciudad">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Ciudad </th>
+                            <td mat-cell *matCellDef="let element;let i = index;">
+                                <ng-select appendTo="body" [disabled]="element.bLineaConfirmada"
+                                    [(ngModel)]="element.nIdSucursal" ngDefaultControl
+                                    (change)="fnValidarCiudad(i,element.nIdSucursal)">
+                                    <ng-option *ngFor="let element of lCboCiudad" [(value)]="element.nIdSucursal">
+                                        {{element.sNomCiudad}}
+                                    </ng-option>
+                                </ng-select>
+                        </ng-container>
+
+                        <!-- Codigo y Nombre-->
+                        <ng-container matColumnDef="codnombre">
+                            <th mat-header-cell *matHeaderCellDef class="clsNombre"> Nombre </th>
+                            <td mat-cell *matCellDef="let element;let i = index;">
+
+                                <ng-select [disabled]="!element.bLineaEditable || element.bLineaConfirmada"
+                                    appendTo="body" [(ngModel)]="element.nIdPersonal" ngDefaultControl
+                                    (change)="fnObtenerImagen(i,element.nIdPersonal)">
+                                    <ng-option *ngFor="let nom of lCboNombres" [(value)]="nom.nIdPersonal">
+                                        {{nom.sNombres}}
+                                    </ng-option>
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <!-- Codigo y Cargo -->
+                        <ng-container matColumnDef="codcargo">
+                            <th mat-header-cell *matHeaderCellDef class="clsCargo"> Cargo </th>
+                            <td mat-cell *matCellDef="let element;let i = index;">
+                                <ng-select [disabled]="!element.bLineaEditable || element.bLineaConfirmada"
+                                    appendTo="body" [(ngModel)]="element.nIdCargo" ngDefaultControl
+                                    (change)="fnValidarLinea(i,element.nIdCargo)">
+                                    <ng-option *ngFor="let opc of lCboCargo" [(value)]="opc.nIdCargo">
+                                        {{opc.sNomCargo}}
+                                    </ng-option>
+                                </ng-select>
+                            </td>
+                        </ng-container>
+
+                        <!-- Total -->
+                        <ng-container matColumnDef="total">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                            <td mat-cell *matCellDef="let element;let i = index;" ngDefaultControl>
+                                <mat-form-field style="margin-top: 11.5px">
+                                    <input matInput [readonly]="true" type="number" [(ngModel)]="element.nTotalDetalle"
+                                        autocomplete="off" [(value)]="element.nTotalDetalle" />
+                                </mat-form-field>
+                            </td>
+
+                            <!--{{element.total}}-->
+                        </ng-container>
+
+                        <!-- Imagen-->
+                        <ng-container matColumnDef="imagen">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Imagen </th>
+                            <td mat-cell *matCellDef="let element;let i = index;" [(ngModel)]="element.sImagen"
+                                ngDefaultControl>
+                                {{element.sImagen}} </td>
+                        </ng-container>
+
+                        <!-- Seleccion-->
+                        <ng-container matColumnDef="bSeleccionado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                <mat-checkbox (change)="fnMarcarTodos($event.checked)" [disabled]="!nEstadoImpresion"
+                                    [checked]="allChecked">
+                                    ¿Imprimir?
+                                </mat-checkbox>
+                            </th>
+                            <td data-label='¿Imprimir?: ' mat-cell *matCellDef="let element"
+                                class="has_label_on_mobile clsColumnaOpc2">
+                                <mat-checkbox [disabled]="!nEstadoImpresion"
+                                    [ngModel]="element.bSeleccionado == 1 ? true : element.bSeleccionado == 0 ? false : null"
+                                    (ngModelChange)="element.bSeleccionado = ($event ? 1 : 0)"
+                                    (change)="fnSeleccionarFotocheck()" >
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <!-- Header and Row Declarations -->
+                        <tr mat-header-row *matHeaderRowDef="NuevoDetFotocheckColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: NuevoDetFotocheckColumns;"></tr>
+
+                    </table>
+
+                    <mat-paginator #nuevoDetFotocheckTablePaginator="matPaginator" [pageSizeOptions]="[10, 20, 30]"
+                        showFirstLastButtons></mat-paginator>
+
+                </div>
+
+            </div>
+
+            <!--Formato a imprimir-->
+            <div class="col-sm-2 ml-auto bd-highlight" *ngIf="nEstadoPedido==2057 && bPerfilRRHH">
+                <mat-form-field>
+                    <mat-label>Formato a Imprimir</mat-label>
+                    <mat-select (selectionChange)="fnFormatoImprimir($event.value)">
+                        <mat-option *ngFor="let opc of lCboFormatos" [value]="opc.nIdFormato">
+                            {{opc.sNombreFormato}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--Para Imprimir-->
+    <div style="display: none;">
+
+
+        <div id="print-fotocheck" style="margin: 0px;">
+            <div style="width:100%; height:100%;">
+
+                <body style="margin:0px">
+                    <div *ngFor="let det of listaImprimir; let opc = index;">
+                        <div id="{{opc}}" style="width:100%; height:100%; ">
+                            <div id="capa1"> <img class="ImagenPersonal" src="{{det.sRutaImagen}}" /> </div>
+                            <div id="capa2"> <img class="ImagenFondo" src="{{sRutaFormato}}" /> </div>
+
+                            <div id="capa3">
+                                <p>{{det.sNombrePrincipal}}</p>
+                                <p>{{det.sApellidos}}</p>
+                                <p>ID: {{det.sDocumento}}</p>
+                            </div>
+
+                            <div id="capa4">
+                                <p>{{det.sNomCargo}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,498 @@
+<!-- #region Spinner -->
+<ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- #endregion -->
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px)">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Gestión de planning</h5>
+            <!-- #region Fab -->
+            <div class="fab-container">
+                <button [@tada]="{ value: tadaMain }" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{ value: tsMain }">add</i>
+      </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+          <i
+            class="material-icons"
+            matTooltip="{{ btn.tool }}"
+            matTooltipPosition="left"
+            >{{ btn.icon }}</i
+          >
+        </button>
+                </div>
+            </div>
+
+            <!-- #endregion -->
+
+            <!-- #region Card Body -->
+
+            <div class="card-body" style="padding-bottom: 0px">
+                <div class="icard melevation col-xl-12">
+                    <div class="row">
+                        <!-- Imagen -->
+                        <div class="col-lg-5" style="align-self: center;">
+                            <div class="row">
+                                <div [ngClass]="{
+                  'col-lg-4': !filterExpanEfect,
+                  'col-lg-12': filterExpanEfect
+                }" style="text-align: center">
+                                    <img class="imgAvatar" src="../../../../../../assets/img/LuckyAvatar.png" alt="" />
+                                </div>
+
+                                <!-- #region Información del personal -->
+                                <div [ngClass]="{
+                  'col-lg-8': !filterExpanEfect,
+                  'col-lg-12': filterExpanEfect,
+                  'text-center': filterExpanEfect
+                }" class="centerCel" style="padding-top: 25px; padding-bottom: 20px">
+                                    <h4 style="font-size: 20px">
+                                        {{ this.getInfoUser.sNombres.value }}
+                                    </h4>
+                                    <h6 style="font-size: 14px; color: rgba(0, 0, 0, 0.54)">
+                                        {{ this.getInfoUser.sTipo.value }} : {{ this.getInfoUser.sDocumento.value }}
+                                    </h6>
+                                </div>
+
+                                <!-- #endregion -->
+                            </div>
+                        </div>
+
+                        <mat-divider [vertical]="true"></mat-divider>
+
+                        <!-- #region Filtro -->
+                        <div id="dFilterRight" class="col-lg" style="align-self: center;">
+                            <mat-accordion #maMain="matAccordion">
+                                <mat-expansion-panel [expanded]="false" (opened)="filterExpanEfect = true" (closed)="filterExpanEfect = false">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title> Aplicar filtro por</mat-panel-title>
+                                        <mat-panel-description style="margin-right: 0px">
+                                        </mat-panel-description>
+                                        <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+                                    </mat-expansion-panel-header>
+
+                                    <form autocomplete="off" [formGroup]="formFilter">
+                                        <div class="form-row">
+                                            <div class="col-lg-5">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Cliente</mat-label>
+                                                    <mat-select formControlName="nIdCliente" (valueChange)="ChangeCliente($event)">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of clients" [value]="item.nIdCliente">
+                                                            {{ item.sNombreComercial }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-7 ngselect">
+                                                <ng-select placeholder="Campaña" formControlName="sCentroCosto" [clearable]="false" style="width: 100%">
+                                                    <ng-option *ngFor="let item of centroCosto" [(value)]="item.sDescription">
+                                                        {{ item.sDescription | titlecase }}
+                                                    </ng-option>
+                                                </ng-select>
+
+                                                <!--<mat-form-field style="width: 100%">
+                        <mat-label>Campaña</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="sCentroCosto"
+                          [matAutocomplete]="sCentroCosto"
+                          class="titlecase"
+                        />
+  
+                        <mat-autocomplete #sCentroCosto="matAutocomplete">
+                          <mat-option
+                            *ngFor="let option of centroCosto | async"
+                            [value]="option.nIdCentroCosto"
+                          >
+                            {{ option.sDescription | titlecase }}
+                          </mat-option>
+                        </mat-autocomplete>
+  
+                        <button
+                          style="outline: none"
+                          mat-button
+                          *ngIf="getFormFilter.sCentroCosto.value"
+                          matSuffix
+                          mat-icon-button
+                          aria-label="Clear"
+                          (click)="getFormFilter.sCentroCosto.patchValue('')"
+                        >
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>-->
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Nombres o documento de identidad</mat-label>
+                                                    <input type="text" matInput formControlName="sNombres" (keyup)="applyFilter($event)" #input />
+                                                    <button style="outline: none" mat-button *ngIf="getFormFilter.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFormFilter.sNombres.patchValue('')">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%" appYearMonthFormat>
+                                                    <mat-label>Fecha devengue</mat-label>
+                                                    <input matInput [matDatepicker]="dFecha" formControlName="dFecha" />
+                                                    <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                                                    <mat-datepicker #dFecha startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFecha)">
+                                                    </mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Canal</mat-label>
+                                                    <mat-select formControlName="nIdCanal">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of canal" [value]="item.nIdCanal">
+                                                            {{ item.sCanal }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Perfil</mat-label>
+                                                    <mat-select formControlName="nIdPerfil">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of perfil" [value]="item.nIdPerfil">
+                                                            {{ item.sPerfil }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%">
+                                                    <mat-label>Estado</mat-label>
+                                                    <mat-select formControlName="nIdEstado">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option>Vigente</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+
+                            <!--<div class="row" style="margin-left: 0px">
+              <h6>Aplicar filtro por :</h6>
+              <hr style="margin-top: 0px; margin-bottom: 10px" />
+            </div>-->
+                        </div>
+                        <!-- #endregion -->
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px">
+                    <div class="col-sm">
+                        <h6>Historico de registros :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px" />
+                    </div>
+                </div>
+
+                <!-- #region Tabla -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="Maindt" style="width: 100%" multiTemplateDataRows>
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="view(element)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef>Inicio</th>
+                                    <td mat-cell *matCellDef="let element" class="m-card-title" data-label="Inicio :">
+                                        <ngb-highlight [result]="MomentDate(element.dFechIni)" [term]="getFormFilter.dFecha.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Centro de costo Column -->
+                                <ng-container matColumnDef="dFechFin">
+                                    <th mat-header-cell *matHeaderCellDef>Término</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Termino :">
+                                        <ngb-highlight [result]="MomentDate(element.dFechFin)" [term]="getFormFilter.dFecha.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Devengue Column -->
+                                <ng-container matColumnDef="sCliente">
+                                    <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Cliente :">
+                                        <ngb-highlight [result]="element.sCliente | titlecase" [term]="getFormFilter.nIdCliente.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Devengue Column -->
+                                <ng-container matColumnDef="sCampana">
+                                    <th mat-header-cell *matHeaderCellDef>Campaña</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Campaña :">
+                                        <ngb-highlight [result]="element.sCampana | titlecase" [term]="getFormFilter.sCentroCosto.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nPersona">
+                                    <th mat-header-cell *matHeaderCellDef>N* Personas</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="N* Personas :">
+                                        {{ element.nPersona }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- More Column -->
+                                <ng-container matColumnDef="more">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                        <span [@fabToggler]="
+                      element == expandedMore ? 'active3' : 'inactive'
+                    " class="material-icons" style="cursor: pointer">expand_more</span
+                  >
+                </td>
+              </ng-container>
+
+              <!-- More Expanded -->
+              <ng-container matColumnDef="expanded_More">
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  [attr.colspan]="MainDC.length"
+                >
+                  <div
+                    style="overflow: hidden"
+                    [@detailExpand]="
+                      element == expandedMore ? 'expanded' : 'collapsed'
+                    "
+                  >
+                    <div class="row" style="padding: 10px">
+                      <div class="col-lg-12">
+                        <!-- Lista de trabajadores -->
+                        <div class="row" style="padding-left: 15px">
+                          <div
+                            class="col-sm"
+                            style="padding: 10px 0px 0px 0px"
+                          >
+                            <h6>Lista de trabajadores:</h6>
+                            <hr
+                              style="margin-top: 0px; margin-bottom: 10px"
+                            />
+                          </div>
+                        </div>
+
+                        <div id="dTableExpanded" class="melevation">
+                          <table
+                            #mtExpanded
+                            mat-table
+                            [dataSource]="ExpandedDS"
+                            style="width: 100%"
+                          >
+
+                            <!-- Apellido y nombres Column -->
+                            <ng-container matColumnDef="sPersonal">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Apellidos y nombres
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="m-card-title"
+                                data-label="Apellidos y nombres :"
+                              >
+                                <ngb-highlight
+                                  [result]="element.sPersonal | titlecase"
+                                  [term]="getFormFilter.sNombres.value"
+                                ></ngb-highlight>
+                              </td>
+                            </ng-container>
+
+                            <!-- Planilla Column -->
+                            <ng-container matColumnDef="sPila">
+                              <th mat-header-cell *matHeaderCellDef>Plla</th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Tipo de planilla :"
+                              >
+                                {{ element.sPila }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Tipo documento Column -->
+                            <ng-container matColumnDef="sTDoc">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Tipo
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Tipo de documento :"
+                              >
+                                {{ element.sTDoc }}
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCanal">
+                              <th mat-header-cell *matHeaderCellDef>Canal</th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Canal : "
+                              >
+                                {{ element.sCanal }}
+                              </td>
+                            </ng-container>
+
+                            <!-- N° Documento Column -->
+                            <ng-container matColumnDef="sDocumento">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Documento
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="N° Documento : "
+                              >
+                                <ngb-highlight
+                                  [result]="element.sDocumento"
+                                  [term]="getFormFilter.sNombres.value"
+                                ></ngb-highlight>
+                              </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sPerfil">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Perfil
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Perfil "
+                              >
+                                {{ element.sPerfil }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Ciudad Column -->
+                            <ng-container matColumnDef="sCiudad">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Ciudad
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Ciudad :"
+                              >
+                                {{ element.sCiudad }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Bruto Column -->
+                            <ng-container matColumnDef="sIngreso">
+                              <th mat-header-cell *matHeaderCellDef>
+                                Inicio
+                              </th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Inicio: "
+                              >
+                                {{ element.sIngreso }}
+                              </td>
+                            </ng-container>
+
+                            <!-- Bruto Column -->
+                            <ng-container matColumnDef="sCese">
+                              <th mat-header-cell *matHeaderCellDef>Cese</th>
+                              <td
+                                mat-cell
+                                *matCellDef="let element"
+                                class="has_label_on_mobile"
+                                data-label="Cese : "
+                              >
+                                {{ element.sCese }}
+                              </td>
+                            </ng-container>
+
+                            <tr
+                              mat-header-row
+                              *matHeaderRowDef="ExpandedDC; sticky: true"
+                            ></tr>
+                            <tr
+                              mat-row
+                              *matRowDef="let element; columns: ExpandedDC"
+                            ></tr>
+                          </table>
+                        </div>
+                        <mat-paginator
+                          #pagExpanded
+                          style="display: contents"
+                          [hidePageSize]="false"
+                          [pageSize]="4"
+                        ></mat-paginator>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell
+                  *matFooterCellDef
+                  [attr.colspan]="MainDC.length"
+                >
+                  No se encuentran registros.
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: MainDC"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: ['expanded_More']"
+                [class.example-expanded-row]="expandedMore === row"
+                style="height: 0px; border-top-style: none"
+              ></tr>
+              <mat-footer-row
+                *matFooterRowDef="['noData']"
+                [hidden]="Maindt && this.Maindt.filteredData.length > 0"
+              ></mat-footer-row>
+            </table>
+          </div>
+          <mat-paginator
+            #pagMain
+            style="display: contents"
+            [hidePageSize]="false"
+            [pageSize]="4"
+          ></mat-paginator>
+        </div>
+      </div>
+
+      <!-- #endregion -->
+    </div>
+
+    <!--#endregion  -->
+  </div>
+</div>
+</div>

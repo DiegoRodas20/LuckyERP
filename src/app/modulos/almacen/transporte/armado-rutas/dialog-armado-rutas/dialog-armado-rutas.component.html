@@ -1,0 +1,162 @@
+<!-- <div class="col-md-12 fondo">Armado de Rutas</div> -->
+<h5 class="col-md-12 card-header">Armado de Rutas</h5>
+
+<br />
+
+<div class="form-group col-md-12">
+  <div class="row">
+    <div class="col-md-12 offset-md-1">
+      <div class="form-row">
+        <div class="col-md-3 col-sm-3 col-12">
+          <mat-form-field color="primary" style="width: 100%">
+            <mat-label>Sucursal </mat-label>
+            <mat-select [formControl]="nIdSucursalField">
+              <mat-option *ngFor="let itm of listaSucursales" [value]="itm.nId">
+                {{ itm.sDescripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-sm-3 col-12">
+          <mat-form-field color="primary" style="width: 100%">
+            <mat-label>Fecha Traslado</mat-label>
+            <input (click)="picker.open()" matInput [matDatepicker]="picker" [formControl]="dFechaField" readonly />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker color="primary"></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-sm-3 col-12">
+          <mat-form-field style="width: 100%">
+            <mat-label>Búsqueda </mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar Ruta" #input [formControl]="searchKey" />
+            <button *ngIf="input.value" matSuffix mat-icon-button (click)="ListarTabla()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 col-sm-3 col-10">
+          <button mat-mini-fab class="fab-toggler" style="margin-right: 2px" matTooltip="Buscar"
+            (click)="ListarTabla()">
+            <mat-icon>search</mat-icon>
+          </button>
+          <button *ngIf="hide" mat-mini-fab class="fab-toggler" matTooltip="Generar Armado de Ruta"
+            (click)="GenerarArmado()">
+            <mat-icon>settings</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="listaMobile" class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="dsRuta" matSort style="width: 100%">
+    <ng-container matColumnDef="opcion" sticky>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Opción</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label="Opción: ">
+        <button mat-icon-button [matMenuTriggerFor]="menuDetalle" matTooltip="Desplegar" matTooltipPosition="right"
+          mat-stroked-button color="accent" *ngIf="row.sNotaTipo == 'NT'">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuDetalle="matMenu" xPosition="after">
+          <button mat-menu-item *ngIf="row.sNotaTipo == 'NT'" (click)="CambiarEstado(row.nIdOperMov, 2230)">
+            <mat-icon color="accent">reply</mat-icon>
+            <span>Devolver</span>
+          </button>
+          <button mat-menu-item *ngIf="row.sNotaTipo == 'NT'" (click)="CambiarEstado(row.nIdOperMov, 2267)">
+            <mat-icon color="accent">block</mat-icon>
+            <span>Rechazar</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sNombreEmpresa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Empresa: ">
+        <ngb-highlight [result]="row.sNombreEmpresa" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sCodPresupuesto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Presupuesto</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Presupuesto: ">
+        <ngb-highlight [result]="row.sCodPresupuesto" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sNota">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Nota : ">
+        <ngb-highlight [result]="row.sNota" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sGuia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Guía</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Guía: ">
+        <ngb-highlight [result]="row.sGuia" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sCodAlmacen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Almacén</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Almacén: ">
+        <ngb-highlight [result]="row.sCodAlmacen" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nCantidad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidades</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Cantidad: ">
+        <ngb-highlight [result]="row.nCantidad" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nPeso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Peso: ">
+        {{ row.nPeso | number: "2.2-2" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nVolumen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Volumen</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Volumen: ">
+        {{ row.nVolumen | number: "2.6-6" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sPuntoLLegada">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Punto Llegada</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Punto Llegada: ">
+        <ngb-highlight [result]="row.sPuntoLLegada" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sDistrito">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Distrito</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Distrito: ">
+        <ngb-highlight [result]="row.sDistrito" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sFechaEntrega">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Entrega</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Fecha Entrega: ">
+        <ngb-highlight [result]="row.sFechaEntrega" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sHora">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Hora: ">
+        <ngb-highlight [result]="row.sHora" [term]="searchKey.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>

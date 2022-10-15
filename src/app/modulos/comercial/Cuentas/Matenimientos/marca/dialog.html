@@ -1,0 +1,133 @@
+<!--Categoría-->
+<div *ngIf="data.categoria !== undefined">
+
+  <h1 mat-dialog-title>{{data.accion}} CATEGORÍA</h1>
+
+  <form [formGroup]="formCategoria" ngNativeValidate (ngSubmit)="onSubmitCategoria()" autocomplete="off">
+
+    <div class="row">
+      <div class="col-md-4 offset-md-1">
+        <mat-form-field>
+          <mat-label>Nueva Categoría</mat-label>
+          <input matInput formControlName="descripcion" type="text" autocomplete="off">
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4 offset-md-1">
+        <mat-form-field>
+          <mat-label> Estado </mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="true">Activo</mat-option>
+            <mat-option value="false">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row d-flex justify-content-center ">
+      <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+      <button type="submit" color="primary" mat-raised-button>Grabar</button>
+    </div>
+
+  </form>
+
+</div>
+
+<!--Linea-->
+<div *ngIf="data.linea !== undefined">
+
+  <h1 mat-dialog-title>{{data.accion}} LÍNEA</h1>
+
+  <form [formGroup]="formLinea" (ngSubmit)="onSubmitLinea()" autocomplete="off">
+
+    <div class="row">
+      <div class="col-md-6">
+       
+        <ng-select placeholder="Categoría" appendTo="body" formControlName="categoria" style="bottom:0.4rem">
+          <ng-option *ngFor="let obj of lcboCategoria" [(value)]="obj.codigo">{{obj.valor}}</ng-option>
+        </ng-select>
+
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field>
+          <mat-label>Nueva Línea</mat-label>
+          <input matInput formControlName="descripcion" type="text" autocomplete="off">
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-2">
+        <mat-form-field>
+          <mat-label> Estado </mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="true">Activo</mat-option>
+            <mat-option value="false">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+      <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+      <button type="submit" color="primary" mat-raised-button>Grabar</button>
+    </div>
+
+  </form>
+
+</div>
+
+<!--Marca-->
+<div *ngIf="data.marca !== undefined">
+
+  <h1 mat-dialog-title>{{data.accion}} MARCA</h1>
+
+  <form [formGroup]="formMarca" ngNativeValidate (ngSubmit)="onSubmitMarca()" autocomplete="off">
+    <ng-template matStepLabel>Marca</ng-template>
+
+    <div class="row">
+      <div class="col">
+      
+        <ng-select placeholder="Categoría" appendTo="body" formControlName="categoria"
+          (change)="fnCatalogoCategoriaXLinea(); fnChangeCategoriaMarca()">
+          <ng-option *ngFor="let obj of lcboCategoriaLinea" [(value)]="obj.codigo">{{obj.valor}}</ng-option>
+        </ng-select>
+
+      </div>
+
+      <div class="col">
+      
+        <ng-select placeholder="Línea"  appendTo="body" formControlName="linea">
+          <ng-option *ngFor="let obj of lcboLinea" [(value)]="obj.codigo">{{obj.valor}}</ng-option>
+        </ng-select>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Nueva Marca</mat-label>
+          <input matInput type="text" formControlName="descripcion" autocomplete="off" >
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <mat-form-field>
+          <mat-label> Estado </mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="true">Activo</mat-option>
+            <mat-option value="false">Inactivo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+
+    <div class="row d-flex justify-content-center ">
+      <button type="button" mat-button (click)="onNoClick()">Cancelar</button>
+      <button type="submit" color="primary" mat-raised-button>Grabar</button>
+    </div>
+
+  </form>
+
+</div>

@@ -1,0 +1,48 @@
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+
+.table-container-1 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}

@@ -1,0 +1,147 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Registro de Almacén
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <form autocomplete="off" [formGroup]="form">
+            <div class="form-row">
+
+                <!-- Almacen Base -->
+                <div class="form-group col-md-4">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="false" placeholder="Almacén Base"
+                        formControlName="descripcion" (change)="cambioTipo()">
+                        <ng-option *ngFor="let item of listaAlmacen" [value]="item.sDesc">
+                            {{item.sDesc}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Ubicacion -->
+                <div *ngIf="!mobile" class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label>Ubicación</mat-label>
+                        <input matInput formControlName="ubicacion" readonly>
+                    </mat-form-field>
+                </div>
+
+                <!-- Direccion -->
+                <div *ngIf="!mobile" class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label>Dirección</mat-label>
+                        <input matInput formControlName="direccion" readonly>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="form-row d-flex justify-content-center">
+            
+            <div class="col-md-4">
+                <mat-form-field>
+                    <mat-label>Buscar Almacén</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                    <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button
+                        aria-label="Clear" (click)="clean()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Almacenes -->
+    <div id="listaMobile" class="mat-elevation-z8 mb-4">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="editarElemento(element)">
+                                <mat-icon color="accent">touch_app</mat-icon>
+                                <span>Revisar</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Código: '>
+                        <!-- {{element.sCodAlmacen}}  -->
+                        <ngb-highlight [result]="element.sCodAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Descripción: '>
+                        <!-- {{element.sDescripcion}}  -->
+                        <ngb-highlight [result]="element.tipoUso +' ' + element.sDescripcion+ ' ' + element.tipoAlmacen"
+                            [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ubicacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ubicación </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ubicación: '>
+                        <!-- {{element.ubicacion}}  -->
+                        <ngb-highlight [result]="element.ubicacion" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="bloqueoComercial">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Bloqueado Comercial </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                        data-label='Bloqueado Comercial: '>
+                        <!-- {{(element.operativo) === 1 ? 'Si' : 'No'}}  -->
+                        <ngb-highlight [result]="(element.operativo) === 1 ? 'Si' : 'No'" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado: '>
+                        <!-- {{element.estado}}  -->
+                        <ngb-highlight [result]="element.estado" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="{isInactivo: row.estado === 'Inactivo'}"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+</div>

@@ -1,0 +1,29 @@
+export interface RegistroVentaDto {
+    tipoServicio: string;
+    estadoComprobante: string;
+    documento: string;
+    comprobanteAfectado: string;
+    ordenCompra: string;
+    aceptacion: string;
+    ordenServicio: string;
+    fechaDocumento: string;
+    presupuesto: string;
+    nombrePresupuesto: string;
+    fechaInicio: string;
+    fechaFin: string;
+    directoraGeneral: string;
+    gerenteCuentas: string;
+    ejecutivo: string;
+    cliente: string;
+    servicio: string;
+    marca: string;
+    oficinaOrdenante: string;
+    totalPresupuesto: number;
+    aCuenta: number;
+    redondeo: number;
+    subTotal: number;
+    igv: number;
+    totalFactura: number;
+    ciudad: string;
+    facturacionCiudad: number;
+}

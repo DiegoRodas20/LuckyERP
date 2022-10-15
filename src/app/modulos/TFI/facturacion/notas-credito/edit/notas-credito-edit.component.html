@@ -1,0 +1,1041 @@
+<div class="clsprincipal">
+
+    <!--Titulo-->
+    <div class="col-md-12">
+        <div class="titulo">
+            <h4 style="padding: 4px;">
+                Nota {{sTitulo}}
+            </h4>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <mat-horizontal-stepper linear id="stepper" #stepper (keydown.enter)="false">
+            <mat-step [stepControl]="formCreditNotes" label="Pagina 1" style="padding-left: 140px">
+                <form [formGroup]="formCreditNotes">
+
+                    <div class="card_row row">
+
+                        <div class="row">
+
+                            <mat-card>
+
+                                <div class="row">
+
+                                    <!--Fila 1-->
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Tipo de Documento:</mat-label>
+                                            <mat-select formControlName="tipoDocumento">
+                                                <mat-option *ngFor="let opc of listDocumentType"
+                                                    [value]="opc.codigoTipoDoc">
+                                                    {{opc.nombreTipoDoc}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Sucursal</mat-label>
+                                            <input matInput formControlName="sucursal">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Serie:</mat-label>
+                                            <mat-select formControlName="serie"
+                                                (selectionChange)="fnSetSerieFirst($event.value);">
+                                                <mat-option *ngFor="let opc of listSerie" [value]="opc.codigoSerie">
+                                                    {{opc.nombreSerie}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Número</mat-label>
+                                            <input matInput formControlName="nro">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!--Fila 2-->
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Documento Afectado:</mat-label>
+                                            <mat-select formControlName="documentoAfectado"
+                                                (selectionChange)="fnGetSerieDocument()">
+                                                <mat-option *ngFor="let opc of listDocument"
+                                                    [value]="opc.codigoDocumento">
+                                                    {{opc.nombreDocumento}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="row ">
+                                            <div class="col-md-6">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Serie</mat-label>
+                                                    <mat-select formControlName="documentoSerie"
+                                                        (selectionChange)="fnGetNumberDocument()">
+                                                        <mat-option *ngFor="let opc of listSerieDocument"
+                                                            [value]="opc.codigoSerieDoc">
+                                                            {{opc.nombreSerieDoc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Número</mat-label>
+                                                    <mat-select formControlName="documentoNumero"
+                                                        (selectionChange)="fnGetComprobante()">
+                                                        <mat-option *ngFor="let opc of listNumberDocument"
+                                                            [value]="opc.codigoNumeroDoc">
+                                                            {{opc.nombreNumeroDoc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Tipo:</mat-label>
+                                            <input matInput formControlName="tipoSerMat">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Tipo de Cambio</mat-label>
+                                            <input matInput formControlName="tipoCambio">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!--Fila 3-->
+
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-label>Fecha</mat-label>
+                                            <input formControlName="fechaNotaCredito" matInput [matDatepicker]="picker"
+                                                (dateChange)="fnDateChange($event)" [max]="dTodayDate" [min]="dMinDate">
+                                            <mat-datepicker-toggle matSuffix [for]="picker">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Moneda</mat-label>
+                                            <input matInput formControlName="moneda">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Afectación</mat-label>
+                                            <input matInput formControlName="nombreTipoAfectacion">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Sub Tipo:</mat-label>
+                                            <mat-select formControlName="subTipoNC"
+                                                (selectionChange)="fnSetSubType($event.value);">
+                                                <mat-option *ngFor="let opc of listSubType" [value]="opc.codigoSubTipo">
+                                                    {{opc.nombreSubTipo}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!--Fila 4-->
+
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>PS (O. Serv)</mat-label>
+                                            <input matInput formControlName="psOserv">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Aceptación</mat-label>
+                                            <input matInput formControlName="aceptacion">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Motivo:</mat-label>
+                                            <mat-select formControlName="motivo">
+                                                <mat-option *ngFor="let opc of listMotive" [value]="opc.codigoMotivo">
+                                                    {{opc.nombreMotivo}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Estado</mat-label>
+                                            <input matInput formControlName="estado">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Glosa y Observaciones-->
+
+                                <mat-form-field class="col-md-12 col-12">
+                                    <textarea matInput formControlName="glosa" placeholder="Glosa"
+                                        maxlength="500"></textarea>
+                                </mat-form-field>
+
+                                <mat-form-field class="col-md-12 col-12">
+                                    <textarea matInput formControlName="observacion1" placeholder="Observación 1"
+                                        maxlength="100">
+                                            </textarea>
+                                </mat-form-field>
+
+                                <mat-form-field class="col-md-12 col-12">
+                                    <textarea matInput formControlName="observacion2" placeholder="Observación 2"
+                                        maxlength="100"></textarea>
+                                </mat-form-field>
+                            </mat-card>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div>
+                        <button mat-button matStepperNext>Siguiente</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step label="Pagina 2" style="padding-right: 100px;">
+
+
+
+                <div class="row">
+                    <div class="col-md-12 col-12">
+
+                        <mat-card>
+
+                            <form [formGroup]="formDetails">
+                                <!--Cabecera/Detalles-->
+                                <ng-container>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo documento</mat-label>
+                                                <input matInput formControlName="descripcionTipoDocumento">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Sucursal</mat-label>
+                                                <input matInput formControlName="descripcionSucursal">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Serie</mat-label>
+                                                <input matInput formControlName="descripcionSerie"
+                                                    [value]="formDetails.get('descripcionSerie').value">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Número</mat-label>
+                                                <input matInput formControlName="descripcionNumero">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Moneda</mat-label>
+                                                <input matInput formControlName="descripcionMoneda">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo Cambio</mat-label>
+                                                <input matInput formControlName="descripcionTipoCambio">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Tipo S/M</mat-label>
+                                                <input matInput formControlName="descripcionTipoSerMat">
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                </ng-container>
+
+                                <br />
+
+                                <h4 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+                                    Totales
+                                </h4>
+
+                                <!--Totales-->
+                                <ng-container>
+
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <div class="col-md-2" *ngIf="sParamTypeSerMat=='S'">
+                                            <div>
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>T. Añadido</mat-label>
+                                                    <input matInput formControlName="totalAniadido"
+                                                        [value]="formDetails.get('totalAniadido').value | number:'1.2-2'">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>Sub Total</mat-label>
+                                                <input matInput formControlName="subTotal"
+                                                    [value]="formDetails.get('subTotal').value | number:'1.2-2'">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>T. Impuesto</mat-label>
+                                                <input matInput formControlName="impuesto"
+                                                    [value]="formDetails.get('impuesto').value | number:'1.2-2'">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>T. Final</mat-label>
+                                                <input matInput formControlName="totalFinal"
+                                                    [value]="formDetails.get('totalFinal').value | number:'1.2-2'">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+                            </form>
+                            <br>
+
+                            <!--Tabla-->
+                            <div *ngIf="bShowTable">
+                                <!--Tablas Subtipo Totales-->
+
+
+                                <ng-container *ngIf="nParamSubType==2536 && sParamTypeSerMat=='S'">
+                                    <!--Tabla Servicios-->
+                                    <div class="col-md-12 example-container">
+                                        <div class="row">
+                                            <!--Table para detalle de registro de ingreso -->
+                                            <div class="col-12">
+
+                                                <div id="listaMobile" class="mat-elevation-z8">
+                                                    <div class="table-container-1">
+                                                        <table mat-table #detCreditNotesSort="matSort"
+                                                            [dataSource]="detCreditNotesTableData" matSort>
+
+                                                            <!-- PPTO -->
+                                                            <ng-container matColumnDef="nombrePresupuesto">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsPptoTotal"> PPTO
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Presupuesto: '
+                                                                    class="has_label_on_mobile">
+                                                                    {{element.nombrePresupuesto}}
+                                                            </ng-container>
+
+                                                            <!-- Total Ppto-->
+                                                            <ng-container matColumnDef="totalPresupuesto"
+                                                                style="text-align: center;">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Total Ppto </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Total Presupuesto: '
+                                                                    class="has_label_on_mobile">
+                                                                    {{element.totalPresupuesto | number:'1.4-4'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- A Cuenta -->
+                                                            <ng-container matColumnDef="cantidadACuenta">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> a Cuenta %
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='a Cuenta %: '
+                                                                    class="has_label_on_mobile">
+                                                                    {{element.cantidadACuenta | number:'1.4-4'}} %
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Añadir -->
+                                                            <ng-container matColumnDef="totalAniadido">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Añadir
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Añadir: ' class="has_label_on_mobile ">
+                                                                    {{element.totalAniadido | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Sub Total -->
+                                                            <ng-container matColumnDef="subTotal">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Sub Total
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Sub Total: '
+                                                                    class="has_label_on_mobile ">
+                                                                    {{element.subTotal | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Impuesto -->
+                                                            <ng-container matColumnDef="impuesto">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Impuesto
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Impuesto: ' class="has_label_on_mobile "
+                                                                    ngDefaultControl>
+                                                                    {{element.impuesto | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Total -->
+                                                            <ng-container matColumnDef="total">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Total
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index; "
+                                                                    data-label='Total: ' class="has_label_on_mobile "
+                                                                    ngDefaultControl>
+                                                                    {{element.total | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+
+                                                            <!-- Header and Row Declarations -->
+                                                            <tr mat-header-row *matHeaderRowDef="DetCreditNotesColumns">
+                                                            </tr>
+                                                            <tr mat-row
+                                                                *matRowDef="let row; columns: DetCreditNotesColumns;">
+                                                            </tr>
+
+                                                        </table>
+                                                    </div>
+                                                    <mat-paginator #detCreditNotesPaginator="matPaginator"
+                                                        [pageSize]="5">
+                                                    </mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+
+                                <ng-container *ngIf="nParamSubType==2536 && sParamTypeSerMat=='M'">
+                                    <!--Tabla Materiales-->
+                                    <div class="col-md-12 example-container">
+                                        <div class="row">
+                                            <!--Table para detalle de registro de ingreso -->
+                                            <div class="col-12">
+
+                                                <div id="listaMobile" class="mat-elevation-z8">
+                                                    <div class="table-container-1">
+                                                        <table mat-table #detCreditNotesSort="matSort"
+                                                            [dataSource]="detCreditNotesTableData" matSort>
+
+                                                            <!-- Artículo/Servicio -->
+                                                            <ng-container matColumnDef="nombreArticulo">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsArticuloTotal"> Artículo/Servicio
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Artículo/Servicio: '
+                                                                    class="has_label_on_mobile">
+                                                                    {{element.nombreArticulo}}
+                                                            </ng-container>
+
+                                                            <!-- Detalle Articulo-->
+                                                            <ng-container matColumnDef="detalleArticulo"
+                                                                style="text-align: center;">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsDetArtTotal"> Detalle </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Detalle: ' class="has_label_on_mobile">
+                                                                    {{element.detalleArticulo}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Unidad de Medida -->
+                                                            <ng-container matColumnDef="nombreUnidadMedida">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> U. Med
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Unidad Medida: '
+                                                                    class="has_label_on_mobile">
+                                                                    {{element.nombreUnidadMedida}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Cantidad -->
+                                                            <ng-container matColumnDef="cantidad">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Cantidad
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Cantidad: '
+                                                                    class="has_label_on_mobile ">
+                                                                    {{element.cantidad | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Precio Unitario -->
+                                                            <ng-container matColumnDef="precioUnitario">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Precio Unitario
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Precio Unitario: '
+                                                                    class="has_label_on_mobile ">
+                                                                    {{element.precioUnitario | number:'1.4-4'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Sub Total -->
+                                                            <ng-container matColumnDef="subTotal">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Sub Total
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Sub Total: '
+                                                                    class="has_label_on_mobile ">
+                                                                    {{element.subTotal | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Impuesto -->
+                                                            <ng-container matColumnDef="impuesto">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Impuesto
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index;"
+                                                                    data-label='Impuesto: ' class="has_label_on_mobile "
+                                                                    ngDefaultControl>
+                                                                    {{element.impuesto | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Total -->
+                                                            <ng-container matColumnDef="total">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                    class="clsColumnShort"> Total
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element;let i = index; "
+                                                                    data-label='Total: ' class="has_label_on_mobile "
+                                                                    ngDefaultControl>
+                                                                    {{element.total | number:'1.2-2'}}
+                                                                </td>
+                                                            </ng-container>
+
+
+                                                            <!-- Header and Row Declarations -->
+                                                            <tr mat-header-row *matHeaderRowDef="DetCreditNotesColumns">
+                                                            </tr>
+                                                            <tr mat-row
+                                                                *matRowDef="let row; columns: DetCreditNotesColumns;">
+                                                            </tr>
+
+                                                        </table>
+                                                    </div>
+                                                    <mat-paginator #detCreditNotesPaginator="matPaginator"
+                                                        [pageSize]="5">
+                                                    </mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!--Tablas Subtipo Parciales-->
+
+                                <!--Tabla Servicios-->
+                                <ng-container *ngIf="nParamSubType==2535 && sParamTypeSerMat=='S'">
+
+                                    <div class="col-md-12 example-container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="mat-elevation-z8">
+                                                    <div class="table-container-1">
+                                                        <form [formGroup]="formLines">
+                                                            <table mat-table #detCreditNotesSort="matSort"
+                                                                [dataSource]="detCreditNotesTableData" matSort
+                                                                formArrayName="lines">
+                                                                <!-- Agregar-->
+
+                                                                <ng-container matColumnDef="codigoComprobanteDet"
+                                                                    sticky>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        
+                                                                        style="width: 80px !important;">
+                                                                        <button mat-icon-button color="accent" [ngClass]="nIdEstado==2237 ? 'clsShow' : 'clsHide'"
+                                                                            type="button" title="Nuevo Presupuesto"
+                                                                            (click)="fnAddRow()">
+                                                                            <mat-icon>add</mat-icon>
+                                                                        </button>
+                                                                    </th>
+                                                                    <td mat-cell
+                                                                        
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="action-link"
+                                                                        style="width: 80px !important;"
+                                                                        [formGroupName]="index">
+                                                                        <button mat-menu-item [ngClass]="nIdEstado==2237 ? 'clsShow' : 'clsHide'"
+                                                                            (click)="deleteView(index)">
+                                                                            <mat-icon color="accent">delete</mat-icon>
+                                                                        </button>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Presupuesto -->
+                                                                <ng-container matColumnDef="codigoPresupuesto">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsPptoParcial">
+                                                                        PPTO </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <mat-select
+                                                                                formControlName="codigoPresupuesto"
+                                                                                (selectionChange)="fnChangePpto($event,index)">
+                                                                                <mat-option
+                                                                                    *ngFor="let opc of listPresupuesto"
+                                                                                    [value]="opc.codigoPresupuesto">
+                                                                                    {{opc.nombrePresupuesto}}
+                                                                                </mat-option>
+                                                                            </mat-select>
+                                                                        </mat-form-field>
+
+                                                                    </td>
+
+                                                                </ng-container>
+
+                                                                <!-- Total Ppto-->
+                                                                <ng-container matColumnDef="totalPresupuesto">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Total Ppto </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                step="0.01" type="number"
+                                                                                formControlName="totalPresupuesto" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- A Cuenta -->
+                                                                <ng-container matColumnDef="cantidadACuenta">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        a Cuenta % </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number"
+                                                                                formControlName="cantidadACuenta" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Total Añadido -->
+                                                                <ng-container matColumnDef="totalAniadido">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Total Añadido </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number"
+                                                                                formControlName="totalAniadido" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Sub Total -->
+                                                                <ng-container matColumnDef="subTotal">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Sub Total </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <input matInput type="number" step="0.01"
+                                                                                (change)="fnValidateSubTotal(index)"
+                                                                                formControlName="subTotal" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Impuesto -->
+                                                                <ng-container matColumnDef="impuesto">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Impuesto </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number"
+                                                                                formControlName="impuesto" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Total -->
+                                                                <ng-container matColumnDef="total">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Total </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        class="matTdEdit" [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number" formControlName="total" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Header and Row Declarations -->
+                                                                <tr mat-header-row
+                                                                    *matHeaderRowDef="DetCreditNotesColumns">
+                                                                </tr>
+                                                                <tr mat-row
+                                                                    *matRowDef="let row; let i = index;  columns: DetCreditNotesColumns;">
+                                                                </tr>
+
+                                                            </table>
+                                                        </form>
+                                                    </div>
+                                                    <mat-paginator #detCreditNotesPaginator="matPaginator"
+                                                        [pageSize]="5">
+                                                    </mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+
+                                <!--Tabla Materiales-->
+                                <ng-container *ngIf="nParamSubType==2535 && sParamTypeSerMat=='M'">
+                                    <div class="col-md-12 example-container">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="mat-elevation-z8">
+                                                    <div>
+                                                        <form [formGroup]="formLines">
+                                                            <table mat-table #detCreditNotesSort="matSort"
+                                                                [dataSource]="detCreditNotesTableData" matSort
+                                                                formArrayName="lines">
+                                                                <!-- Agregar-->
+
+                                                                <ng-container matColumnDef="codigoComprobanteDet"
+                                                                    sticky>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        style="width: 80px !important;">
+                                                                        <button mat-icon-button color="accent" [ngClass]="nIdEstado==2237 ? 'clsShow' : 'clsHide'"
+                                                                            type="button" title="Nuevo Artículo"
+                                                                            (click)="fnAddRow()">
+                                                                            <mat-icon>add</mat-icon>
+                                                                        </button>
+                                                                    </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let element;let index = index;"
+                                                                        class="action-link"
+                                                                        style="width: 80px !important;"
+                                                                        [formGroupName]="index">
+                                                                        <button mat-menu-item [ngClass]="nIdEstado==2237 ? 'clsShow' : 'clsHide'"
+                                                                            (click)="deleteView(index)">
+                                                                            <mat-icon color="accent">delete</mat-icon>
+                                                                        </button>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Articulo/Servicio -->
+                                                                <ng-container matColumnDef="codigoArticulo">
+
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header class="clsArtParcial">
+                                                                        Articulo/Servicio </th>
+
+                                                                    <td mat-cell
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <mat-select formControlName="codigoArticulo"
+                                                                                (selectionChange)="fnChangeArticle($event,index)">
+                                                                                <mat-option
+                                                                                    *ngFor="let opc of listArticle"
+                                                                                    [value]="opc.codigoArticulo">
+                                                                                    {{opc.nombreArticulo}}
+                                                                                </mat-option>
+                                                                            </mat-select>
+                                                                        </mat-form-field>
+
+                                                                    </td>
+
+                                                                </ng-container>
+
+                                                                <!-- Detalle-->
+                                                                <ng-container matColumnDef="detalleArticulo">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsArtParcial">
+                                                                        Detalle </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="text"
+                                                                                formControlName="detalleArticulo" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Unidad Medida-->
+                                                                <ng-container matColumnDef="nombreUnidadMedida">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        U. Med. </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="text"
+                                                                                formControlName="nombreUnidadMedida" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Cantidad -->
+                                                                <ng-container matColumnDef="cantidad">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Cantidad </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput type="number" step="0.01"
+                                                                                (change)="fnValidateCantidad(index)"
+                                                                                formControlName="cantidad" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Precio Unitario -->
+                                                                <ng-container matColumnDef="precioUnitario">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Precio Unitario </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number"
+                                                                                formControlName="precioUnitario" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Sub Total -->
+                                                                <ng-container matColumnDef="subTotal">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Sub Total </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput type="number" step="0.01"
+                                                                                (change)="fnValidateSubTotal(index)"
+                                                                                formControlName="subTotal" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Impuesto -->
+                                                                <ng-container matColumnDef="impuesto">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Impuesto </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number"
+                                                                                formControlName="impuesto" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+                                                                <!-- Total -->
+                                                                <ng-container matColumnDef="total">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="clsOpcion">
+                                                                        Total </th>
+                                                                    <td mat-cell class="matTdEdit"
+                                                                        *matCellDef="let row;let index = index;"
+                                                                        [formGroupName]="index">
+                                                                        <mat-form-field class="matFormEdit">
+                                                                            <!-- style="margin-top: 11.5px" -->
+                                                                            <input matInput [readonly]="true"
+                                                                                type="number" formControlName="total" />
+                                                                        </mat-form-field>
+                                                                    </td>
+                                                                </ng-container>
+
+
+                                                                <!-- Header and Row Declarations -->
+                                                                <tr mat-header-row
+                                                                    *matHeaderRowDef="DetCreditNotesColumns">
+                                                                </tr>
+                                                                <tr mat-row
+                                                                    *matRowDef="let row; columns: DetCreditNotesColumns;">
+                                                                </tr>
+
+                                                            </table>
+                                                        </form>
+                                                    </div>
+                                                    <mat-paginator #detCreditNotesPaginator="matPaginator"
+                                                        [pageSize]="5">
+                                                    </mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                            </div>
+
+                        </mat-card>
+                    </div>
+                </div>
+                <div>
+                    <button mat-button matStepperPrevious>Anterior</button>
+                </div>
+
+
+            </mat-step>
+
+        </mat-horizontal-stepper>
+    </div>
+
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+            <!--Para Guardar -->
+
+            <button *ngIf="abLista>0" mat-raised-button mat-mini-fab class="fab-secondary"
+                matTooltip="Actualizar Nota {{sTitulo}}" matTooltipPosition="left" color="secondary" id="btnGuardar"
+                (click)="fnSave()">
+                <span class="material-icons">
+                    save
+                </span>
+            </button>
+
+            <!--Para Enviar-->
+            <button *ngIf="this.validarEstado()" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Enviar"
+                color="secondary" matTooltipPosition="left" (click)="fnChangeStateCreditNotes('V')">
+                <span class="material-icons">send</span>
+            </button>
+
+
+            <!--Para abrir el visor de historial -->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Visor de historial"
+                color="secondary" matTooltipPosition="left" (click)="fnViewHistorial()">
+                <span class="material-icons">history</span></button>
+
+            <!--Para Anular-->
+            <button *ngIf="this.validarEstado()" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Anular"
+                color="secondary" matTooltipPosition="left" (click)="fnChangeStateCreditNotes('X')">
+                <span class="material-icons">do_disturb_alt</span>
+            </button>
+
+
+            <!--Para Salir -->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Salir" matTooltipPosition="left"
+                color="warn" (click)="fnExit()">
+                <span class="material-icons">
+                    exit_to_app
+                </span>
+            </button>
+
+        </div>
+    </div>
+
+
+</div>

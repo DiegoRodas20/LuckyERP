@@ -1,0 +1,789 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div *ngIf="vNotaRecojo">
+
+    <app-nota-recojo-detalle [pOpcion]="pOpcion" [objNotaBase]="objNotaBase" (newEvent)="fnSalir($event)">
+    </app-nota-recojo-detalle>
+
+</div>
+
+<div [ngClass]="vNotaSalida ? 'clsShow' : 'clsHide'">
+
+    <br><br><br>
+    <div class="col-md-10 offset-md-1 card-header">
+
+        <!-- <strong style="float: right;" *ngIf="time && bCountdown">
+        {{time.minutes | number:'2.0-0'}}:{{time.seconds | number:'2.0-0' }}
+    </strong>
+    <mat-icon *ngIf="time && bCountdown" style="margin-right: 10px; float: right;" color="white">access_time</mat-icon> -->
+        <h5 style="text-align:center">
+            Detalle de Nota de Salida
+        </h5>
+    </div>
+    <!-- <h5 class="col-md-10 offset-md-1 card-header" style="text-align:center">Detalle de Nota de Salida
+
+</h5> -->
+
+    <br>
+    <!-- <div mat-dialog-content> -->
+    <div class="form-row col-md-12">
+        <!-- Cabecera del Gasto -->
+        <div class="col-md-10 offset-md-1">
+            <mat-card>
+                <mat-card-content>
+                    <form [formGroup]="salidaForm">
+                        <div class="form-row">
+
+                            <div class="col-md-10">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Solicitante</mat-label>
+                                            <input matInput formControlName="txtSolicitante" placeholder="Buscar"
+                                                aria-label="State" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+
+                                        <ng-select appendTo="body" style="padding-bottom:3.5px; bottom:0.76rem"
+                                            [clearable]="false"
+                                            (change)="fnObtenerAlmacen($event);fnLimpiarArticulos($event,1)"
+                                            formControlName="txtPresupuesto" placeholder="Presupuesto" required>
+                                            <ng-option *ngFor="let item of cboPresupuesto" [value]="item.nId">
+                                                {{item.sDescripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <mat-error style="font-size: 75%;"
+                                            *ngIf="salidaForm.get('txtPresupuesto').hasError('required')">.Obligatorio
+                                        </mat-error>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Almacen:</mat-label>
+                                            <mat-select formControlName="opcAlmacen" [errorStateMatcher]="matcher"
+                                                (selectionChange)="fnLimpiarArticulos($event.value,2)">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let element of cboAlmacen" [value]="element.nId">
+                                                    {{element.sDescripcion}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="salidaForm.get('opcAlmacen').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha de entrega:</mat-label>
+                                            <input matInput [matDatepicker]="txtFecha" [readonly]="vModifica"
+                                                (dateChange)="fnCambiarFechaEntrega($event)"
+                                                [matDatepickerFilter]="filtroFecha" [min]="minDate"
+                                                placeholder="Seleccione Fecha" formControlName="txtFechaEntrega"
+                                                [errorStateMatcher]="matcher">
+                                            <mat-datepicker-toggle matSuffix [for]="txtFecha"></mat-datepicker-toggle>
+                                            <mat-datepicker #txtFecha (opened)="fnObtenerFechaActual()">
+                                            </mat-datepicker>
+                                            <mat-error *ngIf="salidaForm.get('txtFechaEntrega').hasError('required')">
+                                                .Obligatorio</mat-error>
+
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2 d-flex align-items-center">
+                                        <mat-checkbox formControlName="btnTodoDia"
+                                            (change)="fnCambiarHoraEntrega($event)">Todo el día</mat-checkbox>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Hora de entrega</mat-label>
+                                            <mat-select formControlName="opcHora">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let element of cboHoras" [value]="element.sHora">
+                                                    {{element.sHora}}</mat-option>
+                                            </mat-select>
+
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <mat-accordion>
+                                    <mat-expansion-panel #expUbicacion style="width: 100%;">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title
+                                                style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                                Ubicación de entrega
+                                            </mat-panel-title>
+                                            <mat-panel-description style="margin-right: 0px">
+                                            </mat-panel-description>
+                                            <button type="button" mat-icon-button>
+                                                <mat-icon style="margin-right: 10px;" color="accent">location_on
+                                                </mat-icon>
+                                            </button>
+                                        </mat-expansion-panel-header>
+                                        <div class="form-row">
+
+                                            <div class="form-group col-md-4">
+
+                                                <ng-select appendTo="body" style="padding-bottom:10px"
+                                                    [clearable]="false" formControlName="txtDestinatario"
+                                                    placeholder="Destinatario" required>
+                                                    <ng-option *ngFor="let item of cboEntidades" [value]="item.nId">
+                                                        {{item.sDescripcion}}
+                                                    </ng-option>
+                                                </ng-select>
+                                                <mat-error style="font-size: 75%;"
+                                                    *ngIf="salidaForm.get('txtDestinatario').hasError('required')">
+                                                    .Obligatorio</mat-error>
+
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+
+                                                <ng-select appendTo="body" style="padding-bottom:10px"
+                                                    [clearable]="false"
+                                                    (change)="fnValidarEntidades(); fnObtenerDestino($event)"
+                                                    formControlName="txtEntidadDestino" placeholder="Entidad Destino"
+                                                    required>
+                                                    <ng-option *ngFor="let item of cboEntidades" [value]="item.nId">
+                                                        {{item.sDescripcion}}
+                                                    </ng-option>
+                                                </ng-select>
+                                                <mat-error style="font-size: 75%;"
+                                                    *ngIf="salidaForm.get('txtEntidadDestino').hasError('required')">
+                                                    .Obligatorio</mat-error>
+
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+
+                                                <ng-select appendTo="body" style="padding-bottom:10px"
+                                                    [clearable]="false" (change)="fnObtenerUbicacion($event)"
+                                                    formControlName="txtPuntoDestino" placeholder="Punto Destino"
+                                                    required>
+                                                    <ng-option *ngFor="let item of cboDestino"
+                                                        [value]="item.nIdDireccion">
+                                                        {{item.sDestino}}
+                                                    </ng-option>
+                                                </ng-select>
+                                                <mat-error style="font-size: 75%;"
+                                                    *ngIf="salidaForm.get('txtPuntoDestino').hasError('required')">
+                                                    .Obligatorio</mat-error>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-md-4">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Ubicación</mat-label>
+                                                    <input matInput formControlName="txtUbicacion" placeholder="Buscar"
+                                                        [readonly]="true">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Dirección Exacta Destino</mat-label>
+                                                    <input matInput formControlName="txtDireccionDestino"
+                                                        placeholder="Buscar" [readonly]="true">
+
+                                                </mat-form-field>
+                                            </div>
+
+
+                                            <div class="form-group col-md-1">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Movilidad:</mat-label>
+                                                    <mat-select formControlName="opcMovil"
+                                                        (selectionChange)="fnEventMovil($event); fnObtenerMovilidad()"
+                                                        [errorStateMatcher]="matcher">
+                                                        <mat-option>Seleccione</mat-option>
+                                                        <mat-option *ngFor="let element of cboMovil"
+                                                            [value]="element.nIdMovil">
+                                                            {{element.sOpcMovil}}</mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="salidaForm.get('opcMovil').hasError('required')">
+                                                        .Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+
+
+                                            <div class="form-group col-md-3">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Tipo Movilidad:</mat-label>
+                                                    <mat-select formControlName="opcTipoMovil"
+                                                        (selectionChange)="fnEventCourier($event); fnValidarSaldo() "
+                                                        [errorStateMatcher]="matcher">
+                                                        <mat-option>Seleccione</mat-option>
+                                                        <mat-option *ngFor="let element of cboTipoMovil"
+                                                            [value]="element.nId">
+                                                            {{element.sDescripcion}}</mat-option>
+                                                    </mat-select>
+                                                    <mat-error
+                                                        *ngIf="salidaForm.get('opcTipoMovil').hasError('required')">
+                                                        .Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                                <br>
+
+                                <div class="form-row">
+
+                                    <div class="form-group col-md-6 ocultar-mobile">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Observación:</mat-label>
+                                            <input (input)="fnDarValor(salidaForm, 'txtObservacion', $event)" matInput
+                                                formControlName="txtObservacion" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+
+
+                                    <div class="form-group col-md-2 ocultar-mobile">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Total Unidades:</mat-label>
+                                            <input matInput formControlName="txtTotalUnidades" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-2 ocultar-mobile">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Peso:</mat-label>
+                                            <input matInput formControlName="txtTotalPeso" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-2 ocultar-mobile">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Volumen:</mat-label>
+                                            <input matInput formControlName="txtTotalVolumen" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <p *ngIf="listaDetalle.length>=30" style="font-size: 0.8rem; color:red">*Se puede
+                                        registrar hasta un máximo de 30 artículos</p>
+
+                                </div>
+
+
+                            </div>
+
+                            <!--Informacion en celular-->
+                            <div class="col-md-12 mostrar-mobile">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                            Datos
+                                        </mat-panel-title>
+                                        <button mat-icon-button>
+                                            <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                        </button>
+                                    </mat-expansion-panel-header>
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Observación:</mat-label>
+                                            <input (input)="fnDarValor(salidaForm, 'txtObservacion', $event)" matInput
+                                                formControlName="txtObservacion" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+
+
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Total Unidades:</mat-label>
+                                            <input matInput formControlName="txtTotalUnidades" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Peso:</mat-label>
+                                            <input matInput formControlName="txtTotalPeso" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Volumen:</mat-label>
+                                            <input matInput formControlName="txtTotalVolumen" [readonly]="true">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <p *ngIf="listaDetalle.length>=30" style="font-size: 0.8rem; color:red">*Se
+                                        puede registrar hasta un máximo de 30 artículos</p>
+
+                                </mat-expansion-panel>
+                            </div>
+
+                            <div class="col-md-12 mostrar-mobile">
+                                <br>
+                            </div>
+
+                            <div class="col-md-2 ocultar-mobile">
+                                <div class="form-row">
+                                    <div class="col-md-1">
+                                        <div class="clsSeparador">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <!-- Campos auditoria -->
+                                    <div class="col-md-11">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Documento:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtDocumento"
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Creado por:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtCreado">
+                                        </mat-form-field>
+
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha Creado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtFechaCreado">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Guía Salida:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtGuiaSalida">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="txtEstado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Informacion en celular-->
+                            <div class="col-md-12 mostrar-mobile">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                            Información
+                                        </mat-panel-title>
+                                        <button mat-icon-button>
+                                            <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                        </button>
+                                    </mat-expansion-panel-header>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Documento:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtDocumento"
+                                                    style="color: rgb(236, 0, 140);">
+                                            </mat-form-field>
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Creado por:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtCreado">
+                                            </mat-form-field>
+
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Creado:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtFechaCreado">
+                                            </mat-form-field>
+
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Guía Salida:</mat-label>
+                                                <input type="text" matInput readonly formControlName="txtGuiaSalida">
+                                            </mat-form-field>
+
+                                            <mat-form-field style="width: 100%;" color="accent">
+                                                <mat-label>Estado:</mat-label>
+                                                <input type="text" matInput formControlName="txtEstado" readonly
+                                                    style="color: rgb(236, 0, 140);">
+                                            </mat-form-field>
+
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+                            <div class="col-md-12 mostrar-mobile">
+                                <br>
+                            </div>
+
+                        </div>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!--Detalle-->
+    <div class="col-md-10 offset-md-1 clsTableCreate example-container">
+        <div class="row">
+            <!--Table para detalle de registro de ingreso -->
+            <div class="col-12">
+                <button matTooltipPosition="left" matTooltip='Agregar detalle' *ngIf="vbtnGuardar" mat-raised-button
+                    mat-mini-fab class="boton-MatTable" color="accent" (click)="btnAgregarLineaDetalle()"><i
+                        class="material-icons">add</i>
+                    <input data-toggle="modal" data-target="#modalArticulo" #modalArticulo type="hidden" name="button">
+                </button>
+
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="table-container-1">
+                        <table mat-table #detNotaSalidaSort="matSort" [dataSource]="detNotaSalidaTableData" matSort>
+                            <!-- Agregar-->
+
+                            <ng-container matColumnDef="pEstado" sticky>
+
+                                <th mat-header-cell *matHeaderCellDef style="min-width: 88px !important;">
+                                </th>
+
+                                <td mat-cell *matCellDef="let row; let i = index;"
+                                    class="has_label_on_mobile clsColumnaOpc2" data-label='Opción: '>
+
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                        matTooltipPosition="right" mat-stroked-button color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+
+                                    <mat-menu #menu="matMenu" xPosition="after">
+                                        <button mat-menu-item (click)="btnEditarDetalle(i, row)" *ngIf="vbtnGuardar">
+                                            <mat-icon color="accent">mode_edit</mat-icon>
+                                            <input data-toggle="modal" data-target="#modalArticulo" #modalArticulo
+                                                type="hidden" name="button">
+                                            <span>Editar</span>
+                                        </button>
+
+                                        <button mat-menu-item (click)="btnVerImagen(i, row)">
+                                            <mat-icon color="accent">image</mat-icon>
+                                            <span>Ver foto</span>
+                                        </button>
+                                        <button mat-menu-item (click)="btnEliminarLineaDetalle(i,row)"
+                                            *ngIf="vbtnGuardar">
+                                            <mat-icon color="accent">delete</mat-icon>
+                                            <span>Eliminar</span>
+                                        </button>
+                                    </mat-menu>
+
+                                </td>
+
+                            </ng-container>
+
+                            <!-- Artículo -->
+                            <ng-container matColumnDef="sArticulo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Artículo
+                                </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Artículo: '
+                                    class="has_label_on_mobile clsColumnaLarge">
+
+                                    {{element.sArticulo}}
+
+
+                            </ng-container>
+
+                            <!-- Unidad de Medida-->
+                            <ng-container matColumnDef="sMedida" style="text-align: center;">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> U.M </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Unidad de Medida: '
+                                    class="has_label_on_mobile">
+
+                                    {{element.sMedida}}
+
+                                </td>
+                            </ng-container>
+
+                            <!-- Lote -->
+                            <ng-container matColumnDef="sLote">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Lote
+                                </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Lote: '
+                                    class="has_label_on_mobile">
+                                    {{element.sLote}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Fecha Vencimiento -->
+                            <ng-container matColumnDef="sFechaVence">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Fecha
+                                    Venc. </th>
+                                <td mat-cell *matCellDef="let element;let i = index;"
+                                    data-label='Fecha de Vencimiento: ' class="has_label_on_mobile ">
+                                    {{element.sFechaVence}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Saldo Actual -->
+                            <ng-container matColumnDef="nStockActual">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Saldo
+                                    Actual </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Saldo Actual: '
+                                    class="has_label_on_mobile ">
+
+                                    {{element.nStockActual}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Cantidad -->
+                            <ng-container matColumnDef="nCantidad">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Cantidad
+                                </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Cantidad: '
+                                    class="has_label_on_mobile " ngDefaultControl>
+                                    {{element.nCantidad}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Peso Total -->
+                            <ng-container matColumnDef="nPesoDetalle">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Peso
+                                </th>
+                                <td mat-cell *matCellDef="let element;let i = index; " data-label='Peso Total: '
+                                    class="has_label_on_mobile " ngDefaultControl>
+                                    {{element.nPesoDetalle | number:'1.2-2'}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Volumen -->
+                            <ng-container matColumnDef="nVolumenDetalle">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaShort"> Volumen
+                                </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Volumen: '
+                                    class="has_label_on_mobile " ngDefaultControl>
+                                    {{element.nVolumenDetalle | number:'1.6-6'}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sObservacionDet">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                    Observaciones </th>
+                                <td mat-cell *matCellDef="let element;let i = index;" data-label='Observaciones: '
+                                    class="has_label_on_mobile " ngDefaultControl>
+                                    {{element.sObservacionDet}}
+                                </td>
+                            </ng-container>
+
+
+
+                            <!-- Header and Row Declarations -->
+                            <tr mat-header-row *matHeaderRowDef="DetNotaSalidaColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: DetNotaSalidaColumns;"></tr>
+
+                        </table>
+                    </div>
+                    <mat-paginator #detNotaSalidaPaginator="matPaginator" [pageSize]="5"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+            <!--Para Guardar -->
+            <button *ngIf="vbtnGuardar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Guardar" (click)="fnGuardarFormulario()"><i
+                    class="material-icons">save</i></button>
+
+            <!--Para Modificar -->
+            <button *ngIf="vbtnModificar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Modificar" (click)="fnActivarModificar()"><i
+                    class="material-icons">edit</i></button>
+
+            <!--Para Cancelar -->
+            <button *ngIf="vbtnCancelar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Cancelar" (click)="fnCancelar()"><i
+                    class="material-icons">clear</i></button>
+
+            <!--Para Enviar -->
+            <button *ngIf="vbtnEnviar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Enviar" (click)="fnEnviar()"><i
+                    class="material-icons">send</i></button>
+
+            <!--Para Duplicar -->
+            <button *ngIf="vbtnDuplicar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Duplicar" (click)="fnDuplicarNota()"><i
+                    class="material-icons">content_copy</i></button>
+
+            <!--Para abrir el visor de historial -->
+            <button *ngIf="!vbtnGuardar && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" color="secondary" matTooltip="Visor de historial"
+                (click)="fnAbrirVisorHistorialNota()"><i class="material-icons">assignment</i></button>
+
+            <!--Para Salir -->
+            <button *ngIf="abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary"
+                color="secondary" matTooltip="Salir" (click)="fnSalir()"><i class="material-icons">exit_to_app</i></button>
+
+            <mat-chip-list *ngIf="time && bCountdown" style="margin-top: 10px;">
+                <mat-chip [disableRipple]="true" color="primary" selected>
+                    <mat-icon *ngIf="time && bCountdown" style="margin-right: 10px; float: right;" color="white">
+                        access_time</mat-icon>
+
+                    <strong>
+                        {{time.minutes | number:'2.0-0'}}:{{time.seconds | number:'2.0-0' }}
+                    </strong>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+
+    <!-- Modal para agregar artículos -->
+    <div class="modal fade  bd-example-modal-xl" id="modalArticulo" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important;">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalGastoLongTitle"> Detalle del artículo: </h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="detalleForm">
+                            <div class="form-row ">
+                                <div class="col-md-8">
+
+                                    <div class="form-row col-md-12">
+
+                                        <div class="form-group col-md-12">
+
+                                            <ng-select appendTo="body" [clearable]="false"
+                                                (change)="fnObtenerDatoArticulo($event)" formControlName="txtArticulo"
+                                                placeholder="Artículo" required>
+                                                <ng-option *ngFor="let item of cboArticulo" [value]="item.nIdArticulo">
+                                                    {{item.sDescripcion}}
+                                                </ng-option>
+                                            </ng-select>
+                                            <mat-error style="font-size: 75%;"
+                                                *ngIf="detalleForm.get('txtArticulo').hasError('required')">.Obligatorio
+                                            </mat-error>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row col-md-12">
+
+                                        <div class="form-group col-md-8">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Tipo de Lote</mat-label>
+                                                <input matInput formControlName="txtTipoLote" [readonly]="true"
+                                                    placeholder="Buscar" aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Unidad Medida</mat-label>
+                                                <input matInput formControlName="txtUnidadMedida" [readonly]="true"
+                                                    placeholder="Buscar" aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="form-row col-md-12">
+
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Ingreso</mat-label>
+                                                <input matInput formControlName="txtFechaIngreso" [readonly]="true"
+                                                    aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Fecha Vencimiento</mat-label>
+                                                <input matInput formControlName="txtFechaVencimiento" [readonly]="true"
+                                                    aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-row col-md-12">
+
+                                        <div class="form-group col-md-6">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Lote</mat-label>
+                                                <input matInput formControlName="txtLote" [readonly]="true"
+                                                    aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Stock Actual</mat-label>
+                                                <input matInput formControlName="txtStockActual" [readonly]="true"
+                                                    aria-label="State">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Cantidad</mat-label>
+                                                <input type="number" (input)="fnRedondear('txtCantidad', detalleForm)"
+                                                    min="0.00" matInput formControlName="txtCantidad" aria-label="State"
+                                                    autocomplete="off">
+                                                <mat-error *ngIf="detalleForm.get('txtCantidad').hasError('required')">
+                                                    .Obligatorio</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row col-md-12">
+
+                                        <div class="form-group col-md-10">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Observaciones:</mat-label>
+                                                <input type="text" matInput formControlName="txtObservacionDetalle"
+                                                    autocomplete="off">
+
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <div>
+                                                <button mat-mini-fab class="fab-toggler"
+                                                    matTooltip="Agregar artículo al detalle"
+                                                    (click)="bEditarDetalle ? fnEditarListaDetalle() : fnAgregarListaDetalle() ">
+                                                    <i class="material-icons">check</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card text-center">
+                                        <img [src]="sRutaImagen" class="card-img-top">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,24 @@
+<div class="transporte">
+  <mat-card class="title-card mb-1">
+    Listado de artículos existentes
+    <button class="close button-modal-lucky" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card>
+  <mat-dialog-content>
+    <div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="300">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+          <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: " [style.textAlign]="col.align">
+            {{row[col.field]}}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    </div>
+  </mat-dialog-content>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+</div>

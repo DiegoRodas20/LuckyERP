@@ -1,0 +1,215 @@
+<div class="container-fluid"  [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'" >
+    <br><br><br>
+    <h3 class="col-md-10 offset-md-1 card-header" style="text-align:center">Control: Aval del depósito de efectivo </h3>
+    <br>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <!-- Inicio del Busqueda -->
+            <div class="row">
+                <div class="col-md-8 offset-md-4" >
+                    <div class="form-row">
+                        <div class="col-sm-6">
+
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Personal con firma de Aval:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.txtFiltro.setValue('');fnListarAval()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-2 ">
+                            <button mat-mini-fab class="fab-toggler" matTooltip="Asignar % resguardo" data-toggle="modal" data-target="#modalPersonal"  (click)="fnNuevo()">
+                                <i class="material-icons" >add</i>
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-10 offset-md-1 " >
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container" >
+                        <table mat-table [dataSource]="dsControlAval" matSort style="width: 100%;">
+                        <!-- ID Column -->
+                        <ng-container matColumnDef="nIdControlAval" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Opción</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Opción: '>
+
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button mat-menu-item data-toggle="modal" data-target="#modalPersonal" (click)="VerDetalle(row)">
+                                        <mat-icon color="accent">edit</mat-icon>
+                                        <span>Modificar</span>
+                                    </button>
+                                    <button mat-menu-item (click)="fnVerPendientes(row)">
+                                        <mat-icon color="accent">payment</mat-icon>
+                                        <span>Ver Pendientes</span>
+                                    </button>
+                                    <button mat-menu-item (click)="fnArchivosAval(row)">
+                                        <mat-icon color="accent">attach_file</mat-icon>
+                                        <span>Adjuntar Archivo</span>
+                                    </button>
+                                </mat-menu>
+
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDocumento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Documento </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Documento: '>
+                              <ngb-highlight [result]="row.sDocumento" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDescripcion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Nombre </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge" data-label='Nombre Completo: '>
+                              <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- Progress Column -->
+                        <ng-container matColumnDef="sPlanilla">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge2"> Planilla </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge2" data-label='Planilla: '>
+                              <ngb-highlight [result]="row.sCodPlanilla + ' - ' + row.sPlanilla" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sLiminte">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Sin Líminte </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Sin Liminte: '>
+                              <ngb-highlight [result]="row.sLiminte" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nTotalFirmado">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total Firmado </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Total Firmado: '>
+                              <ngb-highlight [result]="row.nTotalFirmado  | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nTotalLiquidar">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total por Liquidar </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Total por Liquidar: '>
+                              <ngb-highlight [result]="row.nTotalLiquidar  | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nTotalDisponible">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total Disponible </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Total Disponible: '>
+                              <ngb-highlight [result]="row.nTotalDisponible  | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[ 20, 40, 80]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar el personal para firma de Aval -->
+<div class="modal fade  bd-example-modal-xl" id="modalPersonal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalPersonal" aria-hidden="true">
+    <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important; ">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalPersonalLongTitle">
+                    <Label>Registro de personal con firma de aval</Label> </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form [formGroup]="personalForm">
+                        <div class="form-row container">
+                            <div class="form-row col-md-12">
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Personal</mat-label>
+                                        <input matInput formControlName="txtPersonal" [readonly]="vModificar" placeholder="Buscar" aria-label="State" [matAutocomplete]="auto3" [errorStateMatcher]="matcher">
+                                        <mat-autocomplete #auto3="matAutocomplete" >
+                                            <mat-option *ngFor="let state2 of filteredSolicitante | async" [value]="state2.sDescripcion" >
+                                            <span>{{state2.sDescripcion}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <small *ngIf="SolictanteNotFound" class="text-danger"> Error, verificar Personal </small>
+                                        <mat-error *ngIf="personalForm.get('txtPersonal').hasError('required')">.Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width:100%;">
+                                        <mat-label>Planilla: </mat-label>
+                                        <input matInput type="text" readonly formControlName="txtPlanilla"   />
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row col-md-12">
+
+                                <div class="form-group col-md-3">
+                                    <mat-checkbox style="width: 100%;margin-top: 22px;" formControlName="nLimite" class="example-margin">Sin Límite</mat-checkbox>
+                                </div>
+
+                                <div class="form-group col-md-3" [ngClass]="vModificar ? 'clsShow2' : 'clsHide2'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Firmado: </mat-label>
+                                        <input matInput type="text" readonly formControlName="txtTotalFirmado" [value]="personalForm.get('txtTotalFirmado').value | number:'1.2-2' "/>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-3" [ngClass]="vModificar ? 'clsShow2' : 'clsHide2'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Por Liquidar: </mat-label>
+                                        <input matInput type="text" readonly formControlName="txtTotPorLiquidar" [value]="personalForm.get('txtTotPorLiquidar').value | number:'1.2-2' "/>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="form-group col-md-3" [ngClass]="vModificar ? 'clsShow2' : 'clsHide2'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Disponible: </mat-label>
+                                        <input matInput type="text" readonly formControlName="txtTotDisponible" [value]="personalForm.get('txtTotDisponible').value | number:'1.2-2' "/>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button mat-mini-fab (click)="fnGuardarPersonal()"> <mat-icon>save</mat-icon> </button>
+                                    <input class="close" data-dismiss="modal" data-toggle="modal" #modalPersonal data-target="#modalPersonal" type="hidden" name="button">
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

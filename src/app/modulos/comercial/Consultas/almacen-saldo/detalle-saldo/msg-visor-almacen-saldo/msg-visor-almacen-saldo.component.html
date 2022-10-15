@@ -1,0 +1,66 @@
+<h4 mat-dialog-title class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">
+  Para ver mayor detalle descargar el archivo y abrirlo con Outlook
+</h4>
+
+<mat-dialog-content>
+  <mat-card>
+      <form [formGroup]="formMensaje" class="row">
+
+          <div class="col-md-12">
+              <mat-form-field style="width: 100%;">
+                  <mat-label>Emisor:</mat-label>
+                  <input type="text" readonly matInput formControlName="txtEmisor">
+              </mat-form-field>
+          </div>
+
+          <div class="col-md-12">
+              <mat-form-field style="width: 100%;">
+                  <mat-label>Remitentes:</mat-label>
+                  <input type="text" readonly matInput formControlName="txtRemitentes">
+              </mat-form-field>
+          </div>
+
+          <div class="col-md-12">
+              <mat-form-field style="width: 100%;">
+                  <mat-label>Asunto:</mat-label>
+                  <input type="text" readonly matInput formControlName="txtAsunto">
+              </mat-form-field>
+          </div>
+
+          <div class="col-md-12">
+              <mat-form-field style="width: 100%;">
+                  <mat-label>Adjuntos:</mat-label>
+                  <input type="text" readonly matInput formControlName="txtAdjuntos">
+              </mat-form-field>
+          </div>
+
+          <div class="col-md-12">
+              <mat-form-field style="width: 100%;">
+                  <mat-label>Mensaje:</mat-label>
+                  <textarea rows="15" type="text" readonly matInput formControlName="txtBody">
+                  </textarea>
+              </mat-form-field>
+          </div>
+
+      </form>
+  </mat-card>
+</mat-dialog-content>
+
+<div class="fab-container" *ngIf="mostrarBotones">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+      <button *ngIf="btn.state"
+        mat-mini-fab
+        class="fab-secondary"
+        [matTooltip]="btn.tool"
+        matTooltipPosition="left"
+        color="secondary"
+        (click)="clickFab(ibtn)">
+        <i class="material-icons">{{btn.icon}}</i>
+      </button>
+    </ng-container>
+  </div>
+</div>

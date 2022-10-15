@@ -1,0 +1,47 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+.mat-input-element:disabled {
+  color: black !important;
+}
+
+/* Botones Flotantes */
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}

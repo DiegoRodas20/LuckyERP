@@ -1,0 +1,259 @@
+<ngx-spinner name="spi_compare" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+  </ngx-spinner>
+  
+  <div class="fab-container">
+    <button [@tada]="{value: tadaCompare}" mat-mini-fab class="fab-toggler" 
+    (click)="onToggleFab(toggleCompare, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsCompare}">add</i>
+    </button>
+    <div [@speedDialStagger]="abCompare.length">
+        <button *ngFor="let btn of abCompare; let ibtn = index;" mat-mini-fab 
+        class="fab-secondary" color="secondary" (click)="clickFab(toggleCompare, ibtn)" [disabled]="btn.dis"  matBadgeHidden="{{btn.badge === 0}}" matBadge="{{btn.badge}}" matBadgePosition="after" matBadgeColor="accent">
+            <i class="material-icons" matTooltip="{{btn.tool}}"  
+            matTooltipPosition="left">{{btn.icon}} </i>
+        </button>
+    </div>
+  </div>
+
+  <input id="uploadFile3" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  (change)="uploadFile3($event)" style="display: none;">
+  <div class="modal-header">
+    <h4 class="modal-title">Comparando Datos de la planilla : {{IdPlanilla}} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+  
+  <!-- contenido -->
+  <div class="modal-body">
+    <div class="col-lg">
+      <mat-accordion style="direction: ltr">
+      <mat-expansion-panel #epListPersonas   [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true" [disabled]="true" >
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                Lista de personal por Grupo: {{grupoActual}} ({{pagIni}} - {{pagFin}}):
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px;">
+              </mat-panel-description>
+          </mat-expansion-panel-header>
+    <div class="row">
+      <div class="col-lg-12">
+          <div id="dTableMain2" class="melevation">
+              <table  mat-table [dataSource]="MainDS" style="width: 100%;" multiTemplateDataRows>
+                <ng-container matColumnDef="NroOden">
+                  <th mat-header-cell *matHeaderCellDef> Orden </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='# Orden: '> {{element.sNroOrden}} </td>
+              </ng-container>
+                  <ng-container matColumnDef="TipoDocumento">
+                      <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                      <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo: '> {{element.sTipoDocumento}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="Documento">
+                      <th mat-header-cell *matHeaderCellDef > Documento  </th>
+                      <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Documento :'> {{element.sDocumento}} </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="Nombres">
+                      <th mat-header-cell *matHeaderCellDef > Apellidos y Nombres   </th>
+                      <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Nombres'> {{element.sApePa}} {{element.sApeMa}} {{element.sNombres}} </td>
+                  </ng-container>
+
+                  <!-- <ng-container matColumnDef="Plla">
+                    <th mat-header-cell *matHeaderCellDef > Plla   </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Plla'> {{element.sCodPlla}} </td>
+                  </ng-container> -->
+
+                  <!-- <ng-container matColumnDef="Fec. Ingreso">
+                  <th mat-header-cell *matHeaderCellDef > Fec. Ingreso  </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ingreso'> {{element.sFec_Ingreso}} </td>
+                  </ng-container> -->
+  
+                  <ng-container matColumnDef="noData">
+                      <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                          No se encuentran registros.
+                      </mat-footer-cell>
+                  </ng-container>
+    
+                  <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                  <!-- <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.length > 0"></mat-footer-row> -->
+              </table>
+          </div>
+          <mat-paginator  #pagMain  style="display: contents;" [hidePageSize]="false" [pageSize]="10"></mat-paginator>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+</div>
+
+
+<!-- lista para comparar -->
+<div class="col-lg">
+  <mat-accordion style="direction: ltr">
+  <mat-expansion-panel #epListComparar  [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true"  [disabled]="true" >
+      <mat-expansion-panel-header>
+          <mat-panel-title>
+            Comparativa 
+          </mat-panel-title>
+          <mat-panel-description style="margin-right: 0px;">
+          </mat-panel-description>
+      </mat-expansion-panel-header>
+<div class="row">
+  <div class="col-lg-12">
+      <div id="dTableMain" class="melevation">
+          <table  mat-table [dataSource]="CompararDS" style="width: 100%;" multiTemplateDataRows>
+            <ng-container matColumnDef="Documento">
+              <th mat-header-cell *matHeaderCellDef> Documento </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Documento: '> {{element.sDocumento}} </td>
+          </ng-container>
+              <ng-container matColumnDef="Nombres">
+                  <th mat-header-cell *matHeaderCellDef> Nombres </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Nombres: '> {{element.sApePa}} {{element.sApeMa}} {{element.sNombres}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="DifCUSPP">
+                  <th mat-header-cell *matHeaderCellDef > Dif. CUSPP  </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Dif. CUSPP: '> {{element.sDIFCUSPP}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="DifAFP">
+                  <th mat-header-cell *matHeaderCellDef > Dif. AFP   </th>
+                  <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Dif. AFP: '> {{element.sDIFAFP}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Dif.Comision">
+                <th mat-header-cell *matHeaderCellDef > Dif. Comisión   </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Dif. Comisión: '> {{element.sDIFCOMI}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="more">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let row" (click)="expandedMore = (expandedMore === row) ? null : row">
+                    <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                </td>
+            </ng-container>
+
+            <!-- More Expanded -->
+            <ng-container matColumnDef="expanded_More">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="CompararDC.length">
+                    <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                        <div class="row" style="padding: 10px;">
+
+                          <div class="col-lg">
+
+                            <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                <h6>Datos Sistema:</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <div class="form-row">
+
+                              <div class="col-lg-6" style="padding-left: 5px;">
+                                <mat-form-field style="width: 100%;">
+                                  <mat-label>CUSPP:</mat-label>
+                                  <input type="text" matInput value="{{ element.sCUSPP_S }}" disabled >
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-lg-6" style="padding-left: 5px;">
+                                  <mat-form-field style="width: 100%;">
+                                    <mat-label>AFP:</mat-label>
+                                    <input type="text" matInput value="{{ element.sAFP_S }}" disabled>
+                                    </mat-form-field>
+                                  </div>
+                            </div>
+                            <div class="form-row">
+
+                              <div class="col-lg-6" style="padding-left: 5px;">
+                                <mat-form-field style="width: 100%;">
+                                  <mat-label>Comisión:</mat-label>
+                                  <input type="text" matInput value="{{ element.sCOMI_S }}" disabled>
+                                  </mat-form-field>
+                                </div>
+                          </div>
+
+                        </div>
+
+                            <mat-divider [vertical]="true"></mat-divider>
+                            <div class="col-lg">
+
+                              <!-- Contrato origen -->
+                              <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                  <h6>Datos Afp:</h6>
+                                  <hr style="margin-top: 0px; margin-bottom: 10px;">
+                              </div>
+  
+                              <div class="form-row">
+  
+                                <div class="col-lg-6" style="padding-left: 5px;">
+                                  <mat-form-field style="width: 100%;">
+                                    <mat-label>CUSPP:</mat-label>
+                                    <input type="text" matInput value="{{ element.sCUSPP_W }}" disabled >
+                                    </mat-form-field>
+                                  </div>
+
+                                  <div class="col-lg-6" style="padding-left: 5px;">
+                                    <mat-form-field style="width: 100%;">
+                                      <mat-label>AFP:</mat-label>
+                                      <input type="text" matInput value="{{ element.sAFP_W }}" disabled >
+                                      </mat-form-field>
+                                    </div>
+                                 
+                              </div>
+
+                              <div class="form-row">
+                                <div class="col-lg-6" style="padding-left: 5px;">
+                                <mat-form-field style="width: 100%;">
+                                  <mat-label>Comisión:</mat-label>
+                                  <input type="text" matInput value="{{ element.sCOMI_W }}"  disabled >
+                                  </mat-form-field>
+                                </div>
+                                <!-- <div class="col-lg-6" style="padding-left: 5px;">
+                                  <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                      <h6>Comisión:</h6>
+                                  </div>
+                                  <input type="text" matInput  value="{{ element.sCOMI_W }}">
+                              </div> -->
+                            </div>
+  
+                          </div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+              <ng-container matColumnDef="noData">
+                  <mat-footer-cell *matFooterCellDef [attr.colspan]="CompararDC.length">
+                      No se encuentran registros.
+                  </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="CompararDC; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: CompararDC;"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+              <mat-footer-row *matFooterRowDef="['noData']" [hidden]="CompararDS && this.CompararDS.filteredData.length > 0"></mat-footer-row>
+          </table>
+      </div>
+      <mat-paginator  #pagComparar  style="display: contents;" [hidePageSize]="false" [pageSize]="6"></mat-paginator>
+  </div>
+</div>
+</mat-expansion-panel>
+</mat-accordion>
+</div>
+  
+  </div>
+  
+  
+  
+  
+  
+<!--    
+  <div class="modal-footer">
+    <mat-progress-bar *ngIf="pbExport" color="accent" mode="indeterminate"></mat-progress-bar>
+  </div> -->
+  
+  
+  
+  
+  

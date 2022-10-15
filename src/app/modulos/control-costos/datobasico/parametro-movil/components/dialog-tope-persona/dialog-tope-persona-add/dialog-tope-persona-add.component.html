@@ -1,0 +1,73 @@
+<div class="col-md-10 offset-md-1">
+    <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">Agregar Empleado</mat-card>
+    </div>
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="agregarEmpleado()">
+                <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="onNoClick()">
+                <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+            </button>
+        </div>
+    </div>
+    <mat-card>
+        <form autocomplete="off" [formGroup]="form" class="example-form" (ngSubmit)="save()">
+
+            <!-- Nombre de la Persona -->
+            <mat-form-field class="example-full-width p-2">
+                <input type="text" matInput placeholder="Nombre" formControlName="nombre" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredNombrePersonal | async" [value]="option.sDescripcion">
+                        {{ option.sDescripcion }}
+                    </mat-option>
+                </mat-autocomplete>
+                <small *ngIf="empleadoNotFound" class="text-danger"> El nombre del personal no está registrado</small>
+            </mat-form-field>
+
+            <div class="row  px-2">
+                <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+                    <mat-form-field class="example-half-width">
+                        <input type="text" matInput placeholder="DNI" formControlName="dni" [readOnly]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+                    <mat-form-field class="example-half-width">
+                        <mat-label>Aplica</mat-label>
+                        <mat-select formControlName="aplica">
+                            <mat-option *ngFor="let estado of listEstados" [value]="estado.value">
+                                {{estado.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row  px-2">
+                <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+                    <mat-form-field class="example-half-width">
+                        <input type="number" matInput placeholder="Monto Diario" formControlName="diario" [readOnly]="true">
+                    </mat-form-field>
+                    <small *ngIf="montoDiario" class="text-danger"> El monto debe ser mayor a 0</small>
+                </div>
+                <div class="col-lg-6 col-lg-6 col-sm-6 col-md-6">
+                    <mat-form-field class="example-half-width">
+                        <input type="number" matInput placeholder="Monto Mensual" formControlName="mensual" [readOnly]="true">
+                    </mat-form-field>
+                    <small *ngIf="montoMensual" class="text-danger"> El monto debe ser mayor a 0 y al diario </small>
+                </div>
+            </div>
+        </form>
+    </mat-card>
+
+</div>
+
+
+<!-- <div mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="agregarEmpleado()">Añadir</button>
+    <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+</div> -->

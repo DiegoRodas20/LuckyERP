@@ -1,0 +1,87 @@
+<div class="clsprincipal">
+    <div class="col-md-8 offset-md-2">
+        <h5 class="card-header center-text-card">Cierre mes costo fijo {{vEmpresa?.sCod}} - {{vEmpresa?.sDesc}}</h5>
+        <div class="row"><br /></div>
+    </div>
+    <div>
+        <div class="col-md-8 offset-md-2">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            <p>
+                                Para inactivar los saldos de un mes y año, seleccione el año y despues deseleccione el
+                                mes que desea inactivar, para activarlo lo vuelve a seleccionar.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 d-flex justify-content-center">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Año:</mat-label>
+                                <mat-select [formControl]="cboAnio">
+                                    <mat-option>Seleccione</mat-option>
+                                    <mat-option (click)="fnListarEstadosMeses(vAnio.sAnio); this.fnInactivarST(vAnio.sAnio)" *ngFor="let vAnio of lAnio" [value]="vAnio.sAnio">
+                                        {{vAnio.sAnio}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <form class="form-row grupo grupo-1 border border-info rounded mb-0" [formGroup]="formSaldo">
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[0]); fnCambioCierreMes(this.lMesId[0])" formControlName="stEnero">Enero
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[1]); fnCambioCierreMes(this.lMesId[1])" formControlName="stFebrero">Febrero
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[2]); fnCambioCierreMes(this.lMesId[2])" formControlName="stMarzo">Marzo
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[3]); fnCambioCierreMes(this.lMesId[3])" formControlName="stAbril">Abril
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[4]); fnCambioCierreMes(this.lMesId[4])" formControlName="stMayo">Mayo
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[5]); fnCambioCierreMes(this.lMesId[5])" formControlName="stJunio">Junio
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[6]); fnCambioCierreMes(this.lMesId[6])" formControlName="stJulio">Julio
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[7]); fnCambioCierreMes(this.lMesId[7])" formControlName="stAgosto">Agosto
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[8]); fnCambioCierreMes(this.lMesId[8])" formControlName="stSeptiembre">
+                                Septiembre</mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[9]); fnCambioCierreMes(this.lMesId[9])" formControlName="stOctubre">Octubre
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[10]); fnCambioCierreMes(this.lMesId[10])" formControlName="stNoviembre">
+                                Noviembre</mat-slide-toggle>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <mat-slide-toggle (change)="fnCambioMes(this.lMesId[11]); fnCambioCierreMes(this.lMesId[11])" formControlName="stDiciembre">
+                                Diciembre</mat-slide-toggle>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

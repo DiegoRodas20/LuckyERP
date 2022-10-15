@@ -1,0 +1,58 @@
+<div style="padding-top: 25px;">
+    <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">Historial de Estados</mat-card>
+    </div>
+
+    <div class="mat-elevation-z8">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="usuario">
+                    <th mat-header-cell *matHeaderCellDef> Usuario </th>
+                    <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fecha | date:'yyyy-MM-dd HH:mm'}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="ver">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Ver </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                        <span>
+                            <mat-icon matTooltip="Ver" color="accent" style="cursor: pointer"
+                            *ngIf="element.urlSunat != ''" (click)="VerUrl(element.urlSunat)">visibility</mat-icon>
+                        </span>   
+                     </td>
+                </ng-container>
+                <ng-container matColumnDef="descargar">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Descargar </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;">  
+                        <span>
+                            <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer"
+                              *ngIf="element.urlSunat != ''" (click)="DescargarUrl(element.urlSunat)">cloud_download</mat-icon>
+                        </span> 
+                     </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+ 
+    </div>  
+
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

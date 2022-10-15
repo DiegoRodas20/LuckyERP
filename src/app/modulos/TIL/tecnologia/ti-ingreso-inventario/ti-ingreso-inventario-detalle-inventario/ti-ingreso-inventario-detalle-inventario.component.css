@@ -1,0 +1,150 @@
+.contenedorComponente {
+  height: 100vh;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: 300px;
+  width: 100%;
+  transition: height 0.15s ease;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.icon-activo-table{
+  position: relative; 
+  top: 6px;
+  cursor: pointer;
+}
+
+.registro-yellow{
+  background-color:rgb(255, 214, 81)
+}
+
+/* Estilos del Formulario */
+
+.contenedorAuditoria {
+  display: flex;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.mat-form-field-disabled input,
+.mat-select-disabled .mat-select-value {
+  color: black;
+}
+:host ::ng-deep ng-select-value,
+:host
+  ::ng-deep
+  .ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+/* Estilo del acordeon */
+.mat-expanded > .mat-expansion-panel-header {
+  /* Estilo del acordeon*/
+  background-color: #e1e1e1;
+}
+
+.campoAuditoriaAcordeon {
+  display: none;
+}
+
+:host ::ng-deep .campoAuditoriaAcordeon mat-panel-title,
+:host ::ng-deep .campoAcordeon mat-panel-title {
+  justify-content: space-between;
+  line-height: 40px;
+  color: #334d6e;
+  font-weight: bold;
+}
+
+.alturaMaxima {
+  height: calc(100vh - 400px);
+  min-height: 300px;
+}
+
+@media screen and (max-width: 1199px) {
+  /* Campo auditoria */
+  .campoAuditoria {
+    display: none;
+  }
+
+  .contenedorAuditoria {
+    display: block;
+  }
+
+  .campoAuditoriaAcordeon {
+    display: block;
+    margin: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .clsSeparador {
+    height: 0;
+    border: none;
+  }
+}

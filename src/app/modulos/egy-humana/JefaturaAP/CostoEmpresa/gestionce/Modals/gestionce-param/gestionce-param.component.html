@@ -1,0 +1,168 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+        <i class="material-icons" [@fabToggler]="{value: tsParam}">add</i>
+    </button>
+    <div [@speedDialStagger]="abParam.length">
+        <button *ngFor="let btn of abParam; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_param" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Parametros</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row" style="margin-right: 0px; margin-left: 0px">
+        <mat-tab-group mat-align-tabs="center" style="width: 100%" dynamicHeight [(selectedIndex)]="tabParam">
+
+            <mat-tab label="Costo empresa">
+                <div class="melevation tab">
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Listado :</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="dTableParam" class="melevation">
+                                <table mat-table [dataSource]="ParamDS" style="width: 100%;" multiTemplateDataRows>
+
+                                    <!-- Action Column -->
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button matTooltip="Visualizar" matTooltipPosition="left" mat-stroked-button color="accent" (click)="clickRow(element)">
+                                                <mat-icon>visibility</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Planilla Column -->
+                                    <ng-container matColumnDef="sPlanilla">
+                                        <th mat-header-cell *matHeaderCellDef> Planilla </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Planilla :'> {{ element.sPlanilla }} </td>
+                                    </ng-container>
+
+                                    <!-- Grupo Column -->
+                                    <ng-container matColumnDef="sGrupo">
+                                        <th mat-header-cell *matHeaderCellDef> Grupo </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Grupo :'> {{ element.sGrupo }} </td>
+                                    </ng-container>
+
+                                    <!-- Porcentaje Column -->
+                                    <ng-container matColumnDef="nPorcentaje">
+                                        <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='% Porcentaje :'> {{element.nPorcentaje * 100}} % </td>
+                                    </ng-container>
+
+                                    <!-- More Column -->
+                                    <ng-container matColumnDef="more">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                            <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- More Expanded -->
+                                    <ng-container matColumnDef="expanded_More">
+                                        <td mat-cell *matCellDef="let element" [attr.colspan]="ParamDC.length">
+                                            <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                                <div class="row" style="padding: 10px;">
+                                                    <div class="col-lg-12">
+
+                                                        <div class="row" style="padding-left: 15px;">
+                                                            <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                                <h6>Conceptos relacionados:</h6>
+                                                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                            </div>
+                                                        </div>
+
+                                                        <mat-list>
+                                                            <mat-list-item class="card" *ngFor="let concepto of lConcepto">{{concepto.sConcepto}}</mat-list-item>
+                                                        </mat-list>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="noData">
+                                        <mat-footer-cell *matFooterCellDef [attr.colspan]="ParamDC.length">
+                                            No se encuentran registros.
+                                        </mat-footer-cell>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="ParamDC;"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ParamDC;"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                                    <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ParamDS && this.ParamDS.filteredData.length > 0"></mat-footer-row>
+                                </table>
+                            </div>
+                            <mat-paginator #pagParam style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                            </mat-paginator>
+                        </div>
+                    </div>
+
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Grupos">
+                <div class="melevation tab">
+
+                    <div class="row">
+
+                        <!-- Left section -->
+                        <div class="col-xl-6">
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6>Listado :</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                </div>
+                            </div>
+
+                            <mat-selection-list [multiple]="false">
+                                <mat-list-option class="card" *ngFor="let group of lGroup">{{group.sDesc}}</mat-list-option>
+                            </mat-selection-list>
+
+                        </div>
+
+                        <mat-divider [vertical]="true"></mat-divider>
+
+                        <!-- Right section -->
+                        <div class="col-xl">
+
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h6>Grupo seleccionado :</h6>
+                                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>
+</div>
+
+<div class="modal-footer"></div>

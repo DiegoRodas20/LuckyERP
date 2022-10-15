@@ -1,0 +1,200 @@
+<div>
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+          color="secondary" (click)="clickFab(ibtn)">
+          <i class="material-icons">{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div>
+    <form [formGroup]="formRentabilidad">
+      <div class="row">
+        <!-- Fecha Inicio -->
+        <div class="col-md-6">
+          <div class="row">
+
+            <div class="col-md-12">
+              <ng-select [clearable]="false" (change)="fnVaciarTabla()" placeholder="Año" formControlName="anhoInicio"
+                notFoundText="No hay fechas disponibles">
+                <ng-option *ngFor="let element of cbAnhos" [value]="element.sDescripcion">
+                  {{element.sDescripcion}}
+                </ng-option>
+              </ng-select>
+            </div>
+
+            <div class="col-md-6">
+              <ng-select [clearable]="false" (change)="fnVaciarTabla()" placeholder="Desde" formControlName="mesInicio"
+                notFoundText="No hay fechas disponibles">
+                <ng-option *ngFor="let element of cbMeses" [value]="element.nId">
+                  {{element.sDescripcion}}
+                </ng-option>
+              </ng-select>
+            </div>
+
+            <div class="col-md-6">
+              <ng-select [clearable]="false" (change)="fnVaciarTabla()" placeholder="Hasta" formControlName="mesFin"
+                notFoundText="No hay fechas disponibles">
+                <ng-option *ngFor="let element of cbMeses" [value]="element.nId">
+                  {{element.sDescripcion}}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <ng-select [clearable]="false" (change)="fnMostrarBotonTotal($event); fnVaciarTabla()"
+                placeholder="Tipo de reporte" formControlName="tipoReporte"
+                notFoundText="No hay tipos de reporte disponibles">
+                <ng-option *ngFor="let element of cbTiposReporte" [value]="element.nId">
+                  {{element.sDescripcion}}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-card class="mat-elevation-z8">
+            <mat-radio-group (ngModelChange)="fnVaciarTabla()" aria-label="Seleccione una opcion"
+              formControlName="filtroTablaReporte">
+              <div class="row checkboxUno">
+                <div class="col-md-6">
+                  <mat-radio-button value="0">Facturados</mat-radio-button>
+                </div>
+                <div class="col-md-6">
+                  <mat-radio-button value="1">Por Facturar</mat-radio-button>
+                </div>
+              </div>
+              <div class="row checkboxDos">
+                <div class="col-md-6">
+                  <mat-radio-button value="2">Ambos</mat-radio-button>
+                </div>
+                <div class="col-md-6">
+                  <mat-radio-button value="3">Cerrados</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </mat-card>
+        </div>
+      </div>
+      <mat-card class="mat-elevation-z8">
+        <div class="row">
+          <div class="col-xl-2 mx-auto">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Cantidad total</mat-label>
+              <input type="text" matInput [value]="fnCantidadTotal" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-2 mx-auto">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Costo base total</mat-label>
+              <input type="text" matInput [value]="fnCostoBaseTotal | number:'1.4-4'" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-2 mx-auto">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Gasto total</mat-label>
+              <input type="text" matInput [value]="fnGastoTotal | number:'1.4-4'" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-2 mx-auto">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Margen total</mat-label>
+              <input type="text" matInput [value]="fnMargenTotal | number:'1.4-4'" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-2 mx-auto">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Rent total</mat-label>
+              <input type="text" matInput [value]="fnRentabilidadTotal | number:'1.0-0'" readonly>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+    </form>
+    <div class="mt-3">
+      <div id="listaMobile" class="mat-elevation-z8 scroll-table">
+        <div class="example-container">
+          <table mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="opcion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Descargar: '>
+                <button mat-stroked-button color="accent" matTooltip="Descargar Excel individual"
+                  (click)="fnDescargarExcelIndividual(element)">
+                  <mat-icon> cloud_download</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCodigo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Código: '>
+                <ngb-highlight [result]="element.sCodigo" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sDescripcion">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Descripción: '>
+                <ngb-highlight [result]="element.sDescripcion" [term]="txtFiltro.value">
+                </ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nCantidad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cantidad: '>
+                <ngb-highlight [result]="element.nCantidad" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nCostoBase">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Costo Base </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Costo Base: '>
+                <ngb-highlight [result]="element.nCostoBase | number:'1.4-4'" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nGasto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gasto </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Gasto: '>
+                <ngb-highlight [result]="element.nGasto | number:'1.4-4'" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nMargen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Margen </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Margen: '>
+                <ngb-highlight [result]="element.nMargen | number:'1.4-4'" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nRentabilidad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Rent </th>
+              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Rent: '>
+                <ngb-highlight [result]="element.nRentabilidad" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <!-- <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr> -->
+          </table>
+        </div>
+        <div class="paginator-fixed">
+          <mat-paginator [pageSizeOptions]="[20, 40, 80]"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

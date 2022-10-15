@@ -1,0 +1,54 @@
+<div class="form-row">
+    <div class="col-md-12">
+
+        <h5 mat-dialog-title class="w-100 card-header text-center">
+            Histórico de Estados
+        </h5>
+
+        <div id="listaMobile" class="mat-elevation-z8 mb-3">
+            <div class="example-container">
+
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- Columna Usuario -->
+                    <ng-container matColumnDef="cUser">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Usuario </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.cUser}} </td>
+                    </ng-container>
+
+                    <!-- Columna Estado -->
+                    <ng-container matColumnDef="sEstado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Estado </th>
+                        <td mat-cell *matCellDef="let row" [ngClass]="row.pextension=='' ? 'red' : 'green'">
+                            {{row.sEstado}} </td>
+                    </ng-container>
+
+                    <!-- Columna Fecha -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLarge"> {{row.fecha}} </td>
+                    </ng-container>
+
+                    <!-- Columna Mensaje -->
+                    <ng-container matColumnDef="mensaje">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Mensaje </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLarge"> {{row.mensaje}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>   
+            </div>
+        </div>
+
+        <div class="col-md-12 text-right paddingBoton">
+            <button mat-raised-button color="accent" (click)="onNoClick()">Cancelar</button>
+        </div>
+
+    </div>
+</div>
+
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

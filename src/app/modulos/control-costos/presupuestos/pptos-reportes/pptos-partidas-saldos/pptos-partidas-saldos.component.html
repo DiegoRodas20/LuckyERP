@@ -1,0 +1,122 @@
+<div class="mb-3 col-md-12">
+
+    <mat-card class="title-card" style="text-align: center;">Reporte de Presupuestos Partidas y Saldos</mat-card>
+
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <!-- Botones Flotantes -->
+            <div class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                </button>
+                <div [@speedDialStagger]="abLista.length">
+                    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary"
+                        color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.estado">
+                        <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vista pptos partidas y saldos -->
+            <div>
+                <div class="kardex-container">
+                    <form autocomplete="off" [formGroup]="formPartidas">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <mat-radio-group formControlName="rbPresupuestos">
+
+                                    <div class="form-row">
+                                        <!-- RadioButton Un Ppto -->
+                                        <div class="col-md-6" style=" align-self: center; ">
+                                            <mat-radio-button (click)="cambiarPresupuesto(0)" class="example-margin">Un
+                                                Ppto
+                                            </mat-radio-button>
+                                        </div>
+
+                                        <!-- Presupuesto NgSelect -->
+                                        <div class="col-md-6">
+                                            <ng-select appendTo="body" [clearable]="true" placeholder="Presupuesto"
+                                                formControlName="presupuesto"
+                                                notFoundText="No hay presupuestos registrados">
+                                                <ng-option *ngFor="let item of lPresupuesto" [value]="item.idPre">
+                                                    {{item.codPre}}
+                                                </ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <!-- RadioButton Varios Pptos -->
+                                        <div class="col-md-12" style=" align-self: center; ">
+                                            <mat-radio-button [value]="true" (click)="cambiarPresupuesto(1)"
+                                                class="example-margin">
+                                                Varios Pptos
+                                            </mat-radio-button>
+                                        </div>
+                                    </div>
+
+                                </mat-radio-group>
+                            </div>
+
+                            <div *ngIf="nMostrar == 1" class="form-group col-md-12">
+
+                                <div class="form-row">
+                                    <!-- Año Fin NgSelect -->
+                                    <div class="col-md-6">
+                                        <ng-select appendTo="body" [clearable]="true" placeholder="Año Fin"
+                                            formControlName="año" notFoundText="No hay presupuestos registrados">
+                                            <ng-option *ngFor="let item of lAnio" [value]="item.anio">
+                                                {{item.anio}}</ng-option>
+                                        </ng-select>
+                                    </div>
+
+                                    <!-- Mes Fin NgSelect -->
+                                    <div class="col-md-6">
+                                        <ng-select appendTo="body" [clearable]="true" placeholder="Mes Fin"
+                                            formControlName="mes" notFoundText="No hay presupuestos registrados">
+                                            <ng-option *ngFor="let item of lMes" [value]="item.codMes">
+                                                {{item.sMes}}</ng-option>
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>Elija el estado de los pptos:</label>
+                                    </div>
+                                </div>
+
+                                <!-- Grupo botones estado -->
+                                <div class="col-md-12" style="margin-top: 1rem; margin-bottom: 1rem;">
+                                    <mat-radio-group formControlName="rbEstadoPresupuesto"
+                                        class="d-flex justify-content-around">
+
+                                        <!-- RadioButton Facturados -->
+                                        <mat-radio-button class="example-margin"
+                                            (click)="cambiarEstadoPresupuesto(2073)" [value]="1">Facturados
+                                        </mat-radio-button>
+
+                                        <!-- RadioButton Por Facturar -->
+                                        <mat-radio-button class="example-margin" (click)="cambiarEstadoPresupuesto(0)"
+                                            [value]="2">Por Facturar
+                                        </mat-radio-button>
+
+                                        <!-- RadioButton Ambos -->
+                                        <mat-radio-button class="example-margin" (click)="cambiarEstadoPresupuesto(1)"
+                                            [value]="3">Ambos
+                                        </mat-radio-button>
+
+                                        <!-- RadioButton Cerrados -->
+                                        <mat-radio-button class="example-margin"
+                                            (click)="cambiarEstadoPresupuesto(2074)" [value]="4">Cerrados
+                                        </mat-radio-button>
+
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

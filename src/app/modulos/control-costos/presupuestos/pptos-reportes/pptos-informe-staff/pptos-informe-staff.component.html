@@ -1,0 +1,68 @@
+<div class="mb-3 col-md-12" style="text-align: center;">
+
+    <mat-card class="title-card">Informe del personal de Staff</mat-card>
+
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <!-- Botones Flotantes -->
+            <div class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                </button>
+                <div [@speedDialStagger]="abLista.length">
+                    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary"
+                        color="secondary" (click)="clickFab(ibtn)">
+                        <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <form [formGroup]="formInformeStaff" autocomplete="off">
+                    <div class="row">
+                        
+                        <div class="col-md-4 informeStaff">
+                            Ejercicio:
+                        </div>
+                        <div class="col-md-5">
+                            <mat-form-field class="input">
+                                <mat-label>Ejercicio:</mat-label>
+                                <input matInput readonly formControlName="ejercicio">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4 informeStaff">
+                            Desde:
+                        </div>
+                        <div class="col-md-5">
+                            <ng-select appendTo="body" [clearable]="true" placeholder="Seleccionar Mes"
+                                formControlName="desdeMes" (ngModelChange)="listaHastaMes($event)" notFoundText="No hay meses registrados">
+                                <ng-option *ngFor="let item of lDesdeMes" [value]="item.nEleCod">
+                                    {{item.mes}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-md-4 informeStaff">
+                            Hasta:
+                        </div>
+                        <div class="col-md-5">
+                            <ng-select appendTo="body" [clearable]="true" placeholder="Seleccionar Mes"
+                                formControlName="hastaMes" notFoundText="No hay meses registrados">
+                                <ng-option *ngFor="let item of lHastaMes" [value]="item.nEleCod">
+                                    {{item.mes}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-md-12" style="font-weight: 500;">
+                            Se obtendra la lista de personas de plla 7 del rango de meses indicado.
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

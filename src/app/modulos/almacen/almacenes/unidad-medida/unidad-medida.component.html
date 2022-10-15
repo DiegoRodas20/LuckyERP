@@ -1,0 +1,107 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Administrar Unidad Medida
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+
+            <div class="col-md-4">
+                <mat-form-field>
+                    <mat-label>Buscar Unidad Medida</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                    <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button
+                        aria-label="Clear" (click)="clean()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Unidad de medida -->
+    <div id="listaMobile" class="mat-elevation-z8 mb-4">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+
+                <ng-container matColumnDef="opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Opciones: '>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="editarUnidadMedida(element)">
+                                <mat-icon color="accent">touch_app</mat-icon>
+                                <span>Revisar</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Código: '>
+                        <!-- {{element.sCodUndMedida}}  -->
+                        <ngb-highlight [result]="element.sCodUndMedida" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Descripción: '>
+                        <!-- {{element.sDescripcion}}  -->
+                        <ngb-highlight [result]="element.sDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codigoInterno">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Código Internacional </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile"
+                        data-label='Código Internacional: '>
+                        <!-- {{element.nCodInter}}  -->
+                        <ngb-highlight [result]="element.nCodInter" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcionInterna">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción Internacional </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile"
+                        data-label='Descripción Internacional: '>
+                        <!-- {{element.sDescripInter}}  -->
+                        <ngb-highlight [result]="element.sDescripInter" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+</div>

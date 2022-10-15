@@ -1,0 +1,45 @@
+.contenedor_text_area {
+  width: 100%;
+}
+
+.text_area_contenido {
+  min-height: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.recomendaciones p {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  color: rgb(65, 65, 65);
+}
+
+.recomendaciones ol {
+  color: rgb(88, 88, 88);
+}
+
+.recomendaciones span {
+  font-size: 12px;
+}
+.btn_clear {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+
+.color_titulos {
+  color: gray;
+}
+
+.btn_activo {
+  background-color: #334d6e;
+  color: white;
+}
+
+.btn_pasivo {
+  background-color: white;
+  color: #334d6e;
+}

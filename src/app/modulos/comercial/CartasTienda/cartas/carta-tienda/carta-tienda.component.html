@@ -1,0 +1,317 @@
+<div [class.isPrinting]="printService.isPrinting">
+  <div class="col-md-10 offset-md-1 clsprincipal">
+    <!-- #region Titulo de la tabla-->
+    <h3
+      class="col-md-10 offset-md-1 card-header mb-4"
+      style="
+        background-color: #334d6e;
+        color: white;
+        text-align: center;
+        min-width: 100%;
+        margin: 0px;
+      "
+    >
+      EMISION DE CARTAS A TIENDA
+    </h3>
+    <!-- #endregion -->
+
+    <!-- #region CABECERA DE CARTA-->
+    <div class="row">
+      <!-- #region ID de la carta guardada-->
+      <div class="col-12 col-md-2">
+        <mat-form-field class="full-width">
+          <mat-label>ID Carta</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="cartaID"
+            [disabled]="true"
+          />
+        </mat-form-field>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Select de la cadena-->
+      <div class="col-12 col-md-5">
+        <mat-form-field class="full-width">
+          <mat-label>Escoge la cadena</mat-label>
+          <mat-select
+            [disabled]="this.listaFormatosEstaticos.length > 0 || cartaID !== 0"
+            [(ngModel)]="cadenaSeleccionada"
+            (selectionChange)="cargarLosFormatosDeLaCadena()"
+          >
+            <mat-option
+              *ngFor="let cadena of listaCadenas"
+              [value]="cadena.pId"
+            >
+              {{ cadena.pNombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Select supervisor-->
+      <div class="col-12 col-md-5">
+        <mat-form-field class="full-width">
+          <mat-label>Supervisor</mat-label>
+          <mat-select
+            [(ngModel)]="supervisorID"
+            (selectionChange)="cargarLosFormatosDeLaCadena()"
+          >
+            <mat-option
+              *ngFor="let supervisor of listaSupervisores"
+              [value]="supervisor.id"
+            >
+              {{ supervisor.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- #endregion -->
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region CONJUNTO DE BOTONES -->
+    <div class="mb-2 text-center">
+      <!-- #region BOTON CREAR NUEVO FORMATO -->
+      <button
+        class="ml-2 mr-2 mb-2 btn_stroked_style"
+        mat-stroked-button
+        (click)="crearNuevoFormato()"
+      >
+        <mat-icon>add</mat-icon>
+        CREAR NUEVO FORMATO
+      </button>
+      <!-- #endregion -->
+
+      <!-- #region BOTON ABRIR MODAL DE CARTAS-->
+      <button
+        class="ml-2 mr-2 mb-2 btn_flat_style"
+        mat-flat-button
+        aria-label="Example icon button with a menu icon"
+        (click)="modalTablaCartas()"
+        [disabled]="cadenaSeleccionada === 0"
+      >
+        VER TODAS LAS CARTAS
+        <mat-icon>list</mat-icon>
+      </button>
+      <!-- #endregion -->
+
+      <!-- #region BOTON IMPRIMIR
+      <button
+        mat-flat-button
+        (click)="imprimirCartasPersonal()"
+        [disabled]="cartaID === 0"
+        class="ml-2 mr-2 mb-2 btn_flat_style"
+      >
+        IMPRESION INDIVIDUAL
+        <mat-icon>print</mat-icon>
+      </button>-->
+      <!-- #endregion -->
+
+      <!-- #region BOTON GRABAR CARTA -->
+      <button
+        class="ml-2 mr-2 mb-2 btn_flat_style"
+        *ngIf="!grabadoCarta"
+        mat-flat-button
+        (click)="grabarPersonalCarta()"
+        [disabled]="validacionBotonGrabar()"
+      >
+        GRABAR
+        <mat-icon>save</mat-icon>
+      </button>
+      <!-- #endregion -->
+    </div>
+    <!-- #endregion -->
+
+    <mat-divider></mat-divider>
+
+    <div class="row mt-3">
+      <div class="col-12 col-md-9 order-md-1 order-2 mb-2">
+        <div>
+          <div class="row">
+            <!-- #region TITULO DE LA TABLA-->
+            <div class="mt-4 col-12 col-md-6">
+              <p class="titulo_tabla_personal">LISTA DEL PERSONAL</p>
+            </div>
+            <!-- #endregion -->
+
+            <!-- #region BUSCADOR DE FORMATOS -->
+            <div class="col-12 col-md-6">
+              <mat-form-field
+                *ngIf="cadenaSeleccionada !== 0"
+                class="full-width text-right"
+              >
+                <input
+                  type="text"
+                  placeholder="Busca un formato"
+                  aria-label="Number"
+                  matInput
+                  [formControl]="controlBusqueda"
+                  [matAutocomplete]="auto"
+                  (keyup.enter)="enterEventBuscadorFormatos()"
+                />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option
+                    *ngFor="let item of filtroBusquedaFormatos | async"
+                    [value]="item.pNombre"
+                    (click)="agregarFormatoListaDeFormatos(item)"
+                  >
+                    {{ item.pNombre }}
+                    <button class="float-right" mat-icon-button>
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <!-- #endregion-->
+          </div>
+
+          <!-- #region TABLA DEL PERSONAL-->
+          <div *ngIf="listaFormatosEstaticos.length !== 0">
+            <app-tabla-personal></app-tabla-personal>
+            <app-agregar-personal></app-agregar-personal>
+          </div>
+          <!-- #endregion -->
+
+          <!-- #region LISTA DE FORMATOS AGREGADOS-->
+          <div *ngIf="listaFormatosEstaticos.length === 0">
+            <mat-card class="card_sin_tabla text-center p-5">
+              <p class="mensaje_crear_carta">
+                Busque y agregue un formato para que pueda crear un carta.
+              </p>
+            </mat-card>
+          </div>
+          <!-- #endregion -->
+        </div>
+      </div>
+      <!-- #region Documentos estaticos-->
+      <div class="col-12 col-md-3 order-md-2 order-1">
+        <!-- #region LISTA DE FORMATOS AGREGADOS-->
+        <div class="mb-3">
+          <div class="text-center mt-3 mb-3">
+            <h5 class="color_titulos">LISTA DE FORMATOS A IMPRIMIR</h5>
+            <mat-divider></mat-divider>
+          </div>
+
+          <mat-chip-list
+            class="example-chip"
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+          >
+            <mat-chip
+              class="example-box m-auto"
+              cdkDrag
+              *ngFor="let formato of listaFormatosBusqueda | async"
+            >
+              <mat-icon
+                matTooltip="Imprimir ambas caras"
+                matChipRemove
+                (click)="
+                  cambiarValorImprimirFormatoDobleCaraActivarDesactivar(formato)
+                "
+                class="ml-0"
+              >
+                {{
+                  obtenerValorDobleCaraFormato(formato)
+                    ? "sync"
+                    : "sync_disabled"
+                }}
+              </mat-icon>
+              <mat-icon
+                matTooltip="Permitir impresion"
+                matChipRemove
+                (click)="
+                  cambiarValorImprimirFormatoActivadoDesactivado(formato)
+                "
+                class="ml-2 mr-2"
+              >
+                {{
+                  obtenerValorImprimirFormato(formato)
+                    ? "print"
+                    : "print_disabled"
+                }}
+              </mat-icon>
+              {{ formato.pNombre }}
+
+              <mat-icon
+                matTooltip="Retirar formato"
+                matChipRemove
+                (click)="eliminarFormato(formato)"
+              >
+                cancel
+              </mat-icon>
+            </mat-chip>
+          </mat-chip-list>
+          <div
+            *ngIf="listaFormatosEstaticos.length === 0"
+            class="mt-3 text-center"
+          >
+            <mat-card>Sin formatos</mat-card>
+          </div>
+        </div>
+        <!-- #endregion -->
+
+        <mat-divider></mat-divider>
+        <!-- #region Titulo de documentos para descargar -->
+        <div>
+          <div class="text-center mt-3">
+            <h5 class="color_titulos">DOCUMENTOS FIJOS (DESCARGAR)</h5>
+          </div>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region Lsita de documentos para descargar -->
+        <mat-list role="list">
+          <mat-list-item
+            *ngFor="let documento of listaDocumentosFijos"
+            class="lista_documentos_estaticos"
+            role="listitem"
+            (click)="fnDownloadFile(documento)"
+          >
+            <mat-icon>navigate_next</mat-icon>
+            {{ documento.sNombre }}
+          </mat-list-item>
+        </mat-list>
+        <!-- #endregion -->
+      </div>
+      <!-- #endregion -->
+    </div>
+
+    <!-- #region Botones absolutos-->
+    <div class="btn_print_clear">
+      <!-- #region BOTON IMPRIMIR TODO -->
+      <div class="mr-3 mb-3">
+        <button
+          matTooltip="Imprimir todo"
+          matTooltipPosition="left"
+          mat-fab
+          class="btn_flat_style"
+          aria-label="Example icon button with a delete icon"
+          (click)="onPrintDocumento()"
+        >
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+      <!-- #endregion -->
+      <!-- #region BOTON PARA LIMPIAR DATA DEL FORMULARIO-->
+      <div class="mr-3 mb-3">
+        <button
+          mat-fab
+          matTooltip="Limpiar informacion"
+          matTooltipPosition="left"
+          color="accent"
+          aria-label="Example icon button with a delete icon"
+          (click)="limpiarTodosLosCampos()"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+      <!-- #endregion -->
+    </div>
+    <!-- #endregion -->
+  </div>
+  <router-outlet name="print"></router-outlet>
+</div>

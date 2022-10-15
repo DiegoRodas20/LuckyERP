@@ -1,0 +1,247 @@
+<div [ngClass]="{'noImpresion' : vVerReportePicking}">
+
+    <div class="clsprincipal">
+        <div class="col-md-10 offset-md-1">
+            <h5 class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">
+                Reporte consolidado de picking de ubicaciones
+            </h5>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Cabecera -->
+            <div class="col-md-10 offset-md-1">
+                <!-- offset-md-3 -->
+
+                <mat-card>
+
+                    <form class="row" [formGroup]="formPicking">
+                        <div class="col-md-5">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Fecha Imprime:</mat-label>
+                                <input
+                                    (ngModelChange)="fnListarPresupuesto($event); fnListarArticulo($event); fnLimpiarTabla()"
+                                    (click)="pickerFecha.open()" readonly formControlName="cboFecha" matInput
+                                    [matDatepicker]="pickerFecha">
+                                <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFecha></mat-datepicker>
+                                <mat-error *ngIf="formPicking.get('cboFecha').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-5 col-10">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Almacén:</mat-label>
+                                <mat-select formControlName="cboAlmacen">
+                                    <mat-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen.nId">
+                                        {{vAlmacen.sDescripcion}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formPicking.get('cboAlmacen').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-2 col-2">
+                            <button mat-mini-fab class="fab-toggler" matTooltip="Buscar" (click)="fnBuscarRegistros()">
+                                <i class="material-icons">search</i>
+                            </button>
+                        </div>
+
+                        <div class="col-md-9">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Presupuesto:</mat-label>
+                                <mat-chip-list #chipListPresupuesto>
+                                    <mat-chip *ngFor="let vPres of chipsPresupuesto" [selectable]="true"
+                                        [removable]="true" (removed)="fnEliminarPresupuesto(vPres)">
+                                        {{vPres.sDescripcion}}
+                                        <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="Agregar..." #presupuestoInput formControlName="cboPresupuesto"
+                                        [matAutocomplete]="autoPresupuesto" [matChipInputFor]="chipListPresupuesto"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        (matChipInputTokenEnd)="fnAgregarPresupuesto($event)">
+                                </mat-chip-list>
+                                <mat-autocomplete #autoPresupuesto="matAutocomplete"
+                                    (optionSelected)="fnSeleccionarPresupuesto($event)"
+                                    [displayWith]="fnDisplayPrespuesto">
+                                    <mat-option *ngFor="let vPresupuesto of filteredPresupuesto | async"
+                                        [value]="vPresupuesto">
+                                        {{vPresupuesto.sDescripcion}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-center">
+                            <mat-slide-toggle formControlName="stGuiasAnuladas">Guías anuladas</mat-slide-toggle>
+                        </div>
+
+                        <div class="col-md-7">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Artículo:</mat-label>
+                                <mat-chip-list #chipListArticulo>
+                                    <mat-chip *ngFor="let vArt of chipsArticulo" [selectable]="true" [removable]="true"
+                                        (removed)="fnEliminarArticulo(vArt)">
+                                        {{vArt.sDescripcion}}
+                                        <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="Agregar..." #articuloInput formControlName="cboArticulo"
+                                        [matAutocomplete]="autoArticulo" [matChipInputFor]="chipListArticulo"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        (matChipInputTokenEnd)="fnAgregarArticulo($event)">
+                                </mat-chip-list>
+                                <mat-autocomplete #autoArticulo="matAutocomplete"
+                                    (optionSelected)="fnSeleccionarArticulo($event)" [displayWith]="fnDisplayArticulo">
+                                    <mat-option *ngFor="let vArticulo of filteredArticulo | async" [value]="vArticulo">
+                                        {{vArticulo.sDescripcion}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-5 d-flex align-items-center">
+                            <mat-radio-group formControlName="rbOrden">
+                                Ordenar por:
+                                <mat-radio-button style="margin-left: 5px;" [value]="0">
+                                    Ubicación
+                                </mat-radio-button>
+
+                                <mat-radio-button style="margin-left: 5px;" [value]="1">
+                                    Artículo
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+
+            <div class="row">
+                <br>
+            </div>
+
+            <div class="col-md-10 offset-md-1">
+                <div class="row">
+                    <!--Table para detalle de registro de salida -->
+                    <div class="col-12">
+                        <button [disabled]="this.dataSource?.data?.length==0" matTooltipPosition="left"
+                            matTooltip='Marcar todas las guías' mat-raised-button mat-mini-fab class="boton-MatTable"
+                            color="accent" (click)="fnMarcarTodos()">
+                            <i class="material-icons">check_circle_outline</i>
+                        </button>
+                        <div id="listaMobile" class="mat-elevation-z8">
+
+                            <div class="table-container-1">
+                                <table mat-table [dataSource]="dataSource" matSort>
+
+                                    <ng-container matColumnDef="seleccion">
+                                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc">
+                                            <mat-checkbox [disabled]="this.dataSource?.data?.length==0"
+                                                (change)="$event ? fnMarcarTodos() : null"
+                                                [checked]="registrosSeleccionados.hasValue() && fnEstanTodosSeleccionados()"
+                                                [indeterminate]="registrosSeleccionados.hasValue() && !fnEstanTodosSeleccionados()"
+                                                [aria-label]="checkboxLabel()">
+                                            </mat-checkbox>
+                                        </th>
+                                        <td data-label='Seleccionar: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? registrosSeleccionados.toggle(row) : null"
+                                                [checked]="registrosSeleccionados.isSelected(row)">
+                                            </mat-checkbox>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sGuia">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Guía referencia
+                                        </th>
+                                        <td data-label='Guía referencia: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.sGuia}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sCentroCosto">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                            Presupuesto
+                                        </th>
+                                        <td data-label='Presupuesto: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLarge">
+                                            {{row.sCentroCosto}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sAlmacen">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                            Almacén
+                                        </th>
+                                        <td data-label='Almacén: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc"> {{row.sAlmacen}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sNota">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Nota
+                                        </th>
+                                        <td data-label='Nota: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2"> {{row.sNota}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDestino">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Destino
+                                        </th>
+                                        <td data-label='Destino: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.sDestino}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sEstado">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Estado
+                                        </th>
+                                        <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.sEstado}} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+            <!--Para imprimir -->
+            <button *ngIf="abLista>0" [disabled]="registrosSeleccionados.selected.length==0" (click)="fnImprimir()"
+                matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Imprimir"
+                color="secondary" t-stroked-button><i class="material-icons">print</i></button>
+
+            <!--Para salir-->
+            <button *ngIf="abLista>0" mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+                matTooltip="Salir" color="warn" (click)="fnRegresar()"><i
+                    class="material-icons">exit_to_app</i></button>
+        </div>
+    </div>
+
+</div>
+
+<!---Zona para la impresion del reporte-->
+<div [ngClass]="{'impresionActiva' : vVerReportePicking}" class="impresion">
+    <app-reporte-picking-salida *ngIf="bMostrarReporteComponent" [sFechaPicking]="sFechaPicking" [sGuias]="sGuias"
+        [lArticuloPicking]="lArticuloPicking"></app-reporte-picking-salida>
+</div>

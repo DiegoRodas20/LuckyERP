@@ -1,0 +1,628 @@
+<div class="clsprincipal">
+
+  <div class="row col-md-12">
+    <div class="col-md-12">
+      <div class="row m-auto">
+        <div class="row col-md-12">
+          <div class="titulo">
+            <h4>
+              <div style="margin-top: 5px;">
+                Detalle Orden de Compra Auditada desde Solicitud de Cotización
+              </div>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <form [formGroup]="formularioCompras" class="normal-form" autocomplete="off" (ngSubmit)="save()">
+    <div class="fab-container">
+
+      <button matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Nuevo"
+        color="secondary" (click)="Nuevo()" type="button"><i class="material-icons">add</i></button>
+      <!--Para guardar-->
+      <button matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Grabar"
+        color="secondary" type="submit" [disabled]="!formularioCompras.valid && !formularioComprasLineas.valid"><i
+          class="material-icons">save</i></button>
+
+      <!--Para salir-->
+      <button mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary" matTooltip="Salir"
+        color="warn" (click)="fnSalir()"><i class="material-icons">exit_to_app</i></button>
+    </div>
+  </form>
+
+  <form [formGroup]="formularioCompras">
+    <div class="row col-md-12">
+      <div class="col-md-12">
+
+        <mat-card>
+          <div class="row m-auto">
+
+            <div class="col-md-3">
+
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <ng-select appendTo="body" [clearable]="false" (change)="fnFiltroCotizaciones()"
+                    formControlName="codigoSolicitante" placeholder="Solicitante">
+                    <ng-option *ngFor="let item of listSolicitante" [value]="item.nId">
+                      {{item.sDescripcion}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Presupuesto</mat-label>
+                    <input formControlName="numeroPresupuesto" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Título</mat-label>
+                    <input formControlName="tituloCotizacion" matInput>
+                  </mat-form-field>
+                </div>
+
+                <br>
+                <br>
+                <br>
+
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Contacto</mat-label>
+                    <input formControlName="contactoProveedor" matInput>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="row">
+                <div class="col-md-12 col-12">
+                  <ng-select appendTo="body" [clearable]="false" formControlName="numeroCotizacion"
+                    (change)="fnFiltroCotizacionesSolicitante()" placeholder="Sol.de Cotización" required>
+                    <ng-option *ngFor="let item of listCotizaciones" [value]="item.nIdCotizacion">
+                      SC{{item.sCorrelativo}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Cliente</mat-label>
+                    <input formControlName="nombreCliente" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <ng-select appendTo="body" [clearable]="false" formControlName="codigoProveedor"
+                    (change)="fnFiltroProveedor()" placeholder="Proveedor" required>
+                    <ng-option *ngFor="let item of listProveedor" [value]="item.codigoProveedor">
+                      {{item.sNombreComercial}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Plazo Pago</mat-label>
+                    <input formControlName="plazoPago" matInput>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-md-3">
+
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <ng-select appendTo="body" [clearable]="false" formControlName="codigoServicio"
+                    (change)="fnPartidas()" placeholder="Tipo Servicio" required>
+
+                    <ng-option *ngFor="let item of listTipoServicio" [value]="item.codigoServicio">
+                      {{item.descripcionServicio}}
+                    </ng-option>
+
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field>
+                    <mat-label>Fecha Orden</mat-label>
+                    <input formControlName="fechaorden" matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <ng-select appendTo="body" [clearable]="false" formControlName="codigoClienteBanco"
+                    (change)="fnFiltroMoneda()" placeholder="Banco" required>
+                    <ng-option *ngFor="let item of listBancoProveedor" [value]="item.codigoClienteBanco">
+                      {{item.sDesc}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Moneda:</mat-label>
+                    <mat-select formControlName="codigoMoneda">
+                      <mat-option *ngFor="let moneda of listMoneda" [value]="moneda.codigoMoneda">
+                        {{moneda.nombreMoneda}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-row">
+                <div class="col-md-1">
+                  <div class="clsSeparador">
+                    &nbsp;
+                  </div>
+                </div>
+                <!-- Campos auditoria -->
+                <div class="col-md-11">
+                  <mat-form-field style="width: 100%;">
+                    <mat-label>Año:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtAnio">
+                  </mat-form-field>
+
+                  <mat-form-field style="width: 100%;">
+                    <mat-label>Orden de compra:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtCodigo" style="color: rgb(236, 0, 140);">
+                  </mat-form-field>
+
+                  <div>
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Comprador:</mat-label>
+                      <input type="text" readonly matInput formControlName="txtComprador">
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Fecha de Creación:</mat-label>
+                      <input type="text" readonly matInput formControlName="FechaCreacion">
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Tipo cambio:</mat-label>
+                      <input type="text" readonly matInput placeholder="Tipo cambio" formControlName="txtTipoCambio">
+                      <!-- <input type="text" readonly matInput placeholder="Tipo cambio" formControlName="txtTipoCambio"> -->
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field style="width: 100%;">
+                      <mat-label>Estado:</mat-label>
+                      <input type="text" readonly matInput placeholder="Estado" formControlName="txtEstado"
+                        style="color: rgb(236, 0, 140);">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+  <br>
+  <!-- inicio Tabla detalle -->
+
+
+
+  <div class="row col-md-12">
+
+    <div class="col-md-12">
+      <mat-label class="textoDeTotales">{{utilitarios.totalfilas}}</mat-label>
+
+      <div class="contenedor_tabla mat-elevation-z8">
+        <table mat-table [dataSource]="tempData">
+          <ng-container [matColumnDef]="colum" *ngFor="let colum of utilitarios.displayedColumnsAud">
+    
+            <th [attr.about]="this.utilitarios.cssTablaGeneral()" mat-header-cell *matHeaderCellDef
+              style="padding-right: 0.5rem">
+              {{utilitarios.obtenerNombreColumna(colum)}}
+              <span>
+                <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer" *ngIf="colum === 'editable'"
+                  (click)="InsertIntoArr()">add_circle</mat-icon>
+              </span>
+            </th>
+    
+            <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 0.5rem">
+    
+              <div *ngIf="element.editable" style="padding-top: 1rem">
+    
+                <div *ngIf="colum === 'sucursal'">
+                  <ng-select appendTo="body" (change)=fnCiudad(i) [(ngModel)]="element.codigoSucursal" [clearable]="false">
+                    <ng-option *ngFor="let car of lcboCiudad" [(value)]="car.nIdSuc">{{car.sSuc}}</ng-option>
+                  </ng-select>
+                </div>
+    
+                <div *ngIf="colum === 'partida'" class="d-flex justify-content-center">
+                  <ng-select appendTo="body" (change)=fnPartida(i) [(ngModel)]="element.codigoPartida" [clearable]="false">
+                    <ng-option *ngFor="let car of this.arrayCiudad[element.codigoSucursal]" [(value)]="car.nIdPar">
+                      {{car.sPar}}</ng-option>
+                  </ng-select>
+                </div>
+                <div *ngIf="colum === 'articuloServicio'" class="d-flex justify-content-center">
+                  <ng-select appendTo="body" (change)=fnArticulo(i) [(ngModel)]="element.codigoArticulo"
+                    [clearable]="false">
+                    <ng-option *ngFor="let car of this.arrayPartida[element.codigoSucursal+''+element.codigoPartida]"
+                      [(value)]="car.nIdArt">{{car.sArt}}</ng-option>
+                  </ng-select>
+                </div>
+    
+                <div *ngIf="colum == 'cantidad'" class="d-flex justify-content-center">
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Cantidad</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad" required>
+                    <mat-error *ngIf="element.cantidad === ''
+                    || element.cantidad === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+    
+    
+    
+    
+                <div *ngIf="colum == 'precioProv'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Precio Prov</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.precioProv" (keyup.enter)="actualizarlineas();"
+                      required>
+                    <mat-error *ngIf="element.precioProv === ''
+                    || element.precioProv === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+    
+                </div>
+    
+    
+                <div *ngIf="colum == 'precioLucky'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Precio lucky</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.precioLucky" (keyup.enter)="actualizarlineas();"
+                      required>
+                    <mat-error *ngIf="element.precioLucky === ''
+                    || element.precioLucky === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+    
+                </div>
+    
+                <div *ngIf="colum == 'totalProv'" class="d-flex justify-content-center">
+    
+    
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Total Prov.</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad * element.precioProv" disabled>
+                    <mat-error *ngIf=" element.totalProv==='' || element.totalProv===null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+    
+                <div *ngIf="colum == 'totalLucky'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Total Lucky</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad * element.precioLucky" disabled>
+                    <mat-error *ngIf=" element.totalLucky==='' || element.totalLucky===null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+    
+                </div>
+    
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+    
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer"
+                      (click)="DeshabilitarEdicion(element)" color="accent">save
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento(i)">delete
+                    </mat-icon>
+                  </div>
+                </div>
+              </div>
+    
+    
+              <div *ngIf="!element.editable" style="padding-top: 1rem">
+    
+                <div *ngIf="colum === 'sucursal'">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Sucursal</mat-label>
+                    <input matInput [(ngModel)]="element.descripcion" disabled>
+                  </mat-form-field>
+    
+                </div>
+    
+                <div *ngIf="colum === 'partida'" class="style-form-field p-1 text-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Partida</mat-label>
+                    <input matInput [(ngModel)]="element.descripcionPartida" disabled>
+                  </mat-form-field>
+    
+                </div>
+                <div *ngIf="colum === 'articuloServicio'" class="style-form-field p-1 text-center">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Articulo/Servicio</mat-label>
+                    <input matInput [(ngModel)]="element.descripcionArticulo" disabled>
+                  </mat-form-field>
+                </div>
+    
+                <div *ngIf="colum == 'cantidad'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Cantidad</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad" disabled>
+                  </mat-form-field>
+    
+                </div>
+    
+    
+                <div *ngIf="colum == 'precioProv'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Precio</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.precioProv" disabled>
+                  </mat-form-field>
+    
+                </div>
+    
+                <div *ngIf="colum == 'precioLucky'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Precio</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.precioLucky" disabled>
+                  </mat-form-field>
+    
+                </div>
+    
+                <div *ngIf="colum == 'totalProv'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Total</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad * element.precioProv" disabled>
+                  </mat-form-field>
+                </div>
+    
+                <div *ngIf="colum == 'totalLucky'" class="d-flex justify-content-center">
+    
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Total</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.cantidad * element.precioLucky" disabled>
+                  </mat-form-field>
+                </div>
+    
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer" (click)="HabilitarEdicion(element)"
+                      color="accent">edit
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento(i)">delete
+                    </mat-icon>
+                  </div>
+                </div>
+    
+              </div>
+            </td>
+    
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="utilitarios.displayedColumnsAud;sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: utilitarios.displayedColumnsAud;"></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  
+
+
+
+  <!--fin Tabla detalle -->
+
+  <br>
+
+  <!-- Detalle -->
+  <div class="row col-md-12">
+    <div class="col-md-12">
+      <mat-card>
+        <div class="row m-auto">
+
+          <div class="col-md-3">
+            <form [formGroup]="formularioCompras">
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field>
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input formControlName="fechaEntrega" matInput [matDatepicker]="picker1">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+
+                  <ng-select appendTo="body" [clearable]="false" formControlName="codigoLugarEntrega"
+                    (change)="fnFiltroDireccion()" placeholder="Lugar de entrega" required>
+                    <ng-option *ngFor="let item of listLugarEntrega" [value]="item.codigoLugarEntrega">
+                      {{item.lugarEntrega}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Dirección</mat-label>
+                    <input formControlName="direccion" [readonly]="utilitarios.editarDireccion==true" matInput>
+                  </mat-form-field>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="col-md-1">
+            <form [formGroup]="formularioCompras">
+              <div class="row">
+                <div class="col-md-12 col-12">
+                  <br />
+                </div>
+                <div class="col-md-12 col-12">
+                  <br />
+                </div>
+                <br />
+                <br />
+                <div class="col-md-12 col-12">
+                  <section class="example-section">
+                    <mat-checkbox formControlName="codigoServicioImpuesto" class="example-margin"
+                      (change)="actualizarServicio($event)">Servicio %
+                    </mat-checkbox>
+                  </section>
+                </div>
+                <div class="col-md-12 col-12">
+
+                  <section class="example-section">
+                    <mat-checkbox formControlName="codigoImpuesto" class="example-margin"
+                      (change)="actualizarImpuesto($event)">
+                      {{utilitarios.nombreImpuesto}}
+                    </mat-checkbox>
+                  </section>
+                </div>
+                <div class="col-md-12 col-12">
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-1">
+            <form [formGroup]="formularioCompras">
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <br />
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <br />
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <input formControlName="importeServicio" matInput (keyup.enter)="eventoEnterPorcentajeServicio()">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <input formControlName="importeImpuesto" matInput>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-3">
+            <form [formGroup]="formularioComprasLineas">
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Subtotal dólares</mat-label>
+                    <input formControlName="subtotalDolares" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Servicios dólares</mat-label>
+                    <input formControlName="serviciosDolares" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>IGV dólares</mat-label>
+                    <input formControlName="igvDolares" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Total dólares</mat-label>
+                    <input formControlName="totalDolares" matInput>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-3">
+            <form [formGroup]="formularioComprasLineas">
+              <div class="row">
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>SubTotal soles</mat-label>
+                    <input formControlName="subtotalSoles" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Servicios soles</mat-label>
+                    <input formControlName="serviciosSoles" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>IGV soles</mat-label>
+                    <input formControlName="igvSoles" matInput>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Total soles</mat-label>
+                    <input formControlName="totalSoles" matInput>
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+
+
+</div>

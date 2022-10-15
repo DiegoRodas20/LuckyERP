@@ -1,0 +1,208 @@
+<div class="clsprincipal" >
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Centros de Costo</h5>
+        <div class="row"><br /></div>
+    </div>
+
+    <div>
+        <div class="col-md-10 offset-md-1 ">
+            <div [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <!-- Inicio del contenido -->
+                        <div class="row justify-content-center">
+                            <div class="col-md-9 offset-md-1">
+                                <div class="form-row">
+                                    <div class="col-md-8 col-sm-8 col-10">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Buscar centro costo:</mat-label>
+                                            <input type="text" matInput [formControl]="txtFiltroGen"
+                                                (keyup)="fnFiltrar()">
+                                            <button style="outline: none;" mat-button *ngIf="txtFiltroGen.value"
+                                                matSuffix mat-icon-button aria-label="Clear"
+                                                (click)="this.txtFiltroGen.setValue('');fnListarCC()">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-4 col-2">
+                                        <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo centro de costo"
+                                            (click)="fnCrearCC()">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- nueva tabla material -->
+                        <div id="listaMobile" class="mat-elevation-z8 ">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource" matSort>
+
+                                    <!-- ID Column -->
+                                    <ng-container matColumnDef="nIdCC" sticky>
+                                        <th mat-header-cell data-label='Opción: ' *matHeaderCellDef mat-sort-header
+                                            class="clsColumnaOpc2">
+                                        </th>
+                                        <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            <button mat-stroked-button color="accent" matTooltip="Ver detalle"
+                                                (click)="fnVerDetalle(row)">
+                                                <mat-icon> create</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sCodCC">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Código
+                                        </th>
+                                        <td data-label='Código: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            <ngb-highlight [result]="row.sCodCC" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDescCC">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class=" clsColumnaLarge">
+                                            Centro
+                                            de
+                                            costo
+                                        </th>
+                                        <td data-label='Centro de costo: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLarge">
+                                            <ngb-highlight [result]="row.sDescCC" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Progress Column -->
+                                    <ng-container matColumnDef="sDescDireccion">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class=" clsColumnaLib">
+                                            Dirección
+                                        </th>
+                                        <td data-label='Dirección: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sDescDireccion" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDescArea">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            Área
+                                        </th>
+                                        <td data-label='Área: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sDescArea" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDescCargo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            Cargo
+                                        </th>
+                                        <td data-label='Cargo: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sDescCargo" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sSubCargo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            Subcargo
+                                        </th>
+                                        <td data-label='Subcargo: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sSubCargo" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[20, 40, 80]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-centroCostoCrear [pOpcion]="vOpcion" [pCentrodeCosto]="vCentroCostoSeleccionado" *ngIf="vSecundario">
+    </app-centroCostoCrear>
+
+    <div class="fab-container" *ngIf="vSecundario">
+
+
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="this.nListaLength">
+
+            <!--Para modificar-->
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==1"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Modificar" color="secondary"
+                (click)="centrocostocrearComp?.fnActualizar()"><i class="material-icons">create</i></button>
+
+            <!--Para activar-->
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==2 && centrocostocrearComp?.pCentrodeCosto.nEstadoCC==0"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Activar" color="accent"
+                (click)="centrocostocrearComp?.fnActivarCC()"><i class="material-icons">check</i></button>
+
+            <!--Para inactivar-->
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==2 && centrocostocrearComp?.pCentrodeCosto.nEstadoCC==1"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Inactivar" color="secondary"
+                (click)="centrocostocrearComp?.fnInactivarCC()"><i class="material-icons">block</i></button>
+
+            <!--Para guardar-->
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==2"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Guardar" color="secondary" (click)="centrocostocrearComp?.fnGuardarCC();
+                        centrocostocrearComp.fnAnadirDetalleCC();
+                        centrocostocrearComp.fnActualizarSucursal();
+                        centrocostocrearComp.fnActualizarPersonal();
+                    "><i class="material-icons">save</i></button>
+
+            <!--Para cancelar-->
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==2"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Cancelar" color="secondary"
+                (click)="centrocostocrearComp?.fnCancelar()"><i class="material-icons">close</i></button>
+
+            <button matTooltipPosition="left"
+                *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==1 && centrocostocrearComp?.pTipo==2"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Agregar Saldo" color="secondary"
+                (click)="centrocostocrearComp?.fnAgregarSaldo()"><i class="material-icons">attach_money</i></button>
+
+            <!--Para anadir CC-->
+            <button matTooltipPosition="left" *ngIf="this.nListaLength>0  && centrocostocrearComp?.pOpcion==2"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Generar" color="secondary"
+                (click)="centrocostocrearComp?.fnAnadirCC()"><i class="material-icons">save</i></button>
+
+            <!--Para salir-->
+            <button *ngIf="this.nListaLength>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" matTooltip="Salir" color="warn" (click)="fnSalir()"><i
+                    class="material-icons">exit_to_app</i></button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="vSecundario">
+        <br>
+    </div>
+</div>

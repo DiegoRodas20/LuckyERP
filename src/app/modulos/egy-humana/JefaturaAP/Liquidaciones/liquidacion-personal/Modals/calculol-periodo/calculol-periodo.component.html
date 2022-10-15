@@ -1,0 +1,315 @@
+<!-- Spinner -->
+<ngx-spinner name="spi_personal" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+<div class="fab-container">
+    <button [@tada]="{value: tadaCalculo}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleCalculo, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsCalculo}">add</i>
+    </button>
+    <div [@speedDialStagger]="abCalculo.length">
+        <button *ngFor="let btn of abCalculo; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleCalculo, ibtn )" [disabled]="btn.dis">
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h4 class="modal-title">Historico </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xl-12">
+
+            <div class="row">
+                      
+                <div class="col-lg">
+                    <mat-expansion-panel [expanded]="true" >
+
+                        <mat-expansion-panel-header>
+                            <mat-panel-title style="color: black;">
+                                Aplicar filtro por :
+                            </mat-panel-title>
+                            <mat-panel-description style="margin-right: 0px;">
+    
+                            </mat-panel-description>
+                            <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                        </mat-expansion-panel-header>
+                        <form autocomplete="off" id="fgFilter" [formGroup]="fgFilter">
+                            <div class="form-row">
+                               <div class="col-lg-3">
+                                   <mat-form-field style="width: 100%;" appYearMonthFormat>
+                                       <mat-label>Fecha devengue</mat-label>
+                                       <input matInput [matDatepicker]="dFecha" formControlName="dFecha">
+                                       <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                                       <mat-datepicker #dFecha startView="multi-year"  (monthSelected)="chosenMonthHandler($event, dFecha)" >
+                                       </mat-datepicker>
+                                   </mat-form-field>
+                               </div>
+                                <!-- Nombre del Solicitante-->
+                                <div class="col-lg-3">
+                                   <mat-form-field style="width: 100%;">
+                                       <mat-label>Apellidos y Nombres</mat-label>
+                                       <input type="text" matInput formControlName="sNombres">
+                                       <button style="outline: none;" mat-button *ngIf="getFilter.sNombres.value" 
+                                       matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sNombres.patchValue('')">
+                                         <mat-icon>close</mat-icon>
+                                       </button>
+                                   </mat-form-field>
+                               </div>
+                               <div class="col-lg-3">
+                                   <mat-form-field style="width: 100%;">
+                                       <mat-label>Ciudad</mat-label>
+                                       <mat-select formControlName="sCiudad">
+                                           <mat-option>--</mat-option>
+                                           <mat-option *ngFor="let item of cboCiudad" [value]="item.sDesc">
+                                               {{item.sDesc}}
+                                           </mat-option>
+                                       </mat-select>
+                                   </mat-form-field>
+                               </div>
+                               <div class="col-lg-3">
+                                   <mat-form-field style="width: 100%;">
+                                       <mat-label>Planilla</mat-label>
+                                       <mat-select formControlName="scodplla">
+                                           <mat-option>--</mat-option>
+                                           <mat-option *ngFor="let item of cboPlanilla" [value]="item.sCodPlla">
+                                               {{item.sCodPlla}} - {{item.sDesc}}
+                                           </mat-option>
+                                       </mat-select>
+                                   </mat-form-field>
+                               </div>
+                            </div>
+                       </form>
+                    </mat-expansion-panel>
+                    
+                   
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="row" style="margin-top: 2px;">
+                <div class="col-sm">
+                    <h6>Lista históricas de liquidaciones : </h6>
+                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTablePersonal" class="melevation">
+                        <table  mat-table [dataSource]="PersonalDS" style="width: 100%;" multiTemplateDataRows>
+    
+                             <!-- Action Column -->
+                             <ng-container matColumnDef="action">
+                                <!-- <ng-container matColumnDef="action" sticky> -->
+                                <th mat-header-cell *matHeaderCellDef> Depositos </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(element)">
+                                        <mat-icon>paid</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Devengue">
+                                <th mat-header-cell *matHeaderCellDef> Devengue</th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Devengue: '> {{ MomentDate2(element.nMes,element.nEjercicio) }} </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="Planilla">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Planilla </th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Planilla: '> {{element.scodplla}} </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="NroPersonas">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef > # Personas </th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='# Personas: '> {{element.nroPersonas}} </td>
+                            </ng-container>
+    
+                            <ng-container matColumnDef="TotalIngresos">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Ingresos (S./)</th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ingresos (S./): '> {{element.totalIngresos}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="TotalDescuento">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Descuentos (S./)</th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Descuentos (S./): '> {{element.totalDescuento}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="TotalNeto">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Neto (S./)</th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Neto (S./): '> {{element.totalNeto}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Estado">
+                                <th mat-header-cell *matHeaderCellDef > Estado </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado: '> {{element.estado}} </td>
+                            </ng-container>
+
+                            <!-- More Column -->
+                            <ng-container matColumnDef="more">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                    <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- More Expanded -->
+                            <ng-container matColumnDef="expanded_More">
+                                <td mat-cell *matCellDef="let element" [attr.colspan]="PersonalDC.length">
+                                    <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                        <div class="row" style="margin-top: 15px;">
+                                            <div class="col-sm">
+                                                <h6>Lista de trabajadores : </h6>
+                                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding: 10px;">
+                                            <div class="col-lg-7">
+                                                <div id="dTableExpanded" class="melevation">
+                                                    <table #mtExpanded mat-table [dataSource]="ExpandedDS" style="width: 100%;">
+                                                        <!-- <ng-container matColumnDef="action2">
+                                                            <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                                            <td mat-cell *matCellDef="let element">
+                                                                <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="ConceptoxPersonal(element)">
+                                                                    <mat-icon>visibility</mat-icon>
+                                                                </button>
+                                                            </td>
+                                                        </ng-container> -->
+
+                                                         <!-- Inicio Vacaciones Column -->
+                                                         <ng-container matColumnDef="sNombres">
+                                                            <th mat-header-cell *matHeaderCellDef> Apellidos y Nombres </th>
+                                                            <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y Nombres :'>
+                                                                <ngb-highlight [result]="element.sNombres" [term]="getFilter.sNombres.value"></ngb-highlight>
+                                                            </td>
+                                                            <!-- <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Apellidos y Nombres :'>
+                                                                {{element.sNombres}} </td> -->
+                                                        </ng-container>
+
+                                                         <!-- Ciudad Column -->
+                                                         <ng-container matColumnDef="sCiudad">
+                                                            <th mat-header-cell *matHeaderCellDef > Ciudad </th>
+                                                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ciudad :' >
+                                                                {{element.sCiudad}} </td>
+                                                        </ng-container>
+
+                                                        <!-- Inicio Vacaciones Column -->
+                                                        <ng-container matColumnDef="fecIngreso">
+                                                            <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                                                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Inicio :'>
+                                                                {{element.sFechaIngreso }} </td>
+                                                        </ng-container>
+
+                                                        <!-- Fin Vacaciones Column -->
+                                                        <ng-container matColumnDef="fecCese">
+                                                            <th mat-header-cell *matHeaderCellDef> Termino </th>
+                                                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Termino :'>
+                                                                {{element.sFechaCese }} </td>
+                                                        </ng-container>
+
+                                                        <!-- Cantidad de Dia de vacaciones Column -->
+                                                        <ng-container matColumnDef="nNeto">
+                                                            <th mat-header-cell *matHeaderCellDef > Neto (S/.) </th>
+                                                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Neto (S/.)  :' >
+                                                                {{element.nNeto}} </td>
+                                                        </ng-container>
+
+                                                        <tr mat-header-row *matHeaderRowDef="ExpandedDC; sticky: true"></tr>
+                                                        <!-- <tr mat-row *matRowDef="let element; columns: ExpandedDC;"> -->
+                                                            <tr mat-row *matRowDef="let element; columns: ExpandedDC;" style="cursor: pointer;"
+                                                            (click)="ConceptoxPersonal(element)" [ngClass]="{'highlight': selectedRowIndex === element}">
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <mat-paginator #pagExpanded style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                                                </mat-paginator>
+                                            </div>
+                                                    <div class="col-lg-5">
+                                                    <!-- Lista de Conceptos -->
+                                                     <div class="row">
+                <div class="col-lg-12">
+                    <div id="dTableMain2" class="melevation">
+                        <table  mat-table [dataSource]="ConceptoDS" style="width: 100%;" multiTemplateDataRows>
+
+                            <ng-container matColumnDef="sCodConcepto">
+                                <th mat-header-cell *matHeaderCellDef> Concepto</th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Codigo: '> {{element.sCodConcepto}}  </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sConcepto">
+                                <th mat-header-cell *matHeaderCellDef > Descripción </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Concepto: '> {{element.sConcepto}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nUnidad">
+                                <th mat-header-cell *matHeaderCellDef > Unidad </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Unidad: '> {{element.nUnidad}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nImporte">
+                                <th mat-header-cell *matHeaderCellDef > Importe </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe: '> {{element.nImporte}} </td>
+                            </ng-container>
+                            
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="ConceptoDC.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="ConceptoDC; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: ConceptoDC;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ConceptoDS && this.ConceptoDS.filteredData.length > 0"></mat-footer-row> 
+
+                         </table>
+                    </div>
+                    <!-- <mat-paginator  #pagMain  style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator> -->
+                </div>
+            </div>
+
+                                                </div>
+
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="PersonalDC.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="PersonalDC; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: PersonalDC;"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['expanded_More']" 
+                            [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="PersonalDS && this.PersonalDS.filteredData.length > 0">
+                            </mat-footer-row>
+    
+                            <!-- <tr mat-header-row *matHeaderRowDef="PersonalDC; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let element; columns: PersonalDC;"></tr> -->
+    
+                         </table>
+
+                        </div>
+                    </div>
+                </div>
+                    <mat-paginator  #pagPersonal style="display: contents;" [hidePageSize]="false" [pageSize]="6"></mat-paginator>
+
+                <!-- </mat-expansion-panel> -->
+               
+        
+        </div>
+    </div>
+
+</div>
+
+
+  
+<mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>

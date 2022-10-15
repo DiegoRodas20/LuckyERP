@@ -1,0 +1,264 @@
+<ngx-spinner
+  name="spiDialog"
+  [fullScreen]="true"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+  class="noImpresion"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+
+<div class="clsprincipal noImpresion" >
+    <div class="col-md-10 offset-md-1">
+      <h3 class="card-header">Informe de (RE, RR, SM) autorizado o generados</h3>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <mat-card>
+            <form class="form-row" style="margin-top: 15px;" [formGroup]="form" (ngSubmit)="generarInforme()" >
+                <div class="form-group col-md-12">
+                    <!-- <div class="row justify-content-center"> -->
+                        <div class="col-md-10 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Tipo de Rq:</mat-label>
+                                        <mat-select (selectionChange)="listarUsuarios()" formControlName="tipoRQ"  >
+                                        <mat-option value="RE"> Requerimiento de Efectivo </mat-option>
+                                        <mat-option value="RR"> Requerimiento de Rembolso </mat-option>
+                                        <mat-option value="SM"> Solicitud de Movilidad </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="form.controls.tipoRQ.touched && form.controls.tipoRQ.invalid">
+                                            <span *ngIf="form.controls.tipoRQ.errors.required">Tipo RQ es <strong>requerido</strong></span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6" >
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Creado por:</mat-label>
+                                        <mat-select formControlName="creado">
+                                        <mat-option value="0"> Creados Operaciones </mat-option>
+                                        <mat-option value="625"> Creado Presupuesto </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="form.controls.creado.touched && form.controls.creado.invalid">
+                                            <span *ngIf="form.controls.creado.errors.required">Campo <strong>requerido</strong></span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-10 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-3" >
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Fecha de Aprobación</mat-label>
+                                        <input matInput [matDatepicker]="picker" formControlName="fecha">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker color="primary"></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3" style="margin-top: 22px;">
+                                    <mat-checkbox (click)="activarHora()" formControlName="hora" class="example-margin">Activar Hora</mat-checkbox>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Hora</mat-label>
+                                        <mat-select formControlName="cbohora">
+                                        <mat-option *ngFor="let item of listaHora" [value]="item.hora"> {{ item.hora }} </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Minuto</mat-label>
+                                        <mat-select formControlName="cbominuto">
+                                        <mat-option *ngFor="let item of listaMinuto" [value]="item.minuto"> {{ item.minuto }} </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-10 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-3" style="margin-top: 22px;">
+                                    <mat-checkbox (click)="activarUsuario()" formControlName="check" class="example-margin">Elegir usuario creación</mat-checkbox>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <mat-form-field color="primary" style="width: 100%"   >
+                                        <mat-label>Usuarios</mat-label>
+                                        <mat-select formControlName="usuario">
+                                        <mat-option *ngFor="let item of listaUsuario" [value]="item.nIdUsrRegistro"> {{ item.nameUser }} </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--Zona de botones flotantes-->
+                        <div class="fab-container">
+                            <div>
+
+                                <button mat-raised-button mat-mini-fab class="fab-secondary" type="submit" matTooltipPosition="left" matTooltip="Buscar"
+                                    color="secondary"><i class="material-icons">search</i>
+                                </button>
+
+                                <!-- <button mat-raised-button  *ngIf="hide" mat-mini-fab  [useExistingCss]="true" printSectionId="print-prueba"
+                                    ngxPrint class="fab-secondary" matTooltipPosition="left" matTooltip="Reporte"
+                                    color="secondary"><i class="material-icons">text_snippet</i>
+                                </button> -->
+
+                                <button mat-raised-button *ngIf="hide && !vDispEsCelular" mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Reporte"
+                                    color="secondary" (click)="fnImprimirReporte()"><i class="material-icons">print</i>
+                                </button>
+
+                                <button mat-raised-button *ngIf="hide && vDispEsCelular" mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Reporte"
+                                    color="secondary" (click)="fnImprimirCelularReporte()"><i class="material-icons">print</i>
+                                </button>
+
+                            </div>
+                        </div>
+
+                    <!-- </div> -->
+
+
+                </div>
+            </form>
+        </mat-card>
+    </div>
+
+    <!-- tabla que muestra a información del reporte -->
+    <div class="col-md-10 offset-md-1">
+        <div id="listaMobile" class="mat-elevation-z8">
+            <div class="example-container" style="margin-top: 20px;">
+                <table mat-table [dataSource]="dsreporte" matSort style="width: 100%;"  >
+                <ng-container matColumnDef="sCodCC">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge2" > Presupuesto  </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge2" data-label='Presupuesto: '> {{row.sCodCC}} - {{row.sDescCC}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nNumero">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2" > Documento  </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Documento: ' >{{row.sTipoDoc}} - {{row.sNumero}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFechaRegistro">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha Registro </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Fecha Registro: ' > {{row.dFechaRegistro}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="nameUser">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Usuario </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Usuario: '> {{row.nameUser}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFechaIni">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha Inicio </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Fecha Inicio: '> {{row.dFechaIni}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFechaFin">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2" > Fecha Fin  </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Fecha Fin: '> {{row.dFechaFin}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sTitulo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge" > Título  </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge" data-label='Titulo: ' > {{row.sTitulo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sRuc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge" >Cliente  </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge" data-label='Cliente: ' > {{row.sNombreComercial}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sMoneda">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Moneda </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Moneda: '> {{row.sMoneda}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nTotal">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Total </th>
+                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Total: '> {{row.nTotal | number:'1.2-2'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="UsuarioAprobo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header > Usuario Aprobo </th>
+                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Usuario Aprobo: '> {{row.usuarioAprobo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sFechaAprobo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha Aprobo </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Fecha Aprobo: '> {{row.sFechaAprobo}} - {{row.sHoraAprobo}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" >
+                </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+
+        </div>
+    </div>
+
+</div>
+
+<iframe id="pdf-frame" style="display:none"></iframe>
+
+<div [ngClass]="{'impresionActiva' : vVerReporte}" class="impresion">
+    <div id="print-prueba" >
+        <div style="display: grid; grid-template-columns: repeat(3, 2fr);grid-gap: 15px;" >
+            <div style="grid-column: 1;grid-row: 1;">
+                {{ this.idEmp }} - {{ this.nEmpresa }}
+            </div>
+            <div style="grid-column: 2;grid-row: 1; text-align: center;">
+                <h5>INFORME DE ({{ form.get('tipoRQ').value }}) AUTORIZADO O GENERADOS</h5>
+            </div>
+            <div style="grid-column: 3;grid-row: 1; text-align: end;">
+                {{ fechareporte }}
+            </div>
+        </div>
+        <br>
+        <hr>
+        <p style="font-weight: bold;margin-left: 5px;" >Requerimientos APROBADO el dia {{ form.get('fecha').value.getDate()}}/{{ (("0" + (form.get('fecha').value.getMonth() + 1)).slice(-2)) }}/{{ form.get('fecha').value.getFullYear() }}</p>
+        <hr>
+        <br>
+        <table style="border: 1px solid black;width: 100%;" >
+            <tr>
+                <th style="padding: 5px">DOC</th>
+                <th style="padding: 5px">PPTO</th>
+                <th style="padding: 5px">NUMERO</th>
+                <th style="padding: 5px">AUT-HORA</th>
+                <th style="padding: 5px">NOMBRE PRESUPUESTO</th>
+                <th style="padding: 5px">INICIO RQ</th>
+                <th style="padding: 5px">FIN RQ</th>
+                <th style="padding: 5px">TITULO</th>
+                <th style="padding: 5px">CLIENTE</th>
+                <th style="padding: 5px">MONEDA</th>
+                <th style="padding: 5px">TOTAL</th>
+                <th style="padding: 5px">FISICO</th>
+            </tr>
+            <tr *ngFor="let itm of listaReporte">
+                <td style="padding: 5px">{{ itm.sTipoDoc }}</td>
+                <td style="padding: 5px">{{ itm.sCodCC }}</td>
+                <td style="padding: 5px"> {{ itm.sNumero }} </td>
+                <td style="padding: 5px"> {{ itm.sHoraAprobo }} </td>
+                <td style="padding: 5px"> {{ itm.sDescCC }} </td>
+                <td style="padding: 5px"> {{ itm.dFechaIni }} </td>
+                <td style="padding: 5px"> {{ itm.dFechaFin }} </td>
+                <td style="padding: 5px"> {{ itm.sTitulo }} </td>
+                <td style="padding: 5px"> {{ itm.sNombreComercial }} </td>
+                <td style="padding: 5px"> {{ itm.sMoneda }} </td>
+                <td style="padding: 5px"> {{ itm.nTotal }} </td>
+                <td style="padding: 5px"><div style="width: 20px;height: 20px;border: 1px solid black;margin-left: 5px;"></div></td>
+            </tr>
+        </table>
+    </div>
+</div>

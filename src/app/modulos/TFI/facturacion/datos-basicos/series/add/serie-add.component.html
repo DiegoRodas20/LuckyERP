@@ -1,0 +1,129 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Registro de Nueva Serie
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <form [formGroup]="formSerie" autocomplete="off">
+
+        <!-- Inputs Cliente -->
+        <mat-card class="mb-4">
+            <div class="form-row col-md-12">
+
+                <!-- Empresa -->
+                <div class="form-group col-md-4">
+                    <ng-select [readonly]="isReadOnly" class="ngselect" appendTo="body" [clearable]="true"
+                        placeholder="Empresa" formControlName="empresa" notFoundText="No hay datos registrados">
+                        <ng-option *ngFor="let item of lEmpresa" [value]="item.empresaID">
+                            {{item.razonSocial}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Tipo Documento -->
+                <div class="form-group col-md-4">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Tipo Documento"
+                        formControlName="tipoDocumento" notFoundText="No hay datos registrados">
+                        <ng-option *ngFor="let item of lTipoDocumento" [value]="item.codigoDocumento">
+                            {{item.nombreDocumento}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Codigo Surcursal -->
+                <div *ngIf="isPeru == false" class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label> Código Sucursal </mat-label>
+                        <input matInput placeholder="Ingrese el codigo" formControlName="codigoSucursal">
+                        <mat-error *ngIf="formSerie.get('codigoSucursal').hasError('required')">Debe ingresar el
+                            dato</mat-error>
+                        <mat-error *ngIf="formSerie.get('codigoSucursal').hasError('maxlength')">Ingresar 10
+                            caracteres como máximo</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Serie -->
+                <div class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label> Serie </mat-label>
+                        <input matInput placeholder="Ingrese el numero de Serie" formControlName="serie">
+                        <mat-error *ngIf="formSerie.get('serie').hasError('required')">Debe ingresar el
+                            dato</mat-error>
+                        <mat-error *ngIf="formSerie.get('serie').hasError('maxlength')">Ingresar 10
+                            caracteres como máximo</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Ancho del numerador -->
+                <div class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label> Ancho del Numerador </mat-label>
+                        <input type="number" matInput placeholder="Ingrese el ancho" (blur)="numeradorSerie()"
+                            formControlName="anchoNumerador">
+                        <mat-error>El ancho del numerador es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Numerador Actual -->
+                <div class="form-group col-md-4">
+                    <mat-form-field>
+                        <mat-label> Numerador Actual </mat-label>
+                        <input matInput [readonly]="numeradorDisabled" placeholder="Ingrese el numerador actual"
+                            formControlName="numeradorActual">
+                        <mat-error *ngIf="formSerie.get('numeradorActual').hasError('required')">Debe ingresar el
+                            dato</mat-error>
+                        <mat-error *ngIf="formSerie.get('numeradorActual').hasError('maxlength')">Ingresar 15
+                            caracteres como máximo</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-group col-md-12">
+                    <mat-form-field>
+                        <mat-label> Descripción </mat-label>
+                        <input matInput placeholder="Ingrese la descripción" formControlName="descripcion">
+                        <mat-error *ngIf="formSerie.get('descripcion').hasError('required')">Debe ingresar el
+                            dato</mat-error>
+                        <mat-error *ngIf="formSerie.get('descripcion').hasError('maxlength')">Ingresar 50
+                            caracteres como máximo</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Es Electronica -->
+                <div class="form-group col-md-4">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="¿Es Eléctronica?"
+                        formControlName="electronica" notFoundText="No hay datos registrados">
+                        <ng-option *ngFor="let item of lElectronica" [value]="item.codigo">
+                            {{item.descripcion}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group col-md-4">
+                    <ng-select [readonly]="isReadOnly" class="ngselect" appendTo="body" [clearable]="true"
+                        placeholder="Estado" formControlName="estado" notFoundText="No hay datos registrados">
+                        <ng-option *ngFor="let item of lEstado" [value]="item.codigo">
+                            {{item.descripcion}}</ng-option>
+                    </ng-select>
+                </div>
+
+            </div>
+        </mat-card>
+
+    </form>
+
+</div>

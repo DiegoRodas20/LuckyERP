@@ -1,0 +1,236 @@
+<h5 mat-dialog-title class="card-header"
+    style="text-align: center; width:100%; margin-bottom: 5px; min-height: 40px !important;">
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-expansion-panel [disabled]="true" (opened)="this.matComponente.close()" class="row" #matActivo hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                {{this.data.activo.sActivo + ' - ' + this.data.activo.sArticulo}}
+            </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">devices</mat-icon>
+            </button>
+        </mat-expansion-panel-header>
+        <form style="margin-top: 10px;" class="row" [formGroup]="formActivo">
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Tipo de Artículo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtTipoArticulo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-8">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Artículo:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtArticulo">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-1">
+                <div class="box">
+                    <div class="col-md-1 col-2">
+                        <div class="box">
+                            <img *ngIf="this.data.activo?.sRutaArchivo=='' || this.data.activo?.sRutaArchivo==null"
+                                width="40px" height="40px" src="/assets/img/SinImagen.jpg"
+                                (click)="fnVerImagen(null, '')">
+
+                            <img *ngIf="this.data.activo?.sRutaArchivo!='' && this.data.activo?.sRutaArchivo!=null"
+                                width="40px" height="40px" [src]='this.data.activo?.sRutaArchivo'
+                                (click)="fnVerImagen(this.data.activo?.sActivo, this.data.activo?.sArticulo, this.data.activo?.sRutaArchivo)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div [ngClass]="bEsDispositivoEspecial?'col-md-8':'col-md-7'">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Información artículo:</mat-label>
+                    <mat-chip-list #chipListInformacion>
+                        <mat-chip *ngFor="let vInfor of lInformacionArticulo"
+                            [ngClass]="{
+                                'chip-blue': vInfor.bRepotenciado
+                            }">
+                            {{vInfor.sInformacion}}
+                        </mat-chip>
+                        <input readonly #informacionInput formControlName="cboInformacion"
+                            [matChipInputFor]="chipListInformacion"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Penalización:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtPenalizacion">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Moneda:</mat-label>
+                    <input type="text" readonly matInput formControlName="moneda">
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="!bEsDispositivoEspecial" class="col-md-1 d-flex align-items-center">
+
+                <button mat-icon-button [matMenuTriggerFor]="menuActivo" matTooltip="Desplegar"
+                    matTooltipPosition="left" mat-stroked-button color="accent">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menuActivo="matMenu" xPosition="before">
+
+                    <button (click)="fnMandarSolicitud(this.data.activo.nIdArticulo, 2608, this.data.activo.nMonto, true)"
+                        mat-menu-item>
+                        <mat-icon color="accent"> settings</mat-icon>
+                        <span>Revisión Técnica</span>
+                    </button>
+
+                    <button (click)="fnMandarSolicitud(this.data.activo.nIdArticulo, 2616, this.data.activo.nMonto, true)"
+                        mat-menu-item>
+                        <mat-icon color="accent"> settings</mat-icon>
+                        <span>Reposición Robo</span>
+                    </button>
+
+                    <button (click)="fnMandarSolicitud(this.data.activo.nIdArticulo, 2609, this.data.activo.nMonto, true)"
+                        mat-menu-item>
+                        <mat-icon color="accent"> settings</mat-icon>
+                        <span>Reposición Perdida</span>
+                    </button>
+
+                </mat-menu>
+            </div>
+
+            <div class="col-md-12">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Fotos del Activo:</mat-label>
+                    <mat-chip-list #chipFotos>
+                        <mat-chip
+                            (click)="fnVerImagen('Observación N°' + vFotos.nNumero, vFotos.sObservacion, vFotos.sRutaArchivo)"
+                            *ngFor="let vFotos of lFotos">
+                            {{vFotos.sObservacion}}
+                        </mat-chip>
+                        <input readonly #fotosInput formControlName="cboFotos" [matChipInputFor]="chipFotos"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    </mat-chip-list>
+                </mat-form-field>
+            </div>
+
+        </form>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [ngClass]="this.lComponente.length==0 ? 'clsHide' : 'clsShow'"
+        (opened)="this.matActivo.close()" (closed)="this.matActivo.open()" class="row" #matComponente hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                Componentes
+            </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <button mat-icon-button>
+                <mat-icon style="margin-right: 10px;" color="accent">devices_other</mat-icon>
+            </button>
+        </mat-expansion-panel-header>
+        <div style="margin-top: 10px;" class="row">
+            <div class="col-md-12">
+                <!--Mat Table Personales-->
+                <div id="listaMobile" class="mat-elevation-z8 ">
+                    <div class="example-container">
+                        <table mat-table [dataSource]="dataSourceComponente" #sortComponente="matSort" matSort>
+
+                            <ng-container matColumnDef="opcion" sticky>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                </th>
+                                <td data-label='Ver Componentes: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile">
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                        matTooltipPosition="right" mat-stroked-button color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu" xPosition="after">
+
+                                        <button (click)="fnMandarSolicitud(row.nIdArticulo, 2608, row.nMonto, row.bAplicaDescuento)"
+                                            mat-menu-item>
+                                            <mat-icon color="accent"> settings</mat-icon>
+                                            <span>Revisión Técnica</span>
+                                        </button>
+
+                                        <button (click)="fnMandarSolicitud(row.nIdArticulo, 2616, row.nMonto, row.bAplicaDescuento)"
+                                            mat-menu-item>
+                                            <mat-icon color="accent"> settings</mat-icon>
+                                            <span>Reposición Robo</span>
+                                        </button>
+
+                                        <button (click)="fnMandarSolicitud(row.nIdArticulo, 2609, row.nMonto, row.bAplicaDescuento)"
+                                            mat-menu-item>
+                                            <mat-icon color="accent"> settings</mat-icon>
+                                            <span>Reposición Perdida</span>
+                                        </button>
+
+                                    </mat-menu>
+
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sTipoDispositivo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Tipo Dispositivo
+                                </th>
+                                <td data-label='Tipo Dispositivo: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile">
+                                    <ngb-highlight [result]="row.sTipoDispositivo" [term]="txtFiltroComponente.value">
+                                    </ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sArticulo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Artículo
+                                </th>
+                                <td data-label='Descripción: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile">
+                                    <ngb-highlight [result]="row.sArticulo" [term]="txtFiltroComponente.value">
+                                    </ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nRevision">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Revisiones
+                                </th>
+                                <td data-label='Revisiones: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile">
+                                    <ngb-highlight [result]="row.nRevision" [term]="txtFiltroComponente.value">
+                                    </ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nReposicion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Reposiciones
+                                </th>
+                                <td data-label='Reposiciones: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile">
+                                    <ngb-highlight [result]="row.nReposicion" [term]="txtFiltroComponente.value">
+                                    </ngb-highlight>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsComponente; sticky: true">
+                            </tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsComponente;">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #paginatorComponente [pageSizeOptions]="[4]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-dialog-content>

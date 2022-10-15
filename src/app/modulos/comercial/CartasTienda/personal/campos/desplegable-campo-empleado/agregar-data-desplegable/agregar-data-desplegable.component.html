@@ -1,0 +1,25 @@
+<form #formCampo="ngForm">
+  <h1 mat-dialog-title>NUEVO VALOR</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input
+        required
+        matInput
+        [(ngModel)]="data.pValor"
+        name="nombre"
+        #nombre="ngModel"
+      />
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">No gracias</button>
+    <button
+      mat-button
+      [disabled]="!formCampo.form.valid"
+      [mat-dialog-close]="data"
+    >
+      AGREGAR
+    </button>
+  </div>
+</form>

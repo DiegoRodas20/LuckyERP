@@ -1,0 +1,24 @@
+<div class="mb-3" style="text-align: center; position: relative;">
+    <mat-card class="title-card ">Subir Documento de Descuento</mat-card>
+    <button mat-icon-button class="closeButtonModal" (click)="fnSalir()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <div class="row col-md-12 mx-auto" [formGroup]="formDescuento" style="width: 100%;">
+        <div class="col-sm-10 col-6">
+            <input type="file" accept="application/pdf, image/*" formControlName="documentoDescuento"
+                class="custom-file-input" aria-describedby="inputGroupFileAddon04" #imageFile
+                (change)="fnSeleccionArchivo()">
+            <mat-label class="custom-file-label" style="width: 100%">{{nombreArchivo}}</mat-label>
+        </div>
+
+        <div class="col-1 mx-auto">
+            <button mat-raised-button (click)="fnCargarArchivo()" color="primary" matTooltip="Subir Archivo"
+                type="button">
+                <mat-icon>cloud_upload</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

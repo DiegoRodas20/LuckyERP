@@ -1,0 +1,56 @@
+<div class="mb-3 col-md-10 offset-md-1" style="text-align: center;">
+    <!-- <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div> -->
+    <mat-card class="title-card">Informe de Saldos </mat-card>
+
+    <div mat-dialog-content>
+        <div class="card mt-3">
+            <div class="card-body">
+                <form autocomplete="off" [formGroup]="formReporte">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                            <ng-select appendTo="body" [clearable]="true" placeholder="Centro de Costo" formControlName="presupuesto">
+                                <ng-option *ngFor="let item of listaPresupuesto" [value]="item.id">
+                                    {{item.descripcion}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-5 col-md-10 col-sm-10 col-10">
+                            <ng-select appendTo="body" [clearable]="true" placeholder="Año" formControlName="year">
+                                <ng-option *ngFor="let item of listaYear" [value]="item.descripcion">
+                                    {{item.descripcion}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                            <button mat-mini-fab class="fab-secondary" color="accent" (click)="clickFab(0)">
+                                <i class="material-icons" matTooltip="Generar Reporte Excel" matTooltipPosition="left">cloud_download</i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- <pre>
+    Estado del formulario {{formReporte.valid}}
+  <br />
+    Status: {{formReporte.status}}
+  </pre>
+
+<pre>
+  {{ formReporte.value | json }}
+  </pre> -->

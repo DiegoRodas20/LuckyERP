@@ -1,0 +1,166 @@
+<iframe id="pdf-frame" style="display:none"></iframe>
+<ng-container *ngIf="impresionMasiva">
+  <div *ngFor="let impresion of impresionMasivaResult; let i = index" class="impresion print-impresion-masiva">
+    <app-reporte-rq [pGastoCosto]="impresion.nIdGastoCosto" [nAsiento]="impresion.nAsiento"
+      (reporteCargado)="fnAgregarReporteAlIFrame()">
+    </app-reporte-rq>
+    <app-reporte-sm [pGastoCosto]="impresion.nIdGastoCosto" [nAsiento]="impresion.nAsiento"
+      (reporteCargado)="fnAgregarReporteAlIFrame()" *ngIf="impresion.sTipoDoc == 'SM'">
+    </app-reporte-sm>
+  </div>
+</ng-container>
+
+<div class="col-xl-8 mx-auto" style="padding-top: 90px;">
+  <div>
+    <div class="mb-3" style="text-align: center;">
+      <mat-card class="title-card">
+        <h3>Formato de impresión por Liquidación/Asiento</h3>
+      </mat-card>
+    </div>
+  </div>
+
+  <div>
+    <div class="kardex-container" class="my-3">
+      <!-- Impresión Individual desplegable MatSelect -->
+      <mat-accordion>
+        <mat-expansion-panel #matExpUbicacion [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title style="justify-content: space-between; line-height: 40px; color: #334D6E; font-weight: bold">
+              <span style="vertical-align: middle;">Impresión Individual</span>
+              <button mat-icon-button>
+                <mat-icon color="accent">list</mat-icon>
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <form autocomplete="off" [formGroup]="impresionIndividualForm" class="mt-3">
+            <div class="row">
+              <div class="col-md-6">
+                <ng-select [clearable]="false" placeholder="Año" formControlName="nAnio"
+                  notFoundText="No hay años disponibles">
+                  <ng-option *ngFor="let element of nAnio" [value]="element.nId">
+                    {{element.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="row">
+              <!-- Número (Liquidación/Asiento) -->
+              <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Número (Liquidación/Asiento)</mat-label>
+                  <input type="text" matInput formControlName="txtNumeroAsiento">
+                </mat-form-field>
+              </div>
+
+              <!-- Formatos -->
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="">Formato de Impresión Depósito:</label>
+                    <button mat-icon-button (click)="fnBuscarLiquidacion(1)">
+                      <mat-icon color="accent">print</mat-icon>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="">Formato de Impresión SM:</label>
+                    <button mat-icon-button (click)="fnBuscarLiquidacion(2)">
+                      <mat-icon color="accent">print</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </mat-expansion-panel>
+
+        <!-- Impresión Masiva desplegable MatSelect -->
+        <mat-expansion-panel #matExpUbicacion>
+          <mat-expansion-panel-header>
+            <mat-panel-title style="justify-content: space-between; line-height: 40px; color: #334D6E; font-weight: bold">
+              <span style="vertical-align: middle;">Impresión Masiva</span>
+              <button mat-icon-button>
+                <mat-icon color="accent">list</mat-icon>
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <form autocomplete="off" [formGroup]="impresionMasivaForm" class="row mt-3">
+
+            <div class="col">
+              <div class="row">
+                <div class="col">
+                  <p>Solo se puede imprimir un rango de hasta {{impresionesMaximas}} reportes</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5">
+                  <ng-select [clearable]="false" placeholder="Año" formControlName="nAnio"
+                    notFoundText="No hay años disponibles">
+                    <ng-option *ngFor="let element of nAnio" [value]="element.nId">
+                      {{element.sDescripcion}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+              <!-- Número de asiento inicial -->
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field style="width: 100%;">
+                    <mat-label>Número de asiento inicial</mat-label>
+                    <input type="text" matInput formControlName="txtNumeroAsientoInicial">
+                    <mat-error
+                      *ngIf="(impresionMasivaForm.get('txtNumeroAsientoInicial').hasError('minLength') || impresionMasivaForm.get('txtNumeroAsientoInicial').hasError('maxLength')) && impresionMasivaForm.get('txtNumeroAsientoInicial').touched">
+                      Tienen que ser 8
+                    </mat-error>
+                    <mat-error
+                      *ngIf="impresionMasivaForm.get('txtNumeroAsientoInicial').hasError('required') && impresionMasivaForm.get('txtNumeroAsientoInicial').touched">
+                      Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Número de asiento final -->
+                <div class="col-md-5">
+                  <mat-form-field style="width: 100%;">
+                    <mat-label>Número de asiento final</mat-label>
+                    <input type="text" matInput formControlName="txtNumeroAsientoFinal">
+                    <mat-error
+                      *ngIf="(impresionMasivaForm.get('txtNumeroAsientoFinal').hasError('minLength') || impresionMasivaForm.get('txtNumeroAsientoFinal').hasError('maxLength')) && impresionMasivaForm.get('txtNumeroAsientoFinal').touched">
+                      Tienen que ser 8
+                    </mat-error>
+                    <mat-error
+                      *ngIf="impresionMasivaForm.get('txtNumeroAsientoInicial').hasError('required') && impresionMasivaForm.get('txtNumeroAsientoInicial').touched">
+                      Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div class="col-sm-2 mx-auto">
+                  <button mat-icon-button matTooltip="Impresión masiva de asientos" (click)="fnRecuperarParaImpresionMasiva()">
+                    <mat-icon color="accent">print</mat-icon>
+                  </button>
+                  <!-- <button mat-icon-button matTooltip="Descargar en ZIP">
+                    <mat-icon color="accent">cloud_download</mat-icon>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+</div>
+
+<div class="impresion">
+  <app-reporte-rq [pGastoCosto]="this.nIdGastoCosto" *ngIf="vVerReporte" [nAsiento]="nAsiento"></app-reporte-rq>
+</div>
+
+<div class="impresion">
+  <app-reporte-sm [pGastoCosto]="this.nIdGastoCosto" *ngIf="vVerReporteSM" [nAsiento]="nAsiento"></app-reporte-sm>
+</div>

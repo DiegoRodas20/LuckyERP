@@ -1,0 +1,398 @@
+<!--#region spinner -->
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!--#endregion -->
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="{{btn.color}}"
+      (click)="clickFab(ibtn)">
+      <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+    </button>
+  </div>
+</div>
+
+<div class="clsprincipal">
+  <div class="col-md-12">
+    <div class="card">
+      <h5 class="col-md-12 card-header" style="text-align: center">
+        Control Diario de Distribución
+      </h5>
+
+      <div class="card-body">
+        <div class="col-md-12 transporte">
+          <!--#region Formulario vista cabecera  -->
+          <form [formGroup]="formCabecera">
+            <div class="row">
+              <div class="col-lg-1 col-md-2 col-12">
+                <mat-form-field>
+                  <mat-label>Nro. Ruta:</mat-label>
+                  <input matInput formControlName="ruta" readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2 col-md-3 col-12">
+                <mat-form-field>
+                  <mat-label>Fecha de Ruta:</mat-label>
+                  <input matInput formControlName="fecha" readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2 col-md-3 col-12">
+                <mat-form-field>
+                  <mat-label>Estado:</mat-label>
+                  <input matInput class="pink" formControlName="estado" readonly />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+          <!--#endregion End Formulario vista cabecera -->
+
+          <!--#region Acordion para Vehiculo -->
+          <div class="row">
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="hasVehiculos">
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="panel-title">
+                    Vehículos
+                  </mat-panel-title>
+                  <button type="button" mat-icon-button>
+                    <mat-icon style="margin-right: 10px" color="accent">commute</mat-icon>
+                  </button>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 col-12">
+                    <mat-form-field>
+                      <mat-label>Búsqueda</mat-label>
+                      <input matInput (keyup)="applyFilterVh($event.target.value)" placeholder="Buscar vehículo"
+                        #inputVh />
+                      <button *ngIf="inputVh.value" matSuffix mat-icon-button (click)="fnCleanVh();inputVh.value = ''">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </div>
+                  <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo Vehículo"
+                    (click)="abrirModalVehiculo(null, true)">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                  <button *ngIf="!hideButtonAsignar" mat-mini-fab class="fab-toggler clean" color="white"
+                    matTooltip=" Cancelar asignación" (click)="cancelAsignar()">
+                    <mat-icon class="pink">cancel</mat-icon>
+                  </button>
+                </div>
+                <div class="row">
+                  <!--#region Tabla Vehiculo -->
+                  <div class="col-md-8">
+                    <div id="listaMobile" class="container-vehiculo mat-elevation-z8">
+                      <table mat-table [dataSource]="dsVehiculo" #sortVehiculos="matSort" matSort>
+                        <ng-container *ngFor="let col of vehiculoCols" matColumnDef="{{ col.field }}"
+                          [sticky]="col.sticky" [ngSwitch]="col.type">
+
+                          <!-- #region Designación de sort en header -->
+                          <ng-template [ngIf]="col.field == 'opcion' || col.field == 'asignar'" [ngIfElse]="withSort">
+                            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"
+                              [hidden]="hideButtonAsignar && col.type == 'asignar'">
+                              {{ col.header }}
+                            </th>
+                          </ng-template>
+                          <ng-template #withSort>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width">
+                              {{ col.header }}
+                            </th>
+                          </ng-template>
+                          <!-- #endregion -->
+
+                          <!-- #region Formación de rows dependiendo del tipo -->
+                          <td mat-cell *matCellDef="let row; let i = index" class="header_mobile"
+                            id="{{ col.header }}: " [hidden]="hideButtonAsignar && col.type == 'asignar'">
+                            <span *ngSwitchCase="null">
+                              <ngb-highlight [result]="row[col.field]" [term]="inputVh.value"></ngb-highlight>
+                            </span>
+                            <span *ngSwitchCase="'bEstado'" [style.color]="getColor(row.bEstado)">
+                              <ngb-highlight [result]="row[col.field]" [term]="inputVh.value"></ngb-highlight>
+                            </span>
+                            <span *ngSwitchCase="'bLucky'">
+                              <ngb-highlight [result]="row[col.field]? 'Sí' : 'No'" [term]="inputVh.value">
+                              </ngb-highlight>
+                            </span>
+                            <span *ngSwitchCase="'opcion'">
+                              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent"
+                                (click)="fnLoadDataReport(row.sCodTransporte)">
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu" xPosition="after">
+                                <button mat-menu-item color="accent" (click)="fnOpenTabLiquidacion(row)">
+                                  <mat-icon color="accent">launch</mat-icon>
+                                  <span>Liquidación</span>
+                                </button>
+                                <button *ngIf="!row.bEstado" mat-menu-item (click)="abrirModalVehiculo(row, false)">
+                                  <mat-icon color="accent">cached</mat-icon>
+                                  <span>Cambiar Vehículo</span>
+                                </button>
+                                <button *ngIf="!row.bEstado" mat-menu-item color="accent"
+                                  (click)="retirarVehiculo(row, i)" [disabled]="row.bEstado">
+                                  <mat-icon color="accent">delete</mat-icon>
+                                  <span>Eliminar Vehículo</span>
+                                </button>
+                                <button mat-menu-item color="accent" (click)="asignarChofer(row)"
+                                  [disabled]="row.bEstado">
+                                  <mat-icon color="accent">airline_seat_recline_normal</mat-icon>
+                                  <span>Asignar Chofer</span>
+                                </button>
+                                <button mat-menu-item ngxPrint *ngIf="row.nCantPunto > 0" color="accent"
+                                  [useExistingCss]="true" printSectionId="print-reporte-ruta">
+                                  <mat-icon color="accent">print</mat-icon>
+                                  <span>Reporte por transportista</span>
+                                </button>
+                                <button mat-menu-item ngxPrint *ngIf="row.nCantPunto > 0" color="accent"
+                                  [useExistingCss]="true" printSectionId="print-reporte-movilidad">
+                                  <mat-icon color="accent">print</mat-icon>
+                                  <span>Reporte por movilidad</span>
+                                </button>
+                              </mat-menu>
+                            </span>
+                            <span *ngSwitchCase="'asignar'">
+                              <button mat-icon-button mat-stroked-button matTooltip="Asignar" matTooltipPosition="right"
+                                color="accent" (click)="asignarTransporte(row)">
+                                <mat-icon>add</mat-icon>
+                              </button>
+                            </span>
+                          </td>
+                          <!-- #endregion -->
+
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="detalleVehiculo(row)"></tr>
+                      </table>
+                    </div>
+                    <mat-paginator #paginatorVehiculos="matPaginator" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+                  </div>
+                  <!--#endregion -->
+
+                  <!--#region Detalle vehiculo seleccionado y listado de choferes-->
+                  <div class="col-md-4">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-12">
+                        <mat-label>Código de transporte:</mat-label>
+                        <mat-form-field>
+                          <input matInput [value]="vhSelected?.sCodTransporte" readonly />
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-8 col-md-12">
+                        <mat-label>Proveedor:</mat-label>
+                        <mat-form-field>
+                          <input matInput [value]="vhSelected?.sProveedor" readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12">
+                        <mat-label>Chofer:</mat-label>
+                        <mat-form-field>
+                          <input matInput [value]="vhSelected?.sChofer" readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <mat-label>Total Peso:</mat-label>
+                        <mat-form-field>
+                          <input matInput [value]="vhSelected?.nPesoCarga | number: '1.2-2'" readonly />
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-6 col-md-12">
+                        <mat-label>Total Volumen:</mat-label>
+                        <mat-form-field>
+                          <input matInput [value]="vhSelected?.nVolumen | number: '1.6-6'" readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <mat-label>Peso Restante:</mat-label>
+                        <mat-form-field>
+                          <input matInput class="pink" [value]="
+                              vhSelected?.nPesoRestante | number: '1.2-2'
+                            " readonly />
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-6 col-md-12">
+                        <mat-label>Volumen Restante:</mat-label>
+                        <mat-form-field>
+                          <input matInput class="pink" [value]="
+                              vhSelected?.nVolumenRestante | number: '1.6-6'
+                            " readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--#endregion -->
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <!--#endregion -->
+        </div>
+        <br />
+        <!--#region Buscador de Tabla Detalle -->
+        <form class="transporte" [formGroup]="formGuia" autocomplete="off">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-12">
+              <mat-form-field>
+                <mat-label> Búsqueda </mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Buscar detalle" #inputDet />
+                <button *ngIf="inputDet.value" matSuffix mat-icon-button (click)="fnCleanDet();inputDet.value = ''">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-1 col-md-6 col-12">
+              <mat-form-field>
+                <mat-label>Serie</mat-label>
+                <span matPrefix>GR -&nbsp;</span>
+                <input matInput formControlName="sCodSerie">
+                <mat-error *ngIf="serieError">{{ serieError }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-1 col-md-6 col-12">
+              <mat-form-field>
+                <mat-label>Número</mat-label>
+                <input matInput formControlName="nNumeroGuia">
+                <mat-error *ngIf="numeroGuiaError">{{ numeroGuiaError }}</mat-error>
+              </mat-form-field>
+            </div>
+            <button mat-mini-fab class="fab-toggler" (click)="fnBuscarGuia()" matTooltip="Buscar guía">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+        </form>
+        <!--#endregion -->
+        <!--#region Tabla Detalle-->
+        <div id="listaMobile" class="mt-1 example-container mat-elevation-z8">
+          <table mat-table [dataSource]="dsDetalle" #sortPuntos="matSort" matSort style="width: 100%">
+            <ng-container matColumnDef="opcion" sticky>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Opción</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label="Opción: ">
+                <button mat-icon-button [matMenuTriggerFor]="menuDetalle" matTooltip="Desplegar"
+                  matTooltipPosition="right" mat-stroked-button color="accent">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menuDetalle="matMenu" xPosition="after">
+                  <button mat-menu-item (click)="asignarVehiculo(row)" *ngIf="row.sNroTransporte == ''">
+                    <mat-icon color="accent">add</mat-icon>
+                    <span>Asignar Vehículo</span>
+                  </button>
+                  <button mat-menu-item (click)="retirarVehiculoPunto(row)" *ngIf="row.sNroTransporte != ''">
+                    <mat-icon color="accent">close</mat-icon>
+                    <span>Quitar Vehículo</span>
+                  </button>
+                  <button mat-menu-item (click)="fnLoadNotas(row)">
+                    <mat-icon color="accent">touch_app</mat-icon>
+                    <span>Ver Notas</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sPunto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Punto</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Punto: ">
+                <ngb-highlight [result]="row.sPunto" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sNroTransporte">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nro. Transporte </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile pink" data-label="N* Transporte: ">
+                <ngb-highlight [result]="row.sNroTransporte" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCadenaOrigen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cadena Origen </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Cadena Origen: ">
+                <ngb-highlight [result]="row.sCadenaOrigen" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sSucursalOrigen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sucursal Origen </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Sucursal Origen: ">
+                <ngb-highlight [result]="row.sSucursalOrigen" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCadenaDestino">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cadena Destino </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Cadena Destino: ">
+                <ngb-highlight [result]="row.sCadenaDestino" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sSucursalDestino">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sucursal Destino </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Sucursal Destino: ">
+                <ngb-highlight [result]="row.sSucursalDestino" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCono">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Cono</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile cono" data-label="Cono: ">
+                <ngb-highlight [result]="row.sCono" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nCantidad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Cantidad: ">
+                <ngb-highlight [result]="row.nCantidad" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nPeso">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Peso: ">
+                <ngb-highlight [result]="row.nPeso | number: '1.2-2'" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nVolumen">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Volumen</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Volumen: ">
+                <ngb-highlight [result]="row.nVolumen | number: '1.6-6'" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sZona">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Zona</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Zona: ">
+                <ngb-highlight [result]="row.sZona" [term]="inputDet.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsDetalle; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsDetalle" [style.background-color]="row.sColor">
+            </tr>
+          </table>
+        </div>
+        <mat-paginator #paginatorPuntos="matPaginator" [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+        <!--#endregion -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display: none">
+  <app-reporte-ruta-transporte [cabecera]="cabReporteTranporte" [detalle]="detReporteTransporte">
+  </app-reporte-ruta-transporte>
+</div>
+
+<div style="display: none">
+  <app-reporte-carga-movilidad [cabecera]="cabReporteMovilidad" [detaPunto]="detPuntoReportePunto"
+    [detalle]="detReporteMovilidad">
+  </app-reporte-carga-movilidad>
+</div>

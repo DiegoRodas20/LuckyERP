@@ -1,0 +1,114 @@
+<div class="modal-header">
+  <h4> Detalle del personal </h4>
+  <button class="close" (click)="fnCloseModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<!-- Cuerpo  -->
+<div class="modal-body">
+  <div class="row">
+    <div id="dLeftDetail" class="col-lg-6">
+      <mat-accordion #maDetail="matAccordion" multi>
+        <!-- #region Información personal -->
+        <app-gestioni-informacion-personal [personal]="data?.personal"></app-gestioni-informacion-personal>
+        <!-- #endregion -->
+        <!-- #region Filtro -->
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Aplicar filtro por :
+            </mat-panel-title>
+            <mat-icon>filter_alt</mat-icon>
+          </mat-expansion-panel-header>
+          <form [formGroup]="form">
+            <div class="form-row">
+              <div class="col-lg-6">
+                <mat-form-field appYearMonthFormat>
+                  <mat-label>Devengue</mat-label>
+                  <input matInput [matDatepicker]="dFecha_Filter" readonly formControlName="dFecha" #input>
+                  <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnCleanFecha()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-datepicker-toggle matSuffix [for]="dFecha_Filter">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #dFecha_Filter startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dFecha_Filter)">
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-6">
+                <mat-form-field>
+                  <mat-label>Motivo</mat-label>
+                  <mat-select formControlName="nIdMotivo">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let item of data.motivos" [value]="item.nId">
+                      {{item.sDescripcion}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-expansion-panel>
+        <!-- #endregion -->
+      </mat-accordion>
+    </div>
+    <div class="col-lg-6">
+      <h6 class="mt-2">Histórico de inasistencias:</h6>
+      <hr>
+      <div class="form-row mb-2">
+        <ng-container *ngFor="let item of colores; let i = index">
+          <div class="col-lg-1">
+            <input type="color" [value]="item.primary" disabled>
+          </div>
+          <div class="col-lg-2">
+            {{data.estados[i].sDescripcion}}
+          </div>
+        </ng-container>
+      </div>
+      <div id="listaMobile" class="melevation example-container">
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+          <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+            <!-- #region Formación de rows dependiendo del tipo -->
+            <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+              [style.textAlign]="col.align">
+              <span *ngSwitchCase="null"> {{row[col.field]}} </span>
+              <span *ngSwitchCase="'dropdown'">
+                <mat-icon [@fabToggler]="row == expandedMore ? 'active3' : 'inactive'" (click)="clickExpanded(row)">
+                  expand_more</mat-icon>
+              </span>
+            </td>
+            <!-- #endregion -->
+          </ng-container>
+
+          <ng-container matColumnDef="expanded_More">
+            <td mat-cell *matCellDef="let row" [attr.colspan]="columns.length">
+              <div style="overflow: hidden" [@detailExpand]="row == expandedMore ? 'expanded' : 'collapsed'">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <mwl-calendar-month-view [viewDate]="row.dViewdate" [events]="row.eventos" [locale]="locale"
+                      [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                    </mwl-calendar-month-view>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="empty">
+            <td mat-footer-cell *matFooterCellDef [attr.colspan]="columns.length"> No se encuentran registros.
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expanded_More']" class='expanded_More'
+            [class.example-expanded-row]="expandedMore === row">
+          </tr>
+          <tr mat-footer-row *matFooterRowDef="['empty']" [hidden]="hideMessageEmpty"> </tr>
+        </table>
+      </div>
+      <mat-paginator [pageSize]="4"> </mat-paginator>
+    </div>
+  </div>
+</div>

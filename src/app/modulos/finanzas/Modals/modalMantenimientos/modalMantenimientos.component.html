@@ -1,0 +1,165 @@
+<!-- Fab -->
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(3, -1)">
+  <i class="material-icons" [@fabToggler]="{value: tsMant}">add</i>
+</button>
+    <div [@speedDialStagger]="abMant.length">
+        <button *ngFor="let btn of abMant; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+  </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_mantenimiento" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<!-- CABECERA -->
+<h5 class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> Mantenimiento Parametros</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span class="material-icons">close</span>
+  </button>
+</h5>
+
+<!-- Body -->
+<div class="modal-body" style="padding-bottom: 0px;">
+    <mat-tab-group mat-align-tabs="center">
+        <!-- <mat-tab>
+            <ng-template mat-tab-label>
+                <span (click)="guardarCuentas()">CUENTAS</span>
+            </ng-template>
+            CUENTAS EN CONSTRUCCIÓN...
+        </mat-tab> -->
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span>MATRIZ</span>
+            </ng-template>
+            <div class="row">
+                <div id="dLeftDetail" class="col-lg-12">
+                    <mat-accordion #maDetail="matAccordion" multi>
+                        <!-- Filtro -->
+                        <mat-expansion-panel [expanded]="false" id="mep_filtro">
+
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Aplicar filtro por :
+                                </mat-panel-title>
+                                <mat-panel-description style="margin-right: 0px;">
+
+                                </mat-panel-description>
+                                <mat-icon style="margin-right: 10px;">filter_alt</mat-icon>
+                            </mat-expansion-panel-header>
+
+                            <div class="row">
+                                <div [formGroup]="fgMant" class="col-lg-12">
+                                    <div class="form-row">
+                                        <!-- Planilla -->
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Planilla</mat-label>
+                                                <mat-select formControlName="planilla">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboPlanilla" [value]="item.descripcion">
+                                                        {{item.descripcion}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Concepto</mat-label>
+                                                <mat-select formControlName="concepto">
+                                                    <mat-option>--</mat-option>
+                                                    <mat-option *ngFor="let item of cboConcepto" [value]="item.descripcion">
+                                                        {{item.numero}} - {{item.descripcion}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Cta. Contable</mat-label>
+                                                <input type="text" matInput formControlName="cuentaContable">
+                                                <button style="outline: none;" mat-button *ngIf="getMant.cuentaContable.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMant.cuentaContable.patchValue('')">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-sm-12">
+                    <h6>Lista:</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 20px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="dTableMain1" class="melevation">
+                        <table mat-table [dataSource]="MantDS" style="width: 100%;" multiTemplateDataRows>
+
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                                <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Visualizar :'>
+                                    <button (click)="viewDetail(element)" matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent">
+                                  <mat-icon>visibility</mat-icon>
+                              </button>
+                                </td>
+                            </ng-container>
+
+                            <!-- Planilla Column -->
+                            <ng-container matColumnDef="planilla">
+                                <th mat-header-cell *matHeaderCellDef> Planilla </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Planilla :'>
+                                    <ngb-highlight [result]="element.planilla | titlecase" [term]="getMant.planilla.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="concepto">
+                                <th mat-header-cell *matHeaderCellDef> Concepto </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Concepto :'>
+                                    <ngb-highlight [result]="element.concepto | titlecase" [term]="getMant.concepto.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <!-- # Documento Column -->
+                            <ng-container matColumnDef="cuentaContable">
+                                <th mat-header-cell *matHeaderCellDef> Cuenta </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cuenta :'>
+                                    <ngb-highlight [result]="element.cuentaContable | titlecase" [term]="getMant.cuentaContable.value"></ngb-highlight>
+                                </td>
+                            </ng-container>
+
+                            <!-- # Documento Column -->
+                            <ng-container matColumnDef="tipo">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo :'>
+                                    <span *ngIf="element.tipo === true">Haber</span>
+                                    <span *ngIf="element.tipo === false">Debe</span>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="MantDC; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: MantDC;"></tr>
+                        </table>
+                        <mat-paginator #pagMantenimiento style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbMant" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

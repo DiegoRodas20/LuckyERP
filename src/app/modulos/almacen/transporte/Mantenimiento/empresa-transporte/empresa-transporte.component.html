@@ -1,0 +1,139 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <div class="mb-3" style="text-align: center;">
+            <mat-card class="title-card">Proveedor de Transporte</mat-card>
+        </div>
+        <!-- <h5 class="card-header center-text-card" style="text-align: center;">Proveedor de transporte</h5>
+        <div class="row"><br /></div> -->
+    </div>
+    <div>
+        <div class="col-md-10 offset-md-1">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+
+                        <div class="col-md-5 col-sm-8 col-10">
+
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar Proveedor:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="this.txtFiltro.setValue(''); fnListarEmpTransporte();">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-1 col-sm-4 col-2">
+                            <button mat-mini-fab class="fab-toggler" matTooltip="Nueva empresa transporte"
+                                (click)="fnAgregarEmpresa()">
+                                <i class="material-icons">add</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nId" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc3">
+                                    </th>
+                                    <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc3">
+                                        <button (click)="fnSeleccionarEmpresa(row)" mat-stroked-button color="accent"
+                                            matTooltip="Ver detalle">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sRUC">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> RUC/DNI
+                                    </th>
+                                    <td data-label='RUC/DNI: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sRUC" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sRazonSocial">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Razón
+                                        Social
+                                    </th>
+                                    <td data-label='Razón Social: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sRazonSocial" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombreComercial">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Nombre
+                                        Comercial
+                                    </th>
+                                    <td data-label='Nombre Comercial: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sNombreComercial" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nVehiculo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Vehículos
+                                    </th>
+                                    <td data-label='Vehículos: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.nVehiculo" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nChofer">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Choferes
+                                    </th>
+                                    <td data-label='Choferes: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.nChofer" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="row.nIdEstado==591 ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-empresa-transporte-detalle
+    *ngIf="pMostrar==1"
+    [pEmpresa]="pEmpresa"
+    [isNew]="isNew"
+    [isVehiculo]="isVehiculo"
+    (pMostrar)="fnOcultar($event)">
+</app-empresa-transporte-detalle>

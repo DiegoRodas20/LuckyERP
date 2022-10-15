@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <h1 class="title">IMPRIMIR FORMATOS</h1>
+  <div class="text-center mb-3">
+    <button
+      mat-raised-button
+      *ngFor="let item of listaFormatosEstatica"
+      style="background-color: #334d6e; color: white"
+      class="ml-1 mr-1"
+      (click)="seleccionarFormato(item)"
+    >
+      {{ item.pNombre }}
+      <mat-icon>assignment</mat-icon>
+    </button>
+
+    <div class="mt-2">
+      <button
+        mat-stroked-button
+        *ngFor="let item of listaPersonalEstatica; let i = index"
+        class="ml-1 mr-1"
+        (click)="seleccionarPersona(item)"
+        style="background-color: white; color: #334d6e"
+      >
+        <mat-icon>person</mat-icon> {{ i + 1 }}
+      </button>
+    </div>
+  </div>
+
+  <!-- #region BOTON REGRESAR -->
+  <button
+    class="mb-2 mr-2 btn_activo"
+    mat-flat-button
+    (click)="regresarPaginaAnterior()"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    REGRESAR
+  </button>
+  <!-- #endregion -->
+  <mat-divider></mat-divider>
+  <h2 class="subtitle mt-3">PREVISUALIZACION</h2>
+  <div>
+    <mat-slide-toggle [(ngModel)]="dobleCara">{{
+      dobleCara ? "Impresion a doble cara" : "Impresion con una cara"
+    }}</mat-slide-toggle>
+  </div>
+  <div *ngFor="let item of listaDocumentosImprimir">
+    <div class="contenedor_documento mt-2 mb-2">
+      <div class="container">
+        <div [innerHTML]="item.contenido"></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="btn_clear mr-3 mb-3">
+      <button
+        mat-fab
+        matTooltip="Imprimir carta"
+        matTooltipPosition="left"
+        style="background-color: #334d6e; color: white"
+        (click)="onPrintDocumento()"
+      >
+        <mat-icon>print</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

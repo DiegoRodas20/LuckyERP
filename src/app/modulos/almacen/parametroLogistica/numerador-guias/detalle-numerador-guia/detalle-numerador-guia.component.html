@@ -1,0 +1,253 @@
+<div class="clsprincipal">
+    <div class="col-md-8 offset-md-2">
+        <h5 style="text-align: center;" class="card-header center-text-card">Serie: {{pGuia.sCodigoSerie}}
+            {{pGuia.sCodigoSerie2 == ''? '':' - ' + pGuia.sCodigoSerie2}} -
+            {{pGuia.sDescripcion}}
+        </h5>
+        <div class="row"><br /></div>
+    </div>
+    <div class="col-md-8 offset-md-2">
+        <form class="form-row" [formGroup]="formInformacion">
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Tipo:</mat-label>
+                    <input type="text" style="color: rgb(51, 77, 110);" matInput formControlName="txtTipo"
+                        [errorStateMatcher]="matcher" readonly>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Correlativo:</mat-label>
+                    <input type="number" style="color: rgb(51, 77, 110);" matInput formControlName="txtCorrelativo"
+                        [errorStateMatcher]="matcher" readonly>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <input type="text" style="color: rgb(51, 77, 110);" matInput formControlName="txtEstado"
+                        [errorStateMatcher]="matcher" readonly>
+                </mat-form-field>
+            </div>
+        </form>
+
+    </div>
+    <div>
+        <div class="col-md-8 offset-md-2">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-9 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-8 col-sm-8 col-8">
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Buscar usuario:</mat-label>
+                                        <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                            mat-icon-button aria-label="Clear"
+                                            (click)="this.txtFiltro.setValue(''); fnListarDetalleGuia(this.pGuia);">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo usuario"
+                                        (click)="fnAbrirModal()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <input data-toggle="modal" data-target="#modalDetalle" #modalDetalle type="hidden"
+                                        name="button">
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Regresar"
+                                        (click)="fnRegresar()">
+                                        <i class="material-icons">keyboard_arrow_left</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nId" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                    </th>
+                                    <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <button (click)="fnSeleccionarDetalleGuia(row)" mat-icon-button color="accent"
+                                            matTooltip="Ver detalle">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombreUser">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="has_label_on_mobile clsColumnaLib"> Nombre
+                                        de
+                                        usuario
+                                    </th>
+                                    <td data-label='Nombre de usuario: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sNombreUser" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUser">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Nombres y
+                                        apellidos
+                                    </th>
+                                    <td data-label='Nombres y apellidos: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sUser" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTipoUser">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nivel
+                                    </th>
+                                    <td data-label='Nivel: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sTipoUser" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                [ngClass]="row.nIdEstado==591 ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal para añadir y modificar-->
+<div class="modal fade  bd-example-modal-xl" id="modalDetalle" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalDetalle"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalGuiaLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <!--Cuando se va a registrar-->
+                    <form *ngIf="pOpcion==1" class="row col-md-12" [formGroup]="formDetalle">
+
+                        <div class="form-group col-md-8">
+                            <ng-select appendTo="body" (ngModelChange)="fnSeleccionarUsuario($event)"
+                                [clearable]="false" formControlName="cboPersonal" placeholder="Nombre personal" required>
+                                <ng-option *ngFor="let vUser of lUser" [value]="vUser">
+                                    {{vUser.sNombre}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formDetalle.get('cboPersonal').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+
+                        <div class="form-group col-md-4 alinea-ngselect">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Usuario:</mat-label>
+                                <input type="text" matInput formControlName="txtNombre" [errorStateMatcher]="matcher"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-12 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button mat-mini-fab color="accent" (click)="fnAnadirUsuario()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--Cuando se va a modificar-->
+
+                    <form *ngIf="pOpcion==2" class="row col-md-12" [formGroup]="formDetalleActualizar">
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Nombres y apellidos:</mat-label>
+                                <input type="text" matInput formControlName="txtNombre" [errorStateMatcher]="matcher"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Nombres de usuario:</mat-label>
+                                <input type="text" matInput formControlName="txtUsername" [errorStateMatcher]="matcher"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Nivel:</mat-label>
+                                <input type="text" matInput formControlName="txtNivel" [errorStateMatcher]="matcher"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select formControlName="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nId">
+                                        {{vEstado.sDescripcion}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Modificar" mat-mini-fab color="accent" (click)="fnModificarDetalle()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarDetalle()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

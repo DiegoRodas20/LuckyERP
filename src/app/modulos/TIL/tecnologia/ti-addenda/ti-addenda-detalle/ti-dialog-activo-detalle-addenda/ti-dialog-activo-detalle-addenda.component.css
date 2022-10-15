@@ -1,0 +1,79 @@
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+
+/* .example-container {
+  height: 300px;
+  width: 100%;
+} */
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.table-container-1 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.icon-activo-table {
+  position: relative;
+  top: 6px;
+  cursor: pointer;
+}
+
+.scroll-table {
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+ng-select ~ mat-error {
+  font-size: 12px;
+  margin-top: -8px;
+}
+
+.clsColumnaOpc {
+  width: 120px;
+}
+
+.clsColumnaLarge {
+  width: 280px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaOpc2 {
+  width: 40px;
+}
+
+.clsColumnaLib2 {
+  width: 50px;
+}

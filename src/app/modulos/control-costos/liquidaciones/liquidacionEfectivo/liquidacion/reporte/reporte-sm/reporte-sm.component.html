@@ -1,0 +1,122 @@
+<div id="print-reporte-sm" class="print-reporte-sm">
+  <div class="rompePaginas">
+    <!-- <div style="display: none">  -->
+    <!-- <div id="print-solicitud-detalle"> -->
+    <!-- #region CABECERA-->
+    <div>
+      <h3 style="text-align: center; margin-bottom: 50px">
+        REPORTE DE SOLICITUD MOVILIDAD
+      </h3>
+
+      <table style="text-align: left">
+        <tr>
+          <td style="text-align: left"><b>Solicitante:</b> {{ cabecera.solicitante }}</td>
+          <td><b> </b></td>
+          <td style="text-align: left"><b>Ciudad:</b> {{ cabecera.numero }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: left"><b>Presupuesto:</b> {{ cabecera.campania }}</td>
+          <td><b> </b></td>
+          <td style="text-align: left"><b>Fechas:</b> {{ cabecera.fecha_del }} - {{ cabecera.fecha_al }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: left"><b>Cargo:</b> {{ cabecera.cargo }}</td>
+          <td></td>
+          <td style="text-align: left"><b>Partida:</b> {{ cabecera.partida }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: left"><b>Estado:</b> {{ cabecera.estado }}</td>
+          <td></td>
+          <td style="text-align: left"><b>Total:</b>{{ cabecera.total }}</td>
+          <td style="text-align: left"><b>Asiento: </b>{{ nAsiento }}</td>
+        </tr>
+      </table>
+
+    </div>
+    <!-- #endregion -->
+    <!-- #region TABLA-->
+    <div class="mt-5" class="contenedor-tabla mat-elevation-z5">
+
+      <table mat-table [dataSource]="dataSource">
+        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+          <th mat-header-cell *matHeaderCellDef style="background-color: #334d6e; color: white; font-weight: bold"
+            class="pl-2 pr-2">
+            {{ nombreColumnas(column) }}
+          </th>
+          <td mat-cell *matCellDef="let element" class="pl-2 pr-2">
+
+            <div *ngIf="column === 'sDepositario'">
+              {{ element[column] }}
+              {{ ver(element) }}
+            </div>
+            <div *ngIf="column === 'nTotal'">
+              {{ element[column] }}
+            </div>
+            <div *ngIf="column === 'nPasajeDia'">
+              {{ element[column] }}
+            </div>
+            <div *ngIf="column === 'nCantDia'">
+              {{ element[column] }}
+            </div>
+
+            <div *ngIf="column === 'bDia1'">
+              <b *ngIf="element.bDia1">1</b>
+            </div>
+            <div *ngIf="column === 'bDia2'">
+              <b *ngIf="element.bDia2">1</b>
+            </div>
+            <div *ngIf="column === 'bDia3'">
+              <b *ngIf="element.bDia3">1</b>
+            </div>
+            <div *ngIf="column === 'bDia4'">
+              <b *ngIf="element.bDia4">1</b>
+            </div>
+            <div *ngIf="column === 'bDia5'">
+              <b *ngIf="element.bDia5">1</b>
+            </div>
+            <div *ngIf="column === 'bDia6'">
+              <b *ngIf="element.bDia6">1</b>
+            </div>
+            <div *ngIf="column === 'bDia7'">
+              <b *ngIf="element.bDia7">1</b>
+            </div>
+            <div *ngIf="column === 'bDia8'">
+              <b *ngIf="element.bDia8">1</b>
+            </div>
+            <div *ngIf="column === 'bDia9'">
+              <b *ngIf="element.bDia9">1</b>
+            </div>
+            <div *ngIf="column === 'bDia10'">
+              <b *ngIf="element.bDia10==true">1</b>
+            </div>
+            <div *ngIf="column === 'bDia11'">
+              <b *ngIf="element.bDia11">1</b>
+            </div>
+            <div *ngIf="column === 'bDia12'">
+              <b *ngIf="element.bDia12">1</b>
+            </div>
+            <div *ngIf="column === 'bDia13'">
+              <b *ngIf="element.bDia13">1</b>
+            </div>
+            <div *ngIf="column === 'bDia14'">
+              <b *ngIf="element.bDia14">1</b>
+            </div>
+            <div *ngIf="column === 'bDia15'">
+              <b *ngIf="element.bDia15">1</b>
+            </div>
+            <div *ngIf="column === 'bDia16'">
+              <b *ngIf="element.bDia16">1</b>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+    </div>
+    <!-- #endregion -->
+    <!-- </div> -->
+    <!-- </div>  -->
+  </div>
+</div>

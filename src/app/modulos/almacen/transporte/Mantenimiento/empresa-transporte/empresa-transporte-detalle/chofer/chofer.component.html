@@ -1,0 +1,121 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="form-row" style="margin-top: 15px;">
+	<div class="form-group col-md-12">
+		<!-- Inicio del contenido -->
+		<div class="row justify-content-center">
+
+			<div class="col-md-6 col-sm-8 col-8">
+
+				<mat-form-field style="width: 100%;">
+					<mat-label>Buscar chofer:</mat-label>
+					<input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+					<button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+						(click)="this.txtFiltro.setValue(''); fnListarChofer();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</div>
+			<div class="col-md-1 col-sm-2 col-2">
+				<button mat-icon-button color="accent" matTooltip="Nuevo chofer" (click)="fnAbrirDetalle()">
+					<mat-icon>add</mat-icon>
+				</button>
+			</div>
+			<div class="col-md-1 col-sm-2 col-2">
+
+				<button mat-icon-button color="accent" matTooltip="Agregar chofer" (click)="fnOpenSelector()">
+					<mat-icon>playlist_add</mat-icon>
+				</button>
+			</div>
+		</div>
+
+		<!-- nueva tabla material -->
+		<div id="listaMobile" class="mat-elevation-z8">
+			<div class="example-container">
+				<table mat-table [dataSource]="dataSource" matSort>
+
+					<!-- ID Column -->
+					<ng-container matColumnDef="nId" sticky>
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+						<td data-label='Opciones: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2">
+							<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+								mat-stroked-button color="accent">
+								<mat-icon>more_vert</mat-icon>
+							</button>
+							<mat-menu #menu="matMenu" xPosition="after">
+								<button mat-menu-item (click)="fnVerDetalleChofer(row)">
+									<mat-icon color="accent">create</mat-icon>
+									<span>Ver detalle</span>
+								</button>
+								<button mat-menu-item (click)="fnArchivo(row)">
+									<mat-icon color="accent">attach_file</mat-icon>
+									<span>Adjuntar archivo</span>
+								</button>
+							</mat-menu>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sTipoDoc">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Tipo Doc.
+						</th>
+						<td data-label='Tipo Doc.: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sTipoDoc" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sNumDocumento">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Documento
+						</th>
+						<td data-label='Documento: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sNumDocumento" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sBrevete">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Brevete
+						</th>
+						<td data-label='Brevete: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sBrevete" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sNombreCompleto">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Nombres y
+							Apellidos
+						</th>
+						<td data-label='Nombres y Apellidos: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaLarge">
+							<ngb-highlight [result]="row.sNombreCompleto + ' ' + row.sApeCompleto" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="dVence">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Venc. Brevete
+						</th>
+						<td data-label='Venc. Brevete: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc">
+							<ngb-highlight [result]="row.dVence" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sEstado">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+						</th>
+						<td data-label='Estado: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;"
+						[ngClass]="row.nIdEstado==591 ? 'make-gris' : ''">
+					</tr>
+				</table>
+			</div>
+			<mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+		</div>
+	</div>
+</div>

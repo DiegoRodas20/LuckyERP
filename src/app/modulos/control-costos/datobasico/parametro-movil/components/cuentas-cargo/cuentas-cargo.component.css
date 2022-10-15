@@ -1,0 +1,9 @@
+table {
+    width: 100%;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+}

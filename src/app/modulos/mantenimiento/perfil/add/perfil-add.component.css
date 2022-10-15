@@ -1,0 +1,173 @@
+label {
+    font-size: .875rem;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.example-container {
+    height: 400px;
+    width: 550px;
+    max-width: 100%;
+    overflow: auto;
+  }
+.centrar-col{
+    display: flex; align-items: center;
+}
+
+.titulo {
+    background-color: #334d6e;
+    color: white;
+    text-align: center;
+    min-width: 100%;
+    margin: 0px;
+  }
+
+  :host /deep/  .mat-form-field-disabled input {
+    color: black;
+     BACKGROUND-COLOR: #d0d3d6; 
+  }
+  :host /deep/  .mat-form-field-disabled mat-select{    
+     BACKGROUND-COLOR: #d0d3d6; 
+  }
+  :host /deep/  .mat-form-field-disabled mat-autocomplete
+   {    
+    BACKGROUND-COLOR: #d0d3d6; 
+  }
+
+
+/* botones Flotantes */
+  .fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+  }
+
+  /* css-Modulo */
+  label {
+    font-size: .875rem;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+td,
+th {
+    font-size: 14px;
+}
+
+.button-row {
+    display: table-cell;
+}
+
+.button-row button {
+    display: table-cell;
+    margin-right: 8px;
+}
+
+:host /deep/ #car-tpago .carousel-indicators li {
+    background-color: black!important;
+}
+
+:host /deep/ #car-tpago .carousel-indicators {
+    position: inherit;
+    justify-content: flex-start;
+    margin-left: 0px;
+}
+
+:host /deep/ #car-tpago {
+    outline: none;
+}
+
+.table .btn-light {
+    padding-top: 2px;
+    padding-bottom: 0px;
+    margin-right: 5px;
+}
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+    width: 100%;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:active {
+    color: rgb(51, 77, 110);
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+}
+
+
+:host /deep/ .mat-step-header .mat-step-icon-selected,
+:host /deep/ .mat-step-header .mat-step-icon {
+    background-color: rgb(236, 0, 140);
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-state-error {
+    background-color: rgb(51, 77, 110);
+}
+
+:host /deep/ .mat-step-header .mat-step-label.mat-step-label-active,
+:host /deep/ .mat-step-header .mat-step-label {
+    color: white;
+}
+
+:host /deep/ .mat-stepper-horizontal-line {
+    border-top-color: white;
+}
+
+:host /deep/ .mat-horizontal-stepper-header-container {
+    background-color: rgb(51, 77, 110);
+    margin-bottom: 10px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1500;
+}
+
+:host /deep/ .mat-sort-header-arrow {
+    color: white;
+}
+
+
+
+
+.mat-expansion-panel-header-description {
+    flex-grow: 0;
+}
+
+.mat-form-field {
+    font-size: 15px;
+}
+.centrar-col{
+    display: flex; align-items: center;
+}
+
+.botonConsulta{
+    background-color: #334D6E;  
+    color: white; 
+  }
+
+

@@ -1,0 +1,186 @@
+<div class="transporte">
+
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+          [color]="btn.color" (click)="clickFab(ibtn)">
+          <i class="material-icons">{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+      <h5 class="card-header">Detalle del Artículo</h5>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+      <mat-card>
+        <form [formGroup]="form" class="row" autocomplete="off">
+          <div class="col-lg-10 col-md-10 col-12">
+            <div class="row">
+
+              <div class="col-lg-3 col-md-3 col-12">
+                <mat-form-field>
+                  <mat-label>Familia</mat-label>
+                  <input matInput formControlName="sCategoria" readonly>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3 col-md-3 col-12">
+                <ng-select appendTo="body" formControlName="nIdSubFamilia" [clearable]="false" placeholder="Sub-Familia"
+                  (change)="fnUnidadPresentacionAutomatica(); listarTiposDispositivo(1)">
+                  <ng-option *ngFor="let item of subFamilias" [value]="item.nId">
+                    {{item.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+                <mat-error class="error-select" *ngIf="nIdSubFamiliaError">{{ nIdSubFamiliaError }}</mat-error>
+              </div>
+              <div class="col-lg-3 col-md-3 col-12">
+                <ng-select appendTo="body" formControlName="nIdMarca" [clearable]="false" placeholder="Marca">
+                  <ng-option *ngFor="let item of marcas" [value]="item.nId">
+                    {{item.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+                <mat-error class="error-select" *ngIf="nIdMarcaError">{{ nIdMarcaError }}</mat-error>
+              </div>
+              <div class="col-lg-3 col-md-3 col-12">
+                <ng-select appendTo="body" formControlName="nIdTipoDispositivo" [clearable]="false"
+                  placeholder="Tipo Dispositivo"
+                  (change)="fnLlenarNombreProductoDefecto();fnNecesitaPartNumber($event);">
+                  <ng-option *ngFor="let item of tiposDispositivo" [value]="item.nId">
+                    {{item.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+                <mat-error class="error-select" *ngIf="nIdMarcaError">{{ nIdMarcaError }}</mat-error>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-12">
+                <mat-form-field>
+                  <mat-label>Nombre de producto</mat-label>
+                  <input matInput formControlName="sNombreProducto">
+                  <mat-error *ngIf="sNombreProductoError">{{ sNombreProductoError }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-12">
+                <mat-form-field>
+                  <mat-label>Característica</mat-label>
+                  <input matInput formControlName="sCaracteristica">
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-md-4 col-12">
+                <mat-form-field>
+                  <mat-label>Presentación / Modelo</mat-label>
+                  <input matInput formControlName="sPresentacion">
+                </mat-form-field>
+              </div>
+              <div class="col-lg-3 col-md-4 col-12">
+                <ng-select appendTo="body" formControlName="nIdPresenMedida" [clearable]="false"
+                  placeholder="Unidad de presentación">
+                  <ng-option *ngFor="let item of unidadTipos" [value]="item.nId">
+                    {{item.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+                <mat-error class="error-select" *ngIf="nIdPresenMedidaError">{{ nIdPresenMedidaError }}</mat-error>
+              </div>
+            </div>
+            <div class="row">
+
+              <div class="col-lg-3 col-md-3 col-12">
+                <mat-form-field>
+                  <mat-label>Código</mat-label>
+                  <input matInput formControlName="sCodArticulo"  readonly style="color: rgb(236, 0, 140)">
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-9 col-md-9 col-12">
+                <mat-form-field>
+                  <mat-label>Descripción</mat-label>
+                  <input matInput formControlName="sDescripcion" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="bPartNumber">
+
+              <div class="col-lg-4 col-md-4 col-12">
+                <mat-form-field>
+                  <mat-label>Part Number</mat-label>
+                  <input type="text" matInput formControlName="sNumeroParte">
+                  <mat-error *ngIf="sNumeroParteError">{{ sNumeroParteError }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <app-ti-articulo-componente [caracteristicas]="caracteristicas" [nIdSubFamilia]="nIdSubFamiliaField?.value"
+              [componentes]="componentes" [sCodBarra]="sCodBarra" [editar]="show" (sendAux)="backSubFamilia($event)">
+            </app-ti-articulo-componente>
+          </div>
+
+          <div class="col-lg-2 col-md-2 ocultar-mobile">
+            <div class="form-row">
+              <div class="col-lg-1 col-md-1 col-1 pad">
+                <div class="clsSeparador">&nbsp;</div>
+              </div>
+              <div class="col-lg-11 col-md-11 col-11">
+                <mat-form-field>
+                  <mat-label>Actualizado Por</mat-label>
+                  <input matInput formControlName="sCreacion" readonly>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Fecha Actualización</mat-label>
+                  <input matInput formControlName="sModificacion" readonly>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Estado</mat-label>
+                  <input matInput formControlName="sEstado" readonly style="color: rgb(236, 0, 140)">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 mostrar-mobile">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Información
+                </mat-panel-title>
+                <button mat-icon-button>
+                  <mat-icon color="accent">info</mat-icon>
+                </button>
+              </mat-expansion-panel-header>
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <mat-label>Actualizado Por</mat-label>
+                    <input matInput formControlName="sCreacion" readonly>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Fecha Actualización</mat-label>
+                    <input matInput formControlName="sModificacion" readonly>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Estado</mat-label>
+                    <input matInput class="pink" formControlName="sEstado" readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

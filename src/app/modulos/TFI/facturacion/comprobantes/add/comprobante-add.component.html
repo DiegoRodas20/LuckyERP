@@ -1,0 +1,893 @@
+<div class="clsprincipal">
+
+    <div class="col-md-12">
+        <div class="titulo">
+            <h4 style="padding: 4px;">
+                Nueva Factura/Boleta
+            </h4>
+        </div>
+    </div>  
+    <div class="col-md-12">
+        <mat-horizontal-stepper id="stepper" [linear]="isLinear" #stepper (keydown.enter)="false">
+            <mat-step [stepControl]="formulario" label="Pagina 1" style="padding-left: 140px">
+                <form [formGroup]="formulario">
+
+                    <div class="card_row row">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <mat-card>
+                                    <div class="row m-auto">
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Serv/Materiales</mat-label>
+                                                        <input class="labelInput" matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="codigoServicio" (selectionChange)="tablaTipoServicio($event.value)">
+                                                            <mat-option *ngFor="let x of servicioList" [value]="x.codigoDocumento">
+                                                                {{x.descripcionCorta +" - "+ x.descripcionLarga}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="hasError('codigoServicio', 'required')">* Seleccione el tipo de servicio.
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Tipo Documento</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="codigoDocumento" (selectionChange)="getListadoSerie($event.value)">
+                                                            <mat-option *ngFor="let x of documentoList" [value]="x.codigoDocumento">
+                                                                {{x.descripcionCorta}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="hasError('codigoDocumento', 'required')">* Seleccione el tipo de documento.
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Orden Compra</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="ordenCompra" pattern="[^-]*" maxlength="20" (change)=fnValidarOrdenComprar()>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <div class="col-md-3">
+
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Fecha</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field>
+                                                        <input formControlName="fechaComprobante" matInput [matDatepicker]="picker" (dateChange)="consultaTipoCambio()">
+                                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker></mat-datepicker>
+                                                        <mat-error *ngIf="hasError('fechaComprobante', 'required')">*Seleccione la fecha
+                                                        </mat-error>
+                                                    </mat-form-field>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Sucursal</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="sucursal">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>PS(O.Serv)</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="psOserv" (blur)="cambioPSOrden($event.target.value)" (keyup.enter)="getValidaNroOrdenServicio(this.formulario.value.psOserv);" maxlength="11">
+
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3">
+
+
+                                            <div *ngIf="this.securityErp.getPais() == '604'">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-6 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-label>Moneda</mat-label>
+                                                            <input matInput disabled>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-select formControlName="codigoMoneda" (selectionChange)="cambioMoneda($event.value)">
+                                                                <mat-option *ngFor="let x of monedaList;" [value]="x.codigoMoneda">
+                                                                    {{x.descripcionCorta}}</mat-option>
+                                                            </mat-select>
+                                                            <mat-error *ngIf="hasError('codigoMoneda', 'required')">Ingrese la moneda
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Serie</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="codigoSerie" (selectionChange)="obtenerNumeradorSerie($event.value)">
+                                                            <!-- <mat-select formControlName="codigoSerie" disabled> -->
+                                                            <mat-option *ngFor="let x of serieList" [value]="x.codigoSerie">
+                                                                {{x.numeroSerie}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="this.validarserie"> No se encontraron series.</mat-error>
+                                                        <mat-error *ngIf="hasError('codigoSerie', 'required')">* Seleccione la serie. </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Aceptación</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="aceptacion" maxlength="11" (blur)="cambioAceptacion($event.target.value)" (keyup.enter)="getValidaNroOrdenServicio(this.formulario.value.aceptacion);">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div *ngIf="this.securityErp.getPais() == '604'">
+
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-label>Tipo de cambio</mat-label>
+                                                            <input matInput disabled class="labelInput">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-md-6 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <input matInput formControlName="codigoTipoCambio" value="{{this.tipoCambioList.precioVenta}}" readonly>
+                                                        </mat-form-field>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Número</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <!-- <input matInput formControlName="numeroSerie" (keyup.enter)="obtenerNuevoNumeradorSerie()"> -->
+                                                        <input matInput formControlName="numeroSerie" placeholder="Automático">
+                                                        <!-- <mat-error *ngIf="hasError('numeroSerie', 'required')">* Ingrese el numero
+                                                        </mat-error> -->
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Afectacion</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="codigoAfectacion">
+                                                            <mat-option *ngFor="let x of afectacionList" [value]="x.codigoMoneda">
+                                                                {{x.desCodigo}} - {{x.descripcionLarga}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="hasError('codigoAfectacion', 'required')">* Seleccione Afectacion.
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <!-- controles para la opcion de materiales : Inicio-->
+
+                                        <ng-container *ngIf="!this.utilitarios.mostrarTablaLineas">
+                                            <div class="row col-md-12">
+                                                <div class="col-md-2 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Ppto/CcCosto</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-2 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="pptos" (change)="mate_getListadoPresupuesto();">
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-4 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput formControlName="descPpto">
+                                                    </mat-form-field>
+                                                </div>
+
+
+                                                <div class="col-md-1 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Cliente</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-3 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="cliente">
+                                                            <mat-option *ngFor="let x of clienteList;" [value]="x.codigoCliente">
+                                                                {{x.ruc}} - {{x.nombreComercial}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="hasError('codigoMoneda', 'required')">Ingrese cliente
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div> 
+                                            </div>
+
+                                        </ng-container>
+
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Forma Pago</mat-label>
+                                                        <input matInput disabled class="labelInput">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-select formControlName="codigoFormaPago">
+                                                            <mat-option *ngFor="let x of formaPagoList" [value]="x.codigoFormaPago">
+                                                                {{x.descripcion}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="hasError('codigoFormaPago', 'required')">* Seleccione Forma de Pago
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- controles para la opcion de materiales : FIN-->
+                                        <div class="col-md-12">
+                                            <mat-form-field>
+                                                <textarea matInput formControlName="glosa" placeholder="Glosa" maxlength="500"></textarea>
+                                                <mat-error *ngIf="hasError('glosa', 'required')">* Ingrese la glosa
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-12">
+    
+                                            <mat-form-field>
+                                                <textarea matInput formControlName="observacion1" placeholder="Observacion 1" maxlength="100">
+                                                </textarea>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <mat-form-field>
+                                                <textarea matInput formControlName="observacion2" placeholder="Observacion 2" maxlength="100"></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                        
+
+                                        <!-- Cuadro de detracciones :  INICIO  -->
+                                        <ng-container *ngIf="utilitarios.mostrarDetracciones">
+                                            <h4 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+                                                Detracciones
+                                            </h4>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-label>Codigo</mat-label>
+                                                            <input matInput disabled>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-9 col-12">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-select formControlName="codigoDetraccion" (selectionChange)="detalleDetraccion()">
+                                                                <mat-option *ngFor="let x of detraccionList" [value]="x.codigoDetracion">
+                                                                    {{x.desCodigo}} - {{x.descripcionLarga}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-4">
+                                                <div class="col-md-12 col-12">
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput disabled value="{{this.utilitarios.descripcionLargaDetraccion}}">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-md-3">
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-10">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-label>Porcentaje</mat-label>
+                                                            <input matInput disabled>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-4 col-6">
+                                                        <mat-form-field class="example-full-width">
+                                                            <input matInput type="number" formControlName="porcentajeDetraccion">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="col-md-3">
+
+                                                <div class="row">
+                                                    <div class="col-md-4 col-8">
+                                                        <mat-form-field class="example-full-width">
+                                                            <mat-label>Importe</mat-label>
+                                                            <input matInput disabled>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-8">
+                                                        <mat-form-field class="example-full-width">
+                                                            <input matInput type="number" formControlName="totalDetraccion">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <!-- FIN-->
+
+                                    </div>
+                                </mat-card>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <button mat-button matStepperNext>Siguiente</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="formularioLineas" label="Pagina 2" style="padding-right: 100px;">
+                <form [formGroup]="formularioLineas">
+
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <mat-card>
+                                <div class="row m-auto">
+
+                                    <ng-container *ngIf="utilitarios.mostrarDetracciones">
+
+                                        <div class="row">
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Tipo documento</mat-label>
+                                                    <input matInput formControlName="descripcionTipoDocumento">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Sucursal</mat-label>
+                                                    <input matInput formControlName="descripcionSucursal">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Serie</mat-label>
+                                                    <input matInput formControlName="descripcionNumeroSerie" [value]="formularioLineas.get('descripcionNumeroSerie').value">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Número</mat-label>
+                                                    <input matInput type="number" formControlName="descripionNumeradorSerie" placeholder="Automático">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Moneda</mat-label>
+                                                    <input matInput formControlName="descripcionMoneda">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-2 col-12">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Tipo Cambio</mat-label>
+                                                    <input matInput formControlName="descripcionTipoCambio">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <br />
+                                <h4 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+                                    Totales
+                                </h4>
+
+                                <div class="row m-auto">
+                                    <ng-container>
+
+                                        <div class="col-md-3" *ngIf="this.utilitarios.mostrarTablaLineas">
+
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerderecha">
+                                                        <mat-label>T.Añadido</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerTotales">
+                                                        <input matInput formControlName="sAnadido">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerderecha">
+                                                        <mat-label>Sub Total</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <!-- <div class="col-md-6 col-12" *ngIf="!this.utilitarios.mostrarTablaLineas">
+                                                    <mat-form-field class="example-full-width">
+                                                        <mat-label>Sub total</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div> -->
+
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerTotales">
+                                                        <input matInput formControlName="sValorVenta">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerderecha">
+                                                        <input matInput formControlName="descripcionCorta">
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12">
+                                                    <mat-form-field class="example-full-width centerTotales">
+                                                        <input matInput formControlName="simportePorcenje">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-12" *ngIf="this.utilitarios.mostrarTablaLineas">
+                                                    <mat-form-field class="example-full-width centerderecha">
+                                                        <mat-label>T.Final</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6 col-12" *ngIf="!this.utilitarios.mostrarTablaLineas">
+                                                    <mat-form-field class="example-full-width centerderecha">
+                                                        <mat-label>Total</mat-label>
+                                                        <input matInput disabled>
+                                                    </mat-form-field>
+                                                </div>
+
+
+                                                <div class="col-md-6 col-10">
+                                                    <mat-form-field class="example-full-width centerTotales">
+                                                        <input matInput formControlName="stotalFinal">
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </ng-container>
+                                </div>
+                                <br>
+
+                                <!-- INICIO :  Comprabante Servicios -->
+
+                                <ng-container *ngIf="this.utilitarios.mostrarTablaLineas">
+                                    <mat-label class="textoDeTotales">{{utilitarios.totalfilas}}</mat-label>
+
+                                    <div class="contenedor_tabla mat-elevation-z8">
+                                        <table mat-table [dataSource]="tempData">
+                                            <ng-container [matColumnDef]="colum" *ngFor="let colum of utilitarios.displayedColumnsServicios">
+                                                <th mat-header-cell *matHeaderCellDef style="padding-right: 0.5rem" [ngStyle]="{'padding-left': colum === 'pptos' ? '110px' :  column === 'add' ? '0px' : '30px'}">
+                                                    {{utilitarios.obtenerNombreColumna(colum)}}
+                                                    <span>
+                                                        <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer;font-size: 35px;" 
+                                                                    *ngIf="colum === 'add'" (click)="nuevaLinea()">
+                                                                    add_circle
+                                                        </mat-icon>
+                                                    </span>
+                                                </th>
+
+                                                <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 0.5rem">
+
+                                                    <div *ngIf="element.editable" style="padding-top: 1rem">
+
+                                                        <div *ngIf="colum === 'pptos'" class="d-flex justify-content-center anchoColPpto">
+
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>PPTO</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.pptos" [ngModelOptions]="{standalone: true}" (change)="consultaPptos(element,i);" required  min="1">
+                                                                <mat-error *ngIf="element.pptos == ''
+                                  || element.pptos == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'totalPptos'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Total Ppto</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.totalPptos | number:'3.2-2'" (ngModelChange)="element.totalPptos=$event" type="text" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.totalPptos == ''
+                                  || element.totalPptos == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'aCuenta'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>a Cuenta</mat-label>
+                                                                <input matInput placeholder="" [disabled]="element.centroCosto > 0? false:true" [(ngModel)]="element.aCuenta" (change)="getCalcularLineas(element,1);" [ngModelOptions]="{standalone: true} " autocomplete="off" required min="1">
+                                                                <mat-error *ngIf="element.aCuenta == ''
+                                  || element.aCuenta == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'anadir'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Añadir</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.sanadir" (ngModelChange)="element.sanadir=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.sanadir == ''
+                                  || element.anadir == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'valorVenta'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Sub Total</mat-label>
+                                                                <input matInput placeholder="" [disabled]="element.centroCosto > 0? false:true"  [(ngModel)]="element.valorVenta" (change)="getCalcularLineasVenta(element,2);" [ngModelOptions]="{standalone: true}" autocomplete="off" required  min="1">
+                                                                <mat-error *ngIf="element.valorVenta == ''
+                                  || element.valorVenta == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'impuesto'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Impuesto</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.simpuesto" (ngModelChange)="element.simpuesto=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.simpuesto == ''
+                                  || element.impuesto == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'total'" class="d-flex justify-content-center anchoColS">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Total</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.stotal" (ngModelChange)="element.stotal=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.stotal == ''
+                                  || element.total == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'cliente'" class="d-flex justify-content-center anchoColPpto">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Cliente</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.cliente" [ngModelOptions]="{standalone: true}" disabled required>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum === 'add'" class="style-form-field p-1 text-right">
+
+                                                            <div class="btn-group">
+                                                                <!-- <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer" (click)="DeshabilitarEdicion(element)" color="accent">save
+                                                                </mat-icon> -->
+                                                                <mat-icon  matTooltip="Eliminar" style="cursor: pointer" color="accent" (click)="EliminarElemento(i)">delete
+                                                                </mat-icon>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                </td>
+
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="utilitarios.displayedColumnsServicios"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: utilitarios.displayedColumnsServicios;"></tr>
+                                        </table>
+                                    </div>
+                                </ng-container>
+
+                                <!-- FIN :  Comprabante Servicios -->
+
+
+
+
+                                <!-- INICIO :  Comprabante Materiales -->
+
+                                <ng-container *ngIf="!this.utilitarios.mostrarTablaLineas">
+                                    <mat-label class="textoDeTotales">{{utilitarios.totalfilas}}</mat-label>
+
+                                    <div class="contenedor_tabla mat-elevation-z8">
+                                        <table mat-table [dataSource]="tempDataM">
+                                            <ng-container [matColumnDef]="colum" *ngFor="let colum of utilitarios.displayedColumnsMateriales">
+                                                <th mat-header-cell *matHeaderCellDef style="padding-right: 0.5rem">
+                                                    {{utilitarios.obtenerNombreColumna(colum)}}
+                                                    <span>
+                            <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer"
+                              *ngIf="colum === 'add'" (click)="mat_NuevaLinea()">add_circle</mat-icon>
+                          </span>
+                                                </th>
+
+                                                <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 0.5rem">
+
+                                                    <div *ngIf="element.editable" style="padding-top: 1rem">
+
+                                                        <div *ngIf="colum === 'cuenta'" class="anchoCol">
+
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Cuenta</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.cuenta" (change)=mat_numerico(element) [ngModelOptions]="{standalone: true}" autocomplete="off" required>
+                                                                <mat-error *ngIf="element.cuenta == ''
+                                  || element.cuenta == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'articuloServicio'" class="anchoMaterial">  
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Articulo/Servicio</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.sarticuloServicio" (click)=mat_DialogArticulo(element,i); [ngModelOptions]="{standalone: true}" readonly required>
+                                                                <mat-error *ngIf="element.articuloServicio == ''
+                                                                || element.articuloServicio == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+
+                                                        <div *ngIf="colum == 'detalle'" class="d-flex justify-content-center anchoArtDet">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Detalle</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.detalle" (keyup.enter)="mat_CalcularLinea(element);" [ngModelOptions]="{standalone: true} " autocomplete="off" required>
+                                                                <mat-error *ngIf="element.detalle == ''
+                                  || element.detalle == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'unidadMedida'" class="d-flex justify-content-center anchoMin">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>U.Med</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.unidadMedida" [ngModelOptions]="{standalone: true}" required disabled>
+                                                                <mat-error *ngIf="element.unidadMedida == ''
+                                  || element.unidadMedida == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'cantidad'" class="d-flex justify-content-center anchoMin">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Cantidad</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.cantidad" (change)="mat_CalcularLinea(element);" [ngModelOptions]="{standalone: true}" autocomplete="off" required>
+                                                                <mat-error *ngIf="element.cantidad == ''
+                                  || element.cantidad == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'precioUnitario'" class="d-flex justify-content-center anchoMin">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Pre.Unit</mat-label>
+                                                                <input matInput placeholder="" [(ngModel)]="element.precioUnitario" (change)="mat_CalcularLinea(element);" [ngModelOptions]="{standalone: true}" autocomplete="off" required>
+                                                                <mat-error *ngIf="element.precioUnitario == ''
+                                  || element.precioUnitario == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'subTotal'" class="d-flex justify-content-center anchoCol">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Sub Total</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.ssubTotal" (ngModelChange)="element.ssubTotal=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.ssubTotal == ''
+                                  || element.subTotal == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div *ngIf="colum == 'igv'" class="d-flex justify-content-center anchoCol">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>IGV</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.sigv" (ngModelChange)="element.sigv=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.sigv == ''
+                                  || element.igv == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div *ngIf="colum == 'total'" class="d-flex justify-content-center anchoCol">
+                                                            <mat-form-field class="style-form-field p-1 text-center">
+                                                                <mat-label>Total</mat-label>
+                                                                <input matInput placeholder="" [ngModel]="element.stotal" (ngModelChange)="element.stotal=$event" [ngModelOptions]="{standalone: true}" disabled required>
+                                                                <mat-error *ngIf="element.stotal == ''
+                                  || element.total == null">.Obligatorio
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+
+
+                                                        <div *ngIf="colum === 'add'" class="style-form-field p-1 text-right">
+
+                                                            <div class="btn-group">
+                                                                <!-- <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer" (click)="DeshabilitarEdicion(element)" color="accent">save
+                                                                </mat-icon> -->
+                                                                <mat-icon matTooltip="Eliminar" style="cursor: pointer" color="accent" (click)="EliminarElementoMat(i)">delete
+                                                                </mat-icon>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                </td>
+
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="utilitarios.displayedColumnsMateriales"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: utilitarios.displayedColumnsMateriales;"></tr>
+                                        </table>
+                                    </div>
+                                </ng-container>
+
+                                <!-- FIN :  Comprabante Materiales -->
+
+
+                            </mat-card>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious>Anterior</button>
+                    </div>
+                </form>
+            </mat-step>
+
+        </mat-horizontal-stepper>
+    </div>
+
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <form [formGroup]="formulario" class="normal-form" autocomplete="off">
+                <div class="fab-container">
+
+                    <!-- <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                    </button> -->
+                    <button [disabled]="!this.botonNuevo" matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Nuevo" color="secondary" (click)="nuevoComprobante()" type="button"><i
+                        class="material-icons">add</i>
+                    </button>
+
+                    <div [@speedDialStagger]="utilitarios.abLista.length"> 
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" [disabled]="!formulario.valid" id="btnGuardar" (click)="saveComprobante(2237,1)">
+                            <i class="material-icons" matTooltip="Guardar Comprobante" matTooltipPosition="left">save</i>
+                        </button> 
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+                            <i class="material-icons" matTooltip="Enviar" matTooltipPosition="left">exit_to_app</i>
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>

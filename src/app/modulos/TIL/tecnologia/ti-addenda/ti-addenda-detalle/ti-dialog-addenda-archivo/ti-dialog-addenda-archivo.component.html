@@ -1,0 +1,129 @@
+<h5 mat-dialog-title class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">Archivos de la
+    Addenda: {{this.data.sNumero}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<div mat-dialog-content>
+    <div class="row" style="margin-top: 15px;">
+        <mat-accordion style="width: 100%;">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="color: #002c4b; font-weight: bold;">
+                        Subir archivo:
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px">
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="form-row">
+                    <div class="form-row col-md-12">
+                        <div class="form-group col-md-10">
+                            <form [formGroup]="formArchivo">
+                                <input type="file" #archivoFile (change)="fnSeleccionarArchivo($event,lblName.id)"
+                                    formControlName="fileUpload" class="custom-file-input"
+                                    aria-describedby="inputGroupFileAddon04">
+                                <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">
+                                    Seleccione Archivo:</mat-label>
+                            </form>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <button mat-raised-button color="primary" matTooltip="Subir Archivo"
+                                (click)="fnSubirArchivo(lblName.id)" type="button">
+                                <mat-icon>cloud_upload</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="vArchivoSeleccionado.length == 0 && formArchivo.controls.fileUpload.touched"
+                        class="col-md-12 alert alert-info">
+                        ¡No selecciono nigun archivo!
+                    </div>
+                </div>
+                <div class="col-12">
+                    <form [formGroup]="formArchivoRegistro">
+                        <div class="form-row col-md-12 ">
+
+                            <div class="form-group col-md-12">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Documento:</mat-label>
+                                    <input type="text" matInput formControlName="txtNombre">
+                                    <mat-error *ngIf="formArchivoRegistro.controls['txtNombre'].hasError('required')">
+                                        .Obligatorio
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="formArchivoRegistro.get('txtNombre').hasError('caracterValidator')">
+                                        .El texto no debe contener: "/", "|", "?"</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md">
+            <div id="listaMobile" class="mat-elevation-z8">
+
+                <div class="table-container-1">
+                    <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                        <ng-container matColumnDef="opcion" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+                            <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button mat-menu-item (click)="fnDescargar(row)">
+                                        <mat-icon color="accent">cloud_download</mat-icon>
+                                        <span>Descargar</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sNombreArchivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nombre Archivo
+                            </th>
+                            <td data-label='Nombre Archivo: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaLib"> {{row.sNombreArchivo}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sUsrSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Usuario Subió
+                            </th>
+                            <td data-label='Usuario Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc"> {{row.sUsrSubio}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sFechaSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Fecha Subió
+                            </th>
+                            <td data-label='Fecha Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.dFechaSubio | date:'dd/MM/yyyy'}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sHoraSubio">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Hora Subió
+                            </th>
+                            <td data-label='Hora Subió: ' mat-cell *matCellDef="let row"
+                                class="has_label_on_mobile clsColumnaOpc2"> {{row.dFechaSubio | date:'HH:mm:ss'}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>

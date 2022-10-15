@@ -1,0 +1,145 @@
+<div class=" col-md-10 offset-md-1">
+    <div style="padding-top: 80px;">
+        <div style="text-align: center;">
+            <h3 *ngIf="!isDetalle" class="card-header center-text-card" style="text-align: center;">Destinos de las
+                Guías</h3>
+            <h3 *ngIf="isDetalle" class="card-header center-text-card" style="text-align: center;">Listado de Destinos
+            </h3>
+            <!-- 
+            <mat-card *ngIf="!isDetalle" class="title-card">Destinos de las Guías</mat-card>
+            <mat-card *ngIf="isDetalle" class="title-card">Listado de Destinos</mat-card> -->
+        </div>
+        <div><br /></div>
+
+
+        <!-- Esta es la parte que aparecerá si estamos en la vista de cabecera -->
+        <div *ngIf="!isDetalle">
+
+
+            <!-- *********************************************** -->
+            <!-- *************** Inicia Buscador *************** -->
+            <!-- *********************************************** -->
+            <div class="offset-lg-4 offset-md-4">
+                <div class="col-lg-6 col-md-6 col-sm-10 col-10">
+                    <mat-form-field>
+                        <mat-label>Buscar</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                        <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button
+                            aria-label="Clear" (click)="clean()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                    <button mat-mini-fab class="fab-secondary" color="accent">
+                        <i class="material-icons" matTooltip="Agregar" matTooltipPosition="left">add</i>
+                    </button>
+                </div> -->
+            </div>
+            <!-- *********************************************** -->
+            <!-- *************** Termina Buscador ************** -->
+            <!-- *********************************************** -->
+
+
+            <!-- *********************************************** -->
+            <!-- **************** Inicia Tabla ***************** -->
+            <!-- *********************************************** -->
+            <div id="listaMobile" class="mat-elevation-z8 ">
+
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <!-- Opciones -->
+                        <ng-container matColumnDef="opciones" sticky>
+                            <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                                data-label='Ver Direcciones: '>
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                    matTooltipPosition="right" mat-stroked-button color="accent">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" xPosition="after">
+                                    <button mat-menu-item (click)="verDetalle(element)">
+                                        <mat-icon color="accent">touch_app</mat-icon>
+                                        <span>Ver Direcciones</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
+                        </ng-container>
+
+                        <!-- Codigo Column -->
+                        <ng-container matColumnDef="codigo">
+                            <th mat-header-cell *matHeaderCellDef> Código </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Código: '>
+                                <ngb-highlight [result]="element.codigo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- Descripcion Column -->
+                        <ng-container matColumnDef="descripcion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre/Razón Social </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                                data-label='Nombre/Razón Social: '>
+                                <ngb-highlight [result]="element.descripcion" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- nombrecomercial Column -->
+                        <ng-container matColumnDef="nombreComercial">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Comercial</th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                                data-label='Nombre Comercial: '>
+                                <ngb-highlight [result]="element.nombreComercial" [term]="txtFiltro.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- Tipo Column -->
+                        <ng-container matColumnDef="tipo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo: '>
+                                <ngb-highlight [result]="element.tipo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- Departamento Column -->
+                        <ng-container matColumnDef="departamento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                                data-label='Departamento: '>
+                                <ngb-highlight [result]="element.departamento" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <!-- Distrito Column -->
+                        <ng-container matColumnDef="distrito">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Distrito </th>
+                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Distrito: '>
+                                <ngb-highlight [result]="element.distrito" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+            <!-- *********************************************** -->
+            <!-- *************** Termina Tabla ***************** -->
+            <!-- *********************************************** -->
+        </div>
+
+        <!-- Esta es la parte que aparecerá cuando le dan ver detalle a una de las opciones en al tabla cabecera -->
+        <div *ngIf="isDetalle">
+            <app-destino-detalle (salida)="salir($event)" [destino]="cabecera"></app-destino-detalle>
+        </div>
+    </div>
+</div>

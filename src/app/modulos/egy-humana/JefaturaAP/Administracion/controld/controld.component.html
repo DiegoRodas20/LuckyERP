@@ -1,0 +1,826 @@
+<iframe id="pdf-frame" style="display:none" (load)="printDoc()"></iframe>
+
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px); padding-bottom: 20px;">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Control de descuentos</h5>
+
+            <div class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="body-main" class="card-body" style="padding-bottom: 0px; padding-top: 15px;">
+
+                <div class="icard melevation col-xl-12">
+                    <div class="row" style="margin-left: 0px;">
+                        <h6>Aplicar filtro por :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+
+                    <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+                        <div class="form-row">
+
+                            <div class="col-lg-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nombres o documento de identidad</mat-label>
+                                    <input type="text" matInput formControlName="sNombres">
+                                    <button style="outline: none;" mat-button *ngIf="getMain.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sNombres.patchValue('')">
+                                    <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Planilla</mat-label>
+                                    <mat-select formControlName="sCodPlla">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboPlanilla" [value]="item.sCodPlla">
+                                            {{item.sCodPlla}} - {{item.sDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Ciudad</mat-label>
+                                    <mat-select formControlName="sCiudad">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboCiudad" [value]="item.sDesc">
+                                            {{item.sDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Lista de personal con descuentos activos </h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="MainDS" style="width: 100%;">
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(2, element, 1)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                        <ngb-highlight [result]="element.sNombres | titlecase" [term]="getMain.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPlla">
+                                    <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDscTipo">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sDscTipo}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                        <ngb-highlight [result]="element.sDocumento" [term]="getMain.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCiudad">
+                                    <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ciudad : '>
+                                        <ngb-highlight [result]="element.sCiudad" [term]="getMain.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaIngreso">
+                                    <th mat-header-cell *matHeaderCellDef> Fecha Ingreso </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Ingreso : '>
+                                        {{element.dFechIni | date:"dd/MM/yyyy"}}
+                                        <!-- <ngb-highlight [result]="element.dFechIni" [term]="getMain.sNombres.value"></ngb-highlight> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaCese">
+                                    <th mat-header-cell *matHeaderCellDef> Fecha Cese </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Cese : '>
+                                        {{element.dFechFin | date:"dd/MM/yyyy"}}
+                                        <!-- <ngb-highlight [result]="element.dFechFin" [term]="getMain.sNombres.value"></ngb-highlight> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let element; columns: MainDC;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #pagMain style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>
+
+<!-- Div Search -->
+<div style="z-index: 1042" class="modal fade bd-example-modal-lg" id="ModalSearch" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ModalSearchTitle" aria-hidden="true">
+
+    <div id="ModalSearchCenter" class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Cabecera -->
+            <h5 class="card-header">
+                Busqueda de personal
+                <button type="button" class="close" (click)="clickFab(2,-1)" style="color: white !important; text-shadow: none !important; outline: none;" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </h5>
+
+            <!-- Cuerpo  -->
+            <div class="modal-body">
+
+                <div class="icard melevation col-xl-12" style="padding-bottom: 0px;">
+                    <div class="row" style="margin-left: 0px;">
+                        <h6>Aplicar filtro por :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+
+                    <form autocomplete="off" id="fgSearch" [formGroup]="fgSearch">
+                        <div class="form-row">
+
+                            <div class="col-lg-12">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nombres o documento de identidad</mat-label>
+                                    <input type="text" matInput formControlName="sNombres">
+                                    <button style="outline: none;" mat-button *ngIf="getSearch.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getSearch.sNombres.patchValue('')">
+                                    <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Lista de personal :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableSearch" class="melevation">
+                            <table mat-table [dataSource]="SearchDS" style="width: 100%;">
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(2, element, 2)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                        <ngb-highlight [result]="element.sNombres | titlecase" [term]="getSearch.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPlla">
+                                    <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTipo">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sTipo}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                        <ngb-highlight [result]="element.sDocumento" [term]="getSearch.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="SearchDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="SearchDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: SearchDC;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="SearchDS && this.SearchDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #pagSearch style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbSearch" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+</div>
+
+<!-- Div Detail -->
+<div style="z-index: 1042" class="modal fade bd-example-modal-xl" id="ModalDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ModalDetailTitle" aria-hidden="true">
+
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(3, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsDetail}">add</i>
+        </button>
+        <div [@speedDialStagger]="abDetail.length">
+            <button *ngFor="let btn of abDetail; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(3, ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div id="ModalDetailCenter" class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+
+            <!-- Cabecera -->
+            <h5 class="card-header">
+                Detalle de personal
+                <button type="button" class="close" (click)="clickFab(3,-1)" style="color: white !important; text-shadow: none !important; outline: none;" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </h5>
+
+            <!-- Cuerpo  -->
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div id="dLeftDetail" class="col-lg-6">
+                        <mat-accordion>
+
+                            <!-- Información personal -->
+                            <mat-expansion-panel [expanded]="panelOpenState" (opened)="panelState(true)" (closed)="panelState(false)">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Información del personal :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <div class="row">
+
+                                    <div class="col-lg-3 divAvatar">
+                                        <a>
+                                            <span class="imgBadge">{{getDetail.sCodPlla.value}}</span>
+                                            <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                        </a>
+                                    </div>
+
+                                    <div id="fgDetail" [formGroup]="fgDetail" class="col-lg-9">
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-8">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Tipo</mat-label>
+                                                    <input type="text" matInput formControlName="sTipo">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>N° Documento</mat-label>
+                                                    <input type="text" matInput formControlName="sDocumento">
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Apellidos y nombres</mat-label>
+                                                    <input type="text" matInput formControlName="sNombres">
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Ciudad</mat-label>
+                                                    <input type="text" matInput formControlName="sCiudad">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Fecha ingreso</mat-label>
+                                                    <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                                    <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                                    <mat-datepicker #dFechIni></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Fecha término</mat-label>
+                                                    <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                                    <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                                    <mat-datepicker #dFechFin></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+
+                    <div id="dRightDetail" class="col-lg-6">
+                        <mat-accordion>
+
+                            <!-- Filtro -->
+                            <mat-expansion-panel [expanded]="panelOpenState" (opened)="panelState(true)" (closed)="panelState(false)">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Aplicar filtro por :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">filter_alt</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <div class="row">
+                                    <div [formGroup]="fgFilter" class="col-lg-12">
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Direccion</mat-label>
+                                                    <mat-select formControlName="nDirec" (valueChange)="ChangeDirec($event)">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboDirec" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Area</mat-label>
+                                                    <mat-select formControlName="nArea" (valueChange)="ChangeArea($event)">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboArea" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Motivo</mat-label>
+                                                    <mat-select formControlName="nMotivo">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboMotivo" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Descripción</mat-label>
+                                                    <input type="text" matInput formControlName="sDescripcion">
+                                                    <button style="outline: none;" mat-button *ngIf="getFilter.sDescripcion.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sDescripcion.patchValue('')">
+                                                    <mat-icon>close</mat-icon>
+                                                    </button>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;" appYearMonthFormat>
+                                                    <mat-label>Fecha descuento</mat-label>
+                                                    <input matInput [matDatepicker]="dFecha" formControlName="dFecha">
+                                                    <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                                                    <mat-datepicker #dFecha startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFecha)">
+                                                    </mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Estado</mat-label>
+                                                    <mat-select formControlName="bEstado">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option [value]="1">Descuentos con saldo en positivo</mat-option>
+                                                        <mat-option [value]="2">Descuentos concluidos en su totalidad</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Histórico de descuentos :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-12">
+
+                        <div id="dTableDetail" class="melevation">
+                            <table mat-table [dataSource]="DetailDS" style="width: 100%;" multiTemplateDataRows>
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Detalle </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Detalle" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(3, element, 2)">
+                                            <mat-icon>local_atm</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sMotivo">
+                                    <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Motivo :'> {{element.sMotivo}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDireccion">
+                                    <th mat-header-cell *matHeaderCellDef> Dirección </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Dirección :'> {{element.sDireccion}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sArea">
+                                    <th mat-header-cell *matHeaderCellDef> Área </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Área :'> {{element.sArea}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha inicio :'> {{element.dFechIni | date:"MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechFin">
+                                    <th mat-header-cell *matHeaderCellDef> Término </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha término :'> {{element.dFechFin | date:"MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nImporte">
+                                    <th mat-header-cell *matHeaderCellDef> Importe ( S/ ) </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe :'> {{ (element.nImporte * 1) | number : '1.2-2'}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCuotas">
+                                    <th mat-header-cell *matHeaderCellDef> Cuotas </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cuotas :'> {{ element.nCant.toString().concat('/', element.nCuota.toString()) }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nSaldo">
+                                    <th mat-header-cell *matHeaderCellDef> Saldo ( S/ ) </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Saldo :'> {{ (element.nSaldo * 1) | number : '1.2-2'}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="more">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let row" (click)="expandedMore = (expandedMore === row) ? null : row">
+                                        <span class="material-icons" style="cursor: pointer;">expand_more</span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="expanded_More">
+                                    <td mat-cell *matCellDef="let element" [attr.colspan]="DetailDC.length">
+                                        <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                            <div class="row div_expanded" style="padding: 10px;">
+                                                <div class="col-lg-6" style="padding-left: 5px;">
+                                                    <!-- Descripción -->
+                                                    <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                        <h6>Descripción:</h6>
+                                                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                    </div>
+                                                    {{ element.sDescripcion }}
+                                                </div>
+                                                <mat-divider [vertical]="true"></mat-divider>
+                                                <div id="dRightDescuento" class="col-lg">
+                                                    <!-- Lista de movimientos -->
+                                                    <div class="row" style="padding-left: 15px;">
+                                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                            <h6>Movimientos en planilla:</h6>
+                                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="dTableDescuento" class="melevation">
+                                                        <table mat-table [dataSource]="DescuentoDS" style="width: 100%;">
+                                                            <!-- Action Column -->
+                                                            <ng-container matColumnDef="position">
+                                                                <th mat-header-cell *matHeaderCellDef> N° </th>
+                                                                <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
+                                                            </ng-container>
+
+                                                            <ng-container matColumnDef="dFecha">
+                                                                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha :'> {{element.dFecha | date:"MM/yyyy"}} </td>
+                                                            </ng-container>
+
+                                                            <ng-container matColumnDef="nImporte">
+                                                                <th mat-header-cell *matHeaderCellDef> Importe ( S/ ) </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe :'> {{ (element.nImporte * 1) | number : '1.2-2'}} </td>
+                                                            </ng-container>
+
+                                                            <ng-container matColumnDef="noData">
+                                                                <mat-footer-cell *matFooterCellDef [attr.colspan]="DetailDC.length">
+                                                                    No se encuentran registros.
+                                                                </mat-footer-cell>
+                                                            </ng-container>
+
+                                                            <tr mat-header-row *matHeaderRowDef="DescuentoDC; sticky: true"></tr>
+                                                            <tr mat-row *matRowDef="let row; columns: DescuentoDC;"></tr>
+                                                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="DescuentoDS && this.DescuentoDS.filteredData.length > 0"></mat-footer-row>
+                                                        </table>
+                                                    </div>
+                                                    <mat-paginator #pagDescuento style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="DetailDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="DetailDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: DetailDC;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="DetailDS && this.DetailDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #pagDetail style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbDetail" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+</div>
+
+<!-- Div Descuento -->
+<div style="z-index: 1042" class="modal fade bd-example-modal-md" id="ModalDescuento" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ModalDescuentoTitle" aria-hidden="true">
+
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(4, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsDescuento}">add</i>
+        </button>
+        <div [@speedDialStagger]="abDescuento.length">
+            <button *ngFor="let btn of abDescuento; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(4, ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div id="ModalDescuentoCenter" class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+
+            <!-- Cabecera -->
+            <h5 class="card-header">
+                {{hDescuento}} Descuento
+                <button type="button" class="close" (click)="clickFab(4,-1)" style="color: white !important; text-shadow: none !important; outline: none;" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </h5>
+
+            <!-- Cuerpo  -->
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <mat-accordion>
+
+                            <!-- Información descuento -->
+                            <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Información de descuento :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">local_atm</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <div class="row">
+
+                                    <div id="fgDescuento" [formGroup]="fgDescuento" class="col-lg-12">
+
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Direccion</mat-label>
+                                                    <mat-select formControlName="T1_nIdDireccion" (valueChange)="ChangeDirec($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboDirec" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getDescuento.T1_nIdDireccion.hasError('noSelect')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Area</mat-label>
+                                                    <mat-select formControlName="T1_nIdArea" (valueChange)="ChangeArea($event)" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboArea" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getDescuento.T1_nIdArea.hasError('noSelect')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Motivo</mat-label>
+                                                    <mat-select formControlName="T1_nIdMotivo" [errorStateMatcher]="matcher">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboMotivo" [value]="item.nIdTipEle">
+                                                            {{item.sDesc}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="getDescuento.T1_nIdMotivo.hasError('noSelect')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Importe</mat-label>
+                                                    <input type="number" matInput formControlName="T0_nImporte" [errorStateMatcher]="matcher">
+                                                    <mat-error *ngIf="getDescuento.T0_nImporte.hasError('vMonto')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Cuota(s)</mat-label>
+                                                    <input type="number" matInput formControlName="T2_nCuota" [errorStateMatcher]="matcher">
+                                                    <mat-error *ngIf="getDescuento.T2_nCuota.hasError('vMonto')">. Obligatorio</mat-error>
+                                                    <mat-error *ngIf="getDescuento.T2_nCuota.hasError('min')">. Debe ser mayor a 0</mat-error>
+                                                    <mat-error *ngIf="getDescuento.T2_nCuota.hasError('max')">. Debe ser menor a 12</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Fecha Inicio</mat-label>
+                                                    <input formControlName="T2_dFechIni" matInput [matDatepicker]="mdpNewFchIni" [errorStateMatcher]="matcher">
+                                                    <mat-datepicker-toggle matSuffix [for]="mdpNewFchIni"></mat-datepicker-toggle>
+                                                    <mat-datepicker #mdpNewFchIni></mat-datepicker>
+                                                    <mat-error *ngIf="getDescuento.T2_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group col-lg-6">
+                                                <mat-form-field style="width: 100%;" appDateFormat>
+                                                    <mat-label>Fecha Termino</mat-label>
+                                                    <input formControlName="dFechFin" matInput [matDatepicker]="mdpNewFchFin">
+                                                    <mat-datepicker-toggle matSuffix [for]="mdpNewFchFin"></mat-datepicker-toggle>
+                                                    <mat-datepicker #mdpNewFchFin></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-lg-12">
+                                                <mat-form-field style="width: 100%;">
+                                                    <textarea matInput placeholder="Escribir aqui...." formControlName="T2_sDescripcion" style="max-height: 75px; min-height: 75px;" [errorStateMatcher]="matcher"></textarea>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <mat-progress-bar *ngIf="pbDescuento" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+
+</div>

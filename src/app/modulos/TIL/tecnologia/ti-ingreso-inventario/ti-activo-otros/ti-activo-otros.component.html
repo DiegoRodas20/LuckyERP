@@ -1,0 +1,111 @@
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+            <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons">{{btn.icon}}</i>
+            </button>
+        </ng-container>
+    </div>
+</div>
+
+<div class="mb-3" style="text-align: center; position: relative;">
+    <mat-card class="title-card"><h3>{{titulo}}</h3></mat-card>
+    <button mat-icon-button class="closeButtonModal" (click)="fnSalir()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content class="mt-3">
+    <mat-card class="mat-elevation-z8 my-3">
+        <form [formGroup]="formActivoOtros" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-4 mt-1">
+                    <ng-select [clearable]="false" appendTo="body" placeholder="Sub-Familia" formControlName="subFamilia"
+                        notFoundText="No hay sub-familias disponibles" (change)="fnLlenarComboboxTipoDispositivo(1)">
+                        <ng-option *ngFor="let element of listaSubFamilia" [value]="element.nId">
+                            {{element.sDescripcion}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error class="ngSelectError"
+                        *ngIf="this.formActivoOtros.get('subFamilia').hasError('required') && formActivoOtros.get('subFamilia').touched">
+                        La sub-familia es obligatoria
+                    </mat-error>
+                </div>
+
+                <div class="col-md-4 mt-1">
+                    <ng-select [clearable]="false" appendTo="body" placeholder="Tipo de Dispositivo"
+                        formControlName="tipoDispositivo"
+                        notFoundText="No hay tipos de dispositivos disponibles" (change)="fnLlenarComboboxArticulos(1)">
+                        <ng-option *ngFor="let element of listaTipoDispositivo" [value]="element.nId">
+                            {{element.sDescripcion}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error class="ngSelectError"
+                        *ngIf="this.formActivoOtros.get('tipoDispositivo').hasError('required') && formActivoOtros.get('tipoDispositivo').touched">
+                        El tipo de dispositivo es obligatoria
+                    </mat-error>
+                </div>
+
+                <div class="col-md-4 mt-1" *ngIf="!nIdActivo">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Cantidad de Activos</mat-label>
+                        <input type="number" matInput formControlName="cantidadActivos"
+                            (keydown)="fnValidarCaracteresNumericos($event)"
+                            (paste)="fnValidarCaracteresNumericosClipboard($event)"
+                            (focusout)="fnValidarCeros()" placeholder="0">
+                        <mat-error
+                            *ngIf="this.formActivoOtros.get('cantidadActivos').hasError('required') && formActivoOtros.get('cantidadActivos').touched">
+                            La cantidad de activos es obligatoria
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4 mt-1" *ngIf="nIdActivo">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Código del activo</mat-label>
+                        <input matInput formControlName="codigoActivo" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-11 mt-1">
+                    <ng-select [clearable]="false" appendTo="body" placeholder="Artículo" formControlName="articulo"
+                        notFoundText="No hay artículos disponibles" (change)="fnLlenarChipListCaracteristicasArticulo()">
+                        <ng-option *ngFor="let element of listaArticulos" [value]="element.nId">
+                            {{element.sDescripcion}}
+                        </ng-option>
+                    </ng-select>
+                    <mat-error class="ngSelectError"
+                        *ngIf="this.formActivoOtros.get('articulo').hasError('required') && formActivoOtros.get('articulo').touched">
+                        El artículo es obligatorio
+                    </mat-error>
+                </div>
+                
+                <div class="col-md-1 mt-1">
+                    <img width="40px" height="40px"
+                    [src]="tieneImagen ? imagenActual : '/assets/img/SinImagen.jpg'"
+                    (click)="fnVerImagen()">
+                </div>
+
+                <div class="col-md-12 mt-1">
+                    <mat-form-field class="example-chip-list" style="width: 100%">
+                        <mat-label>Componentes</mat-label>
+                        <mat-chip-list #chipListComponentes style="height: 51.5px;">
+                            <mat-chip *ngFor="let chipElement of chipElementsComponentes">
+                                {{chipElement.sDescripcion}}
+                            </mat-chip>
+                            <input [matChipInputFor]="chipListComponentes" readonly
+                                [disabled]="chipElementsComponentes != []">
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </form>
+    </mat-card>
+</div>

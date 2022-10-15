@@ -1,0 +1,70 @@
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container{
+  min-height: 536px;
+  width: 120%;
+}
+
+.scroll-table{
+  position: relative;
+  overflow-x: scroll;
+}
+
+.paginator-fixed{
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+/* Checkbox */
+.checkboxUno{
+  margin-top: 10px;
+}
+
+.checkboxDos{
+  margin-top: 35px;
+}
+
+@media (max-width: 767px){
+  .checkboxUno{
+    margin-top: inherit;
+  }
+
+  .checkboxDos{
+    margin-top: inherit;
+  }
+}
+
+.ocultar-opcion {
+  display: none;
+}

@@ -1,0 +1,67 @@
+
+<div class="col-md-12" >
+    <div class="example-container2 mat-elevation-z8" >    
+        <table mat-table  [dataSource]="dataSource" matSort style="width: 100%;">
+
+        <ng-container matColumnDef="nIdGastoCosto" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc2">   
+                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                    matTooltipPosition="right" mat-stroked-button color="accent">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="after">
+                    <button mat-menu-item >
+                        <mat-icon color="accent">cloud_download</mat-icon>
+                        <span>Descargar</span>
+                    </button>
+                </mat-menu> 
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sNumero">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> sNumero  </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.sNumero}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="sCentroCosto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> sCentroCosto  </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.sCentroCosto}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="sSucursal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> sSucursal </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.sSucursal}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="sNombreCompletoDepositario">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> sNombreCompletoDepositario </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.sNombreCompletoDepositario}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="nTotal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> nTotal </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.nTotalRq}} </td>
+        </ng-container> 
+        
+        <ng-container matColumnDef="sTitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> sTitulo </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.sTitulo}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="sMoneda">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> sMoneda </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.sMoneda}} </td>
+        </ng-container> 
+        
+        <ng-container matColumnDef="sEstadoRq">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaExt"> sEstadoRq </th>
+            <td mat-cell *matCellDef="let row" class="clsColumnaExt"> {{row.sEstadoRq}} </td>
+        </ng-container> 
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> 
+        </table> 
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 20]"></mat-paginator> 
+</div>     

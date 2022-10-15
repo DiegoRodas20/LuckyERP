@@ -1,0 +1,768 @@
+<div class="col-md-12 classContainer">
+
+    <div [ngClass]="divList ? 'clsShow' : 'clsHide'">
+
+        <!-- Card Header Titulo-->
+        <div class="text-center mt-0 mb-2">
+            <h3 class="col-md-10 offset-md-1 card-header mb-4">
+                Base de Postulantes
+            </h3>
+        </div>
+
+        <mat-accordion class="example-headers-align">
+
+            <!-- Listado de Postulantes -->
+            <mat-expansion-panel class="mb-2" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+
+                <!-- Expansion Panel Header -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Listado Postulantes </mat-panel-title>
+                    <mat-panel-description>
+                        <mat-icon color="accent">list</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="w-100">
+
+                    <!-- Inputs -->
+                    <div class="mb-4 form-row selectGeneral">
+
+                        <!-- Distrito -->
+                        <div class="form-group col-md-4">
+                            <ng-select placeholder="Distrito" appendTo="body" [clearable]="true"
+                                (change)="fnFiltrarOtros($event,1); fnListarFiltros()" [formControl]="distritoFilter">
+                                <ng-option *ngFor="let item of dataDistrito" [(value)]="item.pDistrito">
+                                    {{item.pDistrito}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- Puesto -->
+                        <div class="form-group col-md-4">
+                            <ng-select placeholder="Puesto" appendTo="body" [clearable]="true"
+                                (change)="fnFiltrarOtros($event,2); fnListarFiltros()" [formControl]="puestoFilter">
+                                <ng-option *ngFor="let item of dataPuesto" [(value)]="item.pPuesto">
+                                    {{ item.pPuesto }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- Fuente -->
+                        <div class="form-group col-md-4">
+                            <ng-select placeholder="Fuente" appendTo="body" [clearable]="true"
+                                (change)="fnFiltrarOtros($event,3); fnListarFiltros()" [formControl]="fuenteFilter">
+                                <ng-option *ngFor="let item of dataFuente" [(value)]="item.pFuenteCont">
+                                    {{item.pFuenteCont}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- Filtro Global -->
+                        <div class="form-group col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-label>Buscar</mat-label>
+                                <input matInput (keyup)="applyFilter($event.target.value)" [formControl]="txtControl" />
+                                <button mat-button style="outline: none" matSuffix mat-icon-button aria-label="Clear">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Fecha Postulacion Desde -->
+                        <div class="form-group col-md-4">
+                            <mat-form-field>
+                                <mat-label>Fecha Postulación: (Desde)</mat-label>
+                                <input matInput (dateChange)="fnCambiarFechaPostulacion($event,1);fnListarFiltros()"
+                                    [formControl]="fechaInicioFilter" [matDatepicker]="txtFechaInicio">
+                                <mat-datepicker-toggle *ngIf="dFechaInicio!='' " matSuffix
+                                    (click)="fnLimpiarFecha(1);fnListarFiltros()">
+                                    <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker-toggle matSuffix [for]="txtFechaInicio">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #txtFechaInicio></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Fecha Postulacion Hasta -->
+                        <div class="form-group col-md-4">
+                            <mat-form-field>
+                                <mat-label>Fecha Postulación: (Hasta)</mat-label>
+                                <input matInput [matDatepicker]="txtFechaFin"
+                                    (dateChange)="fnCambiarFechaPostulacion($event,2);fnListarFiltros()"
+                                    [formControl]="fechaFinFilter">
+                                <mat-datepicker-toggle *ngIf="dFechaFin!='' " matSuffix
+                                    (click)="fnLimpiarFecha(2);fnListarFiltros()">
+                                    <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker-toggle matSuffix [for]="txtFechaFin"></mat-datepicker-toggle>
+                                <mat-datepicker #txtFechaFin></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Filtrar por Radio Buttons -->
+                        <div class="form-group col-md-6 align-self-center">
+                            <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                                [formControl]="positionFilter" (change)="fnListarFiltros()">
+                                <mat-radio-button class="example-radio-button" *ngFor="let season of seasons"
+                                    [checked]="season.checked" [value]="season.id">
+                                    {{season.valor}}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
+                        <!-- Boton Historial -->
+                        <div class="form-group col-md-6 text-right">
+                            <button mat-raised-button color="accent" (click)="openDialogHistorico()">Histórico</button>
+                        </div>
+
+                    </div>
+
+                    <!-- Listado de Postulantes -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- Opcion -->
+                                <ng-container matColumnDef="pCodPostulacion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion">
+                                        Opcion
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaOpcion">
+                                        <button mat-stroked-button (click)="fnDatos(row.pCodPostulacion, row.pNumDoc)"
+                                            color="accent">
+                                            <mat-icon> remove_red_eye</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Tipo de Documento -->
+                                <ng-container matColumnDef="pTipDoc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion"> Tipo
+                                        Documento </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaOpcion"> {{row.pTipDoc}} </td>
+                                </ng-container>
+
+                                <!-- Numero de Documento -->
+                                <ng-container matColumnDef="pNumDoc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaFuente">
+                                        Numero
+                                        de Documento
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pNumDoc}} </td>
+                                </ng-container>
+
+                                <!-- Nombre y Apellido -->
+                                <ng-container matColumnDef="pNom">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNombre">
+                                        Apellidos y Nombres
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaNombre"> {{row.pNom}} </td>
+                                </ng-container>
+
+                                <!-- Telefono -->
+                                <ng-container matColumnDef="pNumCelular">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Tlf.
+                                        Móvil
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pNumCelular}} </td>
+                                </ng-container>
+
+                                <!-- Correo -->
+                                <ng-container matColumnDef="pCorreo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaCorreo">
+                                        Correo
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pCorreo}} </td>
+                                </ng-container>
+
+                                <!-- Puesto -->
+                                <ng-container matColumnDef="pPuesto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Puesto
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pPuesto}} </td>
+                                </ng-container>
+
+                                <!-- Fecha de Cita -->
+                                <ng-container matColumnDef="pFechaCita">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Fecha
+                                        de
+                                        Cita </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pFechaCita}} </td>
+                                </ng-container>
+
+                                <!-- Hora de Cita -->
+                                <ng-container matColumnDef="pHoraCita">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Hora
+                                        de
+                                        Cita </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pHoraCita}} </td>
+                                </ng-container>
+
+                                <!-- Turno -->
+                                <ng-container matColumnDef="pTurno">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaFuente">
+                                        Turno
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pTurno}} </td>
+                                </ng-container>
+
+                                <!-- Fuente Postulación -->
+                                <ng-container matColumnDef="pFuenteCont">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion">
+                                        Fuente
+                                        Postulación </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pFuenteCont}} </td>
+                                </ng-container>
+
+                                <!-- Distrito -->
+                                <ng-container matColumnDef="pDistrito">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaFuente">
+                                        Distrito
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pDistrito}} </td>
+                                </ng-container>
+
+                                <!-- Fecha Postulacion -->
+                                <ng-container matColumnDef="dFechaPostulacion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaTelf"> Fecha
+                                        Postulación </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.dFechaPostulacion}} </td>
+                                </ng-container>
+
+                                <!-- Citado -->
+                                <ng-container matColumnDef="pCitado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Citado </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pCitado}} </td>
+                                </ng-container>
+
+                                <!-- Contactado -->
+                                <ng-container matColumnDef="pContactado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Contactado </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pContactado}} </td>
+                                </ng-container>
+
+                                <!-- Medio de Contacto -->
+                                <ng-container matColumnDef="pMedioContacto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpcion">
+                                        Medio de
+                                        Contacto </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pMedioContacto}} </td>
+                                </ng-container>
+
+                                <!-- Motivo de no citacion-->
+                                <ng-container matColumnDef="pMotNoCita">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivo de no Citación </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pMotNoCita}} </td>
+                                </ng-container>
+
+                                <!-- Motivo de no contactacion-->
+                                <ng-container matColumnDef="pMotNoCont">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 7%;"> Motivo de
+                                        no
+                                        Contactación
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pMotNoCont}} </td>
+                                </ng-container>
+
+                                <!-- Ultimo estado de contactacion -->
+                                <ng-container matColumnDef="pUltEstCont">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 9%;"> Último
+                                        Estado
+                                        de Contactación
+                                    </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.pUltEstCont}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+                    </div>
+
+                </div>
+
+            </mat-expansion-panel>
+
+            <!-- Detalle de Postulantes -->
+            <mat-expansion-panel class="mb-2" [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+
+                <!-- Expansion Panel Header -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Detalle Postulante </mat-panel-title>
+                    <mat-panel-description>
+                        <mat-icon color="accent">person_pin</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="w-100">
+
+                    <!-- Inputs -->
+                    <div class="mb-4">
+                        <form [formGroup]="DatosFormGroup" autocomplete="off">
+                            <div class="form-row">
+
+                                <!-- Tipo de Documento -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Tipo de Documento</mat-label>
+                                        <mat-select formControlName="TipoDoc">
+                                            <mat-option *ngFor="let vMatOpcion of lCboTipoDocumento"
+                                                [value]="vMatOpcion.codigo">
+                                                {{vMatOpcion.valor}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Numero de Documento -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>N° de Documento</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="NumDoc" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Primer Nombre -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Primer Nombre</mat-label>
+                                        <input matInput type="text" name="valuePriN" formControlName="PrimerMombre"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Segundo Nombre -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Segundo Nombre</mat-label>
+                                        <input matInput type="text" name="valueSegN" formControlName="SegundoNombre"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Apellido Paterno -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Apellido Paterno</mat-label>
+                                        <input matInput type="text" name="valueAPat" formControlName="PrimerApellido"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Apellido Materno -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Apellido Materno</mat-label>
+                                        <input matInput type="text" name="valueAMat" formControlName="SegundoApellido"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Numero Celular -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Celular</mat-label>
+                                        <input matInput type="text" name="valueCel" formControlName="Celular" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Numero Celular Opcional -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Celular Opcional</mat-label>
+                                        <input matInput type="text" name="valuePues" formControlName="CelularOpc"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Correo Electronico -->
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <mat-label>Correo</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="Correo" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Puesto -->
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <mat-label>Puesto</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="Puesto">
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Dirección -->
+                                <div class="form-group col-md-6">
+                                    <mat-form-field>
+                                        <mat-label>Dirección</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="Direccion"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Distrito -->
+                                <div class="form-group col-md-6">
+                                    <mat-form-field>
+                                        <mat-label>Distrito</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="Distrito"
+                                            readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Opciones Botones -->
+                                <div class="form-group col-md-12 text-right">
+                                    <button mat-raised-button class="mr-2" (click)="openDialogNuevaContactacion()">Nueva
+                                        Contactación</button>
+                                    <button mat-raised-button class="mr-2" (click)="fnVerDocumento(1)"
+                                        color="accent">Ver
+                                        Foto</button>
+                                    <button mat-raised-button class="mr-2" (click)="fnVerDocumento(2)">Ver CV</button>
+                                </div>
+
+                                <!-- Distrito Oculto -->
+                                <div class="col-md-6 clsHide">
+                                    <mat-form-field>
+                                        <mat-label>Distrito</mat-label>
+                                        <input matInput type="text" name="valueNDoc" formControlName="CodDistrito">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Listado de Detalle Postulante -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+
+                            <table class="w-100" mat-table [dataSource]="dataSource2" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="pPuesto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Puesto
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.pPuesto}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="pContactado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Estado
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.pContactado}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechaPostulacion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha
+                                        Postulacion
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.dFechaPostulacion}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUsuario">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Usuario
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="clsColumnaLib"> {{row.sUsuario}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="pCodPostulacion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Accion
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" (click)="fnDatos(row.pCodPostulacion, 0)"
+                                        class="clsColumnaLib">
+                                        <button mat-raised-button>Contactar</button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+                    </div>
+
+                </div>
+
+            </mat-expansion-panel>
+
+        </mat-accordion>
+
+    </div>
+
+    <div [ngClass]="divCreate ? 'clsShow' : 'clsHide'">
+
+        <!-- Card Header Titulo-->
+        <div class="text-center mt-0 mb-2">
+            <h3 class="col-md-10 offset-md-1 card-header mb-4">
+                Ficha de Postulante
+            </h3>
+        </div>
+
+        <mat-horizontal-stepper linear #stepper>
+
+            <mat-step [stepControl]="DatosFormGroup">
+                <form [formGroup]="DatosFormGroup">
+                    <ng-template matStepLabel>Datos Personales</ng-template>
+                    <div class="form-row">
+
+                        <!-- Tipo de Documento -->
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-label>Tipo de Documento</mat-label>
+                                <mat-select formControlName="TipoDoc">
+                                    <mat-option *ngFor="let vMatOpcion of lCboTipoDocumento"
+                                        [value]="vMatOpcion.codigo">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Numero de Documento -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>N° de Documento</mat-label>
+                                <input matInput type="text" name="valueNDoc" formControlName="NumDoc">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Primer Nombre -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Primer Nombre</mat-label>
+                                <input matInput type="text" name="valuePriN" formControlName="PrimerMombre">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Segundo Nombre -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Segundo Nombre</mat-label>
+                                <input matInput type="text" name="valueSegN" formControlName="SegundoNombre">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Apellido Paterno -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Apellido Paterno</mat-label>
+                                <input matInput type="text" name="valueAPat" formControlName="PrimerApellido">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Apellido Materno -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Apellido Materno</mat-label>
+                                <input matInput type="text" name="valueAMat" formControlName="SegundoApellido">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Numero Celular -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Celular</mat-label>
+                                <input matInput type="text" name="valueCel" formControlName="Celular">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Celular Opcional -->
+                        <div class="col-md-3">
+                            <mat-form-field class="example-form-field">
+                                <mat-label>Celular Opcional</mat-label>
+                                <input matInput type="text" name="valuePues" formControlName="CelularOpc">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Correo Electronico -->
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>Correo</mat-label>
+                                <input matInput type="text" name="valueNDoc" formControlName="Correo">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Puesto -->
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>Puesto</mat-label>
+                                <input matInput type="text" name="valueNDoc" formControlName="Puesto">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Direccion -->
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>Dirección</mat-label>
+                                <input matInput type="text" name="valueNDoc" formControlName="Direccion">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Distrito -->
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>Distrito</mat-label>
+                                <input matInput type="text" name="valueNDoc" readonly (click)="openDialogUbigeo()"
+                                    formControlName="Distrito">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Codigo Distrito Hide -->
+                        <div class="col-md-3" class="clsHide">
+                            <mat-form-field>
+                                <mat-label>Distrito</mat-label>
+                                <input matInput type="text" name="valueNDoc" formControlName="CodDistrito">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="ContactoFormGroup">
+                <form [formGroup]="ContactoFormGroup">
+                    <ng-template matStepLabel>Contactación</ng-template>
+                    <div class="form-row">
+
+                        <!-- Medio de Contacto -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Medio de Contacto</mat-label>
+                                <mat-select formControlName="MedioContactacion" (selectionChange)="fnContactado()">
+                                    <mat-option *ngFor="let vMatOpcion of lCboMedioCont" [value]="vMatOpcion.codigo">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Contactado -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Contactado</mat-label>
+                                <mat-select formControlName="Contactado" (selectionChange)="fnContactado()">
+                                    <mat-option *ngFor="let vMatOpcion of estado" [value]="vMatOpcion.id">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Fuente -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Fuente</mat-label>
+                                <mat-select formControlName="Fuente" (selectionChange)="fnFuente()">
+                                    <mat-option *ngFor="let vMatOpcion of lCboTipoFuente" [value]="vMatOpcion.codigo">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Referido -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Referido</mat-label>
+                                <input matInput type="text" formControlName="Referido">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Motivo de no contactacion -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Motivo de NO Contactación</mat-label>
+                                <mat-select formControlName="NoContactacion">
+                                    <mat-option *ngFor="let vMatOpcion of lCboMotNoCont" [value]="vMatOpcion.codigo">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                </form>
+
+                <form [formGroup]="CitaFormGroup">
+                    <div class="form-row">
+                        
+                        <!-- ¿Fue Citado? -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Citado</mat-label>
+                                <mat-select formControlName="Citado" (selectionChange)="fnCita()">
+                                    <mat-option *ngFor="let vMatOpcion of estado" [value]="vMatOpcion.id">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Fecha de Cita -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Fecha de Cita</mat-label>
+                                <input matInput [matDatepicker]="fr" readonly formControlName="Fecha">
+                                <mat-datepicker-toggle matSuffix [for]="fr"></mat-datepicker-toggle>
+                                <mat-datepicker #fr></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Hora de Cita -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Hora de Cita</mat-label>
+                                <mat-select formControlName="Hora" (selectionChange)="fnGetHora()">
+                                    <mat-option *ngFor="let vMatOpcion of lCboHorario" [value]="vMatOpcion.pIdTurno">
+                                        {{vMatOpcion.pHora}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Turno -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Turno</mat-label>
+                                <input matInput type="text" formControlName="Turno">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Motivo de no Citacion -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Motivo de NO Citación</mat-label>
+                                <mat-select formControlName="Nocitado" (selectionChange)="fnNoCita()">
+                                    <mat-option *ngFor="let vMatOpcion of lCboMotNoCita" [value]="vMatOpcion.codigo">
+                                        {{vMatOpcion.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Ultimo estado de contactacion -->
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-label>Último Estado de Contactación</mat-label>
+                                <input matInput type="text" formControlName="UltEstCont">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                </form>
+
+            </mat-step>
+
+        </mat-horizontal-stepper>
+
+        <!-- Opciones Botones -->
+        <div class="col-md-12 mb-4 text-right">
+            <button mat-raised-button class="mr-2" color="warn" (click)="fnChange(0)">Cancelar</button>
+            <button mat-raised-button class="mr-2" (click)="openDialogFicha()">Ficha</button>
+            <button mat-raised-button class="mr-2 buttonAction" (click)="fnAction(stepper,4)">Guardar</button>
+        </div>
+    </div>
+
+</div>

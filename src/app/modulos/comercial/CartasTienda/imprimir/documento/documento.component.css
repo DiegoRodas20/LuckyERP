@@ -1,0 +1,7 @@
+.documento {
+  page-break-after: always;
+}
+
+.documento:last-child {
+  page-break-after: avoid;
+}

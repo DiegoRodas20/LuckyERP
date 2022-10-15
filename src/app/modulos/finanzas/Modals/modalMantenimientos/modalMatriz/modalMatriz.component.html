@@ -1,0 +1,95 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleMatriz, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsMatriz}">add</i>
+  </button>
+    <div [@speedDialStagger]="abMatriz.length">
+        <button *ngFor="let btn of abMatriz; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleMatriz, ibtn)" [disabled]="btn.dis">
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+      </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_matriz" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Matriz</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<!-- Body -->
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <mat-accordion>
+                <mat-expansion-panel [expanded]="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información de Matriz :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">feedback</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgIncidencia" [formGroup]="fgMatriz" class="col-lg-12">
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Planilla</mat-label>
+                                        <mat-select formControlName="codPlla" [errorStateMatcher]="matcher">
+                                            <mat-option *ngFor="let item of cboPlanilla" [value]="item.codPlla">
+                                                {{item.descripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="fgMatriz.get('codPlla').hasError('required')">Obligatorio</mat-error>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Concepto</mat-label>
+                                        <mat-select formControlName="codConcepto" [errorStateMatcher]="matcher">
+                                            <mat-option *ngFor="let item of cboConcepto" [value]="item.codConcepto">
+                                                {{item.numero}} - {{item.descripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="fgMatriz.get('codConcepto').hasError('required')">Obligatorio</mat-error>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo</mat-label>
+                                        <mat-select formControlName="aTipo" [errorStateMatcher]="matcher">
+                                            <mat-option value="0">Debe</mat-option>
+                                            <mat-option value="1">Haber</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="fgMatriz.get('aTipo').hasError('required')">Obligatorio</mat-error>
+                                </div>
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Cuenta</mat-label>
+                                        <input type="text" matInput formControlName="cuentaContable" [errorStateMatcher]="matcher">
+                                    </mat-form-field>
+                                    <mat-error *ngIf="fgMatriz.get('cuentaContable').hasError('required')">Obligatorio</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbMatriz" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

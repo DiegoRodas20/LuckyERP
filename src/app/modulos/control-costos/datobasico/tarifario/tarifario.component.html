@@ -1,0 +1,783 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="clsprincipal">
+
+    <!-- Botones Flotantes pantalla Principal-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFabPrincipal(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsListaPrincipal}">add</i>
+        </button>
+        <div [@speedDialStagger]="abListaPrincipal.length">
+            <button *ngFor="let btn of abListaPrincipal; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFabPrincipal(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+
+    <h3 style="text-align:center" class="col-md-10 offset-md-1 card-header">Tarifario Cliente</h3>
+    <div class="row"><br /></div>
+
+    <!-- Bloque de vista de los Tarifarios  -->
+    <div class="container-fluid" [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <!-- Inicio del Busqueda -->
+                <div class="row">
+                    <div class="col-md-8 offset-md-4">
+                        <div class="form-row">
+                            <div class="col-sm-6">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Buscar tarifa:</mat-label>
+                                    <input type="text" matInput [formControl]="txtFiltroGen"
+                                        (keyup)="fnFiltrar($event)">
+                                    <!-- (keyup)="fnListarTarifario()"   -->
+                                    <button style="outline: none;" mat-button *ngIf="txtFiltroGen.value" matSuffix
+                                        mat-icon-button aria-label="Clear"
+                                        (click)="this.txtFiltroGen.setValue('');fnListarTarifario()">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- <div class="col-sm-2 ">
+                                <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo Tarifario"
+                                    (click)="fnNuevaTarifa()">
+                                    <i class="material-icons">add</i>
+                                </button>
+
+                            </div> -->
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- nueva tabla material -->
+                <div class="col-md-10 offset-md-1 ">
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" #MatSort1="matSort" matSort style="width: 100%;">
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nIdTarifario" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> </th>
+                                    <td mat-cell *matCellDef="let row" class=" has_label_on_mobile clsColumnaOpc2"
+                                        data-label='Ver detalle: '>
+                                        <button mat-stroked-button color="accent" matTooltip="Ver detalle"
+                                            (click)="fnVerDetalle(row.nIdTarifario)">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNumero">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Número
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                                        data-label='Número: '>
+                                        <ngb-highlight [result]="row.sNumero" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sClienteDsc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Cliente </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge"
+                                        data-label='Cliente: '>
+                                        <ngb-highlight [result]="row.sClienteDsc" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Progress Column -->
+                                <ng-container matColumnDef="sDesc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Cargo
+                                        Descripción </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Cargo Descripción: '>
+                                        <ngb-highlight [result]="row.sCodPartida + ' - ' + row.sDesc"
+                                            [term]="txtFiltroGen.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCanalDesc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Canal
+                                        Negocio </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Canal Negocio: '>
+                                        <ngb-highlight [result]="row.sCanalDesc" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sMoneda">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Moneda
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Moneda: '>
+                                        <ngb-highlight [result]="row.sMoneda" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCategoriaDesc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Categoría </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Categoría: '>
+                                        <ngb-highlight [result]="row.sCategoriaDesc" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nTotalRemunera">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Total
+                                        Remuneración </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                        data-label='Total Remuneración: '>
+                                        <ngb-highlight [result]="row.nTotalRemunera | number:'1.2-2'"
+                                            [term]="txtFiltroGen.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sVigente">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        ¿Vigente? </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc"
+                                        data-label='¿Vigente?: '>
+                                        <ngb-highlight [result]="row.sVigente" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Estado
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc"
+                                        data-label='Estado: '>
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltroGen.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="{'make-gris': row.sEstado=='Inactivo'}">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bloque del detalle de nueva tarifa || la tarifa seleccionada  -->
+    <div class="container-fluid" [ngClass]="vPrincipal ? 'clsHide' : 'clsShow'">
+        <div class="form-row col-md-12">
+
+            <!-- Cabecera tarifario -->
+            <div class="col-md-10 offset-md-1">
+                <!-- offset-md-3 -->
+                <mat-card>
+                    <form [formGroup]="tarifaForm">
+                        <div class="row">
+
+                            <div class="col-xl-9">
+                                <div class="row mt-1">
+
+                                    <div class="col-lg-4">
+                                        <ng-select appendTo="body" [clearable]="false" formControlName="cboCliente"
+                                            placeholder="Cliente" required>
+                                            <ng-option *ngFor="let vCliente of lCliente" [value]="vCliente.nId">
+                                                {{vCliente.sDescripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="tarifaForm.get('cboCliente').hasError('required')  && tarifaForm.get('cboCliente').touched">
+                                            .Obligatorio</mat-error>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <ng-select appendTo="body" [clearable]="false" formControlName="cboPartidaBase"
+                                            placeholder="Partida Base" required>
+                                            <ng-option *ngFor="let vPartida of lPartidaBase"
+                                                [value]="vPartida.nIdPartida">
+                                                {{vPartida.sCodPartida}} - {{vPartida.sDescripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <small class="text-danger"
+                                            *ngIf="tarifaForm.get('cboPartidaBase').hasError('required')  && tarifaForm.get('cboPartidaBase').touched">.Obligatorio</small>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <ng-select appendTo="body" [clearable]="false" formControlName="cboCanal"
+                                            placeholder="Canal Negocio" required>
+                                            <ng-option *ngFor="let vCanal of lCanal" [value]="vCanal.codigo">
+                                                {{vCanal.valor}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <small class="text-danger"
+                                            *ngIf="tarifaForm.get('cboCanal').hasError('required') && tarifaForm.get('cboCanal').touched">.Obligatorio</small>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <ng-select appendTo="body" [clearable]="false" formControlName="cboCategoria"
+                                            placeholder="Categoría" required>
+                                            <ng-option *ngFor="let vCategoria of lCategoria"
+                                                [value]="vCategoria.codigo">
+                                                {{vCategoria.valor}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <small class="text-danger"
+                                            *ngIf="tarifaForm.get('cboCategoria').hasError('required') && tarifaForm.get('cboCategoria').touched">.Obligatorio</small>
+                                    </div>
+
+                                    <div class="col-lg-4 alinea-ngselect">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Moneda:</mat-label>
+                                            <mat-select formControlName="cboMoneda" [errorStateMatcher]="matcher">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vMoneda of lMoneda" [value]="vMoneda.nId">
+                                                    {{vMoneda.sDescripcion}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="tarifaForm.get('cboMoneda').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4 alinea-ngselect">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Versión (Al aprobar):</mat-label>
+                                            <input type="text" matInput placeholder="Num Versión"
+                                                formControlName="txtVersion">
+                                        </mat-form-field>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>% Implemento:</mat-label>
+                                            <input type="number" matInput placeholder="0.00"
+                                                formControlName="txtImplemento" [errorStateMatcher]="matcher">
+                                            <mat-error *ngIf="tarifaForm.get('txtImplemento').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>% Implemento Detalle:</mat-label>
+                                            <input type="number" matInput formControlName="txtImplementoDet"
+                                                placeholder="0.00" [errorStateMatcher]="matcher">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Referencia:</mat-label>
+                                            <input type="text" matInput formControlName="txtReferencia"
+                                                (blur)="fnPrimeraMayuscula()" appCaracterValidador>
+                                            <mat-error
+                                                *ngIf="tarifaForm.get('txtReferencia').errors?.caracterValidator">
+                                                .El texto no debe contener: "/", "|", "?"</mat-error>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Días Base:</mat-label>
+                                                    <input type="number" matInput formControlName="txtDiaBase"
+                                                        [readonly]="!vModifica" placeholder="0" step="1" min="1"
+                                                        max="31" (focusin)="fnGuardarDiaActual()"
+                                                        (blur)="fnActualizarDia()" [errorStateMatcher]="matcher">
+                                                    <mat-error
+                                                        *ngIf="tarifaForm.get('txtDiaBase').hasError('required')">
+                                                        .Obligatorio</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6">
+                                                <button type="button" mat-raised-button color="primary"
+                                                    matTooltip="Estructura Salarial"
+                                                    (click)="fnEstructuraRemuneracion()">
+                                                    <mat-icon> monetization_on</mat-icon> Sueldo Mes
+                                                </button>
+                                                <input data-toggle="modal" data-target="#modalPartidaRemun"
+                                                    #modalPartidaRemun type="hidden" name="button">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Sueldo Mes:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtSueldoMes">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Sueldo Día:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtSueldoDia">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Vigente:</mat-label>
+                                            <mat-select formControlName="cboVigente" [errorStateMatcher]="matcher">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vVigente of lVigente"
+                                                    [value]="vVigente.nIdVigente">{{vVigente.sDescripcion}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="tarifaForm.get('cboVigente').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Remuneración:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtTotalRemunera">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Total día:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtTotalDia">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <!-- Boton agregar detalle  container-fluid  -->
+                                <div class="row">
+                                    <div class="col-md-3" [ngClass]="vbtnPartida ? 'clsShow' : 'clsHide'  ">
+                                        <div class="form-row">
+                                            <div class="col-md-3" [ngClass]="vbtnPartida ? 'clsShow' : 'clsHide' ">
+                                                <button type="button" mat-raised-button color="primary"
+                                                    matTooltip="Agregar Partida" (click)="fnPartidaTarifa(1,'')">
+                                                    <mat-icon>add</mat-icon> Partida Tarifario
+                                                </button>
+                                                <input data-toggle="modal" data-target="#modalPartidaTarifario"
+                                                    #modalPartidaTarifario type="hidden" name="button">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-xl-3">
+                                <div class="row">
+                                    <div class="col-xl-1">
+                                        <div class="clsSeparador">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <!-- Campos auditoria -->
+                                    <div class="col-xl-10 campoAuditoria">
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Número:</mat-label>
+                                            <input type="text" matInput readonly formControlName="txtNumero"
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Creado:</mat-label>
+                                            <input type="text" matInput formControlName="txtCreado"> <br>
+                                            <input type="text" matInput formControlName="txtFechaCrea">
+                                        </mat-form-field>
+
+                                        <!-- <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Creado:</mat-label>
+                                            
+                                        </mat-form-field> -->
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Modificado:</mat-label>
+                                            <input type="text" matInput formControlName="txtModificado"><br>
+                                            <input type="text" matInput formControlName="txtFechaMod">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="txtEstado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Campos auditoria acordeon (Solo Mobil) -->
+                                    <mat-accordion class="campoAuditoriaAcordeon" style="width: 100%;">
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title>
+                                                    <span style="vertical-align: middle;">Información</span>
+                                                </mat-panel-title>
+                                            </mat-expansion-panel-header>
+                                            <div>
+                                                <mat-form-field style="width: 100%;" class="mt-3">
+                                                    <mat-label>Número:</mat-label>
+                                                    <input type="text" matInput readonly formControlName="txtNumero"
+                                                        style="color: rgb(236, 0, 140);">
+                                                </mat-form-field>
+
+                                                <mat-form-field style="width: 100%;" class="mt-1">
+                                                    <mat-label>Creado:</mat-label>
+                                                    <input type="text" matInput formControlName="txtCreado"> <br>
+                                                    <input type="text" matInput formControlName="txtFechaCrea">
+                                                </mat-form-field>
+
+                                                <!-- <mat-form-field style="width: 100%;" class="mt-1">
+                                                    <mat-label>Fecha Creado:</mat-label>
+                                                    <input type="text" matInput readonly formControlName="txtFechaCreado">
+                                                </mat-form-field> -->
+
+                                                <mat-form-field style="width: 100%;" class="mt-1">
+                                                    <mat-label>Modificado:</mat-label>
+                                                    <input type="text" matInput formControlName="txtModificado"><br>
+                                                    <input type="text" matInput formControlName="txtFechaMod">
+                                                </mat-form-field>
+
+                                                <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                                    <mat-label>Estado:</mat-label>
+                                                    <input type="text" matInput formControlName="txtEstado" readonly
+                                                        style="color: rgb(236, 0, 140);">
+                                                </mat-form-field>
+                                            </div>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Detalle tabla material offset-md-1 -->
+        <div id="listaMobile" class="col-md-10 offset-md-1 mat-elevation-z8">
+            <div class="example-container2 ">
+                <table mat-table class="table2" [dataSource]="dataSource2" #MatSort2="matSort" matSort
+                    style="width: 100%;">
+
+                    <ng-container matColumnDef="nIdDetTarifario" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción </th>
+                        <td mat-cell *matCellDef="let row;let i = index;" class='has_label_on_mobile clsColumnaOpc2'
+                            data-label='Opción: '>
+
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button [ngClass]="vModifica ? 'clsShow2' : 'clsHide2'" mat-menu-item
+                                    (click)="fnEliminaPartida(i)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                    <span>Eliminar</span>
+                                </button>
+                                <button [disabled]="vModifica ? false : true" mat-menu-item
+                                    (click)="fnPartidaTarifa(4, row)">
+                                    <mat-icon color="accent">edit</mat-icon>
+                                    <span>Modificar Monto</span>
+                                </button>
+                            </mat-menu>
+
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sCodPartida">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Partida </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                            data-label='Partida: '> {{row.sCodPartida}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDesc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Descripción </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc'
+                            data-label='Descripción: '> {{row.sDesc}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nImpMes">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Importe Mensual
+                        </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                            data-label='Importe Mensual: '> {{ row.nImpMes | number:'1.2-2' }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nDiaBase">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Días Base </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                            data-label='Dias Base: '> {{row.nDiaBase}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nImpDia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Importe Día </th>
+                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                            data-label='Importe Día: '> {{ row.nImpDia | number:'1.2-2' }} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator #MatPaginator2="matPaginator" [pageSizeOptions]="[5, 10 , 20]"></mat-paginator>
+        </div>
+
+        <!-- Botones -->
+        <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+            </button>
+            <div [@speedDialStagger]="abLista.length">
+                <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                    <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                        matTooltipPosition="left" color="secondary" (click)="clickFab(ibtn)">
+                        <i class="material-icons">{{btn.icon}}</i>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- *********************************************************************************************************************************************************************************************************** -->
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <!-- Modal para partida Remuneración  -->
+    <div class="modal fade  bd-example-modal-xl" id="modalPartidaRemun" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="modalPartidaRemun" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered " style="width: 95% !important;">
+            <!-- margin-left: 15%; -->
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalPartidaRemunLongTitle"><Label>Estructura de remuneración</Label> </h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <div class="form-row">
+
+                            <div class="form-row col-md-12">
+                                <div class="form-group col-md-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Sueldo Mes:</mat-label>
+                                        <input type="number" matInput readonly [formControl]="txtTotal">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row col-md-12">
+
+                                <div class="form-group col-md-5" [ngClass]="vModifica ? 'clsShow2' : 'clsHide2'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Concepto de Remuneración:</mat-label>
+                                        <mat-select [formControl]="cboPartidaRemuneacion" [errorStateMatcher]="matcher">
+                                            <mat-option>Seleccione</mat-option>
+                                            <mat-option *ngFor="let vPartidaRemun of lPartidaRemunera"
+                                                [value]="vPartidaRemun.nIdPartida">{{vPartidaRemun.sCodPartida}} -
+                                                {{vPartidaRemun.sDescripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="cboPartidaRemuneacion.hasError('required')">.Obligatorio
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-5" [ngClass]="vModifica ? 'clsShow2' : 'clsHide2'">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Monto:</mat-label>
+                                        <input type="number" min="0" matInput [formControl]="txtMontoRemuneacion"
+                                            [errorStateMatcher]="matcher">
+                                        <mat-error *ngIf="txtMontoRemuneacion.hasError('required')">.Obligatorio
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <div [ngClass]="vModifica ? 'clsShow' : 'clsHide'">
+                                        <button mat-mini-fab class="fab-toggler" matTooltip="Agregar a Sueldo"
+                                            (click)="fnRegistraRemunera()">
+                                            <i class="material-icons">save</i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="listaMobile" class="col-md-12 mat-elevation-z8">
+                                <div class="example-container2 ">
+                                    <table mat-table class="table3" [dataSource]="dataSource3" #MatSort3="matSort"
+                                        matSort>
+
+                                        <ng-container matColumnDef="nIdTarifarioRemun" sticky>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width: 20px">
+                                            </th>
+                                            <td mat-cell *matCellDef="let row;let i = index;"
+                                                class='has_label_on_mobile width: 20px' data-label='Eliminar: '>
+                                                <button [disabled]="vModifica ? false : true" mat-stroked-button
+                                                    color="warn" matTooltip="Eliminar"
+                                                    (click)="fnEliminaPartidaRemu(row)">
+                                                    <mat-icon> delete</mat-icon>
+                                                </button>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="sCodPartida">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width: 40px">
+                                                Partida </th>
+                                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile width: 40px'
+                                                data-label='Partida: '> {{row.sCodPartida}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="sDesc">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width: 40px">
+                                                Descripción </th>
+                                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile width: 40px'
+                                                data-label='Descripción: '> {{row.sDesc}} </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="nMonto">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width: 40px">
+                                                Importe </th>
+                                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile width: 40px'
+                                                data-label='Importe: '> {{ row.nMonto | number:'1.2-2' }} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns3; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns3;">
+                                        </tr>
+                                    </table>
+                                </div>
+                                <mat-paginator #MatPaginator3="matPaginator" [pageSizeOptions]="[5, 10]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para partida Tarifario -->
+    <div class="modal fade  bd-example-modal-xl" id="modalPartidaTarifario" data-backdrop="static" data-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="modalPartidaTarifario" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important;">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalPartidaTarifarioLongTitle">Partida Tarifario</h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="parTarifaForm">
+                            <div class="form-row">
+                                <div class="form-row col-md-12 offset-md-2">
+
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Partida Tarifario:</mat-label>
+                                            <mat-select formControlName="cboParTarifario" [errorStateMatcher]="matcher">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vParTarifa of lPartidaTarifa"
+                                                    [value]="vParTarifa.nIdPartida">{{vParTarifa.sCodPartida}} -
+                                                    {{vParTarifa.sDescripcion}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <!-- <mat-error *ngIf="cboParTarifario.hasError('required')">.Obligatorio</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Importe Mensual:</mat-label>
+                                            <input type="number" min="0.00" matInput formControlName="txtMonto"
+                                                (keyup)="fnPartidaTarifa(2,'')" [errorStateMatcher]="matcher">
+                                            <!-- <mat-error *ngIf="txtMonto.hasError('required')">.Obligatorio</mat-error>  -->
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="form-row col-md-12 offset-md-2">
+                                    <div class="form-group col-md-5">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Día Base:</mat-label>
+                                            <input type="number" matInput formControlName="txtDiaBase" readonly
+                                                [errorStateMatcher]="matcher">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-5">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Importe Día:</mat-label>
+                                            <input type="number" matInput formControlName="txtMontoDia" readonly
+                                                [errorStateMatcher]="matcher">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-2" [ngClass]="vModifica2 ? 'clsShow' : 'clsHide'">
+                                        <div [ngClass]="vModifica ? 'clsShow' : 'clsHide'">
+                                            <button mat-mini-fab class="fab-toggler"
+                                                matTooltip="Agregar partida Tarifario" (click)="fnPartidaTarifa(3,'')">
+                                                <i class="material-icons">save</i></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-2" [ngClass]="vModifica3 ? 'clsShow' : 'clsHide'">
+                                        <div [ngClass]="vModifica ? 'clsShow' : 'clsHide'">
+                                            <button mat-mini-fab class="fab-toggler"
+                                                matTooltip="Actualizar partida Tarifario"
+                                                (click)="fnPartidaTarifa(5,'')">
+                                                <i class="material-icons">save</i></button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

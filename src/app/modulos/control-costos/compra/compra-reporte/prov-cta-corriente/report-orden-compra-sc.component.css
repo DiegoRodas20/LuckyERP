@@ -1,0 +1,98 @@
+.container_tabla{
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}  
+  
+  .example-container {
+    height: 450px;
+    width: 100%;
+    overflow: auto;
+  }
+  .example-container table {
+    width: 1000px;
+  } 
+
+  table th{ 
+    background-color: #334D6E;  
+    color: white; 
+  } 
+  
+  .example-container-sub {
+    height: 150px;
+    width: 100%;
+    overflow: auto;
+  }
+  mat-form-field{ 
+    width: 100%; 
+  } 
+  
+.clsprincipal {
+  padding: 60px 5px 0px 5px;
+}
+
+.titulo {
+  background-color: #334d6e;
+  color: white;
+  text-align: center;
+  min-width: 100%;
+  margin-top:30px;   
+  height: 38px;
+}
+
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.card-header {
+  padding: 0px;
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+.clsprincipal {
+  padding: 45px 5px 0px 5px;
+}
+
+.contenedor_tabla {     
+  overflow: auto;
+  height: 500px;
+}
+
+.mat-header-row {  
+  height: 40px;  
+}
+
+.mat-header-row .mat-header-cell {
+  height: 40px;  
+}
+td,
+th {
+  font-size: 14px;
+}
+
+.h4, h4 {
+  font-size: 1.5rem;
+  padding: 4px;
+}

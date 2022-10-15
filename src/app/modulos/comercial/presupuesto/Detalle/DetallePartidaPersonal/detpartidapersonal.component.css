@@ -1,0 +1,60 @@
+.example-container-partida{
+    height: 310px;
+    width: 100%;
+    overflow: auto;
+  }
+
+  .clspartida{
+    width: 1468px;
+  }
+
+  :host /deep/ table thead{ 
+    background-color: #334D6E;   
+  } 
+
+  table  th{ 
+    color: white; 
+  } 
+
+  th:nth-child(2) {
+    width: 120px;
+    text-align: center;
+  }
+  th:nth-child(3) {
+    width: 120px;
+    text-align: center;
+  }
+  th:nth-child(4) {
+    width: 120px;
+    text-align: center;
+  }
+
+  
+
+  :host /deep/ .ng-select {
+    padding-bottom: 0.0em;
+}
+
+:host /deep/ .ng-select .ng-select-container .ng-value-container {
+    align-items: stretch;
+    padding: 0.0em 0;
+    border-top: 0.24375em solid transparent;
+}
+
+:host /deep/  .ng-select .ng-select-container {
+    color: rgba(0,0,0,0.87);
+    align-items: baseline;
+    min-height: 20px;
+}
+
+:host /deep/  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 1.25em;
+}
+
+.informacion_tipo_personal {
+  color: #ff4081;
+}
+
+.numero_personas_registradas {
+  font-weight: 500;
+}

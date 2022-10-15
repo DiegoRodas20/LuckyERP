@@ -1,0 +1,175 @@
+<ngx-spinner name="spi_new" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsNew }">add</i>
+  </button>
+  <div [@speedDialStagger]="abNew.length">
+    <button *ngFor="let btn of abNew; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="clickFab(ibtn)" [disabled]="btn.disable">
+      <i class="material-icons" matTooltip="{{ btn.tool }}" matTooltipPosition="left">{{ btn.icon }}</i>
+    </button>
+  </div>
+</div>
+
+<div class="modal-header mb-1">
+  <h4>Nómina: {{sPeriodo}}</h4>
+  <button class="close" aria-label="Close" (click)="clickFab(null)">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<!-- #region Filtro -->
+<mat-accordion #maMain="matAccordion">
+  <mat-expansion-panel [expanded]="false">
+
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Aplicar filtro por :
+      </mat-panel-title>
+      <mat-panel-description style="margin-right: 0px;">
+      </mat-panel-description>
+      <mat-icon style="margin-right: 10px;">filter_alt</mat-icon>
+    </mat-expansion-panel-header>
+
+    <form autocomplete="off" [formGroup]="form">
+      <div class="form-row">
+        <div class="col-lg-4">
+          <mat-form-field>
+            <mat-label>Nombres o documento de identidad</mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" autocomplete="off" #input>
+            <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnClean()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field>
+            <mat-label>Planilla</mat-label>
+            <mat-select formControlName="nIdPlla">
+              <mat-option>Todos</mat-option>
+              <mat-option *ngFor="let item of planillas" [value]="item.nId">
+                {{item.nId}} - {{item.sDescripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="col-lg-4">
+          <mat-form-field>
+            <mat-label>Remuneración</mat-label>
+            <mat-select formControlName="nIdRemu">
+              <mat-option>Todos</mat-option>
+              <mat-option *ngFor="let item of remuTipos" [value]="item.nId">
+                {{item.sDescripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field>
+            <mat-label>Régimen Pensionario</mat-label>
+            <mat-select formControlName="nIdRegPen">
+              <mat-option>Todos</mat-option>
+              <mat-option *ngFor="let item of regPensiones" [value]="item.nId">
+                {{item.nId}} - {{item.sDescripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field>
+            <mat-label>Sucursales</mat-label>
+            <mat-select formControlName="nIdSuc">
+              <mat-option>Todos</mat-option>
+              <mat-option *ngFor="let item of sucursales" [value]="item.nId">
+                {{item.sDescripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+  </mat-expansion-panel>
+</mat-accordion>
+<!-- #endregion -->
+
+<div id="listaMobile" class="melevation example-container mat-elevation-z8" [style.height.px]="500">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+    <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+      <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+      <!-- #region Formación de rows dependiendo del tipo -->
+      <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: " [style.textAlign]="col.align">
+        <span *ngSwitchCase="null"> {{row[col.field]}} </span>
+        <span *ngSwitchCase="'deci2'"> {{row[col.field] | number :'1.2-2'}} </span>
+        <span *ngSwitchCase="'font'">
+          <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+        </span>
+        <span *ngSwitchCase="'accion'">
+          <button mat-stroked-button matTooltip="Visualizar" matTooltipPosition="right" color="accent"
+            (click)="showModal(row)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </span>
+        <span *ngSwitchCase="'dropdown'">
+          <mat-icon [@fabToggler]="row == expandedMore ? 'active3' : 'inactive'" (click)="clickExpanded(row)">
+            expand_more</mat-icon>
+        </span>
+      </td>
+      <!-- #endregion -->
+      <!-- #region Formación de footers -->
+      <td mat-footer-cell *matFooterCellDef [hidden]="col.hide" [style.textAlign]="col.align"
+        [attr.colspan]="col.type == 'deci2' || col.type == 'dropdown' ? 1 : displayedColumns.length - 4">
+        {{col.type == 'deci2' ? sumTotal(col.field) : col.type == 'dropdown' ? '' : 'Totales'}}
+      </td>
+      <!-- #endregion -->
+    </ng-container>
+
+    <ng-container matColumnDef="expanded_More">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+        <div style="overflow: hidden;" [@detailExpand]="row == expandedMore ? 'expanded' : 'collapsed'">
+          <div class="row">
+            <div class="col-lg-12">
+              <div id="listaMobile" class="melevation example-container mat-elevation-z8" [style.height.px]="200">
+                <table mat-table [dataSource]="row.concepts">
+                  <ng-container *ngFor="let col of colsDetail;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+                    <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+                    <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+                      [style.textAlign]="col.align">
+                      <span class="margin_concept" *ngSwitchCase="null"> {{row[col.field] || null}} </span>
+                      <span class="margin_import" *ngSwitchCase="'deci2'"> {{row[col.field] | number :'1.2-2'}} </span>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row style="display: none;" *matHeaderRowDef="detailColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: detailColumns;"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info message_detail" role="alert">
+            Para visualizar el detalle del personal
+            <button mat-button style="padding: 0px;" (click)="clickPersonal(row)" color="accent">dar click
+              aquí.</button>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="empty">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length"> No se encuentran registros. </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore == row"
+      class='expanded_More'></tr>
+    <tr mat-footer-row *matFooterRowDef="['empty']" [hidden]="hideMessageEmpty"> </tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true" [hidden]="!hideMessageEmpty"></tr>
+  </table>
+</div>
+<mat-paginator [pageSizeOptions]="[5,10]" showFirstLastButtons></mat-paginator>

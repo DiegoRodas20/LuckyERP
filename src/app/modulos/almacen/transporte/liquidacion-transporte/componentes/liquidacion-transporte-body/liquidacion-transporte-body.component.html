@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-12">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+      <button class="outline" *ngIf="input.value" mat-button matSuffix mat-icon-button aria-label="Clear"
+        (click)="fnClean(); input.value = ''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</div>
+<div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="400">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+
+      <!-- #region Designación de sort en header -->
+      <ng-template [ngIf]="col.field == 'accion'" [ngIfElse]="withSort">
+        <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width" [style.textAlign]="'center'"> {{col.header}}
+        </th>
+      </ng-template>
+      <ng-template #withSort>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+      </ng-template>
+      <!-- #endregion -->
+
+      <!-- #region Formación de rows dependiendo del tipo -->
+      <td mat-cell *matCellDef="let element" class='header_mobile' id="{{headerName(col.field, col.header)}}: "
+        [style.textAlign]="col.align">
+        <span *ngSwitchCase="null">
+          <span *ngSwitchCase="null"> {{element[col.field]}} </span>
+        </span>
+        <span *ngSwitchCase="'accion'">
+          <button mat-stroked-button (click)="fnGetGuiaList(element)" matTooltip="Listar guías">
+            <mat-icon color="accent">settings</mat-icon>
+          </button>
+        </span>
+      </td>
+      <!-- #endregion -->
+
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

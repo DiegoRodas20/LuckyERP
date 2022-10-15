@@ -1,0 +1,310 @@
+<!-- Spinner -->
+<ngx-spinner name="spi_controld" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+<div class="fab-container">
+  <button [@tada]="{value: tadaControld}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleControld, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsControld}">add</i>
+  </button>
+  <div [@speedDialStagger]="abControld.length">
+      <button *ngFor="let btn of abControld; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" 
+      (click)="clickFab(toggleControld, ibtn ,nIdBancoFab)" [disabled]="btn.dis">
+        <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+      </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">Detalle del depósito </h4>
+  <button type="button" class="close" aria-label="Close" (click)="CerrarModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+      <div class="col-xl-6">
+          <div id="dLeftDetail" class="col-xl-12">
+              <mat-expansion-panel [expanded]="true" [disabled]="true">
+                  <mat-expansion-panel-header>
+                      <mat-panel-title style="color: black;">
+                          Información del depósito: {{BancoSeleccionado}}
+                      </mat-panel-title>
+                      <mat-panel-description style="margin-right: 0px;">
+                      </mat-panel-description>
+                      <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                  </mat-expansion-panel-header>
+                  <mat-horizontal-stepper #stepLeft id="stepLeft">
+                      <mat-step>
+                  <form autocomplete="off" id="fgInfoDeposito" [formGroup]="fgInfoDeposito">
+                      <div class="form-row">
+                         <div class="col-lg-6">
+                              <mat-form-field style="width: 100%;">
+                                  <mat-label>Dirección</mat-label>
+                                  <input type="text" matInput formControlName="sDireccion">
+                              </mat-form-field>
+                         </div>
+                         <div class="col-lg-6">
+                              <mat-form-field style="width: 100%;">
+                                  <mat-label>Área</mat-label>
+                                  <input type="text" matInput formControlName="sArea">
+                              </mat-form-field>
+                          </div>
+                          
+                      </div>
+                      <div class="form-row">
+                          <div class="col-lg-6">
+                              <mat-form-field style="width: 100%;">
+                                  <mat-label>Tipo depósito</mat-label>
+                                  <input type="text" matInput formControlName="sTipoDeposito">
+                              </mat-form-field>
+                          </div>
+                          <div class="col-lg-3">
+                               <mat-form-field style="width: 100%;">
+                                   <mat-label># Personas</mat-label>
+                                   <input type="text" style="text-align: right;" matInput formControlName="sPersonas">
+                               </mat-form-field>
+                          </div>
+                          <div class="col-lg-3">
+                               <mat-form-field style="width: 100%;">
+                                   <mat-label>Total  ( S/. ) </mat-label>
+                                   <input type="text" style="text-align: right;" matInput formControlName="sTotal">
+                               </mat-form-field>
+                           </div>
+                       </div>
+                  </form>
+                  <div class="dStep row">
+                  <button style="float: right;" mat-button matStepperNext>Siguiente</button>
+                  </div>
+                      </mat-step>
+                      <mat-step>
+                          <div class="row">
+          
+                              <div class="col-lg-3 divAvatar">
+                                  <a>
+                                      <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                  </a>
+                              </div>
+          
+                              <div id="fgInfoBanco" [formGroup]="fgInfoBanco" class="col-lg-9">
+          
+                                  <div class="form-row">
+                                      <div class="col-lg-8">
+                                          <mat-form-field style="width: 100%;">
+                                              <mat-label>Usuario</mat-label>
+                                              <input type="text" matInput formControlName="sUsuario">
+                                          </mat-form-field>
+                                      </div>
+                                  </div>
+                                  <div class="form-row">
+                                      <div class="col-lg-8">
+                                          <mat-form-field style="width: 100%;">
+                                              <mat-label>Fecha depósito</mat-label>
+                                              <input type="text" matInput formControlName="sFechaDeposito">
+                                          </mat-form-field>
+                                      </div>
+                                  </div>
+                              </div>
+          
+                             
+          
+                          </div>
+                          <div class="dStep row">
+                              <button style="float: left;" mat-button matStepperPrevious>Anterior</button>
+                          </div>
+                      </mat-step>
+                  </mat-horizontal-stepper>
+              </mat-expansion-panel>
+              
+          </div>
+      <div>
+          <div class="row" style="margin-top: 20px;">
+              <div class="col-sm">
+                <h6>Listado de Bancos</h6>
+                <hr style="margin-top: 0px; margin-bottom: 20px;">
+              </div>
+          </div>
+
+          <div class="row" >
+              <div class="col-lg-12">
+                  <div id="dTableMain4" class="melevation">
+                    <table  mat-table #table [dataSource]="BancoDS2" style="width: 100%;"  >
+                      
+                      <ng-container matColumnDef="visualizar" >
+                          <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="ClickBanco(element)" >
+                                   <mat-icon>visibility</mat-icon>
+                                </button>
+                            </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="banco">
+                        <th  mat-header-cell *matHeaderCellDef > Banco </th>
+                        <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                        data-label='Banco: '> {{element.banco}} </td>
+                      </ng-container> 
+    
+                      <ng-container matColumnDef="ntrabajadores">
+                        <th  mat-header-cell *matHeaderCellDef > # Trabajadores </th>
+                        <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                        data-label='# Trabajadores: '> {{element.nroTrabajadores}}  </td>
+                      </ng-container>
+    
+                      <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef > Total </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                        data-label='Total: '> {{ (element.nMonto2 * 1) | number : '1.2-2' }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="icono">
+                          <th mat-header-cell *matHeaderCellDef style="text-align: center;"  >Estado</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;" class='has_label_on_mobile' 
+                          data-label='#: '> 
+                          <i [ngClass]="{'estadoPendiente': element.icon === 1, 'estadoProcesado' : element.icon === 2 }" 
+                          class="material-icons " matTooltipPosition="left">circle</i>
+                          </td>
+                      </ng-container>
+    
+                        <ng-container matColumnDef="noData">
+                          <mat-footer-cell *matFooterCellDef [attr.colspan]="BancoDC.length">
+                            No se encuentran registros.
+                          </mat-footer-cell>
+                        </ng-container>
+    
+                        <tr mat-header-row *matHeaderRowDef="BancoDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: BancoDC;"></tr>
+                        <mat-footer-row *matFooterRowDef="['noData']" [hidden]="BancoDS2 && this.BancoDS2.filteredData.length > 0"></mat-footer-row>
+
+                      </table>
+                  </div>
+                
+                    <mat-paginator  #BancoB  style="display: contents;" [hidePageSize]="false" [pageSize]="10"></mat-paginator>
+                </div>
+          </div>
+      </div>
+        
+      </div>
+      
+      <div class="col-xl-6">
+         
+          <mat-horizontal-stepper >
+              <mat-step>
+                  <div class="row">
+                      <div class="col-sm">
+                        <h6>Listado de Trabajadores </h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                      </div>
+                  </div>
+      
+                  <div class="row" style="width: 100%; height: 445px" >
+                      <div class="col-lg-12">
+                        <div id="dTableMain3" class="melevation">
+                          <table  mat-table [dataSource]="TrabajadoresDS" style="width: 100%;"  >
+          
+                            <ng-container matColumnDef="trabajador">
+                              <th  mat-header-cell *matHeaderCellDef > Trabajador </th>
+                                <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                                    data-label='Trabajador: '> {{element.trabajador}} </td>
+                                <td mat-footer-cell *matFooterCellDef>Total </td>
+                            </ng-container>
+          
+                            <ng-container matColumnDef="tipoDocumento">
+                              <th  mat-header-cell *matHeaderCellDef > Tipo Documento </th>
+                              <td  mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                              data-label='Tipo documento: '> {{element.tipoDocumento}} </td>
+                              <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+          
+                            <ng-container matColumnDef="nroDocumento">
+                              <th mat-header-cell *matHeaderCellDef > # Documento </th>
+                              <td mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                              data-label='# Documento: '> {{element.nroDocumento}} </td>
+                              <td mat-footer-cell *matFooterCellDef ></td>
+                            </ng-container>
+      
+                            <ng-container matColumnDef="importe">
+                              <th style="text-align: center;" mat-header-cell *matHeaderCellDef > Importe </th>
+                              <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' 
+                              data-label='Importe: '> {{ (element.nImporte * 1) | number : '1.2-2' }} </td>
+                              <td style="text-align: center;" mat-footer-cell *matFooterCellDef> {{ SumarFiltrado() }} </td>
+          
+                            </ng-container>
+          
+                              <ng-container matColumnDef="noData">
+                              <mat-footer-cell *matFooterCellDef [attr.colspan]="TrabajadoresDC.length">
+                                  No se encuentran registros.
+                              </mat-footer-cell>
+                              </ng-container>
+          
+          
+                              <tr mat-header-row *matHeaderRowDef="TrabajadoresDC;"></tr>
+                              <tr mat-footer-row *matFooterRowDef="TrabajadoresDC; sticky: true" [hidden]="TrabajadoresDS && this.TrabajadoresDS.filteredData.length === 0" ></tr>
+                              <tr mat-row style="border-top: 1px solid dimgray;" *matRowDef="let row; columns: TrabajadoresDC;"></tr>
+          
+                          <mat-footer-row *matFooterRowDef="['noData']" [hidden]="TrabajadoresDS && this.TrabajadoresDS.filteredData.length > 0" ></mat-footer-row>
+                          </table>
+                        </div>
+                      
+                          <mat-paginator  #pagDetDeposito  style="display: contents;" [hidePageSize]="false" [pageSize]="10"></mat-paginator>
+                      </div>
+                  </div>
+
+                  <div class="dStep row">
+                      <button style="float: right;" mat-button matStepperNext>Sustento</button>
+                  </div>
+              </mat-step>
+              <mat-step>
+                  <div class="row" >
+                    <div class="col-sm">
+                      <h6>Vista previa del depósito :</h6>
+                      <hr style="margin-top: 0px; margin-bottom: 10px" />
+                
+                      <ngx-doc-viewer
+                        *ngIf="urlDocumento !== ''"
+                        [url]="urlDocumento"
+                        viewer="url"
+                        style="width: 100%; height: 445px"
+                      >
+                      </ngx-doc-viewer>
+                
+                      <div
+                        *ngIf="urlDocumento === ''"
+                        style="width: 100%; height: 445px; text-align: center"
+                      >
+                        <div
+                          style="
+                            width: 100px;
+                            height: 100px;
+                            text-align: initial;
+                            padding-top: 150px;
+                            margin: auto;
+                          "
+                        >
+                          <mat-icon style="font-size: 100px; color: rgb(197, 197, 197)"
+                            >content_paste_off</mat-icon
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dStep row">
+                      <button style="float: left;" mat-button matStepperPrevious>Anterior</button>
+                  </div>
+              </mat-step>
+          </mat-horizontal-stepper>
+          
+      </div>
+  </div>
+  
+</div>
+
+
+<div class="modal-footer">
+  <input
+    id="uploadFile"
+    type="file"
+    accept="application/pdf"
+    (change)="uploadFile($event)"
+    style="display: none"
+  />
+</div>

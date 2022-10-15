@@ -1,0 +1,11 @@
+<div class="mt-1 mr-1">
+  <mat-form-field class="example-form-field">
+    <mat-label>{{ label }}</mat-label>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="valor"
+      (input)="registrarEscritura()"
+    />
+  </mat-form-field>
+</div>

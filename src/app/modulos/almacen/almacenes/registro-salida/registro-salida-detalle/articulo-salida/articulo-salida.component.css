@@ -1,0 +1,301 @@
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.clsDivRegistro {
+  background-color: white;
+  border: solid 2px #002c4b;
+  border-radius: 5px;
+}
+
+.center-text-card {
+  text-align: center;
+}
+/*Opcion para poner mostrar y ocultar*/
+
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+.btnOne {
+  font-size: 12px;
+  width: 120px;
+  height: 30px;
+  font-weight: bold;
+}
+
+.form-row .form-group label {
+  font-size: 12.5px;
+}
+
+.clsScrollTable {
+  overflow: auto;
+  width: 100%;
+  height: 500px;
+}
+
+.clsScrollTable2 {
+  overflow: auto;
+  width: 100%;
+  height: 200px;
+}
+
+.clsbtnAccion2ed {
+  margin: 5px 0px 5px 0px;
+  border: 0px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.clsbutton2 button {
+  width: 80%;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+  border: 0px;
+  font-size: 10px;
+  color: darkblue;
+}
+
+.clsScrollTable .table tr th {
+  padding: 5px !important;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #334d6e;
+  color: white;
+}
+
+.clsScrollTable .table tr td {
+  padding: 10px !important;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.clsScrollTable2 {
+  overflow: auto;
+  width: 100%;
+  height: 200px;
+}
+
+.clsScrollTable2 .table tr th {
+  padding: 5px !important;
+  font-size: 12px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #334d6e;
+  color: white;
+}
+
+.clsScrollTable2 .table tr td {
+  padding: 10px !important;
+  font-size: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table {
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.clsbutton button {
+  width: 100%;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+  font-size: 12px;
+}
+
+th {
+  font-size: 10px;
+}
+
+th label {
+  font-size: 9.5px !important;
+}
+
+/* input{    
+                width: 70%;
+                float: right;
+                background-color: #D8EBFF;  
+                font-size: 10.5px; 
+            } */
+
+.clsMin {
+  width: 63% !important;
+}
+
+.clsMin2 {
+  width: 50% !important;
+}
+
+.clsMin3 {
+  width: 40% !important;
+}
+
+input [type="button"] {
+  cursor: pointer;
+}
+
+select {
+  width: 70%;
+  float: right;
+  font-size: 10.5px;
+  background-color: #d8ebff;
+}
+
+/*Tabla responsive*/
+
+.example-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid #358fcf;
+}
+
+.clsEstatico {
+  position: sticky;
+  top: 0;
+  /* background-color: #7F7F7F; */
+  /* color: white; */
+  font-weight: bold;
+  text-align-last: center;
+}
+
+.clsImg {
+  width: 370px !important;
+  height: 220px !important;
+}
+
+.clsNum {
+  text-align: right;
+}
+
+.clsNum .table tr {
+  text-align: right;
+}
+
+.clsprincipal {
+  padding: 80px 15px 0px 15px;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+table {
+  width: 100%;
+}
+
+.table2 {
+  width: 100%;
+  height: 200px;
+}
+
+.clsColumnaOpc {
+  width: 40px;
+}
+
+.clsColumnaLarge {
+  width: 150px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaOpc2 {
+  width: 80px;
+}
+
+.clsColumnaLib2 {
+  width: 50px;
+}
+
+.table-container-1 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+/*  Para modal responsive */
+.modal-example {
+  widows: 105% !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .modal-example {
+    width: 80% !important;
+  }
+}
+
+/*Para darle color a los disables*/
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+ng-select ~ mat-error {
+  font-size: 12px;
+  margin-top: -17px;
+}
+/* .container-fluid {
+                height: 200px;
+              } */

@@ -1,0 +1,302 @@
+<div class="clsprincipal col-xl-9 col-lg-11 mx-auto">
+  <div style="padding-top: 10px;">
+    <h3 class="card-header center-text-card" style="text-align: center;">Párametros Logística</h3>
+
+  </div>
+  <div class="fab-container" *ngIf="mostrarBotones == true && lParametro.length > 0">
+
+    <div>
+      <button mat-mini-fab class="fab-toggler" (click)="fnGuardarParametro()">
+        <i class="material-icons">save</i>
+      </button>
+      <button mat-mini-fab class="fab-secondary" color="white" (click)="fnOpenDialogCierreAutomatico()">
+        <i class="material-icons" matTooltip="Parametros Listas" matTooltipPosition="left">assignment</i>
+      </button>
+      <button mat-mini-fab class="fab-secondary" color="white" (click)="fnOpenDialogPermisosUsuarioArticulo()">
+        <i class="material-icons" matTooltip="Parametros Permisos" matTooltipPosition="left">assignment</i>
+      </button>
+    </div>
+
+  </div>
+  <mat-accordion class="example-headers-align">
+    <form class="px-2" autocomplete="off" [formGroup]="ParametroForm" *ngIf="lParametro.length > 0">
+      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+            Parámetros Notas Comercial:
+          </mat-panel-title>
+          <mat-panel-description style="margin-right: 0px">
+
+          </mat-panel-description>
+          <button mat-icon-button>
+            <mat-icon style="margin-right: 10px;" color="accent">hourglass_top</mat-icon>
+          </button>
+        </mat-expansion-panel-header>
+
+        <div class="form-row controlls-container pt-4">
+          <div class="col-lg-4 col-md-6 toggle-parametro">
+            <mat-slide-toggle formControlName="bNotaMismoDia">Notas del mismo día</mat-slide-toggle>
+          </div>
+          <div class="col-lg-4 col-md-6  toggle-parametro">
+            <mat-slide-toggle formControlName="bBloquearHoraMismoDia">Bloquear día por Hora</mat-slide-toggle>
+          </div>
+          <div class="col-lg-4">
+            <mat-form-field>
+              <mat-label>Hora Bloqueo</mat-label>
+              <mat-select formControlName="sHoraTopeDia">
+                <mat-option *ngFor="let item of cboMismoDia" value="{{item}}">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row controlls-container pt-4">
+          <div class="col-lg-4 col-md-6  toggle-parametro">
+            <mat-slide-toggle (click)="ActivarBloqueoDiaPorHora(2)" formControlName="bNotaDiaSabado">Notas día Sabado
+            </mat-slide-toggle>
+          </div>
+          <div class="col-lg-4 col-md-6  toggle-parametro">
+            <mat-slide-toggle formControlName="bBloquearHoraDiaSabado">Bloquear día por Hora</mat-slide-toggle>
+          </div>
+          <div class="col-lg-4 ">
+            <mat-form-field>
+              <mat-label>Hora Bloqueo</mat-label>
+              <mat-select formControlName="sHoraTopeSabado">
+                <mat-option *ngFor="let item of cboDiaSabado" value="{{item}}">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row controlls-container pt-4">
+          <div class="col-lg-4 col-md-6  toggle-parametro">
+            <mat-slide-toggle (click)="ActivarBloqueoDiaPorHora(3)" formControlName="bNotaDiaDomingo">Notas día Domingo
+            </mat-slide-toggle>
+          </div>
+          <div class="col-lg-4 col-md-6  toggle-parametro">
+            <mat-slide-toggle formControlName="bBloquearHoraDiaDomingo">Bloquear día por Hora</mat-slide-toggle>
+          </div>
+          <div class="col-lg-4">
+            <mat-form-field>
+              <mat-label>Hora Bloqueo</mat-label>
+              <mat-select formControlName="sHoraTopeDomingo">
+                <mat-option *ngFor="let item of cboDiaDomingo" value="{{item}}">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row controlls-container pt-4" style="padding-bottom: 20px;">
+          <div class="col-lg-5 mx-auto">
+            <div class="row">
+              <div class="col-lg-6 toggle-parametro">
+                <mat-slide-toggle formControlName="bCierreAutomatico">Cierre automático</mat-slide-toggle>
+              </div>
+              <div class="col-lg-6 pt-2">
+                <mat-form-field [color]="colorControl.value">
+                  <mat-label>Tiempo Cierre</mat-label>
+                  <input formControlName="nCierreAutoTiempo" matInput placeholder="Ejemplo: 1"
+                    [formControl]="minutosControl" min="1">
+                  <span matSuffix>min</span>
+                  <!-- <mat-error *ngIf="minutosControl.invalid">No puede ser menor a: 1 minuto</mat-error> -->
+                </mat-form-field>
+                <small *ngIf="ValidarTiempo" class="text-danger">El campo es obligatorio, sin decimales y entre los
+                  valores 1 - 60</small>
+              </div>
+            </div>
+          </div>
+          <mat-divider [vertical]="true"></mat-divider>
+          <div class="col-lg-5 mx-auto">
+            <div class="row">
+              <div class="col-lg-6 toggle-parametro">
+                <mat-slide-toggle formControlName="bTieneCourier">
+                  <span *ngIf="nombrePais">{{nombrePais.sDescripcion}}</span> tiene courier
+                </mat-slide-toggle>
+              </div>
+              <div class="col-lg-6 toggle-parametro">
+                <mat-slide-toggle formControlName="bTieneDistribucion">
+                  <span *ngIf="nombrePais">{{nombrePais.sDescripcion}}</span> tiene distribución
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+            Parámetros Precio/Peso/Volumen:
+          </mat-panel-title>
+          <mat-panel-description style="margin-right: 0px">
+
+          </mat-panel-description>
+          <button mat-icon-button>
+            <mat-icon style="margin-right: 10px;" color="accent">list</mat-icon>
+          </button>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Taxi Peso Máximo</mat-label>
+              <input formControlName="nTaxiPeso" matInput type="number" placeholder="Ejemplo: 1" min="1">
+              <span matSuffix>kgr</span>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field [color]="colorControl.value">
+              <mat-label>Taxi Volumen Máximo</mat-label>
+              <input formControlName="nTaxiVolumen" matInput type="number" placeholder="Ejemplo: 1" min="1">
+              <span matSuffix>m3</span>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Precio Móvil del Almacén</mat-label>
+              <input formControlName="nAlmacenMovilPrecio" matInput type="number" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                step="0.01" min="0.01" />
+              <span matSuffix>S./</span>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Almacén Móvil Peso</mat-label>
+              <input formControlName="nAlmacenMovilPeso" matInput type="number" placeholder="Ejemplo: 1" min="1">
+              <span matSuffix>kgr</span>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Peso Máximo Pallet</mat-label>
+              <input formControlName="peso" matInput type="number" placeholder="Ejemplo: 1" min="1">
+              <span matSuffix>kgr</span>
+            </mat-form-field>
+            <small *ngIf="validarPeso" class="text-danger">El campo es obligatorio y mayor a 1</small>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Volumen Máximo Pallet</mat-label>
+              <input formControlName="volumen" matInput type="number" placeholder="Ejemplo: 1" min="1">
+              <span matSuffix>m3</span>
+            </mat-form-field>
+            <small *ngIf="validarVolumen" class="text-danger">El campo es obligatorio y mayor a 1</small>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Artículo Valorado Precio Kilo</mat-label>
+              <input formControlName="articuloValoradoPrecioKilo" matInput type="number" placeholder="Ejemplo: 1"
+                min="1">
+            </mat-form-field>
+            <small *ngIf="validarValoradoPrecioKilo" class="text-danger">El campo es obligatorio y mayor a 1</small>
+          </div>
+          <div class="col-lg-3 col-md-6 pt-2">
+            <mat-form-field>
+              <mat-label>Artículo Valorado Precio Adicional</mat-label>
+              <input formControlName="articuloValoradoPrecioAdicional" matInput type="number" placeholder="Ejemplo: 1"
+                min="1">
+            </mat-form-field>
+            <small *ngIf="validarArticuloValoradoPrecioAdicional" class="text-danger">El campo es obligatorio y mayor a
+              1</small>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+            Parámetros Traslados:
+          </mat-panel-title>
+          <mat-panel-description style="margin-right: 0px">
+
+          </mat-panel-description>
+          <button mat-icon-button>
+            <mat-icon style="margin-right: 10px;" color="accent">line_weight</mat-icon>
+          </button>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <!-- Traslado entre Empresas NgSelect-->
+          <div class="col-lg-3">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Traslado entre Empresas"
+              formControlName="nIdCcTrasladoEmp" notFoundText="No hay presupuestos disponibles">
+              <ng-option *ngFor="let element of ccTrasladosEmp" [value]="element.nId">
+                {{element.sDescripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <!-- Cargas extraordinarias NgSelect-->
+          <div class="col-lg-3">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Cargas Extraordinarias"
+              formControlName="nIdCcExtraCargas" notFoundText="No hay presupuestos disponibles">
+              <ng-option *ngFor="let element of ccExtraCargas" [value]="element.nId">
+                {{element.sDescripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <div class="col-lg-3 toggle-parametro">
+            <mat-slide-toggle formControlName="nuEnvio">NU con envío Automático</mat-slide-toggle>
+          </div>
+          <div class="col-lg-3 toggle-parametro">
+            <mat-slide-toggle formControlName="bGrabaBalanza">Usar Balanza</mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Direccion de transito NgSelect-->
+          <div class="col-lg-3">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Dirección Tránsito"
+              formControlName="nIdDireccionTransito" notFoundText="No hay direcciones disponibles"
+              (change)="fnActualizarInputUbicacionDireccion()">
+              <ng-option *ngFor="let element of cbDirecciones" [value]="element.nId">
+                {{element.sDescripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <!-- Ubicación NgSelect-->
+          <div class="col-lg-3">
+            <mat-form-field style="width: 100%;" class="inputAcordeon">
+              <mat-label>Ubicación</mat-label>
+              <input matInput placeholder="Ubicación" formControlName="sUbicacion" readonly>
+            </mat-form-field>
+          </div>
+
+          <!-- Direccion exacta destino NgSelect-->
+          <div class="col-lg-3">
+            <mat-form-field style="width: 100%;" class="inputAcordeon">
+              <mat-label>Dirección Exacta Destino</mat-label>
+              <input matInput placeholder="Dirección Exacta Destino" formControlName="sDireccion" readonly>
+            </mat-form-field>
+          </div>
+
+          <!-- Vehiculo NgSelect-->
+          <div class="col-lg-3">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Tipo de Transporte"
+              formControlName="nIdTipoVehiculo" notFoundText="No hay transportes disponibles">
+              <ng-option *ngFor="let element of cbTransportes" [value]="element.nId">
+                {{element.sDescripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+    </form>
+  </mat-accordion>
+
+  <div class="row" *ngIf="lParametro.length == 0 && nIdParametro != null">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center mx-auto">
+            <p>En este país no existe ningún parámetro</p>
+            <button mat-raised-button color="primary" (click)="fnCrearParametro()">Crear parámetro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

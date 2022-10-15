@@ -1,0 +1,25 @@
+.texto {
+  color: green;
+}
+
+.btn_clear {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+
+.contenedor_documento {
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  padding: 25px;
+}
+
+.title,
+.subtitle {
+  color: gray;
+}
+
+.btn_activo {
+  background-color: #334d6e;
+  color: white;
+}

@@ -1,0 +1,196 @@
+<div class="clsprincipal">
+    <input data-toggle="modal" data-target="#modalGN" #modalGN type="hidden" name="button">
+
+    <!-- Botones Flotantes pantalla -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                matTooltipPosition="left" (click)="clickFab(0)">
+                <i class="material-icons" matTooltip="{{btn.tool}}">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-8 offset-md-2">
+        <h5 class="card-header center-text-card">Giros de negocio</h5>
+        <div class="row"><br /></div>
+    </div>
+    <div>
+        <div class="col-md-8 offset-md-2">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-9 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-8 col-sm-8 col-10">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Buscar giro de negocio:</mat-label>
+                                        <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar()">
+                                        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                            mat-icon-button aria-label="Clear"
+                                            (click)="this.txtFiltro.setValue(''); fnListarGiroNeg(1);">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- <div class="col-md-4 col-sm-4 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo giro de negocio"
+                                        (click)="fnAbrirModal()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <input data-toggle="modal" data-target="#modalGN" #modalGN type="hidden"
+                                        name="button">
+                                </div> -->
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8 ">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nId" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                    </th>
+                                    <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <button (click)="fnSeleccionarGiroNeg(row)" mat-icon-button color="accent"
+                                            matTooltip="Ver detalle">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodigo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Código
+                                    </th>
+                                    <td data-label='Código: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sCodigo" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescripcion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Giro Negocio
+                                    </th>
+                                    <td data-label='Giro Negocio: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal para añadir giro negocio-->
+<div class="modal fade  bd-example-modal-xl" id="modalGN" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalGN"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalGNLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <form class="row col-md-12" [formGroup]="formGiroNegocio">
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Código:</mat-label>
+                                <input type="text" matInput placeholder="00" formControlName="txtCodigo"
+                                    [errorStateMatcher]="matcher" readonly>
+                                <mat-error *ngIf="formGiroNegocio.get('txtCodigo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Descripcion:</mat-label>
+                                <input type="text" (input)="fnEvitarEspacios()" matInput placeholder="Descripcion"
+                                    formControlName="txtDescripcion" [errorStateMatcher]="matcher" appCaracterValidador>
+                                <mat-error *ngIf="formGiroNegocio.get('txtDescripcion').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formGiroNegocio.get('txtDescripcion').hasError('maxlength')">
+                                    .Max. 50 digitos</mat-error>
+                                <mat-error *ngIf="formGiroNegocio.get('txtDescripcion').errors?.caracterValidator">
+                                    .El texto no debe contener: "/", "|", "?"</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </form>
+
+                    <div class="row col-md-12 d-flex justify-content-end">
+                        <div *ngIf="pOpcion==2" class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select [formControl]="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstados" [value]="vEstado.nEstado">
+                                        {{vEstado.sEstado}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnAnadirGiroNeg()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Editar" mat-mini-fab color="accent" (click)="fnModificarGiroNeg()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarGiroNeg()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                </mat-card>
+                <div class="container-fluid">
+                    <div class="form-row col-md-12 justify-content-end align-items-end">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

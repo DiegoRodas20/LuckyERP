@@ -1,0 +1,51 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <!-- Card Header Titulo -->
+        <div class="container mb-4">
+            <h5 class="col-md-12 card-header">
+                Nuevo Cliente
+            </h5>
+        </div>
+
+        <!-- Inputs -->
+        <div class="col-md-12">
+            <form [formGroup]="formCliente" autocomplete="off">
+                <div class="form-row">
+
+                    <!-- Seleccionar Cliente -->
+                    <div class="col-md-3 text-center align-self-center">
+                        Seleccionar Cliente:
+                    </div>
+
+                    <!-- Cliente -->
+                    <div class="form-group col-md-9">
+                        <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Cliente"
+                            formControlName="cliente">
+                            <ng-option *ngFor="let item of lClientes" [value]="item.codigoCliente">
+                                {{item.cliente}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Opciones -->
+                    <div class="form-group col-md-11 text-right">
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                            matTooltip="Grabar" color="accent" (click)="registrarClientexGrupo()">
+                            <i class="material-icons">save</i>
+                        </button>
+                    </div>
+
+                    <div class="form-group col-md-1 text-right">
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                            matTooltip="Salir" color="secondary" (click)="salir()">
+                            <i class="material-icons">exit_to_app</i>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

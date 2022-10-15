@@ -1,0 +1,298 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 style="text-align: center;" class="card-header center-text-card">Perfiles de Equipos
+        </h5>
+        <div class="row"><br /></div>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <mat-card>
+            <form [formGroup]="formPerfiles" class="row">
+                <div class="col-md-10">
+                    <div class="form-row">
+
+                        <div [ngClass]="bNecesitaGarantia ? 'col-md-3' : 'col-md-4'">
+                            <ng-select (change)="GetAllArticulo($event);" class="alinea-ng-select" appendTo="body"
+                                [clearable]="false" formControlName="cboSubfamilia" placeholder="Tipo de Activo"
+                                required>
+                                <ng-option *ngFor="let vSubFam of lSubFamilia" [value]="vSubFam.tipoElementoId">
+                                    {{vSubFam.descripcion}}</ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="cboSubfamiliaError">{{ cboSubfamiliaError }}</mat-error>
+                        </div>
+
+                        <div [ngClass]="bNecesitaGarantia ? 'col-md-3' : 'col-md-4'">
+                            <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false"
+                                formControlName="cboMoneda" placeholder="Moneda" required>
+                                <ng-option *ngFor="let vMoneda of lMoneda" [value]="vMoneda.nIdTipEle">
+                                    {{vMoneda.sDesc}}</ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="cboMonedaError">{{ cboMonedaError }}</mat-error>
+                        </div>
+
+                        <div *ngIf="bGuardar" [ngClass]="bNecesitaGarantia ? 'col-md-2' : 'col-md-4'">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Costo/Descuento:</mat-label>
+                                <input type="number" matInput formControlName="txtCosto">
+                                <mat-error *ngIf="txtCostoError">{{ txtCostoError }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="!bGuardar" [ngClass]="bNecesitaGarantia ? 'col-md-2' : 'col-md-4'">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Costo/Descuento:</mat-label>
+                                <input readonly type="text" matInput placeholder="Contacto"
+                                    formControlName="txtCostoTexto">
+                                <mat-error *ngIf="txtCostoError">{{ txtCostoError }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="bNecesitaGarantia" class="col-md-2">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Garantía(Años):</mat-label>
+                                <input type="number" matInput placeholder="Garantía(Años)"
+                                    formControlName="txtTiempoAnio">
+                                <mat-error *ngIf="txtTiempoAnioError">{{ txtTiempoAnioError }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="bNecesitaGarantia" class="col-md-2">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Garantía(Meses):</mat-label>
+                                <input type="number" matInput placeholder="Garantía(Meses)"
+                                    formControlName="txtTiempoMes">
+                                <mat-error *ngIf="txtTiempoMesError">{{ txtTiempoMesError }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Cargo:</mat-label>
+                                <mat-chip-list #chipListCargo>
+                                    <mat-chip *ngFor="let vChip of chipsCargo" [selectable]="true"
+                                        [removable]="bGuardar" (removed)="fnEliminarCargo(vChip)">
+                                        {{vChip.descripcion}}
+                                        <mat-icon matChipRemove *ngIf="bGuardar">cancel</mat-icon>
+                                    </mat-chip>
+                                    <input [readonly]="!bGuardar" [placeholder]="bGuardar?'Agregar...':''" #cargoInput
+                                        formControlName="cboCargo" [matAutocomplete]="autoCargo"
+                                        [matChipInputFor]="chipListCargo"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        (matChipInputTokenEnd)="fnAgregarCargo($event)">
+                                </mat-chip-list>
+                                <mat-autocomplete #autoCargo="matAutocomplete"
+                                    (optionSelected)="fnSeleccionarCargo($event)" [displayWith]="fnDisplayCargo">
+                                    <mat-option *ngFor="let vCargo of filteredCargo | async" [value]="vCargo">
+                                        {{vCargo.descripcion}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Perfil:</mat-label>
+                                <input type="text" matInput placeholder="Perfil" formControlName="txtTipoPerfil">
+                                <mat-error *ngIf="txtTipoPerfilError">{{ txtTipoPerfilError }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <ng-select (change)="GetAllArticuloDispositivo($event)" class="alinea-ng-select"
+                                appendTo="body" [clearable]="false" formControlName="cboTipoDispositivo"
+                                placeholder="Tipo Dispositivo" required>
+                                <ng-option *ngFor="let vTipo of lTipoDispositivo" [value]="vTipo.elementoId">
+                                    {{vTipo.nombre}}</ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="cboTipoDispositivoError">{{ cboTipoDispositivoError }}</mat-error>
+                        </div>
+
+                        <div class="col-md-7 col-10">
+                            <ng-select (change)="GetInformacionArticulo($event)" class="alinea-ng-select"
+                                appendTo="body" [clearable]="false" formControlName="cboArticulo" placeholder="Artículo"
+                                required>
+                                <ng-option *ngFor="let vArticulo of lArticulo" [value]="vArticulo.nIdArticulo">
+                                    {{vArticulo.sCodArticulo}} - {{vArticulo.sNombreProducto}}</ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="cboArticuloError">{{ cboArticuloError }}</mat-error>
+                        </div>
+
+                        <div class="col-md-1 col-2 d-flex align-items-end">
+                            <button type="button" [disabled]="this.bEditar" style="margin-bottom: 20px;"
+                                (click)="fnAnadirArticulo()" mat-icon-button class="fab-secondary" color="accent">
+                                <i class="material-icons" matTooltip="Agregar artículo"
+                                    matTooltipPosition="left">add</i>
+                            </button>
+                        </div>
+
+                        <div *ngIf="bGuardar" class="col-md-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Información artículo:</mat-label>
+                                <mat-chip-list #chipListInformacion>
+                                    <mat-chip *ngFor="let vInfor of lInformacionArticulo">
+                                        {{vInfor.sInformacion}}
+                                    </mat-chip>
+                                    <input readonly #informacionInput formControlName="cboInformacion"
+                                        [matChipInputFor]="chipListInformacion"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                                </mat-chip-list>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 ocultar-mobile">
+                    <div class="form-row">
+                        <div class="col-md-1">
+                            <div class="clsSeparador">&nbsp;</div>
+                        </div>
+
+                        <!-- Campos auditoria -->
+                        <div class="col-md-11">
+
+                            <mat-form-field style="width: 100%">
+                                <mat-label>Actualizó:</mat-label>
+                                <input type="text" readonly matInput formControlName="txtActualizo" />
+                            </mat-form-field>
+
+                            <mat-form-field style="width: 100%">
+                                <mat-label>Fecha Actualización:</mat-label>
+                                <input type="text" readonly matInput formControlName="txtFechaActualizo" />
+                            </mat-form-field>
+
+                            <mat-form-field style="width: 100%">
+                                <mat-label>Estado:</mat-label>
+                                <input type="text" readonly matInput placeholder="Estado" formControlName="txtEstado"
+                                    style="color: rgb(236, 0, 140)" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Informacion en celular-->
+                <div class="col-md-12 mostrar-mobile">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                Información
+                            </mat-panel-title>
+                            <button mat-icon-button>
+                                <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                            </button>
+                        </mat-expansion-panel-header>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Actualizó:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtActualizo" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Fecha Actualización:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtFechaActualizo" />
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" readonly matInput placeholder="Estado"
+                                        formControlName="txtEstado" style="color: rgb(236, 0, 140)" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+
+                <div class="col-md-12 mostrar-mobile">
+                    <br>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <div class="row">
+            <!--Table para detalle de Addenda -->
+            <div class="col-12">
+                <div id="listaMobile" class="mat-elevation-z8">
+
+                    <div class="table-container-1">
+                        <table mat-table [dataSource]="dataSource" matSort>
+
+                            <ng-container matColumnDef="opcion">
+                                <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                                    <br>
+                                </th>
+                                <td data-label='Eliminar: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2">
+                                    <button [disabled]="this.bEditar" mat-stroked-button color="accent"
+                                        matTooltip="Eliminar" (click)="fnEliminarFila(row);">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sArticulo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                    Artículo
+                                </th>
+                                <td data-label='Artículo: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile clsColumnaLib">
+                                    {{row.sArticulo}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sCaracteristica">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                    Característica
+                                </th>
+                                <td data-label='Característica: ' mat-cell *matCellDef="let row"
+                                    class="has_label_on_mobile clsColumnaLarge"> {{row.sCaracteristica}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="imagen">
+                                <th mat-header-cell class="clsColumnaOpc" *matHeaderCellDef> Imagen </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc"
+                                    data-label='Imagen: '>
+                                    <button mat-icon-button class="fab-secondary" color="accent">
+                                        <div *ngIf="row.sRutaArchivo == '' || row.sRutaArchivo == null">
+                                            <div class="box">
+                                                <img width="40px" height="40px" src="/assets/img/SinImagen.jpg"
+                                                    (click)="fnVerImagenArticulo(null, '')">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="row.sRutaArchivo != '' && row.sRutaArchivo != null">
+                                            <div class="box">
+                                                <img width="40px" height="40px" [src]="row.sRutaArchivo"
+                                                    (click)="fnVerImagenArticulo(row.sArticulo, row.sRutaArchivo)">
+                                            </div>
+                                        </div>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Zona de botones-->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+            <button [disabled]="!btn.enabled" *ngIf="this[btn.state]" mat-mini-fab class="fab-secondary"
+                [matTooltip]="btn.tool" matTooltipPosition="left" [color]="btn.color"
+                (click)="clickFab(btn.functionName)">
+                <i class="material-icons">{{btn.icon}}</i>
+            </button>
+        </ng-container>
+    </div>
+</div>

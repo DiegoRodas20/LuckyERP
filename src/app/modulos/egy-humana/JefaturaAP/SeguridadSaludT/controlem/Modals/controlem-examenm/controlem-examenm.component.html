@@ -1,0 +1,245 @@
+<ngx-spinner
+  name="spi_nuevo_examen_medico"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<!-- #region FB -->
+<div class="fab-container">
+  <button
+    mat-mini-fab
+    class="fab-toggler"
+    (click)="fb.opcionesMostrarOcultar()"
+  >
+    <i class="material-icons" [@fabToggler]="{ value: fb.getAnimacion() }"
+      >add</i
+    >
+  </button>
+  <div [@speedDialStagger]="fb.getOpciones().length">
+    <button
+      *ngFor="let btn of fb.getOpciones(); let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="fb.ejecutar(ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+<!-- #endregion -->
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    {{ nIdExamenMedico === 0 ? "Nuevo Examen Médico" : "Editar Examen Médico" }}
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row" style="margin-bottom: 15px">
+    <!-- #region INFORMACION DEL PERSONAL-->
+    <div id="dLeftDetail" class="col-lg-5">
+      <mat-accordion #maDetail="matAccordion">
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información del personal : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div class="col-lg-12 divAvatar">
+              <a>
+                <span class="imgBadge">{{
+                  infoPersonal.getValorCampo("sCodPlla")
+                }}</span>
+                <img
+                  class="imgAvatar"
+                  src="../../../../../assets/img/LuckyAvatar.png"
+                  alt=""
+                />
+              </a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div
+              id="fgDetail"
+              [formGroup]="infoPersonal.form"
+              class="col-lg-12"
+            >
+              <div class="form-row">
+                <div class="col-lg-12">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Apellidos y nombres</mat-label>
+                    <input type="text" matInput formControlName="sNombres" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo</mat-label>
+                    <input type="text" matInput formControlName="sTipo" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>N° Documento</mat-label>
+                    <input type="text" matInput formControlName="sDocumento" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Responsable</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="sResponsable"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Cita</mat-label>
+                    <mat-select
+                      formControlName="nIdCitaEm"
+                      [errorStateMatcher]="matcher"
+                      (selectionChange)="infoPersonal.activarFechaFin()"
+                    >
+                      <mat-option
+                        *ngFor="let item of infoPersonal.listaCitasSinExamen"
+                        [value]="item.nIdCitaEm"
+                        >{{ item.dFecha | date: "dd/MM/yyyy" }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row" style="padding-bottom: 15px">
+                <div class="col-lg-6">
+                  <mat-form-field style="width: 100%" appDateFormat>
+                    <mat-label>Inicio</mat-label>
+                    <input
+                      [errorStateMatcher]="matcher"
+                      formControlName="dFechIniEm"
+                      matInput
+                      [matDatepickerFilter]="infoPersonal.desactivarFechaIni"
+                      [matDatepicker]="dFechIniExamen"
+                      (dateChange)="
+                        infoPersonal.nuevaFechaInicioSeleccionada($event)
+                      "
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechIniExamen"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechIniExamen></mat-datepicker>
+                    <mat-error
+                      *ngIf="
+                        infoPersonal.form.controls.dFechIniEm.hasError(
+                          'required'
+                        )
+                      "
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6">
+                  <mat-form-field style="width: 100%" appDateFormat>
+                    <mat-label>Termino</mat-label>
+                    <input
+                      [errorStateMatcher]="matcher"
+                      formControlName="dFechFinEm"
+                      matInput
+                      [matDatepicker]="dFechFinExamen"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechFinExamen"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechFinExamen></mat-datepicker>
+                    <mat-error
+                      *ngIf="
+                        infoPersonal.form.controls.dFechFinEm.hasError(
+                          'required'
+                        )
+                      "
+                      >. Obligatorio</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region VISTA PREVIA DEL DOCUMENTO-->
+    <div
+      id="dRigthDetail"
+      class="icard melevation col-lg"
+      style="margin-right: 15px"
+    >
+      <h6>Vista Previa Sustento:</h6>
+      <hr style="margin-top: 0px; margin-bottom: 10px" />
+
+      <ngx-doc-viewer
+        *ngIf="urlDocumento !== ''"
+        [url]="urlDocumento"
+        viewer="url"
+        style="width: 100%; height: 390px"
+      >
+      </ngx-doc-viewer>
+
+      <div
+        *ngIf="urlDocumento === ''"
+        style="width: 100%; height: 390px; text-align: center"
+      >
+        <div
+          style="
+            width: 100px;
+            height: 100px;
+            text-align: initial;
+            padding-top: 110px;
+            margin: auto;
+          "
+        >
+          <mat-icon style="font-size: 100px; color: rgb(197, 197, 197)"
+            >content_paste_off</mat-icon
+          >
+        </div>
+      </div>
+    </div>
+    <!-- #endregion -->
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar
+    *ngIf="false"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

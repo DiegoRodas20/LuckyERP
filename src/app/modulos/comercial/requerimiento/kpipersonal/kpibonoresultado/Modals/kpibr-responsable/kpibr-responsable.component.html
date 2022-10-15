@@ -1,0 +1,87 @@
+<ngx-spinner name="spi_responsable" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+  </ngx-spinner>
+
+  <div class="modal-header">
+    <h4 class="modal-title">Cambiar responsable</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+
+ <!-- Cuerpo  -->
+ <div class="modal-body">
+
+    <div class="row" style="margin-left: 0px;">
+        <h6>Aplicar filtro por :</h6>
+        <hr style="margin-top: 0px; margin-bottom: 10px;">
+    </div>
+
+    <div class="row">
+        <div [formGroup]="fgResp" class="col-lg-12">
+            <div class="form-row">
+                <!-- Nombres o documento -->
+                <div class="col-lg-12">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Filtrar personal por apellidos y nombres</mat-label>
+                        <input type="text" matInput formControlName="sNombres">
+                        <button style="outline: none;" mat-button *ngIf="getResp.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getResp.sNombres.patchValue('')">
+                        <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm">
+            <h6>Lista de responsables :</h6>
+            <hr style="margin-top: 0px; margin-bottom: 10px;">
+        </div>
+    </div>
+
+    <div id="dTableResponsable">
+        <table #mtResponsable mat-table [dataSource]="ResponsableDS" style="width: 100%;">
+
+            <!-- Imagen Personal -->
+            <ng-container matColumnDef="sPersoImg">
+                <th mat-header-cell *matHeaderCellDef> Perfil </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label=''>
+                    <div class="divImg">
+                        <div [@divTable]="element == selectResp ? 'over' : 'out'" class="divMouse" (click)="clickResp(element)" (mouseover)="mouseOver(2, element)" (mouseout)="selectResp = null">
+                            <span [@editTable]="element == selectResp ? 'over' : 'out'" class="material-icons imgMouse">touch_app</span>
+                        </div>
+                        <img class="imgTable" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Apellidos y nombres Column -->
+            <ng-container matColumnDef="sNombres">
+                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                    <ngb-highlight [result]="element.sNombres | titlecase" [term]="getResp.sNombres.value"></ngb-highlight>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef [attr.colspan]="ResponsableDC.length">
+                    No se encuentran registros.
+                </mat-footer-cell>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="ResponsableDC; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: ResponsableDC;"></tr>
+            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ResponsableDS && this.ResponsableDS.filteredData.length > 0"></mat-footer-row>
+
+        </table>
+    </div>
+    <mat-paginator #pagResp style="display: contents;" [hidePageSize]="false" [pageSize]="5"></mat-paginator>
+
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbResp" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

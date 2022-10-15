@@ -1,0 +1,413 @@
+<ngx-spinner
+  name="spi_reject"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Desestimaciones</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="closeReject()"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xl-12">
+      <mat-accordion #maReject="matAccordion">
+        <!-- Filtro -->
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Aplicar filtro por : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+          </mat-expansion-panel-header>
+
+          <form autocomplete="off" id="fgReject" [formGroup]="fgReject">
+            <div class="form-row">
+              <!-- Trabajador -->
+              <div class="col-lg-6">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Trabajador</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="sNombres"
+                    (input)="filtroReject()"
+                  />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="getReject.sNombres.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="getReject.sNombres.patchValue(''); filtroReject()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <!-- Responsable -->
+              <div class="col-lg-6">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Responsable</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="sResponsable"
+                    (input)="filtroReject()"
+                  />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="getReject.sResponsable.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="getReject.sResponsable.patchValue('')"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <!-- Cliente -->
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Cliente</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="sCliente"
+                    (input)="filtroReject()"
+                  />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="getReject.sCliente.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="getReject.sCliente.patchValue('')"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%" appYearMonthFormat>
+                  <mat-label>Fecha</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="dFecha"
+                    formControlName="dFecha"
+                    (dateChange)="filtroReject()"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dFecha"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #dFecha
+                    startView="multi-year"
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dFecha)"
+                  >
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Estado</mat-label>
+                  <mat-select
+                    formControlName="nIdEstado"
+                    (selectionChange)="filtroReject()"
+                  >
+                    <mat-option>--</mat-option>
+                    <mat-option
+                      *ngFor="let item of cboEstado"
+                      [value]="item.nEleCod"
+                    >
+                      {{ item.cEleNam }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 20px">
+    <div class="col-sm">
+      <h6>Lista de asistencias observadas :</h6>
+      <hr style="margin-top: 0px; margin-bottom: 10px" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="dTableReject" class="melevation">
+        <table
+          #mtReject
+          mat-table
+          [dataSource]="RejectDS"
+          style="width: 100%"
+          multiTemplateDataRows
+        >
+          <!-- Apellidos y nombres Column -->
+          <ng-container matColumnDef="sNombres">
+            <th mat-header-cell *matHeaderCellDef>Trabajador</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="m-card-title"
+              data-label="Apellidos y nombres :"
+            >
+              <ngb-highlight
+                [result]="element.sNombres | titlecase"
+                [term]="getReject.sNombres.value"
+              ></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Fecha Column -->
+          <ng-container matColumnDef="dFecha">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Fecha :"
+            >
+              {{ element.dFecha | date: "dd/MM/yyyy" }}
+            </td>
+          </ng-container>
+
+          <!-- Responsable Column -->
+          <ng-container matColumnDef="sResponsable">
+            <th mat-header-cell *matHeaderCellDef>Responsable</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="m-card-title"
+              data-label="Responsable :"
+            >
+              <ngb-highlight
+                [result]="element.sResponsable | titlecase"
+                [term]="getReject.sResponsable.value"
+              ></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Cliente Column -->
+          <ng-container matColumnDef="sCliente">
+            <th mat-header-cell *matHeaderCellDef>Cliente</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Cliente :"
+            >
+              {{ element.sCliente }}
+            </td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="sEstado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Estado :"
+            >
+              {{ element.sEstado }}
+            </td>
+          </ng-container>
+
+          <!-- More Column -->
+          <ng-container matColumnDef="more">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let row">
+              <span
+                [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'"
+                class="material-icons"
+                style="cursor: pointer"
+                (click)="expandedMore = expandedMore === row ? null : row"
+                >expand_more</span
+              >
+            </td>
+          </ng-container>
+
+          <!-- More Expanded -->
+          <ng-container matColumnDef="expanded_More">
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [attr.colspan]="RejectDC.length"
+            >
+              <div
+                style="overflow: hidden"
+                [@detailExpand]="
+                  element == expandedMore ? 'expanded' : 'collapsed'
+                "
+              >
+                <div class="row" style="padding: 10px 10px 0px 10px">
+                  <div class="col-lg-6" style="padding-left: 5px">
+                    <!-- Observacion -->
+                    <div class="col-sm" style="padding: 10px 0px 0px 0px">
+                      <h6>Tienda:</h6>
+                      <hr style="margin-top: 0px; margin-bottom: 10px" />
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-lg-12">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Direccion</mat-label>
+                              <input
+                                matInput
+                                disabled
+                                [value]="element.sDireccion"
+                              />
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Hora Inicio</mat-label>
+                              <input
+                                matInput
+                                disabled
+                                [value]="element.sHoraIni"
+                              />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Hora Fin</mat-label>
+                              <input
+                                matInput
+                                disabled
+                                [value]="element.sHoraFin"
+                              />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" style="padding-left: 5px">
+                    <!-- Observacion -->
+                    <div class="col-sm" style="padding: 10px 0px 0px 0px">
+                      <h6>Observación:</h6>
+                      <hr style="margin-top: 0px; margin-bottom: 0px" />
+                    </div>
+
+                    <div class="form-row">
+                      <div class="col-lg-12">
+                        <mat-form-field style="width: 100%">
+                          <textarea
+                            matInput
+                            [value]="element.sObservacion"
+                            style="max-height: 85px; min-height: 85px"
+                            disabled
+                          ></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="alert alert-light"
+                    role="alert"
+                    style="
+                      padding-bottom: 2px;
+                      padding-top: 2px;
+                      margin-top: 5px;
+                      width: 100%;
+                    "
+                  >
+                    <button
+                      mat-raised-button
+                      class="invalidar_button"
+                      [disabled]="element.nIdEstado !== 2329"
+                      (click)="invalidarDesestimacion(element)"
+                    >
+                      <mat-icon>clear</mat-icon>
+                      Invalidar
+                    </button>
+                    <button
+                      mat-raised-button
+                      class="confirmar_button"
+                      [disabled]="element.nIdEstado !== 2329"
+                      (click)="confirmarDesestimacion(element)"
+                    >
+                      <mat-icon>check</mat-icon>
+                      Confirmar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="RejectDC.length">
+              No se encuentran registros.
+            </mat-footer-cell>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="RejectDC; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: RejectDC"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: ['expanded_More']"
+            [class.example-expanded-row]="expandedMore === row"
+            style="height: 0px; border-top-style: none"
+          ></tr>
+          <mat-footer-row
+            *matFooterRowDef="['noData']"
+            [hidden]="RejectDS && this.RejectDS.filteredData.length > 0"
+          ></mat-footer-row>
+        </table>
+      </div>
+      <mat-paginator
+        #pagReject
+        style="display: contents"
+        [hidePageSize]="false"
+        [pageSize]="4"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar
+    *ngIf="pbReject"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

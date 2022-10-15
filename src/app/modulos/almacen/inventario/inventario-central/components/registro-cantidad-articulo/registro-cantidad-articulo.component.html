@@ -1,0 +1,38 @@
+<!-- ========================== -->
+<!-- Botones Funcionalidad -->
+<!-- ========================== -->
+
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <!-- Ingreso de Articulos -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="anadirCantidad()">
+            <i class="material-icons" matTooltip="Ingresa cantidad" matTooltipPosition="left">add</i>
+        </button>
+        <!-- Salir -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+
+<!-- ========================== -->
+<!-- End Botones Funcionalidad -->
+<!-- ========================== -->
+
+<div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Añadir Cantidad de {{ titulo }}</mat-card>
+</div>
+<br>
+<mat-label class="subtitulo" *ngIf="cantidadMaxima > 0">Cantidad Máxima: {{ cantidadMaxima }} </mat-label>
+<form autocomplete="false" [formGroup]="formCantidad">
+    <mat-form-field>
+        <mat-label>Cantidad a trasladar</mat-label>
+        <input matInput formControlName="cantidad" type="number">
+        <!-- <input matInput id="codigo" class="uppercase" formControlName="codigo" (input)="escribirNombre($event.target.value)" (blur)=""> -->
+    </mat-form-field>
+    <small *ngIf="cantidadNoValido" class="text-danger">La cantidad tiene que ser mayor a 0 y entero</small>
+</form>

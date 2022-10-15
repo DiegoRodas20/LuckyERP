@@ -1,0 +1,25 @@
+mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+:host /deep/  .mat-form-field-disabled input{
+    color: black;
+  }
+  
+  ::ng-deep .mat-select-value {
+    color: black !important;
+  }
+  
+  :host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+    color: black !important;
+  }
+  
+  ng-select-value  {
+    color: black !important;
+  }
+  

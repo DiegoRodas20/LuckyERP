@@ -1,0 +1,153 @@
+<ngx-spinner name="spi_new" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="container-fluid mt-5 pt-4">
+  <div class="card">
+    <h5 class="card-header">Gestión de inasistencias</h5>
+    <div id="body-main" class="card-body">
+      <div class="icard melevation col-xl-12">
+        <div class="row">
+          <div class="col-lg-2 text-center">
+            <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png">
+          </div>
+          <div class="col-lg-4 py-3">
+            <h4 class="pt-2" style="font-size: 20px;">{{responsable?.sNombreCompleto}}</h4>
+            <h6 class="pt-2" style="font-size: 14px; opacity: 0.6;">{{responsable?.sTipoDoc}} :
+              {{responsable?.sDocumento}}
+            </h6>
+          </div>
+          <mat-divider [vertical]="true"></mat-divider>
+          <div class="col-lg">
+            <div class="row ml-auto">
+              <h6>Aplicar filtro por :</h6>
+            </div>
+            <form autocomplete="off" [formGroup]="form">
+              <div class="form-row">
+                <div class="col-lg-7">
+                  <mat-form-field>
+                    <mat-label>Nombre o documento de identidad</mat-label>
+                    <input matInput formControlName="sNomOrDoc">
+                    <button mat-button matSuffix mat-icon-button *ngIf="sNomOrDocCtrl.value"
+                      (click)="sNomOrDocCtrl.setValue('')">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-5">
+                  <mat-form-field>
+                    <mat-label>Planilla</mat-label>
+                    <mat-select formControlName="sCodPlla">
+                      <mat-option>Todos</mat-option>
+                      <mat-option *ngFor="let item of planillas" [value]="item.nId">
+                        {{item.nId}} - {{item.sDescripcion}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div>
+            <h6 class="mt-4">Equipo de trabajo actual :</h6>
+            <hr class="my-2" />
+            <div class="col-lg-12">
+              <div id="listaMobile" class="melevation example-container">
+                <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+                  <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+                    <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+                    <!-- #region Formación de rows dependiendo del tipo -->
+                    <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+                      [style.textAlign]="col.align">
+                      <span *ngSwitchCase="null">
+                        {{row[col.field]}}
+                      </span>
+                      <span *ngSwitchCase="'font'">
+                        <ngb-highlight [result]="row[col.field] | titlecase" [term]="sNomOrDocCtrl.value">
+                        </ngb-highlight>
+                      </span>
+                      <span *ngSwitchCase="'accion'">
+                        <button matTooltip="Acción rápida" matTooltipPosition="right" mat-stroked-button color="accent"
+                          (click)="showModal(1, row)">
+                          <mat-icon>calendar_today</mat-icon>
+                        </button>
+                      </span>
+                    </td>
+                    <!-- #endregion -->
+                  </ng-container>
+
+                  <ng-container matColumnDef="dropdown">
+                    <th mat-header-cell *matHeaderCellDef [style.width.px]="100"></th>
+                    <td mat-cell *matCellDef="let row" (click)="clickExpanded(row)" class="text-center">
+                      <mat-icon [@fabToggler]="row == expandedMore ? 'active3' : 'inactive'"
+                        (click)="clickExpanded(row)">
+                        expand_more
+                      </mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="expanded_More">
+                    <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+                      <div style="overflow: hidden" [@detailExpand]="row == expandedMore ? 'expanded' : 'collapsed'">
+                        <div class="row" [ngStyle]="showCalendar(row.eventos)">
+                          <div class="col-lg-12">
+                            <div *ngIf="expandedMore" class="col-sm dv_title">
+                              <div class="form-row">
+                                <div class="col-lg-6">
+                                  <h6> Devengue {{viewDate | date:'MMMM yyyy':'UTC':'es'}} con {{row.eventos.length}}
+                                    inasistencias</h6>
+                                </div>
+                                <ng-container *ngFor="let item of colores; let i = index">
+                                  <div class="col-lg-1 text-center">
+                                    <input type="color" [value]="item.primary" disabled>
+                                  </div>
+                                  <div class="col-lg-1">
+                                    {{estados[i].sDescripcion}}
+                                  </div>
+                                </ng-container>
+                              </div>
+                              <hr>
+                            </div>
+                            <mwl-calendar-month-view [viewDate]="viewDate" [events]="row.eventos" [locale]="locale"
+                              [weekStartsOn]="weekStartsOn" (dayClicked)="dayClicked($event.day, row)"
+                              [weekendDays]="weekendDays">
+                            </mwl-calendar-month-view>
+                          </div>
+                        </div>
+                        <div class="alert alert-info message_detail" role="alert">
+                          Para visualizar el detalle del personal
+                          <button mat-button style="padding: 0px;" (click)="showModal(2, row)" color="accent">
+                            dar click aquí.
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="empty">
+                    <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                      No se encuentran registros.
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ['expanded_More']" class='expanded_More'
+                    [class.example-expanded-row]="expandedMore === row">
+                  </tr>
+                  <tr mat-footer-row *matFooterRowDef="['empty']" [hidden]="hideMessageEmpty"> </tr>
+                </table>
+              </div>
+              <mat-paginator [pageSizeOptions]="[5,10]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,305 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="clsprincipal">
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+
+            <button *ngIf="abLista>0" mat-mini-fab color="secondary" class="fab-secondary"
+                matTooltip="Nuevo registro de Traslado" (click)="fnAgregarRegistro()">
+                <i class="material-icons">post_add</i>
+            </button>
+
+            <button *ngIf="abLista>0" mat-mini-fab color="secondary" class="fab-secondary" matTooltip="Traslado masivo"
+                (click)="fnTrasladoMasivo()">
+                <i class="material-icons">import_export</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="card-header center-text-card" style="text-align: center;">Traslado Interno del Almacén</h3>
+        <div class="row"><br /></div>
+    </div>
+    <div>
+        <div class="col-md-12">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+
+                        <div class="form-group col-md-2">
+                            <mat-form-field style="width: 100%">
+                                <mat-label>Año:</mat-label>
+                                <mat-select (ngModelChange)="fnCambioAnio($event)" [formControl]="cboAnio">
+                                    <mat-option *ngFor="let vAnio of lAnios" [value]="vAnio">
+                                        {{ vAnio }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4 col-sm-8 col-8">
+
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar registro de traslado:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="this.txtFiltro.setValue(''); 
+                                    (rbGuias.value==1 ? fnListarRegistroTraslado(): fnListarNotasUtiles(rbGuias.value)); ">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-6">
+                            <mat-radio-group [formControl]="rbGuias"
+                                (ngModelChange)="($event==1 ? fnListarRegistroTraslado(): fnListarNotasUtiles($event)); fnListarCantidadNota()">
+                                <mat-radio-button
+                                    (click)="this.rbGuias.setValue(1);  fnListarRegistroTraslado();fnListarCantidadNota();"
+                                    style="margin-left: 5px;" [value]="1">
+                                    Traslado
+                                </mat-radio-button>
+
+                                <mat-radio-button *ngIf="!bEsLogisticoSatelite"
+                                    (click)="this.rbGuias.setValue(2226); fnListarNotasUtiles(2226);fnListarCantidadNota();"
+                                    [value]="2226">
+                                    Notas de útiles pendientes:
+                                    <span class="cantidad-enfoque">{{vCantidadNotas==null?0:vCantidadNotas}}</span>
+                                </mat-radio-button>
+
+                                <mat-radio-button *ngIf="!bEsLogisticoSatelite"
+                                    (click)="this.rbGuias.setValue(2230); fnListarNotasUtiles(2230);fnListarCantidadNota();"
+                                    [value]="2230">
+                                    Notas devueltas
+                                </mat-radio-button>
+
+                                <mat-radio-button *ngIf="!bEsLogisticoSatelite"
+                                    (click)="this.rbGuias.setValue(2267); fnListarNotasUtiles(2267);fnListarCantidadNota();"
+                                    [value]="2267">
+                                    Notas rechazadas
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nId" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                    </th>
+                                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button matTooltip="Ver detalle" *ngIf="rbGuias.value==1" mat-menu-item
+                                                (click)="fnSeleccionarRegistro(row)">
+                                                <mat-icon color="accent">touch_app</mat-icon>
+                                                <span>Ver detalle</span>
+                                            </button>
+
+                                            <button mat-menu-item *ngIf="rbGuias.value==1" (click)="fnArchivo(row)">
+                                                <mat-icon color="accent">attach_file</mat-icon>
+                                                <span>Adjuntar archivo</span>
+                                            </button>
+
+                                            <button *ngIf="rbGuias.value==2230 || rbGuias.value==2267"
+                                                matTooltip="Ver detalle" mat-menu-item (click)="fnVerDetalleNota(row)">
+                                                <mat-icon color="accent">touch_app</mat-icon>
+                                                <span>Ver detalle</span>
+                                            </button>
+
+                                            <button *ngIf="rbGuias.value==2226" mat-menu-item
+                                                (click)="fnSeleccionarNota(row)">
+                                                <mat-icon color="accent">touch_app</mat-icon>
+                                                <span>Registrar</span>
+                                            </button>
+
+                                            <button *ngIf="rbGuias.value==2226" mat-menu-item
+                                                (click)="fnDevolverNota(row)">
+                                                <mat-icon color="accent">reply</mat-icon>
+                                                <span>Devolver</span>
+                                            </button>
+
+                                            <button *ngIf="rbGuias.value==2226" mat-menu-item
+                                                (click)="fnRechazarNota(row)">
+                                                <mat-icon color="accent">block</mat-icon>
+                                                <span>Rechazar</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNumeroDoc">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Nro. Operación
+                                    </th>
+                                    <td data-label='Nro. Operación: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.sNumeroDoc" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nNumDocumento">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Doc. Referencia
+                                    </th>
+                                    <td data-label='Doc. Referencia: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.nNumDocumento" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFecha">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Fecha
+                                    </th>
+                                    <td data-label='Fecha: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sFecha" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sAlmacen">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Almacén
+                                    </th>
+                                    <td data-label='Almacén: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sAlmacen" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCentroCosto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Presupuesto
+                                    </th>
+                                    <td data-label='Presupuesto: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sCentroCosto" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="sAlmacenDestino">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Almacén Destino
+                                    </th>
+                                    <td data-label='Almacén Destino: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sAlmacenDestino" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCentroCostoDestino">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                        Presupuesto Destino
+                                    </th>
+                                    <td data-label='Presupuesto Destino: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.sCentroCostoDestino" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCliente">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Cliente Destino
+                                    </th>
+                                    <td data-label='Cliente Destino: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sCliente" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nTotalUnd">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total
+                                        Ud.
+                                    </th>
+                                    <td data-label='Total Ud.: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.nTotalUnd" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nTotalPeso">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total
+                                        Peso
+                                    </th>
+                                    <td data-label='Total Peso: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.nTotalPeso | number:'1.2-2'"
+                                            [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nTotalVolumen">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total
+                                        Volumen
+                                    </th>
+                                    <td data-label='Total Volumen: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc">
+                                        <ngb-highlight [result]="row.nTotalVolumen | number:'1.6-6'"
+                                            [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!--Columna invisible para filtrar por solicitante-->
+                                <ng-container matColumnDef="sSolicitante">
+                                    <th style="display: none;" mat-header-cell *matHeaderCellDef mat-sort-header
+                                        class="clsColumnaLib2"> Solicitante
+                                    </th>
+                                    <td style="display: none;" data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row?.sSolicitante" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row
+                                    [ngClass]="row.nIdEstado==2232?'make-gris': row.nIdEstado==2227?'make-green':''"
+                                    *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-registro-traslado-detalle [pNota]="nNota" [pIdRegistro]="pIdRegistroSalida" (pMostrar)="fnOcultar($event)"
+    *ngIf="pMostrar==1">
+</app-registro-traslado-detalle>

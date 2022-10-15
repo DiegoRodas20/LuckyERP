@@ -1,0 +1,49 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.clsColumnaOpc {
+  width: 80px;
+}
+
+.clsColumnaLarge {
+  width: 400px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaLittle {
+  width: 100px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}

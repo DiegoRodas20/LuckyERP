@@ -1,0 +1,69 @@
+.full-width {
+  width: 100%;
+}
+
+.mensaje_crear_carta {
+  color: gray;
+  font-size: 20px;
+  padding-top: 100px;
+}
+
+.titulo_tabla_personal {
+  font-size: 22px;
+  color: gray;
+}
+
+.lista_documentos_estaticos {
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.lista_documentos_estaticos:hover {
+  color: blue;
+}
+
+.btn_print_clear {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  z-index: 9999;
+}
+
+.card_sin_tabla {
+  height: 350px;
+}
+
+.titulo_principal {
+  margin-top: 100px;
+}
+
+.color_titulos {
+  color: gray;
+}
+
+.btn_flat_style {
+  background-color: #334d6e;
+  color: white;
+}
+
+.btn_stroked_style {
+  background-color: white;
+  color: #334d6e;
+}
+
+.color_primario {
+  background-color: #334d6e;
+}
+.mat-chip.mat-standard-chip .mat-chip-remove {
+  color: #ff4081;
+  opacity: 1;
+}
+
+.mat-chip.mat-standard-chip {
+  background-color: white;
+  font-size: 16px;
+}
+
+.mat-chip.mat-standard-chip::after {
+  background-color: rgb(241, 241, 241);
+}

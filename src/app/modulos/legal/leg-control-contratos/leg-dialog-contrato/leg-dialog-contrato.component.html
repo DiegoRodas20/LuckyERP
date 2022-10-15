@@ -1,0 +1,121 @@
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+      <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+        [color]="btn.color" (click)="clickFab(ibtn)">
+        <i class="material-icons">{{btn.icon}}</i>
+      </button>
+    </ng-container>
+  </div>
+</div>
+
+<div class="mb-3 " style="text-align: center; ">
+  <mat-card class="title-card ">{{ titulo }}</mat-card>
+</div>
+
+<div mat-dialog-content>
+
+  <form autocomplete="off" [formGroup]="formContrato" class="mb-3">
+    <div class="row center">
+      <div class="col-lg-6 col-sm-12">
+        <ng-select appendTo="body" [clearable]="false" formControlName="empresa" placeholder="Empresa"
+          (change)="cambioEmpresa($event)">
+          <ng-option *ngFor="let item of listaEmpresa" [value]="item.nIdEmp">
+            {{item.sRuc}} - {{ item.sRazonSocial }}
+          </ng-option>
+        </ng-select>
+        <mat-error *ngIf="formContrato.get('empresa').hasError('required') && formContrato.get('empresa').touched"
+          class="ngSelectError">
+          El lote debe tener una longitud de 8 números
+        </mat-error>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <ng-select appendTo="body" [clearable]="false" formControlName="cliente" placeholder="Cliente / Proveedor"
+          (change)="cambioCliente($event)">
+          <ng-option *ngFor="let item of listaCliente" [value]="item.nId">
+            {{item.sDescripcion}}
+          </ng-option>
+        </ng-select>
+        <mat-error *ngIf="formContrato.get('cliente').hasError('required') && formContrato.get('cliente').touched"
+          class="ngSelectError">
+          El lote debe tener una longitud de 8 números
+        </mat-error>
+      </div>
+    </div>
+  </form>
+
+  <div id="listaMobile" class="mat-elevation-z8 mb-3">
+    <div class="example-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="opcion">
+          <th mat-header-cell *matHeaderCellDef>Opciones</th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Opciones: '>
+            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+              mat-stroked-button color="accent">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="after">
+              <button mat-menu-item (click)="verDetalle(element)">
+                <mat-icon color="accent">touch_app</mat-icon>
+                <span>Ver Detalle</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sTitulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Nombre: '>
+            {{element.sTitulo}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dFechaInicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Inicio </th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Fecha Inicio: '>
+            {{element.dFechaInicio }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dFechaFin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Fin </th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Fecha Fin: '>
+            {{element.dFechaFin }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bitAddenda">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Addendas. </th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Addendas: '>
+            <!-- {{element.bitAddenda === 1 ? 'Activo' : 'Inactivo'}}  -->
+            <mat-checkbox [disabled]="true" [checked]="element.bitAddenda === 1 ? true : false"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="vigente">
+                        <th mat-header-cell *matHeaderCellDef> Vigente </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Vigente: '>
+                    <mat-checkbox [disabled]="true" [checked]="element.bitVigente === 1 ? true : false"></mat-checkbox>
+                    </td>
+                    </ng-container> -->
+
+        <ng-container matColumnDef="bitVigente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+          <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Estado: '>
+            {{element.bitVigente === 1 ? 'Activo' : 'Vencido'}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [ngClass]="{isInvalido: row.bitVigente === 0, isValido: row.bitVigente === 1}"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+  </div>
+</div>

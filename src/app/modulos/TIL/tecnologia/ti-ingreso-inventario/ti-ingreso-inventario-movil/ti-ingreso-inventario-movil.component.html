@@ -1,0 +1,228 @@
+<div
+    [ngClass]="{
+        'col-xl-10 mx-auto': !modoDialog, 
+        'contenedorComponente': !modoDialog
+    }"
+>
+
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}" *ngIf="!modoDialog">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">
+                    <h3>{{titulo}}</h3>
+                </mat-card>
+            </div>
+        </div>
+
+        <mat-card class="mat-elevation-z8">
+            <form [formGroup]="formMovil">
+
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="row mt-1">
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>IMEI</mat-label>
+                                    <input matInput formControlName="emei">
+                                    <mat-error
+                                        *ngIf="this.formMovil.get('emei').hasError('required') && formMovil.get('emei').touched">
+                                        El EMEI es obligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            
+                            <div class="col-lg-6 mt-1">
+                                <ng-select [clearable]="false" placeholder="Artículo Movil" formControlName="articuloMovil"
+                                    notFoundText="No hay articulos moviles registrados" (change)="fnLlenarChipListCaracteristicasDispositivoMovil(); fnRecuperarFotoArticuloMovil(); fnRecuperarTipoDispositivo()">
+                                    <ng-option *ngFor="let element of listaArticulosMovil" [value]="element.nId">
+                                        {{element.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error class="ngSelectError"
+                                    *ngIf="this.formMovil.get('articuloMovil').hasError('required') && formMovil.get('articuloMovil').touched">
+                                    Debe seleccionar un artículo movil
+                                </mat-error>
+                            </div>
+
+                            <div class="col-lg-3 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo de dispositivo</mat-label>
+                                    <input matInput formControlName="tipoDispositivo" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-md-12 mt-1">
+                                <mat-form-field class="example-chip-list" style="width: 100%">
+                                    <mat-label>Componentes</mat-label>
+                                    <mat-chip-list #chipListComponentes style="height: 51.5px;">
+                                        <mat-chip *ngFor="let chipElement of chipElementsComponentes">
+                                            {{chipElement.sDescripcion}}
+                                        </mat-chip>
+                                        <input [matChipInputFor]="chipListComponentes" readonly [disabled]="chipElementsComponentes != []">
+                                    </mat-chip-list>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha de Alta</mat-label>
+                                    <input matInput [matDatepicker]="fechaAltaPicker" formControlName="fechaAlta"
+                                        (click)="fechaAltaPicker.open()" readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaAltaPicker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #fechaAltaPicker></mat-datepicker>
+                                    <mat-error
+                                        *ngIf="this.formMovil.get('fechaAlta').hasError('required') && formMovil.get('fechaAlta').touched">
+                                        La fecha de alta es obligatoria
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha de Baja</mat-label>
+                                    <input matInput [matDatepicker]="fechaBajaPicker" formControlName="fechaBaja"
+                                        (click)="fechaBajaPicker.open()" readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaBajaPicker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #fechaBajaPicker></mat-datepicker>
+                                    <mat-error
+                                        *ngIf="this.formMovil.get('fechaBaja').hasError('required') && formMovil.get('fechaBaja').touched">
+                                        La fecha de baja es obligatoria
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <ng-select [clearable]="true" placeholder="Número" formControlName="numero"
+                                    notFoundText="No hay números disponibles" (change)="fnRecuperarPlanDatos()">
+                                    <ng-option *ngFor="let element of listaNumerosSimcardMovil" [value]="element.nId">
+                                        {{element.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Plan de Datos</mat-label>
+                                    <input matInput formControlName="planDatos" readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 mt-1">
+                                <mat-form-field class="example-chip-list" style="width: 100%">
+                                    <mat-label>Características</mat-label>
+                                    <mat-chip-list #chipListCaracteristicas style="height: 51.5px;">
+                                        <mat-chip *ngFor="let chipElement of chipElementsCaracteristicas">
+                                            {{chipElement}}
+                                        </mat-chip>
+                                        <input [matChipInputFor]="chipListCaracteristicas" readonly>
+                                    </mat-chip-list>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 contenedorAuditoria">
+                        <div class="row">
+                            <div class="col-xl-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-xl-10 campoAuditoria">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Creado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Creado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Modificado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioModificacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Modificado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaModificacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" *ngIf="formMovil.get('usuarioBaja').value">
+                                    <mat-label>De Baja Por:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioBaja">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" matInput formControlName="estado" readonly
+                                        style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+
+                            </div>
+
+                            <mat-accordion class="campoAuditoriaAcordeon" style="width: 100%;">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <span style="vertical-align: middle;">Información de creación</span>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div>
+                                        <mat-form-field style="width: 100%;" class="mt-3">
+                                            <mat-label>Creado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Creado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Modificado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioModificacion">
+                                        </mat-form-field>
+        
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Modificado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaModificacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" *ngIf="formMovil.get('usuarioBaja').value">
+                                            <mat-label>De Baja Por:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioBaja">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="estado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </mat-card>
+    </div>
+
+</div>

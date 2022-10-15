@@ -1,0 +1,182 @@
+<!-- #region Spinner -->
+<ngx-spinner name="gestionap_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- #endregion -->
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px)">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Gestión de asistencia</h5>
+
+            <div *ngIf="ifMain" class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+          <i class="material-icons" [@fabToggler]="{ value: tsMain }">add</i>
+        </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index" mat-mini-fab class="fab-secondary" color="secondary">
+            <i
+              class="material-icons"
+              matTooltip="{{ btn.tool }}"
+              matTooltipPosition="left"
+              >{{ btn.icon }}</i
+            >
+          </button>
+                </div>
+            </div>
+
+            <div id="body-main" class="card-body">
+                <div class="icard melevation col-xl-12">
+                    <div class="row">
+                        <div class="col-lg-2" style="text-align: center">
+                            <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="" />
+                        </div>
+
+                        <div class="col-lg-3" style="padding-top: 25px; padding-bottom: 20px">
+                            <h4 style="font-size: 20px">Responsable :</h4>
+                            <h6 style="font-size: 14px; color: rgba(0, 0, 0, 0.54)">
+                                {{ formResponsable.controls.nombres.value }}
+                            </h6>
+                        </div>
+
+                        <mat-divider [vertical]="true"></mat-divider>
+
+                        <div class="col-lg">
+                            <div class="row" style="margin-left: 0px">
+                                <h6>Aplicar filtro por :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px" />
+                            </div>
+
+                            <form autocomplete="off" id="filtroForm" [formGroup]="filtroForm">
+                                <div class="form-row">
+                                    <div class="col-lg-6">
+                                        <mat-form-field style="width: 100%">
+                                            <mat-label>Nombres o documento de identidad</mat-label>
+                                            <input type="text" matInput formControlName="nombresDocumento" (input)="filtrar()" />
+                                            <button *ngIf="
+                          filtroForm.controls.nombresDocumento.value !== null &&
+                          filtroForm.controls.nombresDocumento.value !== ''
+                        " style="outline: none" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="
+                          filtroForm.controls.nombresDocumento.reset();
+                          filtrar()
+                        ">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <mat-form-field style="width: 100%">
+                                            <mat-label>Planilla</mat-label>
+                                            <mat-select formControlName="sCodPlannilla" (selectionChange)="filtrar()">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of comboPlanilla" [value]="item.sCodPlla">{{ item.sCodPlla }} - {{ item.sDesc }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <mat-form-field style="width: 100%">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select formControlName="nIdEstado" (selectionChange)="filtrar()">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of comboEstado" [value]="item.nIdEstado">{{ item.sDesc }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-sm">
+                                <h6>Equipo de trabajo actual :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 20px" />
+                            </div>
+                        </div>
+                        <!-- #region TABLA EQUIPO DE TRABAJO-->
+                        <div class="melevation">
+                            <table mat-table [dataSource]="listaDS" style="width: 100%">
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="verPuntos(element)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPlla">
+                                    <th mat-header-cell *matHeaderCellDef>Plla</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Tipo de planilla :">
+                                        {{ element.sCodPlla }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTipo">
+                                    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Tipo de documento :">
+                                        {{ element.sTipo }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef>Documento</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="N° Documento : ">
+                                        {{ element.sDocumento }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                                    <td mat-cell *matCellDef="let element" class="m-card-title" data-label="Apellidos y nombres :">
+                                        {{ element.sNombres | titlecase }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef>F. Ingreso</th>
+                                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label="Fecha ingreso :">
+                                        {{ element.dFechIni | date: "dd/MM/yyyy" }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="listaDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="listaDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: listaDC"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="listaDS && this.listaDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #listaP style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                        <!-- #endregion -->
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-sm">
+                                <h6>
+                                    Fecha Seleccionada : {{ clickedDate | date: "dd/MM/yyyy" }}
+                                </h6>
+                                <hr style="margin-top: 0px; margin-bottom: 20px" />
+                            </div>
+                        </div>
+                        <!-- #region CALENDARIO-->
+                        <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [locale]="locale" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays" (dayClicked)="diaSeleccionado($event.day)">
+                        </mwl-calendar-month-view>
+                        <!-- #endregion -->
+                    </div>
+                </div>
+            </div>
+
+            <mat-progress-bar *ngIf="false" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>

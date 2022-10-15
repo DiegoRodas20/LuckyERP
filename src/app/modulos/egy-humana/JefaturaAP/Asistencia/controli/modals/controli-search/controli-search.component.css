@@ -1,0 +1,44 @@
+.form-row mat-form-field {
+  width: 100%;
+}
+.modal-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+h4 {
+  margin-bottom: 0 !important;
+  line-height: normal !important;
+}
+.modal-header button {
+  color: white !important;
+  text-shadow: none !important;
+  outline: none;
+}
+
+/* #region  table */
+.example-container {
+  position: relative;
+  max-width: 100%;
+  overflow: auto;
+  border-radius: 4px;
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+table .mat-form-field-infix {
+  width: 100% !important;
+}
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-cell:last-of-type,
+th.mat-header-cell:last-of-type {
+  padding: 0 0.25em 0 0.25em !important;
+}
+th.mat-header-cell {
+  text-align: center !important;
+}
+/* #endregion */

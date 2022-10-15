@@ -1,0 +1,70 @@
+<div class="form-row">
+    <div class="col-md-12">
+        <div class="form-row card-header">
+            <div class="col-md-1">
+            </div> 
+            <div class="col-md-10  w-100 text-center">
+                Lista de Articulos/Servicios
+            </div> 
+            <div class="col-md-1">
+                <button  mat-icon-button color="warn" (click) =onNoClick()>
+                    <mat-icon>cancel</mat-icon> 
+                </button >
+            </div>  
+        </div> 
+        <div class="row">
+            <div class="col-sm-4">
+                <mat-form-field>
+                    <mat-label>Filtro</mat-label>
+                    <input matInput (keyup)="applyFilter($event)"  
+                    [formControl]="txtControl"  
+                    [(ngModel)]="searchKey"
+                    #input
+                    >
+                    <button style="outline: none;" *ngIf="input.value" mat-button matSuffix mat-icon-button aria-label="Clear"
+                    (click)="limpiar()">
+                    <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+              </div> 
+
+        </div>
+        <div id="listaMobile" class="mat-elevation-z8 mb-3">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="opcion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">  </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib"> 
+                            <button mat-stroked-button color="accent" (click)="fnDatos(row)"><mat-icon> touch_app</mat-icon></button> 
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Codigo </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib">  
+                            <ngb-highlight [result]="row.sCodArticulo" [term]="searchKey"></ngb-highlight> 
+                    </ng-container>
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Descripcion </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib"> 
+                            <ngb-highlight [result]="row.nombreMaterial" [term]="searchKey"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="medida">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Medida </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib"> 
+                            <ngb-highlight [result]="row.nombreMedida" [term]="searchKey"></ngb-highlight>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table> 
+            </div>
+            <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

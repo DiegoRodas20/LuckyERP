@@ -1,0 +1,160 @@
+<div style="position: relative;" id="guia-Salida-formato"
+    *ngIf="this.listaCabecera!=null && this.listaDetalle.length>0">
+
+    <!--Sello automatico-->
+    <table *ngIf="this.listaDetalle.length < 20"
+        style="width: 200px; height: 125px; border: 1px solid black; position: absolute; top: 1050px; left: 500px;">
+        <tr style="width: 200px; border: 1px solid black;">
+            <p style="margin-bottom: 0px  !important; font-size: 20px; text-align: center;">LUCKY S.A.C.</p>
+            <p style="margin-bottom: 0px  !important; font-size: 15px; text-align: center;">Despachado</p>
+
+        </tr>
+
+        <tr style="width: 200px; height: 50px; border: 1px solid black;">
+            <p
+                style="margin-bottom: 0px  !important; margin-top: 0px  !important; font-size: 20px;  text-align: center;">
+                {{fechaActual}}</p>
+            <br>
+        </tr>
+
+        <tr style="width: 200px;border: 1px solid black;">
+            <p style="margin-bottom: 0px  !important; font-size: 20px;">COLP</p>
+        </tr>
+    </table>
+
+    <table style="width:100%">
+        <tr>
+            <td style="min-height: 150px;" colspan="2">
+                <br style="min-height: 150px;">
+                <br style="min-height: 150px;">
+                <br style="min-height: 150px;">
+            </td>
+            <td style="padding: 5px;" rowspan="2">
+                <p style="margin-bottom: 0px  !important;">Solicitante: {{listaCabecera?.sSolicitante}}</p>
+                <p style="margin-bottom: 0px  !important;"><br></p>
+                <p style="margin-bottom: 0px  !important;"><br></p>
+                <br>
+                <br>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px; min-width: 220px;max-width: 220px;">
+                <br>
+                <br>
+                <p style="margin-bottom: 0px !important;margin-left: 20%;">{{listaCabecera?.sFechaTransaccion}}</p>
+            </td>
+            <td style="padding: 5px;  min-width: 350px;max-width: 350px;">
+                <br>
+                <br>
+                <p style="margin-bottom: 0px !important; ; margin-left: 13%;">{{listaCabecera?.sFecha}}
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="padding: 5px;">
+                <br style="min-height: 150px;">
+                <p style="margin-bottom: 0px; margin-left: 10%; min-height: 35px;">
+                    {{listaCabecera?.sAlmacen}}
+                </p>
+                <p style="margin-bottom: 0px;margin-left: 10%;min-height: 35px;">
+                    {{listaCabecera?.sDireccion}} <br> {{listaCabecera?.sUbicacion}}
+                </p>
+            </td>
+            <td rowspan="3" style="padding: 5px;">
+                <br>
+                <br>
+                <p style="margin-bottom: 0px  !important; margin-left: 25%; margin-top: 0px; min-height: 125px;">
+                    {{listaCabecera?.sGuia}}</p>
+                <p style="margin-bottom: 0px; min-height: 100%;">
+                    <br>
+                </p>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 5px;">
+                <p style="margin-bottom: 0px; margin-left: 12%;">
+                    {{listaCabecera?.sDestinatario | slice:0:70}}
+                </p>
+                <p style="width: 35%; display: inline-block; margin-left: 10%; margin-bottom: 0px;">
+                    {{listaCabecera?.sRUCDest}}
+                </p>
+                <p style="width: 35%; display: inline-block; margin-left: 10%; margin-bottom: 0px;">
+                    {{listaCabecera?.sDNIDest}}
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;" colspan="2">
+                <p style="margin-bottom: 0px;"><br></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;" colspan="2">
+                <p style="margin-bottom: 0px;"><br></p>
+            </td>
+            <td style="padding: 5px;">
+                <br>
+                <br>
+                <br>
+                <p style="margin-bottom: 0px; margin-left: 15%;">{{listaCabecera?.sMotivo}}</p>
+                <p style="margin-bottom: 0px; margin-left: 15%;">{{listaCabecera?.sCentroCosto}} -
+                    {{listaCabecera?.sCliente | slice:0:45}} </p>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table style="width:100%;" style="font-size: 16px;">
+        <tr *ngFor="let lista of listaDetalle, index as i">
+            <td style="padding-bottom: 0.25px;font-weight: normal; min-width: 86px !important;">{{ lista.sCodArticulo }}
+            </td>
+            <td style="padding-bottom: 0.25px;font-weight: normal; min-width: 86px !important;">{{ lista.nUnidades }}
+            </td>
+            <td style="padding-bottom: 0.25px;font-weight: normal; min-width: 57px !important;">{{ lista.sUndMedida }}
+            </td>
+            <td style="padding-bottom: 0.25px;font-weight: normal; min-width: 611px !important;">{{ lista.sArticulo |
+                slice:0:80}}</td>
+            <td style="padding-bottom: 0.25px;font-weight: normal; min-width: 100px !important; text-align: center;">{{
+                lista.nPesoTotal | number:'1.2-2'}}
+            </td>
+        </tr>
+        <tr *ngFor="let lista of nNumerosrestantes">
+            <td style="padding-bottom: 0.25px;font-weight: normal; max-height: 4px;" colspan="5"><br></td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;" colspan="5">
+                <p style="margin-left: 10%; min-height: 40px;">
+                    {{listaCabecera.sObservacion == '' ? '-' : listaCabecera.sObservacion}}
+                </p>
+            </td>
+        </tr>
+        <!-- <tr>
+            <td colspan="2" rowspan="4" style="padding: 5px;font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                    <br>
+                </p>
+                <p style="margin-bottom: 0px;">
+                    <br>
+                </p>
+                <p style="margin-bottom: 0px;">
+                    <br>
+                </p>
+            </td>
+            <td colspan="2" rowspan="4" style="padding: 5px;font-weight: normal; text-align: center;">
+                <br><br> <br>
+                <br>
+            </td>
+            <td colspan="1" rowspan="1" style="padding: 5px;font-weight: normal;">
+                <br>
+            </td>
+        </tr> -->
+    </table>
+
+    <div style="position: absolute; top: 1250px; left: 750px;">
+        <p style="margin-bottom: 0px;">Total peso: {{nPesoTotal | number:'1.2-2'}}</p>
+        <p>{{listaCabecera.sTipoMovilidad}}</p>
+    </div>
+
+</div>

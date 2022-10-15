@@ -1,0 +1,6 @@
+<h5 mat-dialog-title *ngIf="this.sArticulo!=''" style="width: 100%;text-align: center;"
+    class="card-header center-text-card">{{sArticulo}}
+</h5>
+<mat-dialog-content (click)="dialogRef.close()">
+    <img width="100%" height="100%" [src]="url">
+</mat-dialog-content>

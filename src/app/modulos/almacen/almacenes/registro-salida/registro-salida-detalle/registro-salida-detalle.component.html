@@ -1,0 +1,762 @@
+<div [ngClass]="{'noImpresion' : vVerGuiaSalida}">
+    <div class="clsprincipal">
+        <div class="col-md-10 offset-md-1">
+            <h5 class="card-header" style="text-align: center; width:100%; margin-bottom: 5px;">Salida de Mercadería del
+                Almacén
+            </h5>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Cabecera -->
+            <div class="col-md-10 offset-md-1">
+                <!-- offset-md-3 -->
+
+                <mat-card>
+
+                    <!--Form-->
+                    <form class="row" [formGroup]="formSalida">
+                        <div class="col-md-10">
+                            <div class="form-row">
+                                <div *ngIf="pIdRegistro==0" class="form-group col-md-4">
+                                    <ng-select style="padding-bottom:3.5px; bottom:0.45rem"
+                                        (change)="fnListarPresupuesto($event)" appendTo="body" [clearable]="false"
+                                        formControlName="cboSolicitante" placeholder="Solicitante" required>
+                                        <ng-option *ngFor="let vSolicitante of lSolicitante" [value]="vSolicitante">
+                                            {{vSolicitante.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="formSalida.get('cboSolicitante').hasError('required') && formSalida.get('cboSolicitante').touched ">
+                                        .Obligatorio
+                                    </mat-error>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Solicitante:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtSolicitante">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0" class="form-group col-md-4">
+                                    <ng-select style="padding-bottom:3.5px; bottom:0.45rem"
+                                        (change)="fnLLenarCliente($event); fnValidarSaldo($event, 'CC')" appendTo="body"
+                                        [clearable]="false" formControlName="cboPresupuesto" placeholder="Presupuesto"
+                                        required>
+                                        <ng-option *ngFor="let vPres of lPresupuesto" [value]="vPres">
+                                            {{vPres.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="formSalida.get('cboPresupuesto').hasError('required')  && formSalida.get('cboPresupuesto').touched ">
+                                        .Obligatorio
+                                    </mat-error>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Presupuesto:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtPresupuesto">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Cliente:</mat-label>
+                                        <input type="text" style="color: rgb(236, 0, 140);" readonly matInput
+                                            formControlName="txtCliente">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0" class="form-group col-md-4">
+                                    <ng-select style="padding-bottom:3.5px; bottom:0.45rem"
+                                        (change)="fnValidarSaldo($event, 'ALM')" appendTo="body" [clearable]="false"
+                                        formControlName="cboAlmacen" placeholder="Almacén" required>
+                                        <ng-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen">
+                                            {{vAlmacen.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="formSalida.get('cboAlmacen').hasError('required')  && formSalida.get('cboAlmacen').touched ">
+                                        .Obligatorio
+                                    </mat-error>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Almacen:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtAlmacen">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0 || bEsNota==true" class="form-group col-md-4">
+                                    <ng-select style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body"
+                                        [clearable]="false" formControlName="cboOperacionLogistica"
+                                        placeholder="Operación Logística" required>
+                                        <ng-option *ngFor="let vOpLog of lOpLogistica" [value]="vOpLog.nId">
+                                            {{vOpLog.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="formSalida.get('cboOperacionLogistica').hasError('required')  && formSalida.get('cboOperacionLogistica').touched ">
+                                        .Obligatorio
+                                    </mat-error>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0 && bEsNota==false" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Operación Logística:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtOperacionLogistica">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="(pIdRegistro==0 || bEsNota)" [ngClass]="[(bEsNota)?'col-md-2':' col-md-4']"
+                                    class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha de Entrega:</mat-label>
+                                        <input [min]="fechaHoy" (click)="pickerFechaEnt.open()" readonly
+                                            formControlName="cboFechaEntrega" matInput [matDatepicker]="pickerFechaEnt">
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFechaEnt"></mat-datepicker-toggle>
+                                        <mat-datepicker #pickerFechaEnt></mat-datepicker>
+                                        <mat-error *ngIf="formSalida.get('cboFechaEntrega').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="(bEsNota)" class="form-group col-md-2">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Hora de entrega:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtHoraEntrega">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0 && !bEsNota" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha de Entrega:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtFechaEntrega">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0 || bEsNota==true" class="form-group col-md-1 col-2">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>GR:</mat-label>
+                                        <input readonly formControlName="txtTipoGuia" matInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0 || bEsNota==true" class="form-group col-md-1 col-2">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Serie:</mat-label>
+                                        <mat-select formControlName="cboGuia" [errorStateMatcher]="matcher">
+                                            <mat-option *ngFor="let vTipo of lGuia" [value]="vTipo.nId">
+                                                {{vTipo.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="formSalida.get('cboGuia').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0 || bEsNota==true" class="form-group col-md-2 col-8">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Número:</mat-label>
+                                        <input readonly type="text" matInput formControlName="txtNumGuia2">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0 && bEsNota==false" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Guía:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtGuia">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0 || bEsNota==true" class="form-group col-md-4">
+                                    <ng-select style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body"
+                                        [clearable]="false" formControlName="cboMotivo" placeholder="Motivo" required>
+                                        <ng-option *ngFor="let vMotivo of lMotivo" [value]="vMotivo.nId">
+                                            {{vMotivo.sDescripcion}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <mat-error
+                                        *ngIf="formSalida.get('cboMotivo').hasError('required') && formSalida.get('cboMotivo').touched">
+                                        .Obligatorio</mat-error>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0  && bEsNota==false" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Motivo:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtMotivo">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0" class=" form-group col-md-1 col-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Movilidad:</mat-label>
+                                        <mat-select (selectionChange)="fnListarTipoMovilidad($event.value)"
+                                            formControlName="cboMovilidad" [errorStateMatcher]="matcher">
+                                            <mat-option *ngFor="let vMovilidad of lMovilidad" [value]="vMovilidad">
+                                                {{vMovilidad.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="formSalida.get('cboMovilidad').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro==0" class="form-group col-md-3 col-9">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo Movilidad:</mat-label>
+                                        <mat-select formControlName="cboTipoMovilidad" [errorStateMatcher]="matcher">
+                                            <mat-option *ngFor="let vTipo of lTipoMovil" [value]="vTipo.nId">
+                                                {{vTipo.sDescripcion}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="formSalida.get('cboTipoMovilidad').hasError('required')">
+                                            .Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo Movilidad:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtMovilidad">
+                                    </mat-form-field>
+                                </div>
+
+                                <div [ngClass]="this.pIdRegistro!=0?'col-md-6':'col-md-4'" class="form-group">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Observaciones Guía:</mat-label>
+                                        <input [readonly]="pIdRegistro!=0  && bEsNota==false" type="text" matInput
+                                            formControlName="txtObservacion1">
+                                        <mat-error
+                                            *ngIf="formSalida.get('txtObservacion1').hasError('caracterValidator')">
+                                            .El texto no debe contener: "/", "|", "?"</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="this.pIdRegistro!=0" class="form-group col-md-6 ocultar-mobile">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Observaciones Nota:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtObservacion2">
+                                    </mat-form-field>
+                                </div>
+
+                                <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                    class="form-group col-6 ocultar-mobile">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Unidades:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtTotalUnd">
+                                    </mat-form-field>
+                                </div>
+
+                                <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                    class="form-group col-6 ocultar-mobile">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Peso:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtTotalPeso">
+                                    </mat-form-field>
+                                </div>
+
+                                <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                    class="form-group col-6 ocultar-mobile">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Volumen:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtTotalVolumen">
+                                    </mat-form-field>
+                                </div>
+
+                                <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                    class="form-group col-6 ocultar-mobile">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total Precio:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtTotalPrecio">
+                                    </mat-form-field>
+                                </div>
+
+                                <!--Informacion en celular-->
+                                <div class="col-md-12 mostrar-mobile">
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title
+                                                style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                                Datos
+                                            </mat-panel-title>
+                                            <button mat-icon-button>
+                                                <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                            </button>
+                                        </mat-expansion-panel-header>
+                                        <div class="row">
+                                            <div *ngIf="this.pIdRegistro!=0" class="form-group col-md-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Observaciones Nota:</mat-label>
+                                                    <input type="text" readonly matInput
+                                                        formControlName="txtObservacion2">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                                class="form-group col-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Total Unidades:</mat-label>
+                                                    <input type="text" readonly matInput formControlName="txtTotalUnd">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                                class="form-group col-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Total Peso:</mat-label>
+                                                    <input type="text" readonly matInput formControlName="txtTotalPeso">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                                class="form-group col-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Total Volumen:</mat-label>
+                                                    <input type="text" readonly matInput
+                                                        formControlName="txtTotalVolumen">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div [ngClass]="this.pIdRegistro!=0?'col-md-3':'col-md-2'"
+                                                class="form-group col-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Total Precio:</mat-label>
+                                                    <input type="text" readonly matInput
+                                                        formControlName="txtTotalPrecio">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-expansion-panel>
+                                </div>
+
+                                <div class="col-md-12 mostrar-mobile">
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Informacion en desktop-->
+                        <div class="col-md-2 ocultar-mobile">
+                            <div class="form-row">
+                                <div class="col-md-1">
+                                    <div class="clsSeparador">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <!-- Campos auditoria -->
+                                <div class="col-md-11">
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Número:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtNumero">
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Doc. Referencia:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtDocRef">
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Registro:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtRegistro">
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha Registro:</mat-label>
+                                        <input type="text" readonly matInput formControlName="txtFechaRegistro">
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Estado:</mat-label>
+                                        <input type="text" readonly matInput placeholder="Estado"
+                                            formControlName="txtEstado" style="color: rgb(236, 0, 140);"
+                                            [errorStateMatcher]="matcher">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Informacion en celular-->
+                        <div class="col-md-12 mostrar-mobile">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                        Información
+                                    </mat-panel-title>
+                                    <button mat-icon-button>
+                                        <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                                    </button>
+                                </mat-expansion-panel-header>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Número:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtNumero">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Doc. Referencia:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDocRef">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Registro:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtRegistro">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha Registro:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtFechaRegistro">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" readonly matInput placeholder="Estado"
+                                                formControlName="txtEstado" style="color: rgb(236, 0, 140);"
+                                                [errorStateMatcher]="matcher">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </div>
+
+                        <div class="col-md-12 mostrar-mobile">
+                            <br>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <mat-expansion-panel #matExpUbicacion>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                                        Ubicación destinatario
+                                    </mat-panel-title>
+                                    <button mat-icon-button>
+                                        <mat-icon style="margin-right: 10px;" color="accent">location_on</mat-icon>
+                                    </button>
+                                </mat-expansion-panel-header>
+                                <div class="row">
+                                    <div *ngIf="pIdRegistro==0" class="form-group col-md-4">
+                                        <ng-select style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body"
+                                            [clearable]="false" formControlName="cboDestinatario"
+                                            placeholder="Destinatario" required>
+                                            <ng-option *ngFor="let vDest of lDestinatario" [value]="vDest">
+                                                {{vDest.sDescripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="formSalida.get('cboDestinatario').hasError('required')  && formSalida.get('cboDestinatario').touched ">
+                                            .Obligatorio
+                                        </mat-error>
+                                    </div>
+
+                                    <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Destinatario:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDestinatario">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div *ngIf="pIdRegistro==0" class="form-group col-md-4">
+                                        <ng-select style="padding-bottom:3.5px; bottom:0.45rem"
+                                            (change)="fnListarDirecciones($event)" appendTo="body" [clearable]="false"
+                                            formControlName="cboPuntoLLegada" placeholder="Entidad Entrega" required>
+                                            <ng-option *ngFor="let vPunto of lPuntoLLegada" [value]="vPunto">
+                                                {{vPunto.sDescripcion}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="formSalida.get('cboPuntoLLegada').hasError('required')  && formSalida.get('cboPuntoLLegada').touched ">
+                                            .Obligatorio
+                                        </mat-error>
+                                    </div>
+
+                                    <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Entidad Entrega:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtPuntoLLegada">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div *ngIf="pIdRegistro==0"
+                                        [ngClass]="this.bEsLogisticoSatelite?'col-md-3 col-10':'col-md-4'"
+                                        class="form-group">
+                                        <ng-select style="padding-bottom:3.5px; bottom:0.45rem"
+                                            (change)="fnLlenarDirecciones($event)" appendTo="body" [clearable]="false"
+                                            formControlName="cboPuntoRecup" placeholder="Punto Entrega" required>
+                                            <ng-option *ngFor="let vPunto of lPuntoRecup" [value]="vPunto">
+                                                {{vPunto.sCodigo}} - {{vPunto.sDestino}}
+                                            </ng-option>
+                                        </ng-select>
+                                        <mat-error
+                                            *ngIf="formSalida.get('cboPuntoRecup').hasError('required')  && formSalida.get('cboPuntoRecup').touched ">
+                                            .Obligatorio
+                                        </mat-error>
+                                    </div>
+
+                                    <div *ngIf="pIdRegistro==0 && this.bEsLogisticoSatelite" class="col-md-1 col-2">
+                                        <button (click)="fnAnadirModulos()" mat-icon-button class="fab-secondary" color="accent">
+                                            <i class="material-icons" matTooltip="Agregar Modulo"
+                                                matTooltipPosition="left">add</i>
+                                        </button>
+
+                                    </div>
+                                    <div *ngIf="pIdRegistro!=0" class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Punto Entrega:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtPuntoRecup">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Ubicación:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtUbicación">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Dirección:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDireccion">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </div>
+
+                        <div class="col-md-12">
+                            <br>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+
+            <div class="row">
+                <br>
+            </div>
+
+            <div class="col-md-10 offset-md-1">
+                <div class="row">
+                    <!--Table para detalle de registro de salida -->
+                    <div class="col-12">
+                        <button *ngIf="pIdRegistro==0" matTooltipPosition="left" matTooltip='Agregar detalle'
+                            mat-raised-button mat-mini-fab class="boton-MatTable" color="accent"
+                            (click)="fnAgregarArticulo()"><i class="material-icons">add</i></button>
+
+                        <div id="listaMobile" class="mat-elevation-z8">
+
+                            <div class="table-container-1">
+                                <table mat-table [dataSource]="dataSource" matSort>
+
+                                    <ng-container matColumnDef="opcion">
+                                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                                        </th>
+                                        <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu" xPosition="after">
+                                                <button *ngIf="this.pIdRegistro==0" mat-menu-item
+                                                    (click)="fnModificarArticulo(row)">
+                                                    <mat-icon color="accent">edit</mat-icon>
+                                                    <span>Modificar</span>
+                                                </button>
+
+                                                <button mat-menu-item (click)="fnVerImagen(row)">
+                                                    <mat-icon color="accent">image</mat-icon>
+                                                    <span>Ver foto</span>
+                                                </button>
+
+                                                <button *ngIf="pIdRegistro==0" matTooltip="Eliminar" mat-menu-item
+                                                    (click)="fnEliminarArticulo(row)">
+                                                    <mat-icon color="accent">delete</mat-icon>
+                                                    <span>Eliminar</span>
+                                                </button>
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sArticulo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                            Artículo
+                                        </th>
+                                        <td data-label='Artículo: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLarge">
+                                            {{row.sArticulo}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sLote">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Lote
+                                        </th>
+                                        <td data-label='Lote: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.sLote}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sFechaExpira">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Fecha Expira
+                                        </th>
+                                        <td data-label='Fecha Expira: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2"> {{row.sFechaExpira}}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sUndMedida">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Ud. Medida
+                                        </th>
+                                        <td data-label='Ud. Medida: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.sUndMedida}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nStock">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Stock
+                                        </th>
+                                        <td data-label='Stock: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.nStock}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nUnidades">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Unidades
+                                        </th>
+                                        <td data-label='Unidades: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{row.nUnidades}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nCostoUnit">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Costo Ud.
+                                        </th>
+                                        <td data-label='Costo Ud.: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2">
+                                            {{ row.nCostoUnit |
+                                            number:'1.4-4' }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nCostoTotal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Costo
+                                            Total
+                                        </th>
+                                        <td data-label='Costo Total: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2"> {{ row.nCostoTotal |
+                                            number:'1.4-4' }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nPesoTotal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Peso
+                                            Total
+                                        </th>
+                                        <td data-label='Peso Total: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2"> {{ row.nPesoTotal |
+                                            number:'1.2-2' }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nVolumenTotal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                            Volumen
+                                            Total
+                                        </th>
+                                        <td data-label='Volumen Total: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc2"> {{ row.nVolumenTotal |
+                                            number:'1.6-6' }} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <br>
+    </div>
+
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+
+            <!--Para los archivos-->
+            <button *ngIf="this.pIdRegistro != 0 && !this.bEsNota && !this.bEsNotaVerDetalle && abLista>0"
+                mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+                matTooltip="Adjuntar archivos" color="secondary" (click)="fnArchivo()"><i
+                    class="material-icons">attach_file</i></button>
+
+            <!--Para imprimir -->
+            <button *ngIf="this.pIdRegistro != 0 && !this.bEsNota && !this.bEsNotaVerDetalle && abLista>0"
+                matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Imprimir"
+                color="secondary" (click)="fnImprimirGuiaSalida()"><i class="material-icons">print</i></button>
+
+            <!--Para guardar notas-->
+            <button *ngIf="bEsNota && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" matTooltip="Registrar guía" color="secondary" (click)="fnGuardarNota()"><i
+                    class="material-icons">save</i></button>
+
+            <!--Para guardar guias-->
+            <button *ngIf="pIdRegistro==0 && abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab
+                class="fab-secondary" matTooltip="Registrar guía" color="secondary" (click)="fnGuardar()"><i
+                    class="material-icons">save</i></button>
+
+            <!--Para devolver-->
+            <button *ngIf="bEsNota && this.vRegistroDetalle?.sCodTrasladoNu=='' && abLista>0" mat-raised-button
+                mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Devolver" color="secondary"
+                (click)="fnDevolverNota()"><i class="material-icons">reply</i></button>
+
+            <!--Para rechazar-->
+            <button *ngIf="bEsNota && this.vRegistroDetalle?.sCodTrasladoNu=='' && abLista>0" mat-raised-button
+                mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Rechazar" color="secondary"
+                (click)="fnRechazarNota()"><i class="material-icons">block</i></button>
+
+            <!--Para anular guias-->
+            <button *ngIf="!bEsNota && this.vRegistroDetalle?.nIdEstado==2231 && abLista>0" mat-raised-button
+                mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Anular" color="secondary"
+                (click)="fnAnularGuia()"><i class="material-icons">block</i></button>
+
+            <!--Para anular NS automaticas-->
+            <button *ngIf="bEsNota && this.vRegistroDetalle?.sCodTrasladoNu!='' && abLista>0" mat-raised-button
+                mat-mini-fab class="fab-secondary" matTooltipPosition="left" matTooltip="Anular" color="secondary"
+                (click)="fnAnularNSAuto()"><i class="material-icons">block</i></button>
+
+            <button *ngIf="((bEsNota) ||(pIdRegistro==0)) && abLista>0 " mat-raised-button mat-mini-fab
+                matTooltipPosition="left" class="fab-secondary" matTooltip="Actualizar" color="secondary"
+                (click)="fnActualizar()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+
+            <!--Para salir-->
+            <button *ngIf="abLista>0" mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+                matTooltip="Salir" color="warn" (click)="fnRegresar()"><i
+                    class="material-icons">exit_to_app</i></button>
+        </div>
+    </div>
+
+</div>
+
+<div [ngClass]="{'impresionActiva' : vVerGuiaSalida}" class="impresion">
+    <app-guia-salida-formato [pIdRegistro]="pIdRegistro" *ngIf="this.pIdRegistro != 0 && !bEsNota">
+    </app-guia-salida-formato>
+</div>

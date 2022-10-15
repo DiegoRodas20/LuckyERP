@@ -1,0 +1,217 @@
+<ngx-spinner name="spi_renuncia" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<iframe id="pdf-renuncia" style="display: none" (load)="onLoadDocumento()"></iframe>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsRenuncia }">add</i>
+  </button>
+  <div [@speedDialStagger]="abRenuncia.length">
+    <button *ngFor="let elem of abRenuncia; let index = index" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="onClickMenuRenuncia(index, elem.tool)">
+      <i class="material-icons" matTooltip="{{ elem.tool }}" matTooltipPosition="left">{{ elem.icon }}</i>
+    </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">Renuncia de personal</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body" style="padding-bottom: 20px">
+  <!-- <div class="row"> -->
+  <div [formGroup]="fgRenunciaPersonal" class="col-lg-12">
+    <mat-tab-group mat-align-tabs="start" style="width: 100%">
+      <mat-tab label="Información" class="mat-tab-label-active">
+        <div class="form-row" style="margin-top: 20px">
+          <div class="col-lg-6">
+            <mat-form-field hidden="true">
+              <input matInput formControlName="txtRenunciaId" />
+            </mat-form-field>
+            <mat-form-field hidden="true">
+              <input matInput formControlName="txtPeriodoLaboralId" />
+            </mat-form-field>
+            <mat-form-field hidden="true">
+              <input matInput formControlName="txtSupervisorId" />
+            </mat-form-field>
+            <mat-form-field hidden="true">
+              <input matInput formControlName="txtCentroCostoId" />
+            </mat-form-field>
+            <mat-form-field style="width: 100%">
+              <mat-label>Trabajador</mat-label>
+              <input matInput formControlName="txtTrabajador" class="titlecase" />
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6">
+            <mat-form-field style="width: 100%">
+              <mat-label>Supervisor</mat-label>
+              <input matInput formControlName="txtSupervisor" class="titlecase" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-lg-3">
+            <mat-form-field style="width: 100%" appDateFormat color="accent">
+              <mat-label>Fecha de cese</mat-label>
+              <input matInput #txtFechaCese [matDatepicker]="picker" [min]="minFechaCese" [max]="maxFechaCese"
+                [errorStateMatcher]="matcher" disabled formControlName="txtFechaCese"
+                (dateInput)="onDateInputFechaCese(txtFechaCese.value)"
+                (dateChange)="onDateChangeFechaCese(txtFechaCese.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker disabled="false"></mat-datepicker>
+              <mat-error *ngIf="getRenunciaPersonal.txtFechaCese.hasError('required')">. Obligatorio</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-group col-lg-3">
+            <mat-form-field style="width: 100%">
+              <mat-label>N° celular</mat-label>
+              <input matInput formControlName="txtTelefonoMovil" [errorStateMatcher]="matcher" />
+              <mat-error *ngIf="
+                  getRenunciaPersonal.txtTelefonoMovil.hasError('required')
+                ">. Obligatorio</mat-error>
+              <mat-error *ngIf="getRenunciaPersonal.txtTelefonoMovil.hasError('pattern')">. # Celular inválido
+              </mat-error>
+              <mat-error *ngIf="
+                  getRenunciaPersonal.txtTelefonoMovil.hasError('maxlength')
+                ">. Lóngitud inválida
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6">
+            <mat-form-field style="width: 100%">
+              <mat-label>Cliente</mat-label>
+              <input matInput formControlName="txtCliente" class="titlecase" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-lg-6">
+            <mat-form-field style="width: 80%">
+              <mat-label>Motivo cese</mat-label>
+              <mat-select formControlName="selMotivoCese" [errorStateMatcher]="matcher">
+                <mat-option *ngFor="let elem of lstMotivos" [value]="elem.motivoId">
+                  {{ elem.motivo }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="getRenunciaPersonal.selMotivoCese.hasError('noSelect')">. Obligatorio</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6">
+            <mat-form-field style="width: 100%">
+              <mat-label>Campaña</mat-label>
+              <input matInput formControlName="txtCampania" class="titlecase" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-lg-6">
+            <mat-form-field style="width: 100%" hintLabel="Max 500 caracteres">
+              <mat-label>Observación</mat-label>
+              <textarea matInput #input cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5"
+                placeholder="Ingresa una observación sobre el motivo de renuncia..."
+                formControlName="txtMotivoCese"></textarea>
+              <mat-hint align="end">{{ input.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-6" style="width: 100%">
+            <label style="font-size: 13px; color: rgba(0, 0, 0, 0.54)">Adeuda</label>
+            <div class="row">
+              <div class="col">
+                <mat-checkbox formControlName="chkProvis">Provis</mat-checkbox>
+              </div>
+              <div class="col">
+                <mat-checkbox formControlName="chkPasajes">Pasajes</mat-checkbox>
+              </div>
+              <div class="col">
+                <mat-checkbox formControlName="chkFeriado">Feriado</mat-checkbox>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-checkbox formControlName="chkIncentivo">Incentivo</mat-checkbox>
+              </div>
+              <div class="col">
+                <mat-checkbox formControlName="chkSueldo">Sueldo</mat-checkbox>
+              </div>
+              <div class="col">
+                <mat-checkbox formControlName="chkBono">Bono</mat-checkbox>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <mat-checkbox formControlName="chkOtro">Otro</mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Documentos a imprimir">
+        <mat-list role="list" *ngIf="!nuevaRenuncia">
+          <!-- <mat-list-item role="listitem" *ngFor="let elem of documentos; let index = index;">
+              <button mat-button color="accent" (click)="onImprimirDocumento(index)">Imprimir</button>
+              {{ elem.name }}
+            </mat-list-item> -->
+          <mat-list-item role="listitem">
+            <button mat-button color="accent" (click)="onImprimirDocumento('CartaDeRenuncia')">
+              Imprimir
+            </button>
+            Carta de renuncia
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            <button mat-button color="accent" (click)="onImprimirDocumento('Encuesta')">
+              Imprimir
+            </button>
+            Encuesta
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            <button mat-button color="accent" (click)="onImprimirDocumento('AltaSunat')">
+              Imprimir
+            </button>
+            Alta Sunat
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            <button mat-button color="accent" (click)="onImprimirDocumento('Contrato')">
+              Imprimir
+            </button>
+            Contrato
+          </mat-list-item>
+        </mat-list>
+
+        <mat-selection-list [multiple]="false" *ngIf="nuevaRenuncia">
+          <!-- <mat-list-option *ngFor="let elem of documentos">
+              <mat-checkbox [checked]="elem.checked">{{ elem.name }}</mat-checkbox>
+            </mat-list-option>-->
+          <mat-list-option>
+            <mat-checkbox formControlName="chkCartaRenuncia">Carta de renuncia</mat-checkbox>
+          </mat-list-option>
+          <mat-list-option>
+            <mat-checkbox formControlName="chkEncuesta">Encuesta</mat-checkbox>
+          </mat-list-option>
+          <mat-list-option>
+            <mat-checkbox formControlName="chkAltaSunat">Alta Sunat</mat-checkbox>
+          </mat-list-option>
+          <mat-list-option>
+            <mat-checkbox formControlName="chkContrato">Contrato</mat-checkbox>
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <!-- </div> -->
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar *ngIf="pbRenuncia" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

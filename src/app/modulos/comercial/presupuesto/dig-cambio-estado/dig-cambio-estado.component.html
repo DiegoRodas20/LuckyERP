@@ -1,0 +1,40 @@
+<h1 mat-dialog-title class="clstituloCrtl">Opciones de marca para el presupuesto</h1>
+<div mat-dialog-content >  
+    <div class="col-sm-12"> 
+        Eliga cuidadosamente la MARCA que realizará en el presupuesto
+    </div> 
+    <section>
+        <div class="padre">
+            <div class="example-button-row">
+                <button mat-raised-button (click)="onCambio('P')">(P) - Modificable</button> 
+            </div>
+        </div> 
+    </section>
+    <section>
+        <div class="padre">
+            <div class="example-button-row">
+                <button mat-raised-button (click)="onCambio('X')">(X) - Anulado</button> 
+            </div>
+        </div> 
+    </section>
+    <section>
+        <div class="padre">
+            <div class="example-button-row">
+                <button mat-raised-button (click)="onCambio('K')">(K) - Cancelada</button> 
+            </div>
+        </div> 
+    </section>
+    <section>
+        <div class="padre">
+            <div class="example-button-row">
+                <button mat-raised-button (click)="onCambio('C')">(C) - Cerrado</button> 
+            </div>
+        </div> 
+    </section> 
+</div>
+<div mat-dialog-actions style="display: flex;justify-content: center;"> 
+    <button mat-button color="warn" (click)="onNoClick()">Salir</button> 
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

@@ -1,0 +1,351 @@
+<div class="col-md-10 offset-md-1 mt-4 clsprincipal">
+  <!-- #region CABECERA-->
+  <div class="text-center">
+    <h3 class="titulo">
+      Registro de Porcentajes - Staff
+    </h3>
+  </div>
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="repositoryUtilitarios.onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: repositoryUtilitarios.tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="repositoryUtilitarios.abLista.length">
+      <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="salir()">
+        <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+      </button>
+
+      <!--Para editar tareo-->
+
+      <button *ngIf="this.habilitarbtnEditar()" matTooltipPosition="left" mat-raised-button mat-mini-fab
+        class="fab-secondary" matTooltip="Editar tareo." color="secondary"
+        (click)="cargarDetalleTareo(repositoryTareo.mostrarTablaDetalleTareo=false)" id="btnEditarTareo">
+        <i class="material-icons">edit</i>
+      </button>
+
+
+      <div *ngIf="this.habilitarbtnEditar()">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="guardar(true)"
+          id="btnGuardarTareo">
+          <i class="material-icons" matTooltip="Guardar Tareo" matTooltipPosition="left">save</i>
+        </button>
+      </div>
+
+
+      <button *ngIf="habilitarbtnEditar()" mat-raised-button mat-mini-fab class="fab-secondary" color="secondary"
+        (click)="enviar()" id="btnEnviarTareo">
+        <i class="material-icons" matTooltip="Enviar a RR.HH" matTooltipPosition="left">send</i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-12">
+      <mat-card>
+        <div class="row m-auto">
+          <div class="col-md-6">
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Solicitante</mat-label>
+              <input matInput [(ngModel)]="this.securityErp.sysUsuario" disabled>
+            </mat-form-field>
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Empleado</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.personal" disabled>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-2">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Año</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.anio" disabled>
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Mes</mat-label>
+                    <input matInput [(ngModel)]="consultaPersonalTareo.mes" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Cargo</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.cargoId" disabled>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <input matInput [(ngModel)]="consultaPersonalTareo.cargo" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.idCiudad" disabled>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <input matInput [(ngModel)]="consultaPersonalTareo.ciudad" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Estado</mat-label>
+                  <input style="color: red;font-weight: bolder;" matInput
+                    [(ngModel)]="consultaPersonalTareo.estadoTareo" disabled>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 - col-12">
+                <mat-form-field class="example-full-width ">
+                  <mat-label>Nª Tareo</mat-label>
+                  <input style="color: red; font-weight: bold;" matInput [(ngModel)]="tareoStaffCrud.idCorrelativo"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field color="primary" class="example-full-width">
+                  <mat-label>Quincena</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.idQuincena" disabled>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 - col-12">
+                <mat-form-field class="example-full-width">
+                  <input matInput [(ngModel)]="consultaPersonalTareo.quincena" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Partida</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.codPartida" disabled>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <input matInput [(ngModel)]="consultaPersonalTareo.partida" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Registro</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.horaFechaRegistro" disabled>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Modificado</mat-label>
+                  <input matInput [(ngModel)]="consultaPersonalTareo.horaFechaModificacion" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+
+  <div class="mt-4 mb-4">
+    <!-- Traer detalle de campañas -->
+    <!-- <div class="text-center mt-4">
+      <button mat-raised-button class="mr-1 btn_activo botonTraerCampania"
+        (click)="cargarDetalleTareo(repositoryTareo.mostrarTablaDetalleTareo=true)" id="traerCampania" disabled>
+        TRAER CAMPAÑAS
+      </button>
+    </div> -->
+
+
+    <!-- tareo de solo lectura -->
+    <ng-container *ngIf="!repositoryTareo.mostrarTablaDetalleTareo">
+      <mat-label class=" textoDeTotales">{{repositoryTareo.totalfilasDetalleTareo}}</mat-label>
+      <div class="mat-elevation-z8 container_tabla">
+        <table mat-table [dataSource]="lstCampaniaTareo" id="tablaCampania2">
+
+          <ng-container matColumnDef="sCodCC">
+            <th mat-header-cell *matHeaderCellDef>Campaña </th>
+            <td mat-cell *matCellDef="let element"> {{element.sCodCC}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sDescCC">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.sDescCC}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sPerfil">
+            <th mat-header-cell *matHeaderCellDef>Perfil</th>
+            <td mat-cell *matCellDef="let element"> {{element.sPerfil}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sCanal">
+            <th mat-header-cell *matHeaderCellDef> Canal </th>
+            <td mat-cell *matCellDef="let element"> {{element.sCanal}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nPorcentaje">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Porcentaje </th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <input type="number" min="0" [(ngModel)]="element.nPorcentaje" [ngModelOptions]="{standalone: true}"
+                (change)="onValidarPorcentajes()" class="textoCenterNumeros" id="txtPorcentaje" disabled>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nDiasPropor">
+            <th mat-header-cell *matHeaderCellDef> Dias Equivalente </th>
+            <td mat-cell *matCellDef="let element">
+              <input type="number" [(ngModel)]="element.nDiasPropor" [ngModelOptions]="{standalone: 'true'}"
+                class="textoCenterNumeros" disabled>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="repositoryTareo.displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: repositoryTareo.displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <div class="col-md-12 col-12">
+
+        <div class="row">
+
+          <div class="col-md-5">
+          </div>
+
+
+          <div class="col-md-3">
+            <mat-label class="textoDeTotales">**
+              Solo se podrá grabar al llegar al 100% **</mat-label>
+          </div>
+
+
+          <div class="col-md-2">
+
+            <input class="textoCenterNumeros" type="number"
+              [(ngModel)]="repositoryTareo.sumaTotalPorcentajesEquivalentes" disabled>
+
+          </div>
+
+
+          <div class="col-md-2">
+            <input class="textoCenterNumeros" type="number" [(ngModel)]="repositoryTareo.sumaTotalDiasEquivalentes"
+              disabled>
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+    <br />
+
+    <ng-container *ngIf="repositoryTareo.mostrarTablaDetalleTareo">
+      <mat-label class=" textoDeTotales">{{this.repositoryTareo.totalfilasDetalleTareo}}</mat-label>
+      <div class="mat-elevation-z8 container_tabla">
+        <table mat-table [dataSource]="detalleTareoStaff" id="tablaCampania">
+          <ng-container matColumnDef="campania">
+            <th mat-header-cell *matHeaderCellDef>Campaña </th>
+            <td mat-cell *matCellDef="let element"> {{element.campania}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombreCampania">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.nombreCampania}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="perfil">
+            <th mat-header-cell *matHeaderCellDef>Perfil</th>
+            <td mat-cell *matCellDef="let element"> {{element.perfil}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="canal">
+            <th mat-header-cell *matHeaderCellDef> Canal </th>
+            <td mat-cell *matCellDef="let element"> {{element.canal}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="porcentaje">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Porcentaje </th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <input type="number" min="0" [(ngModel)]="element.porcentaje" (change)="onValidarPorcentajes()"
+                (keyup)="devuelveIndex(element)" (keyup.enter)="consultaCostoEmpresaDiasDisponible(element)"
+                class="textoCenterNumeros">
+            </td>
+          </ng-container>
+          <!-- jose -->
+          <ng-container matColumnDef="diasEquivalente">
+            <th mat-header-cell *matHeaderCellDef> Dias Equivalente </th>
+            <td mat-cell *matCellDef="let element">
+              <input type="number" [(ngModel)]="element.diasEquivalente" class="textoCenterNumeros" disabled>
+            </td>
+
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="consultaPersonalTareo.displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: consultaPersonalTareo.displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <div class="col-md-12 col-12">
+
+        <div class="row">
+
+          <div class="col-md-5">
+          </div>
+
+
+          <div class="col-md-3">
+            <mat-label class="textoDeTotales">**
+              Solo se podrá grabar al llegar al 100% **</mat-label>
+          </div>
+
+
+          <div class="col-md-2">
+
+            <input class="textoCenterNumeros" type="number"
+              [(ngModel)]="repositoryTareo.sumaTotalPorcentajesEquivalentes" disabled>
+
+          </div>
+
+
+          <div class="col-md-2">
+            <input class="textoCenterNumeros" type="number" [(ngModel)]="repositoryTareo.sumaTotalDiasEquivalentes"
+              disabled>
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+  </div>
+  <br />

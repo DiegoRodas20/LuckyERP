@@ -1,0 +1,239 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 style="text-align: center;" class="card-header center-text-card">{{title}}
+        </h5>
+        <div class="row"><br /></div>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <mat-card>
+            <form [formGroup]="formProveedor" class="form-row">
+                <div *ngIf="nIdEmpresaProveedor==0" class="form-group col-md-8 ocultar-mobile">
+                    <ng-select appendTo="body" (change)="fnSeleccionarProveedor($event)" [clearable]="false"
+                        formControlName="cboProveedor" placeholder="Proveedor(Razón Social)" required>
+                        <ng-option *ngFor="let vProveedor of lProveedor" [value]="vProveedor">
+                            {{vProveedor.sRazonSocial}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <div *ngIf="nIdEmpresaProveedor!=0" class="form-group col-md-8 ocultar-mobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Razón Social:</mat-label>
+                        <input readonly type="text" matInput placeholder="Proveedor" [formControl]="txtProveedor">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4 ocultar-mobile" [ngClass]="nIdEmpresaProveedor==0?'alinea-ngselect':''">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>RUC / DNI:</mat-label>
+                        <input readonly type="text" matInput placeholder="RUC" formControlName="txtRUC">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 ocultar-mobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Contacto:</mat-label>
+                        <input readonly type="text" matInput placeholder="Contacto" formControlName="txtContacto">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 ocultar-mobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Correo del Contacto:</mat-label>
+                        <input readonly type="text" matInput placeholder="Correo" formControlName="txtCorreo">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 ocultar-mobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Télefono:</mat-label>
+                        <input readonly type="text" matInput placeholder="Teléfono" formControlName="txtTelefono1">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 ocultar-mobile">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Estado:</mat-label>
+                        <input style="color: rgb(236, 0, 140);" readonly type="text" matInput placeholder="Estado"
+                            formControlName="txtEstado">
+                    </mat-form-field>
+                </div>
+
+                <!--Informacion en celular-->
+                <mat-expansion-panel class="col-md-12 mostrar-mobile" #matExpInformacionCel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                            Datos proveedor
+                        </mat-panel-title>
+                        <button mat-icon-button>
+                            <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                        </button>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div *ngIf="nIdEmpresaProveedor==0">
+                                <ng-select appendTo="body" (change)="fnSeleccionarProveedor($event)" [clearable]="false"
+                                    formControlName="cboProveedor" placeholder="Proveedor(Razón Social)" required>
+                                    <ng-option *ngFor="let vProveedor of lProveedor" [value]="vProveedor">
+                                        {{vProveedor.sRazonSocial}}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div *ngIf="nIdEmpresaProveedor!=0">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Razón social:</mat-label>
+                                    <input readonly type="text" matInput placeholder="Proveedor"
+                                        [formControl]="txtProveedor">
+                                </mat-form-field>
+                            </div>
+
+                            <div [ngClass]="nIdEmpresaProveedor==0?'alinea-ngselect':''">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>RUC / DNI:</mat-label>
+                                    <input readonly type="text" matInput placeholder="RUC" formControlName="txtRUC">
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Contacto:</mat-label>
+                                    <input readonly type="text" matInput placeholder="Contacto"
+                                        formControlName="txtContacto">
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Correo contacto:</mat-label>
+                                    <input readonly type="text" matInput placeholder="Correo"
+                                        formControlName="txtCorreo">
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Télefono:</mat-label>
+                                    <input readonly type="text" matInput placeholder="Teléfono"
+                                        formControlName="txtTelefono1">
+                                </mat-form-field>
+                            </div>
+
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Estado:</mat-label>
+                                    <input style="color: rgb(236, 0, 140);" readonly type="text" matInput
+                                        placeholder="Estado" formControlName="txtEstado">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <div class="col-md-12 mostrar-mobile">
+                    <br>
+                </div>
+
+                <mat-expansion-panel class="col-md-12" hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                            Dirección principal
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px">
+                        </mat-panel-description>
+                        <button mat-icon-button>
+                            <mat-icon style="margin-right: 10px;" color="accent">location_on</mat-icon>
+                        </button>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Departamento:</mat-label>
+                                <input readonly type="text" matInput placeholder="Departamento"
+                                    formControlName="txtDepartamento">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Provincia:</mat-label>
+                                <input readonly type="text" matInput placeholder="Provincia"
+                                    formControlName="txtProvincia">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Distrito:</mat-label>
+                                <input readonly type="text" matInput placeholder="Distrito"
+                                    formControlName="txtDistrito">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Dirección:</mat-label>
+                                <input readonly type="text" matInput placeholder="Dirección"
+                                    formControlName="txtDireccion">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                </mat-expansion-panel>
+            </form>
+        </mat-card>
+    </div>
+    <!--Area de vehiculos y choferes de la empresa transporte-->
+    <div style="margin-top: 10px;" *ngIf="nIdEmpresaProveedor!=0" class="col-md-10 offset-md-1">
+        <mat-tab-group mat-align-tabs="center" [selectedIndex]="index">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon color="primary">commute</mat-icon>
+                    Vehículos
+                </ng-template>
+                <app-vehiculo #vehiculoComponent [pIdEmpresaTransporte]='nIdEmpresaProveedor' [isNew]="isNew">
+                </app-vehiculo>
+            </mat-tab>
+            <mat-tab [disabled]="vehiculoComponent?.pMostrar==1" label="Choferes">
+                <ng-template mat-tab-label>
+                    <mat-icon color="primary">person_pin</mat-icon>
+                    Choferes
+                </ng-template>
+                <app-chofer [pIdEmpresaTransporte]='nIdEmpresaProveedor' [isNew]="isNew" [isVehiculo]="isVehiculo">
+                </app-chofer>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <div>
+        <br>
+    </div>
+
+    <!--pMostrar == 1 cuando esta en vehiculo detalle-->
+    <!--Zona de botones flotantes-->
+    <div class="fab-container" *ngIf="vehiculoComponent?.pMostrar!=1">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+            <!--Para activar-->
+            <button matTooltipPosition="left" *ngIf="nIdEmpresaProveedor!=0 && nIdEstado!=589 && abLista>0"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Activar" color="accent"
+                (click)="fnActivarEmpresa()"><i class="material-icons">check</i></button>
+
+            <!--Para inactivar-->
+            <button matTooltipPosition="left" *ngIf="nIdEmpresaProveedor!=0 && nIdEstado!=591 && abLista>0"
+                mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Inactivar" color="secondary"
+                (click)="fnInactivarEmpresa()"><i class="material-icons">block</i></button>
+
+            <!--Para agregar proveedor-->
+            <button matTooltipPosition="left" *ngIf="nIdEmpresaProveedor==0 && abLista>0" mat-raised-button mat-mini-fab
+                class="fab-secondary" matTooltip="Agregar" color="secondary" (click)="fnAgregarProveedor()"><i
+                    class="material-icons">save</i></button>
+
+            <!--Para salir-->
+            <button *ngIf="abLista>0" matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary"
+                matTooltip="Salir" color="warn" (click)="fnRegresar()"><i
+                    class="material-icons">exit_to_app</i></button>
+
+        </div>
+    </div>

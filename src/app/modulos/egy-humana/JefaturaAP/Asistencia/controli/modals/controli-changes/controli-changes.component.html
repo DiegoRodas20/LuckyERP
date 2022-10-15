@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <h4> Histórico de estados de la inasistencia:</h4>
+  <button class="close" (click)="fnCloseModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="form-row">
+    <div class="col-lg-12">
+      <mat-label>Día seleccionado: {{ data.daySelected | date: 'dd/MM/yyyy'}}</mat-label>
+      <hr class="my-2">
+    </div>
+    <div class="col-lg-12">
+      <div id="listaMobile" class="mat-elevation-z8 example-container">
+        <table mat-table [dataSource]="data.changes">
+          <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+            <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+              [style.textAlign]="col.align">
+              {{row[col.field]}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedcolumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedcolumns"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

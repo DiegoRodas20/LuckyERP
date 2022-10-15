@@ -1,0 +1,70 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngIf="isUpdate === 0 && abLista.length>0" mat-mini-fab class="fab-secondary" color="white"
+            (click)="agregar()">
+            <i class="material-icons" matTooltip="Agregar" matTooltipPosition="left">save</i>
+        </button>
+        <button *ngIf="isUpdate === 1 && abLista.length>0" mat-mini-fab class="fab-secondary" color="white"
+            (click)="agregar()">
+            <i class="material-icons" matTooltip="Grabar" matTooltipPosition="left">save</i>
+        </button>
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="cerrar()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+<div mat-dialog-title class="mb-3" style="text-align: center;">
+    <mat-card *ngIf="isUpdate === 0" class="title-card">Agregar {{title}}</mat-card>
+    <mat-card *ngIf="isUpdate === 1" class="title-card">Modificar {{title}}</mat-card>
+</div>
+<mat-dialog-content>
+    <p class="breadcrump"> {{ breadcrumb }} </p>
+    <form [formGroup]="form" autocomplete="false">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <mat-form-field>
+                    <mat-label>Código</mat-label>
+                    <input matInput formControlName="codigo" class="uppercase"
+                        (blur)="escribirNombre($event.target.value)">
+                    <!-- <input matInput id="codigo" class="uppercase" formControlName="codigo" (input)="escribirNombre($event.target.value)" (blur)=""> -->
+                </mat-form-field>
+                <!-- <small *ngIf="codigoValidator" class="text-danger">{{ mensajeValidacion }}</small> -->
+                <mat-error *ngIf="codigoError">{{ codigoError }}</mat-error>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                <mat-form-field *ngIf="tipo !== 0">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="nombre" readonly>
+                </mat-form-field>
+                <mat-form-field *ngIf="tipo === 0">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="nombre">
+                </mat-form-field>
+                <!-- <small *ngIf="nombreValidator" class="text-danger">El nombre no puede estar vacío</small> -->
+                <mat-error *ngIf="nombreError">{{ nombreError }}</mat-error>
+            </div>
+        </div>
+        <div class="row" *ngIf="tipo === 5">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <mat-form-field>
+                    <mat-label>Peso</mat-label>
+                    <input matInput type="number" formControlName="peso">
+                </mat-form-field>
+                <mat-error *ngIf="pesoValidator">.Obligatorio</mat-error>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <mat-form-field>
+                    <mat-label>Volumen</mat-label>
+                    <input matInput type="number" formControlName="volumen">
+                </mat-form-field>
+                <mat-error *ngIf="volumenValidator">.Obligatorio</mat-error>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>

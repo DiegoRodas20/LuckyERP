@@ -1,0 +1,131 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="form-row" style="margin-top: 15px;">
+	<div class="form-group col-md-12">
+		<!-- Inicio del contenido -->
+		<div class="row justify-content-center">
+
+			<div class="col-md-5 col-sm-8 col-8">
+
+				<mat-form-field style="width: 100%;">
+					<mat-label>Buscar vehículo:</mat-label>
+					<input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+					<button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+						aria-label="Clear" (click)="this.txtFiltro.setValue(''); fnListarVehiculo();">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</div>
+			<div class="col-md-1 col-sm-2 col-2">
+				<button mat-icon-button color="accent" matTooltip="Nuevo vehículo" (click)="fnAbrirDetalle()">
+					<mat-icon>add</mat-icon>
+				</button>
+			</div>
+			<div class="col-md-1 col-sm-2 col-2">
+
+				<button mat-icon-button color="accent" matTooltip="Agregar vehículo" (click)="fnOpenSelector()">
+					<mat-icon>playlist_add</mat-icon>
+				</button>
+			</div>
+
+		</div>
+
+		<!-- nueva tabla material -->
+		<div id="listaMobile" class="mat-elevation-z8">
+			<div class="example-container">
+				<table mat-table [dataSource]="dataSource" matSort>
+
+					<!-- ID Column -->
+					<ng-container matColumnDef="nId" sticky>
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+						<td data-label='Opciones: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaOpc2">
+							<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+								matTooltipPosition="right" mat-stroked-button color="accent">
+								<mat-icon>more_vert</mat-icon>
+							</button>
+							<mat-menu #menu="matMenu" xPosition="after">
+								<button mat-menu-item (click)="fnVerDetalleVehiculo(row)">
+									<mat-icon color="accent">create</mat-icon>
+									<span>Ver detalle</span>
+								</button>
+								<button mat-menu-item (click)="fnArchivo(row)">
+									<mat-icon color="accent">attach_file</mat-icon>
+									<span>Adjuntar archivo</span>
+								</button>
+							</mat-menu>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sPlaca">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Placa
+						</th>
+						<td data-label='Placa: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sPlaca" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+
+					<ng-container matColumnDef="sDescripcion">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Descripción
+						</th>
+						<td data-label='Descripción: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaLarge">
+							<ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sModelo">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Modelo
+						</th>
+						<td data-label='Modelo: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sModelo" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sTipoVehiculo">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Tipo
+						</th>
+						<td data-label='Tipo: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaOpc">
+							<ngb-highlight [result]="row.sTipoVehiculo" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sLucky">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> De Lucky
+						</th>
+						<td data-label='De Lucky: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaOpc2">
+							<ngb-highlight [result]="row.sLucky" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="sEstado">
+						<th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+						</th>
+						<td data-label='Estado: ' mat-cell *matCellDef="let row"
+							class="has_label_on_mobile clsColumnaLib2">
+							<ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value">
+							</ngb-highlight>
+						</td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns;"
+						[ngClass]="row.nIdEstado==591 ? 'make-gris' : ''">
+					</tr>
+				</table>
+			</div>
+			<mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+		</div>
+	</div>
+</div>
+
+<app-vehiculo-detalle [pVehiculo]="pVehiculoSeleccionado" [nIdEmpresaProveedor]="pIdEmpresaTransporte"
+	(pMostrar)="fnOcultar($event)" *ngIf="pMostrar==1"></app-vehiculo-detalle>

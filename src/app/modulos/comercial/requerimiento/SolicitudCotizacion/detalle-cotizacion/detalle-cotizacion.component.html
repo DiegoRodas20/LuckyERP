@@ -1,0 +1,1133 @@
+<div class="col-md-10 offset-md-1 mt-4 clsprincipal">
+
+  <div *ngIf="Privilegio">
+    <div class="text-center">
+      <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+        Detalle de Cotización
+        <span *ngIf="tabla1o2 === true">General</span>
+        <span *ngIf="tabla1o2 === false">Textil</span>
+      </h3>
+    </div>
+    <div class="fab-container">
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab2()">
+        <i class="material-icons" [@fabToggler]="{value: fabTogglerState2}">add</i>
+      </button>
+      <div [@speedDialStagger]="buttons2.length">
+        <button [matTooltip]="tapColumns2(0)" mat-mini-fab class="fab-secondary" color="secondary">
+          <i class="material-icons" (click)="tap2(0)">{{buttons2[0].icon}}</i>
+        </button>
+        <ng-container *ngIf="!BotonConfirmarRecibir">
+          <button *ngIf="EnviadoHabilitar" [matTooltip]="tapColumns2(1)" mat-mini-fab class="fab-secondary"
+            color="secondary">
+            <i class="material-icons" (click)="tap2(1)">{{buttons2[1].icon}}</i>
+          </button>
+          <button *ngIf="EnviadoHabilitar" [matTooltip]="tapColumns2(2)" mat-mini-fab class="fab-secondary"
+            color="secondary">
+            <i class="material-icons" (click)="tap2(2)">{{buttons2[2].icon}}</i>
+          </button>
+          <button *ngIf="EnviadoHabilitar" [matTooltip]="tapColumns2(3)" mat-mini-fab class="fab-secondary"
+            color="secondary">
+            <i class="material-icons" (click)="tap2(3)">{{buttons2[3].icon}}</i>
+          </button>
+        </ng-container>
+        <button *ngIf="BotonImprimirHabilitar" mat-raised-button [matTooltip]="tapColumns2(4)" mat-mini-fab
+          class="fab-secondary butm" color="secondary">
+          <i class="material-icons" (click)="ImprimirPDF(4, imprimir)">{{buttons2[4].icon}}</i>
+        </button>
+
+      </div>
+    </div>
+    <div class="row" *ngIf="ICot.estadoComponent">
+      <div class="col-md-12 col-12">
+        <mat-card>
+          <div class="row m-auto">
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Nro. Solicitud de Cotización
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.correlativo" disabled />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Solicitante</mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.solicitante" disabled />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Título
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.sTitulo" disabled />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Tipo de Cotización 
+                  <!-- {{ICot.nTipoOC}} -->
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.nTipoOCName" disabled />
+              </mat-form-field>
+
+
+            </div>
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Año
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.anio" disabled />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Nro de Presupuesto {{ICot.sCodCC}}</mat-label>
+                <input type="text" aria-label="Number" matInput [(ngModel)]="ICot.descPresupuesto" disabled>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Cliente 
+                  <!-- {{ICot.nIdCliente}} -->
+                </mat-label>
+                <input type="text" aria-label="Number" matInput [(ngModel)]="ICot.cliente" disabled>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Lugar de entrega {{ICot.nIdLugarEntrega}}</mat-label>
+                <input type="text" aria-label="Number" matInput [(ngModel)]="ICot.descrip" disabled>
+              </mat-form-field>
+
+            </div>
+
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Fecha de creación</mat-label>
+                <input matInput [ngModel]="ICot.fechaCreacion | date: 'dd/MM/yyyy'"
+                  (ngModelChange)="ICot.fechaCreacion= $event" disabled>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Fecha de entrega máxima</mat-label>
+                <input matInput [ngModel]="ICot.fechaDeseada | date: 'dd/MM/yyyy'"
+                  (ngModelChange)="ICot.fechaDeseada= $event" disabled>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Observación
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.sObservacion" disabled />
+              </mat-form-field>
+
+              <b>
+                <span>Estado</span>
+
+                <span style="color: rgb(255, 0, 157)" class="ml-2">{{ICot.estado}} </span>
+              </b>
+            </div>
+
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+
+    <!--    PARTE DE FECHAS Y HORAS, RECIBIDO, RECHAZADO O ACTUALIZADO POR...-->
+    <div class="row mt-4">
+
+      <div class="col-md-12 col-12">
+
+        <mat-card *ngIf="ICot.estado !== 'Enviado por Operaciones'">
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.3rem; padding-top: 0.3rem"
+            *ngIf="ICot.estado === 'Recibido por Compras'">
+
+            <span>Recibido por: {{usrRecep.solicitante}} {{ICot.dRecepFecha |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="usrRecha.estado">
+
+            <span>Rechazado o devuelto por: {{usrRecha.solicitante}} {{ICot.dDevRechFecha |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="usrMod.estado">
+
+            <span>Actualizado por: {{usrMod.solicitante}} {{ICot['dModFecha'] |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="ICot['sMotivoDevRech'] != ''">
+
+            <span>Motivo: {{ICot['sMotivoDevRech']}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+        </mat-card>
+      </div>
+    </div>
+
+    <div style="padding-bottom: 5%; padding-top: 2rem">
+
+      <div class="mat-elevation-z5 contenedor_tabla" *ngIf="ICot.estadoComponent">
+
+        <!-- GENERAL TABLE -->
+
+        <table mat-table [dataSource]="generalArr" style="width: 100%" *ngIf="tabla1o2"
+          class="mat-elevation-z8 contenedor_tabla">
+          <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumns">
+
+            <th style="text-align: center; padding-right: 2rem" mat-header-cell *matHeaderCellDef>
+              {{obtenerNombreColumna(colum)}} </th>
+            <td style="text-align: center; padding-right: 2rem" mat-cell *matCellDef="let element">
+
+              <div *ngIf="!element.editable">
+
+                <div *ngIf="colum === 'sCiudad'" class="example-full-width" style="text-align: center">
+
+                  {{element.sDesc}}
+
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'">
+
+                  {{element.sProductoDescripcion}}
+
+                </div>
+
+                <div *ngIf="colum === 'uMedida'">
+
+                  {{element.sDescripcion}}
+
+                </div>
+
+                <div *ngIf="colum === 'sMarcaSugerida'">
+
+                  {{element.sMarcaSugerida}}
+
+                </div>
+
+                <div *ngIf="colum === 'nCantidad'">
+
+                  {{element.nCantidad}}
+
+                </div>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!--        TEXTIL TABLE-->
+
+        <table mat-table [dataSource]="textilArr" style="width: 100%" *ngIf="tabla1o2 == false"
+          class="mat-elevation-z8">
+          <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumns2">
+
+            <th mat-header-cell *matHeaderCellDef style="text-align: left; padding-right: 5rem; padding-left: 2rem">
+              {{obtenerNombreColumna2(colum)}} </th>
+            <td mat-cell *matCellDef="let element" style="text-align: left; padding-right: 5rem; padding-left: 2rem">
+
+              <div *ngIf="!element.editable">
+
+                <div *ngIf="colum === 'sCiudad'" class="example-full-width">
+
+                  {{element.sDesc}}
+
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'" class="style-form-field p-1 text-center">
+
+                  {{element.sProductoDescripcion}}
+
+                </div>
+
+                <div *ngIf="colum === 'sColor'">
+
+                  {{element.sColor}}
+
+                </div>
+
+                <div *ngIf="colum === 'sLogo'">
+
+                  {{element.sLogo}}
+
+                </div>
+
+                <div *ngIf="colum === 'sTipoTela'">
+
+                  {{element.sTipoTela}}
+
+                </div>
+
+
+                <div *ngIf="colum === 'sTalla'">
+
+                  {{element.sTalla}}
+
+                </div>
+
+
+                <div *ngIf="colum === 'nIdSexo'">
+
+                  {{element.sSexo}}
+
+                </div>
+
+                <div *ngIf="colum == 'nCantidad'">
+
+                  {{element.nCantidad}}
+
+                </div>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div *ngIf="Privilegio === false && verificadorAccess">
+    
+    <div class="text-center">
+      <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+        Detalle Cotización <span *ngIf="tabla1o2 === true">General</span>
+        <span *ngIf="tabla1o2 === false">TEXTIL</span>
+      </h3>
+    </div>
+
+    <div class="fab-container">
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+        <i class="material-icons" [@fabToggler]="{value: fabTogglerState}">add</i>
+      </button>
+      <div [@speedDialStagger]="buttons.length">
+        <button [matTooltip]="tapColumns(0)" mat-mini-fab class="fab-secondary" color="secondary">
+          <i class="material-icons" (click)="tap(0)">{{buttons[0].icon}}</i>
+        </button>
+        <button *ngIf="estadoEnviado === false" [matTooltip]="tapColumns(1)" mat-mini-fab class="fab-secondary"
+          color="secondary">
+          <i class="material-icons" (click)="tap(1)">{{buttons[1].icon}}</i>
+        </button>
+        <button *ngIf="estadoEnviado === false" [matTooltip]="tapColumns(2)" mat-mini-fab class="fab-secondary"
+          color="secondary">
+          <i class="material-icons" (click)="tap(2)">{{buttons[2].icon}}</i>
+        </button>
+        <button *ngIf="estadoEnviado === false" [matTooltip]="tapColumns(3)" mat-mini-fab class="fab-secondary"
+          color="secondary">
+          <i class="material-icons" (click)="tap(3)">{{buttons[3].icon}}</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="ICot.estadoComponent">
+      <div class="col-md-12 col-12">
+        <mat-card>
+          <div class="row m-auto">
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Nro. Solicitud de Cotización
+                </mat-label>
+                <input matInput type="text" readonly [(ngModel)]="ICot.correlativo" />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Solicitante</mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.solicitante" readonly />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Título
+                </mat-label>
+                <input matInput type="text" [formControl]="controlTitulo" required [readonly]="estadoEnviado" />
+                <mat-error *ngIf="controlTitulo.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Tipo de cotizacion <span *ngIf="controlTipoCotizacion.value !== ''">
+                    <!-- {{ICot.nTipoOC}} -->
+                  </span>
+                </mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="controlTipoCotizacion"
+                  [matAutocomplete]="autoTipoCotizacion" required [readonly]="estadoEnviado">
+                <mat-autocomplete #autoTipoCotizacion="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="TipoOCSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterTipoOC | async" [value]="option">
+                    {{option.cEleNam}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlTipoCotizacion.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Año
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="ICot.anio" readonly />
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Número de presupuesto
+                  <span *ngIf="selected === null && controlPresupuesto.valid">{{ICot.sCodCC}}</span>
+                  <span *ngIf="controlPresupuesto.value !== ''">{{selected}}</span>
+                </mat-label>
+                <input [readonly]="estadoEnviado" (keyup.enter)="ObtenerListaPresupuesto()" type="text"
+                  aria-label="Number" matInput [formControl]="controlPresupuesto" [matAutocomplete]="autoPresupuesto">
+                <mat-autocomplete #autoPresupuesto="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="presupuestoSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaPptos | async" [value]="option">
+                    {{option.cod}} - {{option.descrip}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Cliente <span *ngIf="controlCliente.value !== ''">
+                  <!-- {{ICot.nIdCliente}} -->
+                </span>
+                </mat-label>
+                <input required [readonly]="estadoEnviado" type="text" aria-label="Number" matInput
+                  [formControl]="controlCliente" [matAutocomplete]="autoCliente">
+                <mat-autocomplete #autoCliente="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="clienteSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaClientes | async" [value]="option">
+                    {{option.razonSocial}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlCliente.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Lugar de entrega
+                </mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="controlLugarDeEntrega"
+                  [matAutocomplete]="autoLugarDeEntrega" required [readonly]="estadoEnviado">
+                <mat-autocomplete #autoLugarDeEntrega="matAutocomplete" panelWidth="auto" autoActiveFirstOption
+                  (optionSelected)="lugarDeEntregaSeleccionado($event)">
+                  <mat-option *ngFor="let option of filterListaLugaresEntrega | async" [value]="option">
+                    {{option.descrip}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="controlLugarDeEntrega.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+            </div>
+
+            <div class="col-md-4">
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Fecha de creación</mat-label>
+                <input matInput readonly [ngModel]="ICot.fechaCreacion | date: 'dd/MM/yyyy'"
+                  (ngModelChange)="ICot.fechaCreacion= $event">
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>Fecha de entrega máxima</mat-label>
+                <input matInput [min]="minDate" [matDatepicker]="picker" [formControl]="controlFechaEntrega" required
+                  [readonly]="estadoEnviado">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="controlFechaEntrega.invalid">.Obligatorio</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-label>
+                  Observación
+                </mat-label>
+                <input matInput type="text" [formControl]="controlObservacion" [readonly]="estadoEnviado" />
+              </mat-form-field>
+
+
+              <div class="row">
+                <div class="col-md-12 col-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>
+                      Direcciòn
+                    </mat-label>
+                    <input matInput type="text" required [formControl]="controllugarEntregaOtro"
+                      [readonly]="editarDireccion==true" />
+                    <mat-error *ngIf="controllugarEntregaOtro.invalid">.Obligatorio</mat-error>
+                  </mat-form-field>
+
+                  <b>
+                    <span>Estado</span>
+                    <span style="color: rgb(255, 0, 157)" class="ml-2">{{ICot.estado}} </span>
+                  </b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <!--    PARTE DE FECHAS Y HORAS, RECIBIDO, RECHAZADO O ACTUALIZADO POR...-->
+    <div class="row mt-4">
+
+      <div class="col-md-12 col-12">
+
+        <mat-card *ngIf="ICot.estado !== 'Enviado por Operaciones'">
+
+          <div style="font-size: 12px; text-align: center;padding-bottom: 0.3rem; padding-top: 0.3rem"
+            *ngIf="ICot.estado === 'Recibido por Compras'">
+
+            <span>Recibido por: {{usrRecep.solicitante}} {{ICot.dRecepFecha |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="usrRecha.estado">
+
+            <span>Rechazado o devuelto por: {{usrRecha.solicitante}} {{ICot.dDevRechFecha |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="usrMod.estado">
+
+            <span>Actualizado por: {{usrMod.solicitante}} {{ICot['dModFecha'] |date :'dd/MM/yyyy h:mm:ss a'}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+          <div style="font-size: 12px; text-align: center; padding-bottom: 0.2rem; padding-top: 0.3rem"
+            *ngIf="ICot['sMotivoDevRech'] != ''">
+
+            <span>Motivo: {{ICot['sMotivoDevRech']}}</span>
+            <span style="color: rgb(64, 12, 71)" class="ml-2"> </span>
+
+          </div>
+
+        </mat-card>
+
+      </div>
+
+    </div>
+
+    <div style="padding-bottom: 5%; padding-top: 2rem">
+
+      <div style="padding-bottom: 1rem" *ngIf="estadoEnviado == false && ICot.estadoComponent">
+        <span style="font-size: 12px">Por favor use una fila para describir un articulo, agregue tantas filas como
+          artículos requiera.</span>
+      </div>
+
+      <div class="mat-elevation-z8 contenedor_tabla" *ngIf="ICot.estadoComponent">
+
+        <!--General-->
+        <table mat-table [dataSource]="tempData" *ngIf="tabla1o2" style="width: 100%">
+          <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumnsX">
+
+            <th [attr.about]="cssTablaGeneral()" mat-header-cell *matHeaderCellDef style="padding-right: 2rem">
+              {{obtenerNombreColumna(colum)}}
+              <span>
+                <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer" *ngIf="colum === 'editable'"
+                  (click)="InsertIntoArr()">add_circle</mat-icon>
+              </span>
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 2rem">
+
+              <div *ngIf="element.editable" style="padding-top: 1rem">
+
+                <div *ngIf="colum === 'sCiudad'">
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Ciudad</mat-label>
+
+                    <input matInput [formControl]="ControlsCiudad(i)" required [matAutocomplete]="auto">
+                    <mat-autocomplete [displayWith]="getOptionTextCity.bind(this)" #auto="matAutocomplete"
+                      panelWidth="auto" autoActiveFirstOption (optionSelected)="CiudadPPSeleccionado($event, element)">
+                      <div *ngIf="ICot.nIdCentroCosto > 0">
+                        <mat-option *ngFor="let city of filterListaPptosCiudad[i] | async" [value]="city">
+                          {{city.sCod}} - {{city.sDesc}}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="ICot.nIdCentroCosto == null || ICot.nIdCentroCosto== ''">
+                        <mat-option *ngFor="let city of filterListaCiudad[i] | async" [value]="city">
+                          {{city.sCod}} - {{city.sDesc}}
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ControlsCiudad(i).invalid">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'" class="d-flex justify-content-center">
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Artículo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sProductoDescripcion" required>
+                    <mat-error *ngIf="element.sProductoDescripcion === ''
+                  || element.sProductoDescripcion === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'uMedida'" class="d-flex justify-content-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Medida</mat-label>
+                    <input matInput placeholder="" [formControl]="ControlsMedida(i)" [matAutocomplete]="auto" required>
+                    <mat-autocomplete [displayWith]="getOptionTextMedida.bind(this)" #auto="matAutocomplete"
+                      panelWidth="auto" autoActiveFirstOption (optionSelected)="UdSeleccionado($event, element)">
+                      <mat-option *ngFor="let option of filterListaMedidas[i] | async" [value]="option">
+                        {{option.sCodUndMedida}} - {{option.sDescripcion}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ControlsMedida(i).invalid">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'sMarcaSugerida'" class="d-flex justify-content-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Marca</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sMarcaSugerida" required>
+                    <mat-error *ngIf="element.sMarcaSugerida === ''
+                  || element.sMarcaSugerida === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'nCantidad'">
+
+                  <div class="d-flex justify-content-center">
+                    <div style="width: 50%">
+                      <mat-form-field class="style-form-field p-1 text-center">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="" [(ngModel)]="element.nCantidad" type="number" min="1"
+                          (keyup.enter)="InsertarElemento(element)" required>
+                        <mat-error *ngIf="element.nCantidad === ''
+                  || element.nCantidad === null">.Obligatorio
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer"
+                      (click)="DeshabilitarEdicion(element)" color="accent">save
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento(i)">delete
+                    </mat-icon>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div *ngIf="!element.editable" style="padding-top: 1rem">
+
+                <div *ngIf="colum === 'sCiudad'">
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Ciudad</mat-label>
+                    <input matInput [(ngModel)]="element.sDesc" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Descripción</mat-label>
+                    <input matInput [(ngModel)]="element.sProductoDescripcion" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'uMedida'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Medida</mat-label>
+                    <input matInput [(ngModel)]="element.sDescripcion" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sMarcaSugerida'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Marca</mat-label>
+                    <input matInput [(ngModel)]="element.sMarcaSugerida" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'nCantidad'" class="style-form-field p-1 text-center">
+
+                  <div class="d-flex justify-content-center">
+                    <div style="width: 50%">
+                      <mat-form-field class="style-form-field p-1 text-center">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput [(ngModel)]="element.nCantidad" disabled>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer"
+                      (click)="HabilitarEdicion(element)" color="accent">edit
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento(i)">delete
+                    </mat-icon>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </td>
+
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsX"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsX;"></tr>
+        </table>
+
+        <!--Textil-->
+        <table style="width: 100%;" mat-table [dataSource]="tempData2" class="mat-elevation-z8"
+          *ngIf="tabla1o2 == false">
+          <ng-container [matColumnDef]="colum" *ngFor="let colum of displayedColumns2X">
+
+            <th mat-header-cell *matHeaderCellDef style="padding-right: 2rem" [attr.about]="cssTablaTextil()">
+              {{obtenerNombreColumna2(colum)}}
+              <span>
+                <mat-icon matTooltip="Añadir" color="accent" style="cursor: pointer" *ngIf="colum === 'editable'"
+                  (click)="InsertIntoArr2()">add_circle</mat-icon>
+              </span>
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index" style="padding-right: 2rem">
+
+              <div *ngIf="element.editable" style="padding-top: 1rem">
+
+                <div *ngIf="colum === 'sCiudad'">
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Ciudad</mat-label>
+                    <input matInput [formControl]="ControlsCiudad(i)" required [matAutocomplete]="auto">
+                    <mat-autocomplete [displayWith]="getOptionTextCit2.bind(this)" #auto="matAutocomplete"
+                      panelWidth="auto" autoActiveFirstOption (optionSelected)="CiudadPPSeleccionado($event, element)">
+                      <div *ngIf="ICot.nIdCentroCosto > 0">
+                        <mat-option *ngFor="let city of filterListaPptosCiudad[i] | async" [value]="city">
+                          {{city.sCod}} - {{city.sDesc}}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="ICot.nIdCentroCosto == null || ICot.nIdCentroCosto== ''">
+                        <mat-option *ngFor="let city of filterListaCiudad[i] | async" [value]="city">
+                          {{city.sCod}} - {{city.sDesc}}
+                        </mat-option>
+                      </div>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ControlsCiudad(i).invalid">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Artículo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sProductoDescripcion">
+                    <mat-error *ngIf="element.sProductoDescripcion === '' || element.sProductoDescripcion === null">
+                      .Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sColor'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Color</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sColor" required>
+                    <mat-error *ngIf="element.sColor === '' || element.sColor === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'sLogo'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Logo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sLogo" required>
+                    <mat-error *ngIf="element.sLogo === '' || element.sLogo === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'sTipoTela'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Tela</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sTipoTela" required>
+                    <mat-error *ngIf="element.sTipoTela === '' || element.sTipoTela === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+
+                <div *ngIf="colum == 'sTalla'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Talla</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sTalla" required>
+                    <mat-error *ngIf="element.sTalla === '' || element.sTalla === null">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'nIdSexo'">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Sexo</mat-label>
+                    <input matInput [formControl]="ControlsSexo(i)" [matAutocomplete]="auto" required>
+                    <mat-autocomplete [displayWith]="getOptionTextSex.bind(this)" #auto="matAutocomplete"
+                      panelWidth="auto" autoActiveFirstOption (optionSelected)="SexoSeleccionado($event, element)">
+                      <mat-option *ngFor="let option of filterListaSexo[i] | async" [value]="option">
+                        {{option.cEleNam}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ControlsSexo(i).invalid">.Obligatorio
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'nCantidad'">
+
+                  <div class="d-flex justify-content-center">
+                    <div style="width: 50%">
+                      <mat-form-field class="style-form-field p-1 text-center">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="" [(ngModel)]="element.nCantidad" type="number" min="1"
+                          (keyup.enter)="InsertarElemento2(element)" required>
+                        <mat-error *ngIf="element.nCantidad === '' || element.nCantidad === null">.Obligatorio
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Guardar" class="pr-5" style="cursor: pointer"
+                      (click)="DeshabilitarEdicion(element)" color="accent">save
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento2(i)">delete
+                    </mat-icon>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div *ngIf="!element.editable" style="padding-top: 1rem">
+
+                <div *ngIf="colum === 'sCiudad'" class="style-form-field p-1 text-left">
+
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Ciudad</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sDesc" disabled>
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="colum === 'sProductoDescripcion'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Artículo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sProductoDescripcion" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sColor'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Color</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sColor" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sLogo'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Logo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sLogo" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'sTipoTela'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Tela</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sTipoTela" disabled>
+                  </mat-form-field>
+                </div>
+
+                <div *ngIf="colum === 'sTalla'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Talla</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sTalla" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum === 'nIdSexo'" class="style-form-field p-1 text-center">
+
+                  <mat-form-field class="style-form-field p-1 text-center">
+                    <mat-label>Sexo</mat-label>
+                    <input matInput placeholder="" [(ngModel)]="element.sSexo" disabled>
+                  </mat-form-field>
+
+                </div>
+
+                <div *ngIf="colum == 'nCantidad'" class="style-form-field p-1 text-center">
+
+                  <div class="d-flex justify-content-center">
+                    <div style="width: 50%">
+                      <mat-form-field class="style-form-field p-1 text-center">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="" [(ngModel)]="element.nCantidad" disabled>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div *ngIf="colum === 'editable'" class="style-form-field p-1 text-right">
+
+                  <div class="btn-group">
+                    <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer"
+                      (click)="HabilitarEdicion(element)" color="accent">edit
+                    </mat-icon>
+                    <mat-icon *ngIf="i != 0" matTooltip="Eliminar" style="cursor: pointer" color="accent"
+                      (click)="EliminarElemento2(i)">delete
+                    </mat-icon>
+                  </div>
+
+                </div>
+                
+              </div>
+            </td>
+
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns2X"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns2X;"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="tablas-imprimir" style="display: none" #imprimir>
+
+  <div class="header">
+
+    <table align="center">
+      <thead>
+
+        <tr>
+
+          <th colspan="2" style="text-align: center;padding: 5px;font-weight: bold;">
+            <span style="padding-right: 0.5rem; font-size: 17px;;font-weight: bold;">ERP - {{usrImp['empresa']}}</span>
+            <br>
+            <span style="padding-right: 0.5rem; font-weight: bold; font-size: 17px">SOLICITUD DE COTIZACIÓN</span>
+            <span style="padding-right: 0.5rem; font-weight: bold; font-size: 17px"
+              *ngIf="tabla1o2 === true">GENERAL</span>
+            <span style="padding-right: 0.5rem; font-weight: bold; font-size: 17px"
+              *ngIf="tabla1o2 === false">TEXTIL</span>
+          </th>
+
+        </tr>
+
+      </thead>
+      <tbody>
+        
+        <tr>
+
+          <td style="text-align: left"><span style="font-weight: bold">SC: </span> {{ICot.correlativo}}</td>
+          <td style="text-align: left"><span style="font-weight: bold">Tipo de cotización: </span> {{ICot.nTipoOCName}}
+          </td>
+
+        </tr>
+
+        <tr>
+
+          <td style="text-align: left"><span style="font-weight: bold">Solicitante: </span> {{ICot.solicitante}}</td>
+          <td style="text-align: left"><span style="font-weight: bold">Año: </span> {{ICot.anio}}</td>
+
+        </tr>
+
+        <tr>
+
+          <td style="text-align: left"><span style="font-weight: bold">Título: </span> {{ICot.sTitulo}}</td>
+          <td style="text-align: left"><span style="font-weight: bold">Fecha de creación: </span> {{ICot.fechaCreacion |
+            date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+
+        <tr>
+
+          <td style="text-align: left"><span style="font-weight: bold">Presupuesto: </span>
+            <span *ngIf="ICot.descPresupuesto !== null || ICot.descPresupuesto !== ''">{{ICot.descPresupuesto}}</span>
+            <span *ngIf="ICot.descPresupuesto === null || ICot.descPresupuesto === ''"> --- </span>
+          </td>
+          <td style="text-align: left"><span style="font-weight: bold">Fecha de entrega máxima: </span>
+            {{ICot.fechaDeseada | date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+
+        <tr>
+
+          <td style="text-align: left"><span style="font-weight: bold">Cliente: </span> {{ICot.cliente}}</td>
+          <td style="text-align: left"><span style="font-weight: bold">Observación: </span>
+
+            <span *ngIf="ICot.sObservacion !== null || ICot.sObservacion !== ''">{{ICot.sObservacion}}</span>
+            <span *ngIf="ICot.sObservacion === null || ICot.sObservacion === ''"> --- </span>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="header" *ngIf="tabla1o2">
+
+    <table align="center">
+      <thead>
+        <tr>
+          <th scope="col" style="font-weight: bold; padding: 14px">Ciudad</th>
+          <th scope="col" style="font-weight: bold">Artículo</th>
+          <th scope="col" style="font-weight: bold">Ud. Medida</th>
+          <th scope="col" style="font-weight: bold">Marca</th>
+          <th scope="col" style="font-weight: bold">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of tempData">
+          <td>{{element.sDesc}}</td>
+          <td>{{element.sProductoDescripcion}}</td>
+          <td>{{element.sDescripcion}}</td>
+          <td>{{element.sMarcaSugerida}}</td>
+          <td>{{element.nCantidad}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+  <div class="header" *ngIf="!tabla1o2">
+
+    <table align="center">
+      <thead>
+        <tr>
+          <th scope="col" style="font-weight: bold;padding: 14px">Ciudad</th>
+          <th scope="col" style="font-weight: bold">Artículo</th>
+          <th scope="col" style="font-weight: bold">Color</th>
+          <th scope="col" style="font-weight: bold">Logo</th>
+          <th scope="col" style="font-weight: bold">Tipo tela</th>
+          <th scope="col" style="font-weight: bold">Talla</th>
+          <th scope="col" style="font-weight: bold">Sexo</th>
+          <th scope="col" style="font-weight: bold">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let element of tempData2">
+          <td>{{element.sDesc}}</td>
+          <td>{{element.sProductoDescripcion}}</td>
+          <td>{{element.sColor}}</td>
+          <td>{{element.sLogo}}</td>
+          <td>{{element.sTipoTela}}</td>
+          <td>{{element.sTalla}}</td>
+          <td>{{element.sSexo}}</td>
+          <td>{{element.nCantidad}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <span style="font-size: 12px; position: relative; bottom: 0; left: 0; padding-bottom: 5rem">
+    <span *ngIf="dataUC">
+      <b> <span style="text-align: left; color: rgb(255, 0, 157)"> Total de artículos:</span></b> <span>
+        {{dataUC.total}}</span> <br>
+      <b> <span style="text-align: left; color: rgb(255, 0, 157)"> Total de unidades:</span></b> <span>
+        {{dataUC.totalPorItems}}</span> <br>
+    </span>
+    <b>
+      <span style="color: rgb(255, 0, 157)">Impreso por:</span></b> <span> {{usrImp['usuario']}} {{today | date:
+      'dd/MM/yyyy h:mm:ss a'}}</span>
+  </span>
+
+</div>
+
+<!--
+<button mat-raised-button (click)="correoEnviarOP()">CORREO ESTADO ENVIAR</button>
+<button mat-raised-button (click)="correoRecibirOP()">CORREO ESTADO RECIBIR</button>
+<button mat-raised-button (click)="correoDevolverOP()">CORREO ESTADO DEVOLVER</button>
+<button mat-raised-button (click)="correoRechazadoOP()">CORREO ESTADO RECHAZADO</button>
+<button mat-raised-button (click)="correoCotizacionAdjuntadaOP()">CORREO ESTADO ARCHIVO ADJUNTO</button>
+<button mat-raised-button (click)="correoElegidoOP()">CORREO ESTADO ELEGIDO</button>
+-->

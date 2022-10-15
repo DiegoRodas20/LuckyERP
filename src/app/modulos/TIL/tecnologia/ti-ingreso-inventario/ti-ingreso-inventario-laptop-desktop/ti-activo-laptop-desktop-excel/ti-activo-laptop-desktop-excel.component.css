@@ -1,0 +1,70 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Boton de cerrado */
+.closeButtonModal{
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  color: gray;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+.example-container {
+  height: 300px;
+}
+
+.icon-activo-table {
+  position: relative;
+  top: 6px;
+  cursor: pointer;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.registro-green{
+    background-color:rgb(168, 255, 168)
+}

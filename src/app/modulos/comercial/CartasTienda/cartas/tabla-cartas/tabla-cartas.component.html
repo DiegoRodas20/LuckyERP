@@ -1,0 +1,121 @@
+<div>
+  CARTAS<span class="spinner_estilo"
+    ><mat-spinner *ngIf="estadoSpinner" [diameter]="20"></mat-spinner
+  ></span>
+</div>
+<mat-dialog-content class="mat-typography">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 mb-3 mt-3">
+    <!--- Note that these columns can be defined in any order. 
+    The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="pId">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="text-align: center; background-color: #334d6e; color: white"
+      >
+        ID.
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.pId }}</td>
+    </ng-container>
+
+    <!-- Cadena a la que pertenece Column -->
+    <ng-container matColumnDef="pCadena">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="text-align: center; background-color: #334d6e; color: white"
+      >
+        Cadena
+      </th>
+      <td mat-cell *matCellDef="let element" style="text-align: center">
+        {{ obtenerNombreCadena(element.pCadena) }}
+      </td>
+    </ng-container>
+
+    <!-- Cantidad de personas registradas Column -->
+    <ng-container matColumnDef="pNroPersonal">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="text-align: center; background-color: #334d6e; color: white"
+      >
+        Nro. Registrados
+      </th>
+      <td mat-cell *matCellDef="let element" style="text-align: center">
+        {{ element.pNroPersonal }}
+      </td>
+    </ng-container>
+
+    <!-- Fecha creacion Column -->
+    <ng-container matColumnDef="pFechaCreacion">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="text-align: center; background-color: #334d6e; color: white"
+      >
+        Creado
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.pFechaCreacion }}</td>
+    </ng-container>
+
+    <!-- Editar Column -->
+    <ng-container matColumnDef="Editar">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="
+          text-align: center;
+          background-color: #334d6e;
+          color: white;
+          padding-right: 5px;
+        "
+      >
+        Seleccionar
+      </th>
+      <td mat-cell *matCellDef="let element" style="text-align: center">
+        <button
+          mat-icon-button
+          style="color: #334d6e"
+          aria-label="Example icon button with a delete icon"
+          (click)="cargarDataCartaParaEditar(element)"
+        >
+          <mat-icon>touch_app</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Eliminar Column -->
+    <ng-container matColumnDef="Eliminar">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        style="text-align: center; background-color: #334d6e; color: white"
+      >
+        Eliminar
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          mat-icon-button
+          color="accent"
+          aria-label="Example icon button with a delete icon"
+          (click)="eliminarUnaCarta(element)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

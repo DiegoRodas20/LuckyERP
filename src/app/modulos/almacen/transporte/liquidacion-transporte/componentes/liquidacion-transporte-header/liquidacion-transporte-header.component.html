@@ -1,0 +1,215 @@
+<div class="fab-container" *ngIf="hasData">
+  <button *ngIf="!isTerminado" mat-mini-fab class="fab-secondary" color="accent">
+    <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left" (click)="fnGuardar()">save</i>
+  </button>
+  <button *ngIf="!isTerminado" mat-mini-fab class="fab-secondary" color="white" (click)="fnClean()">
+    <i class="material-icons" matTooltip="Limpiar" matTooltipPosition="left">autorenew</i>
+  </button>
+  <button *ngIf="!isTerminado" mat-mini-fab class="fab-secondary" color="accent" (click)="fnLiquidar()"
+    [disabled]="!hasChanges">
+    <i class="material-icons" matTooltip="Liquidar" matTooltipPosition="left">playlist_add_check</i>
+  </button>
+  <button *ngIf="!isTerminado" mat-mini-fab class="fab-secondary" color="accent" (click)="fnTerminar()"
+    [disabled]="!isTotalLiquidado">
+    <i class="material-icons" matTooltip="Terminar" matTooltipPosition="left">done_outline</i>
+  </button>
+  <button *ngIf="isTerminado" mat-mini-fab class="fab-secondary" color="accent" (click)="fnVerProrrateos()">
+    <i class="material-icons" matTooltip="Ver prorrateos" matTooltipPosition="left">remove_red_eye</i>
+  </button>
+  <button *ngIf="isTerminado" mat-mini-fab class="fab-secondary" color="accent" (click)="fnLiberar()">
+    <i class="material-icons" matTooltip="Liberar transporte" matTooltipPosition="left">lock_open</i>
+  </button>
+</div>
+
+<mat-card>
+  <div class="row">
+    <div class="col-lg-6 col-md-3 col-12">
+      <mat-card-header>
+        <mat-card-title>Datos de Lectura</mat-card-title>
+      </mat-card-header>
+
+      <div class="row">
+        <div class="col-lg-2 col-md-2">
+          <mat-form-field>
+            <mat-label>Año de Rutas</mat-label>
+            <mat-select [formControl]="nAnioField" (selectionChange)="fnChangeAnio()">
+              <mat-option *ngFor="let anio of anios" [value]="anio.nId">
+                {{ anio.sDescripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12">
+          <ng-select [clearable]="true" placeholder="Transporte" [formControl]="sCodTransporteField"
+            (change)="fnGetLiquidacion()">
+            <ng-option *ngFor="let codigo of codigos" [value]="codigo.nId">
+              {{codigo.nId}} - {{codigo.sDescripcion}}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="col-lg-3 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Fecha Movilidad</mat-label>
+            <input matInput [value]="liquidacion?.sFecha" readonly />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-3 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Estado</mat-label>
+            <input matInput class="pink" [value]="liquidacion?.sEstado" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-5 col-12">
+          <mat-form-field>
+            <mat-label>Vehículo</mat-label>
+            <input matInput [value]="liquidacion?.sVehiculo" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Chofer</mat-label>
+            <input matInput [value]="liquidacion?.sChofer" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-12">
+          <mat-form-field>
+            <mat-label>Tipo de Vehículo</mat-label>
+            <input matInput [value]="liquidacion?.sTipoVehiculo" readonly />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-2 col-md-2 col-12">
+          <mat-form-field>
+            <mat-label>¿De Lucky?</mat-label>
+            <input matInput [value]="liquidacion?.sEsLucky" readonly />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Zona</mat-label>
+            <input matInput [value]="liquidacion?.sZona" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-12">
+      <mat-card-header>
+        <mat-card-title>Valores</mat-card-title>
+      </mat-card-header>
+      <div class="row">
+        <div class="col-lg-12 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Peso Capacidad</mat-label>
+            <input matInput [value]="liquidacion?.nPesoCapacidad | number :'1.2-2'" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Peso Cargado</mat-label>
+            <input matInput class="pink" [value]="liquidacion?.nPesoCargado | number :'1.2-2'" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Volumen Capacidad</mat-label>
+            <input matInput [value]="liquidacion?.nVolumenCapacidad | number :'1.6-6'" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Volumen Cargado</mat-label>
+            <input matInput class="pink" [value]="liquidacion?.nVolumenCargado | number :'1.6-6'" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Cantidad Puntos</mat-label>
+            <input matInput [value]="liquidacion?.nCantPunto" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-3 col-12">
+      <mat-card-header>
+        <mat-card-title>Datos de Entrada</mat-card-title>
+      </mat-card-header>
+      <form [formGroup]="form" autocomplete="off">
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Precio Base</mat-label>
+              <input matInput formControlName="nPreBase" (keyup)="fnPlusValues()" />
+              <mat-error *ngIf="nPreBaseError">{{ nPreBaseError }}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <mat-form-field>
+              <mat-label>Motivo Cambio Precio</mat-label>
+              <mat-select formControlName="nMotivo">
+                <mat-option *ngFor="let motivo of motivos" [value]="motivo.nId">
+                  {{ motivo.sDescripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Precio Carreta</mat-label>
+              <input matInput formControlName="nPreCarreta" (keyup)="fnPlusValues()" />
+              <mat-error *ngIf="nPreCarretaError">{{ nPreCarretaError }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Precio Peaje</mat-label>
+              <input matInput formControlName="nPrePeaje" (keyup)="fnPlusValues()" />
+              <mat-error *ngIf="nPrePeajeError">{{ nPrePeajeError }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Precio Estacionamiento</mat-label>
+              <input matInput formControlName="nPreEstacion" (keyup)="fnPlusValues()" />
+              <mat-error *ngIf="nPreEstacionError">{{ nPreEstacionError }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Precio Ayudante</mat-label>
+              <input matInput formControlName="nPreAyudante" (keyup)="fnPlusValues()" />
+              <mat-error *ngIf="nPreAyudanteError">{{ nPreAyudanteError }}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 col-md-3 col-12">
+            <mat-form-field>
+              <mat-label>Total</mat-label>
+              <input matInput class="pink" formControlName="nTotal" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-card>

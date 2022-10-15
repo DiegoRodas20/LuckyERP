@@ -1,0 +1,304 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Permisos Almacén - Usuario
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+            <input data-toggle="modal" data-target="#modalAlmacenUsr" #modalAlmacenUsr type="hidden" name="button">
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row">
+
+            <!-- Buscar General -->
+            <div class="form-group col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Buscar:</mat-label>
+                    <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                    <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                        aria-label="Clear"
+                        (click)="this.txtFiltro.setValue(''); fnListarAlmacenUsuario(this.rbEstado.value,this.cboCliente.value);">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+
+            <!-- Cliente -->
+            <div class="form-group col-md-4">
+                <ng-select (change)="fnListarAlmacenUsuario(this.rbEstado.value,$event);"
+                    style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body" [clearable]="false"
+                    [formControl]="cboCliente" placeholder="Cliente" required>
+                    <ng-option *ngFor="let vCliente of lCliente" [value]="vCliente.nId">
+                        {{vCliente.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <!-- Direccion -->
+            <div class="form-group col-md-4 text-center align-self-center">
+                <mat-radio-group [formControl]="rbEstado">
+                    <mat-radio-button class="mr-3"
+                        (click)="this.rbEstado.setValue(1); fnListarAlmacenUsuario(1,this.cboCliente.value);"
+                        style="margin-left: 5px;" [value]="1">
+                        Activos
+                    </mat-radio-button>
+                    <mat-radio-button class="mr-3"
+                        (click)="this.rbEstado.setValue(0); fnListarAlmacenUsuario(0,this.cboCliente.value);"
+                        style="margin-left: 5px;" [value]="0">
+                        Inactivos
+                    </mat-radio-button>
+                    <mat-radio-button class="mr-3"
+                        (click)="this.rbEstado.setValue(2); fnListarAlmacenUsuario(2,this.cboCliente.value);"
+                        style="margin-left: 5px;" [value]="2">
+                        Todos
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+        </div>
+    </mat-card>
+
+    <!-- Listado de Almacenes -->
+    <div id="listaMobile" class="mat-elevation-z8 mb-4">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="opcion" sticky>
+                    <th mat-header-cell *matHeaderCellDef class="clsColumnaOpc2">
+                    </th>
+                    <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaOpc2">
+                        <button (click)="fnSeleccionarRegistro(row)" mat-icon-button color="accent"
+                            matTooltip="Ver detalle">
+                            <mat-icon> touch_app</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sAlmacen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                        Almacén
+                    </th>
+                    <td data-label='Almacén: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLarge">
+                        <ngb-highlight [result]="row.sAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sUbicacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                        Ubicación
+                    </th>
+                    <td data-label='Ubicación: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLarge">
+                        <ngb-highlight [result]="row.sUbicacion" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sDireccion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                        Dirección
+                    </th>
+                    <td data-label='Dirección: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLarge">
+                        <ngb-highlight [result]="row.sDireccion" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sUsuario">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                        Usuario
+                    </th>
+                    <td data-label='Usuario: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLarge">
+                        <ngb-highlight [result]="row.sUsuario" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sOperBaja">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Oper.
+                        Baja
+                    </th>
+                    <td data-label='Oper. Baja: ' mat-cell *matCellDef="let row"
+                        class="has_label_on_mobile clsColumnaLib">
+                        <ngb-highlight [result]="row.sOperBaja" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sEstado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                    </th>
+                    <td data-label='Estado: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib2">
+                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="row.nEstado==0 ? 'make-gris' : ''">
+                </tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</div>
+
+<!--Modal para agregar y modificar-->
+<div class="modal fade  bd-example-modal-xl" id="modalAlmacenUsr" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalAlmacenUsr"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalAlmacenUsrLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <!--Cuando se va a registrar-->
+                    <form *ngIf="pOpcion==1 && formUsuarioPermiso" class="row col-md-12"
+                        [formGroup]="formUsuarioPermiso">
+                        <div class="form-group col-md-6">
+                            <ng-select appendTo="body" [clearable]="false" formControlName="cboUsuario"
+                                placeholder="Usuario" required>
+                                <ng-option *ngFor="let vUsuario of lUsuario" [value]="vUsuario.nId">
+                                    {{vUsuario.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formUsuarioPermiso.get('cboUsuario').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <ng-select appendTo="body" (change)="fnSeleccionarAlmacen($event)" [clearable]="false"
+                                formControlName="cboAlmacen" placeholder="Almacén" required>
+                                <ng-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen.nIdDireccion">
+                                    {{vAlmacen.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formUsuarioPermiso.get('cboAlmacen').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Ubicación.:</mat-label>
+                                <input type="text" matInput placeholder="Ubicación" formControlName="txtUbicacion"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Dirección:</mat-label>
+                                <input type="text" matInput placeholder="Dirección" formControlName="txtDireccion"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6 d-flex align-items-center">
+                            <mat-slide-toggle formControlName="stOperBaja">Operacion baja</mat-slide-toggle>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button mat-mini-fab color="accent" (click)="fnAnadirAlmUsr()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--Cuando se va a modificar-->
+
+                    <form *ngIf="pOpcion==2  && formUsuarioPermisoAct" class="row col-md-12"
+                        [formGroup]="formUsuarioPermisoAct">
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Usuario:</mat-label>
+                                <input readonly type="text" matInput placeholder="AA" formControlName="txtUsuario">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Almacén:</mat-label>
+                                <input type="text" matInput placeholder="AA" formControlName="txtAlmacen" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Ubicación.:</mat-label>
+                                <input type="text" matInput placeholder="Ubicación" formControlName="txtUbicacion"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Dirección:</mat-label>
+                                <input type="text" matInput placeholder="Dirección" formControlName="txtDireccion"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select formControlName="cboEstado">
+                                    <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nId">
+                                        {{vEstado.sDescripcion}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6 d-flex align-items-center">
+                            <mat-slide-toggle formControlName="stOperBaja">Operación Baja</mat-slide-toggle>
+                        </div>
+
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Modificar" mat-mini-fab color="accent" (click)="fnModificarAlmUsr()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarAlmUsr()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

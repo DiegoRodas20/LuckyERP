@@ -1,0 +1,37 @@
+/* Header */
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+    text-align: center;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+/* Mat Table */
+
+table {
+    width: 100%;
+}
+
+td, th {
+    font-size: 14px;
+}
+
+.example-container {
+  /* height: 400px; */
+  width: 100%;
+  overflow: auto;
+}
+
+/* Mat Sort Color Blanco */
+
+:host /deep/ .mat-sort-header-arrow {
+    color: white;
+}
+
+ .clsColumnaLib {
+    min-width: 200px;
+}

@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+.spinner_estilo {
+  display: inline-block;
+  padding-left: 10px;
+  float: right;
+}
+
+.head_tabla {
+  background: #334d6e;
+}

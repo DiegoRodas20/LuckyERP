@@ -1,0 +1,22 @@
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color           : white;
+}
+
+.paddingBoton{
+    padding-right: 0% !important;
+    padding-left: 0% !important;
+}
+
+table{
+    width: 100%;
+}
+
+td, th {
+    font-size: 14px;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+}

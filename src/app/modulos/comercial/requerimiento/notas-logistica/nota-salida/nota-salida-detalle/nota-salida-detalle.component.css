@@ -1,0 +1,197 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.clsDivRegistro {
+  background-color: white;
+  border: solid 2px #002c4b;
+  border-radius: 5px;
+}
+/*Opcion para poner mostrar y ocultar*/
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+.clsShow2 {
+  display: inline-block;
+}
+
+.clsHide2 {
+  display: none;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+}
+
+.example-container table {
+  min-width: 100%;
+}
+
+.clsTableCreate table th {
+  max-width: 350px !important;
+}
+
+.clsTableCreate table th:first-of-type {
+  min-width: 126px !important;
+}
+
+.clsTableCreate table .ng-select {
+  cursor: default;
+  display: flex;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  max-width: 350px !important;
+}
+
+.fab-container {
+  position: fixed;
+  top: 85px;
+  right: 35px;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.fab-toggler {
+  float: right;
+  z-index: 101;
+  outline: none;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaLarge {
+  min-width: 120px !important;
+}
+
+.clsColumnaShort {
+  min-width: 80px !important;
+}
+
+.errorLine {
+  border-bottom: red;
+}
+
+.table-container-1 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+@media only screen and (min-width: 960px) {
+  .clsSeparador {
+    height: 100%;
+    border-right: 2px solid rgb(236, 0, 140);
+  }
+
+  .boton-MatTable {
+    position: absolute;
+    top: 2%;
+    left: 40px;
+    z-index: 120;
+  }
+
+  .mostrar-mobile {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .clsSeparador {
+    height: 100%;
+    border-top: 2px solid rgb(236, 0, 140);
+  }
+
+  .boton-MatTable {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 120;
+    left: auto;
+  }
+
+  .ocultar-mobile {
+    display: none;
+  }
+}
+
+/* #mi-select {
+    color: black;
+  }
+  
+  #mi-select option {
+    color: black;
+  } */
+
+.imgModal {
+  max-width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+:host
+  /deep/.ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}

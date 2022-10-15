@@ -1,0 +1,254 @@
+<ngx-spinner name="spi_retencion" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsRetencion }">add</i>
+  </button>
+  <div [@speedDialStagger]="abRetencion.length">
+    <button *ngFor="let elem of abRetencion; let index = index" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="onClickMenuRetencion(index, elem.tool)">
+      <i class="material-icons" matTooltip="{{ elem.tool }}" matTooltipPosition="left">{{ elem.icon }}</i>
+    </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">{{ titulo }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body" style="padding-bottom: 20px">
+  <div class="row">
+    <div class="col-lg-6">
+
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información del beneficiario </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">info</mat-icon>
+          </mat-expansion-panel-header>
+
+          <form autocomplete="off" id="fgRetencion" [formGroup]="fgRetencion">
+            <div class="form-row" style="margin-top: 20px">
+              <div class="col-lg-8">
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_nIdRetencionj" />
+                </mat-form-field>
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_nIdPersonal" />
+                </mat-form-field>
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_sFileSustento" />
+                </mat-form-field>
+
+                <mat-form-field style="width: 100%">
+                  <mat-label>Tipo documento</mat-label>
+                  <mat-select formControlName="T1_nIdTipoDoc" [errorStateMatcher]="matcher">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstTiposDocumento" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="getRetencion.T1_nIdTipoDoc.hasError('noSelect')">. Obligatorio</mat-error>
+                </mat-form-field>
+
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Documento</mat-label>
+                  <input type="text" matInput formControlName="T1_sDocumento" [errorStateMatcher]="matcher">
+                  <mat-error
+                    *ngIf="getRetencion.T1_sDocumento.hasError('required') || getRetencion.T1_sDocumento.hasError('vString')">
+                    .
+                    Obligatorio</mat-error>
+                  <mat-error *ngIf="getRetencion.T1_sDocumento.hasError('minlength')">. Longitud de caracteres
+                    incorrecto</mat-error>
+                  <mat-error *ngIf="getRetencion.T1_sDocumento.hasError('pattern')">. Caracteres incorrectos</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-8">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Apellidos y nombres</mat-label>
+                  <input type="text" matInput formControlName="T1_sNombres" [errorStateMatcher]="matcher">
+                  <mat-error *ngIf="getRetencion.T1_sNombres.hasError('required')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Banco</mat-label>
+                  <mat-select formControlName="T1_nIdBanco" [errorStateMatcher]="matcher">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstBancos" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="getRetencion.T1_nIdBanco.hasError('noSelect')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Cuenta</mat-label>
+                  <input type="text" matInput formControlName="T1_sNroCuenta" [errorStateMatcher]="matcher">
+                  <mat-error *ngIf="getRetencion.T1_sNroCuenta.hasError('required')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Cuenta Int.</mat-label>
+                  <input type="text" matInput formControlName="T1_sNroCuentaI" [errorStateMatcher]="matcher">
+                  <mat-error *ngIf="getRetencion.T1_sNroCuentaI.hasError('required')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Moneda</mat-label>
+                  <mat-select formControlName="T1_nIdMoneda" [errorStateMatcher]="matcher">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstMonedas" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="getRetencion.T1_nIdMoneda.hasError('noSelect')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%" appDateFormat color="accent">
+                  <mat-label>Fecha inicio</mat-label>
+                  <input matInput #txtFechaInicio [matDatepicker]="picker1" [errorStateMatcher]="matcher"
+                    formControlName="T1_dFechIni" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="getRetencion.T1_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%" appDateFormat color="accent">
+                  <mat-label>Fecha fin</mat-label>
+                  <input matInput #txtFechaFin [matDatepicker]="picker2" [errorStateMatcher]="matcher"
+                    formControlName="T1_dFechFin" />
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2 [disabled]="!seleccionarConceptos"></mat-datepicker>
+                  <mat-error *ngIf="getRetencion.T1_dFechFin.hasError('required')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Tipo retención</mat-label>
+                  <mat-select formControlName="T1_bTipo" [errorStateMatcher]="matcher"
+                    (ngModelChange)="onChangeTipoRetencion()">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstTiposRetencion" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="getRetencion.T1_bTipo.hasError('noSelect')">. Obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Monto</mat-label>
+                  <input type="text" matInput formControlName="T1_nMonto" [errorStateMatcher]="matcher">
+                  <mat-error *ngIf="getRetencion.T1_nMonto.hasError('required')">. Obligatorio</mat-error>
+                  <mat-error *ngIf="getRetencion.T1_nMonto.hasError('min') || getRetencion.T1_nMonto.hasError('max')">.
+                    El valor ingresado debe
+                    estar entre {{ minNum }} y {{ maxNum }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </form>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title *ngIf="!nuevaRetencion && !seleccionarConceptos"> Detalle de conceptos : {{
+              lstDetalleConceptos.length }}</mat-panel-title>
+            <mat-panel-title *ngIf="nuevaRetencion || seleccionarConceptos"> Detalle de conceptos : {{
+              cantidadSeleccionados }}</mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">article</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="dListDoc">
+            <mat-selection-list [multiple]="false" *ngIf="!nuevaRetencion && !seleccionarConceptos">
+              <mat-list-option style="margin-top: 10px;" class="card" *ngFor="let element of lstDetalleConceptos">
+                <div class="row row-list">
+                  <mat-checkbox [checked]="true" [disabled]="true" color="accent"></mat-checkbox>
+                  <a>{{element.nombre}}</a>
+                </div>
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+
+          <div class="dListDoc">
+            <mat-selection-list [multiple]="false" *ngIf="nuevaRetencion || seleccionarConceptos">
+              <mat-list-option style="margin-top: 10px;" class="card" *ngFor="let elem of lstConceptos">
+                <div class="row row-list">
+                  <mat-checkbox [checked]="elem.checked" [(ngModel)]="elem.checked"
+                    (ngModelChange)="onChangeConceptos()">
+                  </mat-checkbox>
+                  <a>{{elem.nombre}}</a>
+                </div>
+              </mat-list-option>
+            </mat-selection-list>
+          </div>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6 divLeft">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Detalle de sustento</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg">
+          <iframe [hidden]="!tieneSustento" id="pdf-sustento" style="width: 100%; height: 500px"></iframe>
+
+          <div [hidden]="tieneSustento" style="width: 100%; height: 500px; text-align: center; vertical-align: middle;">
+            <mat-icon style="font-size: 100px; color: rgb(197, 197, 197)">content_paste_off</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <input id="uploadFile" type="file" accept="application/pdf" (change)="uploadFile($event)" style="display: none;">
+
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar *ngIf="pbRetencion" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

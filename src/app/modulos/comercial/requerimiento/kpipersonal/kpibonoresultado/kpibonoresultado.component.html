@@ -1,0 +1,302 @@
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Bono por Resultado</h5>
+
+            <!-- Fab -->
+            <div class="fab-container">
+                <button [@tada]="{value: tadaMain}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div id="body-main" class="card-body" style="padding-bottom: 0px;">
+
+                <div class="icard melevation col-xl-12">
+                    <div class="row">
+
+                        <!-- Imagen -->
+                        <div class="col-lg-2" style="text-align: center; align-self: center;">
+                            <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                        </div>
+
+                        <!-- Información del usuario -->
+                        <div class="col-lg-3 fix-inf-user" style="padding-top: 25px; padding-bottom: 20px; align-self: center; padding-left: 0px;">
+                            <h4 style="font-size: 20px;">{{this.getInfoUser.sNombres.value}}</h4>
+                            <h6 style="font-size: 14px; color: rgba(0,0,0,.54);">{{this.getInfoUser.sTipo.value}} : {{this.getInfoUser.sDocumento.value}}</h6>
+                        </div>
+
+                        <mat-divider [vertical]="true"></mat-divider>
+
+                        <!-- Filtro -->
+                        <div class="col-lg">
+
+                            <div class="row" style="margin-left: 0px;">
+                                <h6>Aplicar filtro por :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+
+                                <div class="form-row">
+
+                                    <!-- Cliente -->
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Cliente</mat-label>
+                                            <mat-select formControlName="nIdCliente" (valueChange)="ChangeCliente($event)">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of cboCliente" [value]="item.nIdCliente">
+                                                    {{item.sCliente}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Centro de costo -->
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Centro de costo</mat-label>
+                                            <input type="text" matInput formControlName="sCentroCosto" [matAutocomplete]="sCentroCosto" class="titlecase">
+
+                                            <mat-autocomplete #sCentroCosto="matAutocomplete">
+                                                <mat-option *ngFor="let option of foCentroCosto | async" [value]="option.sCentroCosto">
+                                                    {{option.sCentroCosto | titlecase}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+
+                                            <button style="outline: none;" mat-button *ngIf="getMain.sCentroCosto.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sCentroCosto.patchValue('')">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+
+                                            <!-- <input type="text" matInput formControlName="CentroCosto" [ngbTypeahead]="searchCC" [inputFormatter]="formatCC" [resultFormatter]="formatCC" [editable]='false'> -->
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Fecha devengue -->
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;" appYearMonthFormat>
+                                            <mat-label>Fecha devengue</mat-label>
+                                            <input matInput [matDatepicker]="dFecha" formControlName="dFecha">
+                                            <mat-datepicker-toggle matSuffix [for]="dFecha"></mat-datepicker-toggle>
+                                            <mat-datepicker #dFecha startView="multi-year" (yearSelected)="chosenYearHandler($event)" (monthSelected)="chosenMonthHandler($event, dFecha)">
+                                            </mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row">
+
+                                    <!-- Nombres o documento -->
+                                    <div class="col-lg-8">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Nombres o documento de identidad</mat-label>
+                                            <input type="text" matInput formControlName="sNombres">
+                                            <button style="outline: none;" mat-button *ngIf="getMain.sNombres.value" matSuffix mat-icon-button aria-label="Clear" 
+                                            (click)="getMain.sNombres.patchValue('')">
+                                            <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Estado -->
+                                    <div class="col-lg-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select formControlName="nIdEstado">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of cboEstado" [value]="item.nEleCod">
+                                                    {{item.cEleNam}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm">
+                        <h6>Lista de registros históricos :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_bonor" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="MainDS" style="width: 100%;" multiTemplateDataRows>
+
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(2, element)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Cliente Column -->
+                                <ng-container matColumnDef="sCliente">
+                                    <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Cliente :'>
+                                        <ngb-highlight [result]="element.sCliente" [term]="getMain.sCliente.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Centro de costo Column -->
+                                <ng-container matColumnDef="sCentroCosto">
+                                    <th mat-header-cell *matHeaderCellDef> Centro de costo </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Centro de costo :'>
+                                        <ngb-highlight [result]="element.sCentroCosto | titlecase" [term]="getMain.sCentroCosto.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Devengue Column -->
+                                <ng-container matColumnDef="dDevengue">
+                                    <th mat-header-cell *matHeaderCellDef> Devengue </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha devengue :'> {{ MomentDate(element.dFecha) }} </td>
+                                </ng-container>
+
+                                <!-- # Personas Column -->
+                                <ng-container matColumnDef="nCant">
+                                    <th mat-header-cell *matHeaderCellDef> Persona(s) </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cantidad de personas :'> {{element.nCant}} </td>
+                                </ng-container>
+
+                                <!-- Estado Column -->
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado :'> {{element.sEstado}} </td>
+                                </ng-container>
+
+                                <!-- More Column -->
+                                <ng-container matColumnDef="more">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                        <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                                    </td>
+                                </ng-container>
+
+                                <!-- More Expanded -->
+                                <ng-container matColumnDef="expanded_More">
+                                    <td mat-cell *matCellDef="let element" [attr.colspan]="MainDC.length">
+                                        <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                            <div class="row" style="padding: 10px;">
+                                                <div class="col-lg-12">
+                                                    <!-- Lista de trabajadores -->
+                                                    <div class="row" style="padding-left: 15px;">
+                                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                            <h6>Lista de trabajadores:</h6>
+                                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="dTableExpanded" class="melevation">
+                                                        <table #mtExpanded mat-table [dataSource]="ExpandedDS" style="width: 100%;">
+
+                                                            <!-- Position Column -->
+                                                            <ng-container matColumnDef="position">
+                                                                <th mat-header-cell *matHeaderCellDef> N° </th>
+                                                                <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>
+                                                            </ng-container>
+
+                                                            <!-- Apellido y nombres Column -->
+                                                            <ng-container matColumnDef="sNombres">
+                                                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                                                <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                                                    <ngb-highlight [result]="element.sNombres | titlecase" [term]="getMain.sNombres.value"></ngb-highlight>
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Planilla Column -->
+                                                            <ng-container matColumnDef="sCodPlla">
+                                                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                                                            </ng-container>
+
+                                                            <!-- Tipo documento Column -->
+                                                            <ng-container matColumnDef="sDscTipo">
+                                                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sDscTipo}} </td>
+                                                            </ng-container>
+
+                                                            <!-- N° Documento Column -->
+                                                            <ng-container matColumnDef="sDocumento">
+                                                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                                                    <ngb-highlight [result]="element.sDocumento" [term]="getMain.sNombres.value"></ngb-highlight>
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Ciudad Column -->
+                                                            <ng-container matColumnDef="sCiudad">
+                                                                <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ciudad :'> {{element.sCiudad}} </td>
+                                                            </ng-container>
+
+                                                            <!-- Neto Column -->
+                                                            <ng-container matColumnDef="nNeto">
+                                                                <th mat-header-cell *matHeaderCellDef> Neto ( S/ ) </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Neto ( S/ ) : '>{{ (element.nNeto * 1) | number : '1.2-2'}} </td>
+                                                            </ng-container>
+
+                                                            <!-- Bruto Column -->
+                                                            <ng-container matColumnDef="nBruto">
+                                                                <th mat-header-cell *matHeaderCellDef> Bruto ( S/ ) </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Bruto ( S/ ) : '>{{ (element.nBruto * 1) | number : '1.2-2'}} </td>
+                                                            </ng-container>
+
+                                                            <tr mat-header-row *matHeaderRowDef="ExpandedDC; sticky: true"></tr>
+                                                            <tr mat-row *matRowDef="let element; columns: ExpandedDC;"></tr>
+                                                        </table>
+                                                    </div>
+                                                    <mat-paginator #pagExpanded style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #pagMain style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>
+

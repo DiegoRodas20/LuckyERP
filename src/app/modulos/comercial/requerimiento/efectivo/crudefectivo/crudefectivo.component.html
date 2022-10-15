@@ -1,0 +1,373 @@
+<div class="clspantallaAjuste">
+    <div class="clstituloCrtl">
+        <h3>Requerimiento de Efectivo</h3>
+    </div>
+
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+
+            <!--Guardar y Actualizar-->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAction(0,4)"
+                *ngIf=BtnNuevo>
+                <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAction(1,4)"
+                *ngIf=BtnModificar>
+                <i class="material-icons" matTooltip="Actualizar" matTooltipPosition="left">save</i>
+            </button>
+
+            <!--Botones de Ejecutivo, Dueño de Presupuesto-->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnValidacion(2054)"
+                *ngIf=BtnDueno>
+                <i class="material-icons" matTooltip="Devolver" matTooltipPosition="left">assignment_return</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnValidacion(2095)"
+                *ngIf=BtnDueno>
+                <i class="material-icons" matTooltip="Rechazar" matTooltipPosition="left">cancel</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnValidacion(2053)"
+                *ngIf=BtnDueno>
+                <i class="material-icons" matTooltip="Aprobar" matTooltipPosition="left">check_circle</i>
+            </button>
+
+            <!--Boton Enviar-->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnValidacion(2052)"
+                *ngIf=BtnEquipo>
+                <i class="material-icons" matTooltip="Enviar" matTooltipPosition="left">send</i>
+            </button>
+
+            <!--Histórico y Salir-->
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnVerEstado()">
+                <i class="material-icons" matTooltip="Histórico de Estado" matTooltipPosition="left">list_alt</i>
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="warn" (click)="fnSalir()">
+                <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+            </button>
+
+        </div>
+    </div>
+
+    <mat-card class="example-card">
+        <mat-card-content>
+            <form [formGroup]="DatosFormGroup">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>REQUERIMIENTO</mat-label>
+                            <input matInput type="text" formControlName="NroRQ">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-form-field>
+                            <mat-label>Título</mat-label>
+                            <input matInput type="text" formControlName="Titulo">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label>Estado del requerimiento</mat-label>
+                            <input matInput type="text" formControlName="Estado">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>Nro.Documento</mat-label>
+                            <input matInput type="text" formControlName="NroDoc">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput type="text" formControlName="Nombre">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Banco</mat-label>
+                            <input matInput type="text" formControlName="Banco">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Nro. Cuenta</mat-label>
+                            <input matInput type="text" formControlName="Cuenta">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="example-card">
+        <mat-card-content>
+            <form [formGroup]="PPTOFormGroup">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>Nro. Presupuesto/Centro Costo</mat-label>
+                            <input matInput type="text" formControlName="NroPPTO" (change)='fnGetPPTO(1)'
+                                autocomplete="off">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label>Descripción Presupuesto/Centro Costo</mat-label>
+                            <input matInput type="text" formControlName="PPTO">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf=BtnPresupuesto>
+                        <mat-form-field>
+                            <mat-label>Inicio Presupuesto</mat-label>
+                            <input matInput type="date" formControlName="IniPPTO">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf=BtnPresupuesto>
+                        <mat-form-field>
+                            <mat-label>Fin Presupuesto</mat-label>
+                            <input matInput type="date" formControlName="FinPPTO">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf=BtnCentroCosto>
+                        <mat-form-field>
+                            <mat-label>Director</mat-label>
+                            <input matInput type="text" formControlName="Director">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf=BtnCentroCosto>
+                        <mat-form-field>
+                            <mat-label>Área</mat-label>
+                            <input matInput type="text" formControlName="Area">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" *ngIf=BtnPresupuesto>
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>R.U.C.</mat-label>
+                            <input matInput type="text" formControlName="NroCliente">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field>
+                            <mat-label>Cliente</mat-label>
+                            <input matInput type="text" formControlName="Cliente">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" formControlName="EstadoPPTO">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Marca</mat-label>
+                            <input matInput type="text" formControlName="Marca">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row" *ngIf=BtnPresupuesto>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Dir. Gen.</mat-label>
+                            <input matInput type="text" formControlName="NombreDir">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Ger. Ctas.</mat-label>
+                            <input matInput type="text" formControlName="NombreGer">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Ejec. Ctas.</mat-label>
+                            <input matInput type="text" formControlName="NombreEje">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>PPTO Moneda</mat-label>
+                            <input matInput type="text" formControlName="Moneda">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="example-card">
+        <mat-card-content>
+            <form [formGroup]="RQFormGroup">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>Moneda Req.</mat-label>
+                            <mat-select formControlName="MonedaRQ">
+                                <mat-option *ngFor="let vMatOpcion of lCboModena" [value]="vMatOpcion.codigo">
+                                    {{vMatOpcion.valor}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <mat-form-field>
+                            <mat-label>Tipo Cambio</mat-label>
+                            <input matInput type="text" formControlName="TipCam">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <mat-form-field class="example-full-width">
+                            <mat-label> De dónde son: </mat-label>
+                            <mat-select formControlName="zona" (selectionChange)="fnGetPersonalxZona(1,0)">
+                                <mat-option [value]="1"> Central</mat-option>
+                                <mat-option [value]="0"> Provincia</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Inicio Req.</mat-label>
+                            <input matInput [matDatepickerFilter]="filtroFecha" [matDatepicker]="frIni"
+                                (dateInput)="fnfecha(0,$event.value,$event.value)" readonly formControlName="Ini">
+                            <mat-datepicker-toggle matSuffix [for]="frIni"></mat-datepicker-toggle>
+                            <mat-datepicker #frIni></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+
+                        <mat-form-field>
+                            <mat-label>Fin Req.</mat-label>
+                            <input matInput [matDatepicker]="frFin" (dateInput)="fnfecha(1,$event.value,$event.value)"
+                                readonly formControlName="Fin">
+                            <mat-datepicker-toggle matSuffix [for]="frFin"></mat-datepicker-toggle>
+                            <mat-datepicker #frFin></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+            <!--Mat Table-->
+            <div id="listap" class="mat-elevation-z8 example-container-partida">
+                <table mat-table [dataSource]="tGestorDS" class="clspartida">
+                    <ng-container matColumnDef="estado" sticky>
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpcion">
+                            <button mat-menu-item (click)="btnNuevoTGestor()" [disabled]=BVal>
+                                <mat-icon color="accent">add</mat-icon>
+                            </button>
+                        </th>
+                        <td mat-cell *matCellDef="let element;index as i">
+                            <button mat-menu-item (click)="btnElimnarTGestor(element)" [disabled]=BVal>
+                                <mat-icon color="accent">delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ciudad">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaLarge"> Sucursal </th>
+                        <td mat-cell *matCellDef="let element;index as i" class='has_label_on_mobile'>
+                            <ng-select appendTo="body" [(ngModel)]="element.ciudad" [clearable]="false" [disabled]=BVal
+                                (change)="fnChangeCiudad(i)">
+                                <ng-option *ngFor="let car of lcboSucursal" [(value)]="car.pidSuc">{{car.psCod}} -
+                                    {{car.psDesc}}</ng-option>
+                            </ng-select>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="partida">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaLarge"> Partida </th>
+                        <td mat-cell *matCellDef="let element;index as ii" class='has_label_on_mobile'>
+                            <ng-select appendTo="body" [(ngModel)]="element.partida" [clearable]="false"
+                                [disabled]=BVal>
+                                <ng-option *ngFor="let car of arrayPartida[element.ciudad]" [(value)]="car.pnIdPartida">
+                                    {{car.pCodEsp}} - {{car.pdesEsp}}
+                                </ng-option>
+                            </ng-select>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="depositario">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaLarge"> Depositario </th>
+                        <td mat-cell *matCellDef="let element;index as i">
+                            <ng-select appendTo="body" [(ngModel)]="element.depositario" [clearable]="false"
+                                [disabled]=BVal (change)="fnChangeBanco(i,element.ciudad,element.depositario)">
+                                <ng-option *ngFor="let car of arrayPersonal[element.ciudad]" [disabled]=car.estado
+                                    [(value)]="car.idPersonal">
+                                    {{car.sDni}} - {{car.sNombres}}
+                                </ng-option>
+                            </ng-select>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaLarge"> Banco </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field>
+                                <input matInput type="text" [disabled]=true [(ngModel)]="element.banco" width="auto">
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpcion"> Cantidad </th>
+                        <td mat-cell *matCellDef="let element;index as i">
+                            <mat-form-field style="width: 100px;">
+                                <input matInput type="number" [disabled]=BVal min="0" autocomplete="off"
+                                    (change)="fnCalculo(i,0,arrayPartida[element.ciudad],element.ciudad,element.partida)"
+                                    [(ngModel)]="element.cantidad">
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="precio">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpcion"> Precio Unit </th>
+                        <td mat-cell *matCellDef="let element;index as i">
+                            <mat-form-field style="width: 100px;">
+                                <input matInput type="number" [disabled]=BVal min="0" autocomplete="off"
+                                    (change)="fnCalculo(i,1,arrayPartida[element.ciudad],element.ciudad,element.partida)"
+                                    [(ngModel)]="element.precio">
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnaOpcion"> Total </th>
+                        <td mat-cell *matCellDef="let element;index as i">
+                            <mat-form-field style="width: 100px;">
+                                <input matInput type="number" [disabled]=BVal min="0" [disabled]=true
+                                    [(ngModel)]="element.total">
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="tGestorDC; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: tGestorDC;"></tr>
+
+                </table>
+            </div>
+            <!--Fin Mat Table-->
+
+            <br />
+
+            <form [formGroup]="TotalFormGroup">
+                <div class="row">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+
+                    <div class="col-sm-3">
+                        <mat-form-field>
+                            <mat-label>Total</mat-label>
+                            <input matInput formControlName="txtTotal">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+
+
+        </mat-card-content>
+    </mat-card>
+
+</div>

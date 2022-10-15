@@ -1,0 +1,96 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+}
+
+.title-panel {
+    color: #334D6E;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 300px;
+}
+
+@media(min-width: 768px) {
+    .clsSeparador {
+        height: 100%;
+        border-right: 2px solid rgb(236, 0, 140);
+    }
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-selected,
+:host /deep/ .mat-step-header .mat-step-icon {
+    background-color: rgb(236, 0, 140);
+}
+
+:host /deep/ .mat-step-header .mat-step-icon-state-error {
+    background-color: rgb(51, 77, 110);
+}
+
+:host /deep/ .mat-step-header .mat-step-label.mat-step-label-active,
+:host /deep/ .mat-step-header .mat-step-label {
+    color: white;
+}
+
+:host /deep/ .mat-stepper-horizontal-line {
+    border-top-color: white;
+}
+
+:host /deep/ .mat-horizontal-stepper-header-container {
+    background-color: rgb(51, 77, 110);
+    margin-bottom: 10px;
+    /* position: sticky; */
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1500;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+
+/* Estilos de impresion */
+
+.impresionActiva {
+    display: none;
+}
+
+.impresion {
+    display: none;
+}
+
+@media print {
+    .impresionActiva {
+        display: initial;
+    }
+    .noImpresion {
+        display: none;
+    }
+}

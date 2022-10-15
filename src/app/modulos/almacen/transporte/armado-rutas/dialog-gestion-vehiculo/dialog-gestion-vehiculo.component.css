@@ -1,0 +1,20 @@
+.example-container {
+  height: 350px;
+  width: 100%;
+  overflow: auto;
+}
+
+.fondo {
+  background-color: #334d6e;
+  color: white;
+  padding: 5px;
+  text-align: center;
+}
+
+.clsColumnaLarge {
+  width: 250px;
+}
+
+.clsColumnaLib {
+  width: 200px;
+}

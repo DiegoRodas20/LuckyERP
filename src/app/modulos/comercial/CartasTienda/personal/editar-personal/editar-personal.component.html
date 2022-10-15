@@ -1,0 +1,71 @@
+<div>
+  <h4 mat-dialog-title>Editar Personal</h4>
+  <mat-dialog-content class="mat-typography">
+    <div class="contenedor_formulario">
+      <div *ngFor="let campo of listaCamposComunesEstaticos">
+        <!-- PARA CAMPOS QUE INGRESEN NUMEROS  -->
+        <div *ngIf="campo.pIdTipoCampo === 1">
+          <app-numero-campo-empleado
+            (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+            [label]="campo.pNombre"
+            [valor]="dataPersona[campo.pIdCampo]"
+          ></app-numero-campo-empleado>
+        </div>
+
+        <!--PARA CAMPOS CON TEXTO -->
+        <div *ngIf="campo.pIdTipoCampo === 2">
+          <app-texto-campo-empleado
+            (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+            [label]="campo.pNombre"
+            [valor]="dataPersona[campo.pIdCampo]"
+          ></app-texto-campo-empleado>
+        </div>
+
+        <!-- PARA CAMPOS CON VARIAS OPCIONES EN UN SELECT-->
+        <div *ngIf="campo.pIdTipoCampo === 3">
+          <app-desplegable-campo-empleado
+            (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+            [label]="campo.pNombre"
+            [CampoID]="campo.pIdCampo"
+            [valor]="
+              this.dataPersona[campo.pIdCampo] === undefined ||
+              this.dataPersona[campo.pIdCampo] === null
+                ? ''
+                : this.dataPersona[campo.pIdCampo].pValor
+            "
+          ></app-desplegable-campo-empleado>
+        </div>
+
+        <!-- PARA CAMPOS PARA LA SELECCION DE FECHAS -->
+        <div *ngIf="campo.pIdTipoCampo === 4">
+          <app-fecha-campo-empleado
+            (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+            [label]="campo.pNombre"
+            [valorEntrada]="dataPersona[campo.pIdCampo]"
+          ></app-fecha-campo-empleado>
+        </div>
+
+        <!-- PARA CON ENTRADAS DE HORAS-->
+        <div *ngIf="campo.pIdTipoCampo === 5">
+          <app-hora-campo-empleado
+            (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+            [label]="campo.nombre"
+            [valor]="dataPersona[campo.pIdCampo]"
+          ></app-hora-campo-empleado>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-button
+      type="submit"
+      color="primary"
+      (click)="editarPersonal()"
+      [disabled]="!validarBotonActualizar()"
+    >
+      Actualizar
+    </button>
+  </mat-dialog-actions>
+</div>

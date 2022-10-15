@@ -1,0 +1,158 @@
+<div class="clsprincipal">
+
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="titulo">
+                <h4>
+                    <div style="margin-top: 0px;">
+                        Reporte cuenta Corriente del Proveedor
+                    </div>
+                </h4>
+            </div>
+        </div>
+    </div>
+
+
+
+    <form [formGroup]="formulario">
+        <div class="row col-md-12">
+            <div class="col-md-12">
+                <mat-card>
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Aplicar filtro por</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+
+                    <div class="row m-auto">
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 col-12">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Años</mat-label>
+                                        <mat-select formControlName="cboAnio" (selectionChange)="consultaReporte()">
+                                            <mat-option *ngFor="let x of ListAnio" [value]="x.anio">
+                                                {{x.anio}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 col-12">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Proveedores</mat-label>
+                                        <mat-select formControlName="cboProveedor"
+                                            (selectionChange)="consultaReporte()">
+                                            <mat-option value="0">Todos</mat-option>
+                                            <mat-option *ngFor="let x of ListProveedor" [value]="x.codigoProv">
+                                                {{x.proveedor}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-sm">
+                            <h6>Lista de cuentas</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+
+
+                    <div class="contenedor_tabla mat-elevation-z8">
+                        <table mat-table [dataSource]="ListCuentaCorriente" id="tablaCampania">
+
+
+                            <ng-container matColumnDef="fecha">
+                                <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                                <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ppto">
+                                <th mat-header-cell *matHeaderCellDef> Ppto/CCosto </th>
+                                <td mat-cell *matCellDef="let element"> {{element.ppto}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="documento">
+                                <th mat-header-cell *matHeaderCellDef> Doc </th>
+                                <td mat-cell *matCellDef="let element"> {{element.documento}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="correlativo">
+                                <th mat-header-cell *matHeaderCellDef>Nro OC</th>
+                                <td mat-cell *matCellDef="let element"> {{element.correlativo}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ruc">
+                                <th mat-header-cell *matHeaderCellDef> Proveedor </th>
+                                <td mat-cell *matCellDef="let element"> {{element.ruc}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="razonSocial">
+                                <th mat-header-cell *matHeaderCellDef> Razon Social </th>
+                                <td mat-cell *matCellDef="let element"> {{element.razonSocial}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="totalProv">
+                                <th mat-header-cell *matHeaderCellDef> Total Proveedor </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalProv}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="totalLucky">
+                                <th mat-header-cell *matHeaderCellDef> Total Lucky </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalLucky}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="notaCredito">
+                                <th mat-header-cell *matHeaderCellDef> Total NC </th>
+                                <td mat-cell *matCellDef="let element"> {{element.notaCredito}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="diferencia">
+                                <th mat-header-cell *matHeaderCellDef> Diferencia </th>
+                                <td mat-cell *matCellDef="let element"> {{element.diferencia}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="utilitarios.displayedColumnsRpt; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: utilitarios.displayedColumnsRpt;">
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[25,50, 100]" [pageSize]="25" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                    <mat-label class="textoDeTotales">{{utilitarios.totalfilas}}</mat-label>
+                </mat-card>
+            </div>
+        </div>
+
+
+        <div class="row col-md-12">
+
+            <div class="fab-container">
+
+                <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary"
+                    (click)="fnDescargarExcel()">
+                    <i class="material-icons" matTooltip="Descargar Archivo" matTooltipPosition="left">cloud_download</i>
+                </button>
+
+
+                <!--Para salir-->
+                <button mat-raised-button mat-mini-fab matTooltipPosition="left" class="fab-secondary"
+                    matTooltip="Salir" color="warn" (click)="fnSalir()">
+                    <i class="material-icons">exit_to_app</i>
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>

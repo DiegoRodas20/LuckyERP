@@ -1,0 +1,168 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+    </div>
+</div>
+
+<div class=" col-md-10 offset-md-1">
+    <div class="clsprincipal">
+
+        <div style="padding-top: 25px;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">Emisión de Facturas/Boletas</mat-card>
+            </div>
+        </div>
+
+
+    </div>
+    <div style="margin-left: 20px;">
+        <!-- Inicio del contenido -->
+        <div class="row m-auto">
+
+            <form autocomplete="off" [formGroup]="formularioComprobantes">
+
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                        <mat-form-field>
+                            <mat-label>Año</mat-label>
+                            <mat-select formControlName="year">
+                                <mat-option *ngFor="let item of listadoYearComprobante" [value]="item.year">{{ item.year }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Fecha inicio</mat-label>
+                            <input matInput formControlName="inicio" readonly [matDatepicker]="picker" (dateChange)="consultaTipoCambio()">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                    </div>
+
+
+
+                    <div class="col-lg-4 col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Fecha fin</mat-label>
+                            <input matInput formControlName="fin"  readonly [matDatepicker]="picker1" (dateChange)="consultaTipoCambio()">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+            </form>
+
+            <div class="col-lg-3 col-md-3">
+                <mat-form-field class="text-left search-form-field" style="width: 100%;">
+
+                    <input matInput (keyup)="applyFilter($event)" autocomplete="off" placeholder="Buscar..." #input [(ngModel)]="value">
+   
+                </mat-form-field>
+            </div>
+ 
+        </div>
+
+
+
+
+    </div>
+
+
+    <div class="col-md-12">
+        <div style="height: 10px;"></div>
+        <!-- nueva tabla material -->
+        <div class="mat-elevation-z8">
+            <div class="example-container mat-elevation-z8 ">
+                <table mat-table [dataSource]="ComprobanteList" matSort>
+
+                    <ng-container matColumnDef="codigoComprobante" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #334d6e; color: white;">Ver
+                        </th>
+
+                        <td *matCellDef="let element">
+
+                            <div style="margin-left: 10px;">
+                                <button matTooltip="Visualizar" matTooltipPosition="left" mat-stroked-button color="accent" (click)="editar(element)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="documento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> T. Documento </th>
+                        <td mat-cell *matCellDef="let element"> {{element.documento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serie">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Serie </th>
+                        <td mat-cell *matCellDef="let element"> {{element.serie}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numero">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Número</th>
+                        <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaRegistro">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Registro </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fechaRegistro}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cliente">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cliente}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cpptos">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Items </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                        <td mat-cell *matCellDef="let element"> {{element.total | number:'3.2-2'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="estado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                        <td mat-cell *matCellDef="let element" [style.color]="element.estado?'tomato':'blue'">
+                            {{element.estado}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
+    <div> 
+        <div class="col-lg-10 col-md-10 col-sm-10 col-10">
+            <pre id="contenido-archivo"></pre>
+        </div>
+    </div>
+</div>

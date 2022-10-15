@@ -1,0 +1,57 @@
+
+GUARDAR
+
+// 1: "1" empresa --
+// 2: "1" responsable del sistema(jayala, admin erp) --
+// 3: 193 personal atareado --
+// 4: 93 cargo del personal -- 
+
+// 5: 30 -- dias nTotalDias Automático, según la suma de dias que se puso en las lineas; 
+
+// 6: 100  -- porcentaje , automático, según la suma de dias que se puso en las lineas; 
+
+// 7: "1"  -- usuario crea registro tareo
+// 8: "P"  --estado del tareo.
+// 9: 30    --- dias maximo permitidos.(calcular)
+
+// 10: 2800 -- costo empresa--
+// 11: 100 -- costo empresa  dos parametro de calculos--
+
+// 12: 0 ---año a consultar (vacio)
+// 13: 0 -- idtareo IRIA EN 0
+
+// 14: 1463    -- idmes
+// 15: "2020" --año de grabado de tareo v
+
+// 16: "119,428,2003,30,6790.04,100,0,2800     detalle
+
+
+// *********************************************************************************
+
+//Editar - enviar)
+
+
+// 1: "1" empresa                                                                         no modificable
+// 2: "1" responsable del sistema(jayala, admin erp)                                      no modificable
+
+// 3: 193 personal atareado                                                              (vacio)
+// 4: 93 cargo del personal                                                              (vacio)
+
+// 5: 30 -- dias nTotalDias Automático, según la suma de dias que se puso en las lineas; modificable 
+
+// 6: 100  -- porcentaje , automático, según la suma de dias que se puso en las lineas;  modificable 
+// 7: "1"  -- usuario crea registro tareo                                                modificable 
+// 8: "P"  --estado del tareo.                                                           modificable 
+// 9: 30    --- dias maximo permitidos.(calcular)                                        modificable 
+
+// 10: 2800 -- costo empresa--                                                           modificable 
+// 11: 100 -- costo empresa  dos parametro de calculos--                                 modificable 
+
+// 12: 0 ---año a consultar                                                             (vacio)
+// 13: 0 -- idtareo (iria en 0)                                                          (No modificable)
+
+// 14: 1463    -- idmes                                                                  (vacio)
+// 15: "2020" --año de grabado de tareo                                                  (vacio)
+ 
+// 16: "119,428,2003,30,6790.04,100,0,2800     detalle                                  Modificable
+

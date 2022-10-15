@@ -1,0 +1,185 @@
+<div class="form-row" style="margin-top: 15px;">
+    <!--Input para modal-->
+    <input data-toggle="modal" data-target="#modalArea" #modalArea type="hidden" name="button">
+
+    <!-- Botones Flotantes pantalla -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                matTooltipPosition="left" (click)="clickFab(0)">
+                <i class="material-icons" matTooltip="{{btn.tool}}">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group col-md-12">
+        <!-- Inicio del contenido -->
+        <div class="row justify-content-center">
+            <div class="col-md-9 offset-md-1">
+                <div class="form-row">
+                    <div class="col-md-8 col-sm-8 col-10">
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Buscar área:</mat-label>
+                            <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar()">
+                            <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                                aria-label="Clear" (click)="this.txtFiltro.setValue('');fnListarAreas()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- <div class="col-md-4 col-sm-4 col-2">
+                        <button mat-mini-fab class="fab-toggler" matTooltip="Nueva Área" (click)="fnAbrirModal()">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <input data-toggle="modal" data-target="#modalArea" #modalArea type="hidden" name="button">
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+
+        <!-- nueva tabla material -->
+        <div id="listaMobile" class="mat-elevation-z8 ">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="nIdArea" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"></th>
+                        <td mat-cell data-label='Ver detalle: ' *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaOpc">
+                            <button (click)="fnSeleccionarArea(row)" mat-stroked-button color="accent"
+                                matTooltip="Ver detalle">
+                                <mat-icon> touch_app</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sCodigoArea">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Código
+                        </th>
+                        <td mat-cell data-label='Código: ' *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.sCodigoArea" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDescripcion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Área
+                        </th>
+                        <td mat-cell data-label='Área: ' *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sEstado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Estado
+                        </th>
+                        <td mat-cell data-label='Estado: ' *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib">
+                            <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  bd-example-modal-xl" id="modalArea" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="modalArea" aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example-1">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalAreaLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <mat-card>
+                    <form class="row col-md-12" [formGroup]="formArea">
+
+                        <div class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Código:</mat-label>
+                                <input type="text" (input)="fnConvertirMay()" matInput placeholder="A"
+                                    formControlName="txtCodigo" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formArea.get('txtCodigo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error
+                                    *ngIf="formArea.get('txtCodigo').hasError('maxlength') || formArea.get('txtCodigo').hasError('minlength')">
+                                    .Dos caracteres</mat-error>
+                                <mat-error *ngIf="formArea.get('txtCodigo').hasError('pattern')">
+                                    .Sin caracteres especiales</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Descripción:</mat-label>
+                                <input type="text" (input)="fnEvitarEspacios()" matInput placeholder="Area"
+                                    formControlName="txtDescripcion" [errorStateMatcher]="matcher" appCaracterValidador>
+                                <mat-error *ngIf="formArea.get('txtDescripcion').hasError('required')">
+                                    .Obligatorio</mat-error>
+                                <mat-error *ngIf="formArea.get('txtDescripcion').hasError('maxlength')">
+                                    .Máximo 50 caracteres</mat-error>
+                                <mat-error *ngIf="formArea.get('txtDescripcion').errors?.caracterValidator">
+                                    .El texto no debe contener: "/", "|", "?"</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </form>
+
+                    <div class="row col-md-12 d-flex justify-content-end">
+                        <div *ngIf="pOpcion==2" class="form-group col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select [formControl]="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstados" [value]="vEstado.nEstado">
+                                        {{vEstado.sEstado}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnAnadirArea()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8  d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Editar" mat-mini-fab color="accent" (click)="fnModificarArea()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarArea()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <div class="form-row col-md-12 justify-content-end align-items-end">
+
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

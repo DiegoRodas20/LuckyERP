@@ -1,0 +1,15 @@
+.clsprincipal {
+  padding: 80px 15px 0px 15px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+}
+
+.example-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}

@@ -1,0 +1,84 @@
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 20px;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+
+.browser-filter {
+  margin-top: 10px;
+  float: right;
+  width: 100%;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+  height: 300px;
+}
+
+::ng-deep .mat-column-bAgregar .mat-sort-header-container,
+::ng-deep .mat-column-bModificar .mat-sort-header-container,
+::ng-deep .mat-column-bDuplicar .mat-sort-header-container {
+  display:flex;
+  justify-content:center;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Estilos del boton de agregar almacen*/
+.buttonAlmacenAdd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos del modal */
+
+/* modal animation */
+:host ::ng-deep .combobox-modal-container .modal-content{
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+:host ::ng-deep .custom-modal-parametros .modal-dialog{
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes example {
+  0%   {transform: scale(0.5)}
+  75%  {transform: scale(1.1)}
+  100% {transform: scale(1)}
+}
+
+@media screen and (max-width: 960px) {
+  .example-container {
+    height: 200px;
+  }
+}

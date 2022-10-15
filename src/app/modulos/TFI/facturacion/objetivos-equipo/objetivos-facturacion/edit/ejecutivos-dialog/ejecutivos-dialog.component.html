@@ -1,0 +1,81 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <!-- Card Header Titulo -->
+        <div class="container mb-4">
+            <h5 class="col-md-12 card-header">
+                Nuevo Ejecutivo
+            </h5>
+        </div>
+
+        <div class="col-md-12">
+            <form [formGroup]="formEjecutivo" autocomplete="off">
+                <div class="form-row">
+
+                    <!-- Ejecutivo -->
+                    <div class="form-group col-md-12">
+                        <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Ejecutivo"
+                            formControlName="codigoEjecutivo">
+                            <ng-option *ngFor="let item of lEjecutivos" [value]="item.codigoPersonal">
+                                {{item.nombreCompleto}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Objetivo -->
+                    <div class="form-group col-md-4">
+                        <mat-form-field>
+                            <mat-label>Objetivo</mat-label>
+                            <input type="number" matInput placeholder="0" formControlName="montoObjetivo">
+                            <mat-error>Debe ingresar el Objetivo</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Regularización -->
+                    <div class="form-group col-md-4">
+                        <mat-form-field>
+                            <mat-label>Regularización</mat-label>
+                            <input type="number" matInput placeholder="0" (blur)="validarRegularizacion()"
+                                formControlName="montoRegularizacion">
+                            <mat-error>Debe ingresar la Regularización</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Objetivo Covid -->
+                    <div class="form-group col-md-4">
+                        <mat-form-field>
+                            <mat-label>Obj. COVID</mat-label>
+                            <input type="number" matInput placeholder="0" formControlName="montoObjCovid">
+                            <mat-error>Debe ingresar el Objetivo Covid</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Motivo -->
+                    <div class="form-group col-md-12">
+                        <mat-form-field>
+                            <mat-label>Motivo</mat-label>
+                            <input matInput placeholder="Motivo" formControlName="motivo">
+                            <mat-error>Debe ingresar el Motivo</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Opciones -->
+                    <div class="form-group col-md-11 text-right">
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                            matTooltip="Grabar" color="accent" (click)="registrarObjetivoxEjecutivo()">
+                            <i class="material-icons">save</i>
+                        </button>
+                    </div>
+
+                    <div class="form-group col-md-1 text-right">
+                        <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                            matTooltip="Salir" color="secondary" (click)="salir()">
+                            <i class="material-icons">exit_to_app</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

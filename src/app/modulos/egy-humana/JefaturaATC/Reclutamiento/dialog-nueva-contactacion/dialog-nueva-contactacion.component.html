@@ -1,0 +1,47 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <h5 mat-dialog-title class="w-100 card-header text-center">
+            Nueva Contactación
+        </h5>
+        
+        <div class="col-md-12">
+            <span>
+                Para iniciar una nueva contactación ud. debe generar una nueva postulación de esta persona:
+            </span>
+        </div>
+        
+        <div class="col-md-12">
+            <form [formGroup]="NuevaContactacion">
+                <div class="form-row">
+
+                    <!-- Lista Puestos Postulacion -->
+                    <div class="form-group mt-2 col-md-12">
+                        <ng-select placeholder="Puesto" appendTo="body" name="Pri" formControlName="Pri">
+                            <ng-option *ngFor="let puesto of listPostulacion" [(value)]="puesto.codigoPublicacion">
+                                {{puesto.descripcionPuesto}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Fecha Postulacion -->
+                    <div class="form-group col-md-12">
+                        <mat-form-field class="w-100">
+                            <mat-label>Fecha Postulación</mat-label>
+                            <input readonly matInput type="text" [(ngModel)]="hoy" formControlName="fechaPost">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Opciones -->
+                    <div class="col-md-12 text-right">
+                        <button mat-raised-button class="mr-2" (click)="onNoClick()">Cancelar</button>
+                        <button mat-raised-button color="accent" (click)="fnSeleccionar()">Crear
+                            Postulación</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

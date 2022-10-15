@@ -1,0 +1,23 @@
+mat-form-field{ 
+    width: 100%; 
+  }
+ 
+
+
+  
+:host /deep/  form .ng-invalid label{
+  color: #f44336; 
+}
+:host /deep/  .mat-form-field-disabled input{
+  color: black;
+  BACKGROUND-COLOR: #d0d3d6;
+} 
+:host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+  color: black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/  .mat-form-field-disabled textarea{  
+  BACKGROUND-COLOR: #d0d3d6;
+}
+ 

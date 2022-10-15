@@ -1,0 +1,175 @@
+<div class="col-xl-10 mx-auto" style="padding-top: 90px; margin-bottom: 10px;" *ngIf="estaCargado">
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab
+          class="fab-secondary"
+          [matTooltip]="btn.tool"
+          matTooltipPosition="left"
+          color="secondary"
+          (click)="clickFab(ibtn)">
+          <i class="material-icons" >{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div>
+    <div class="mb-3" style="text-align: center;">
+      <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">
+          <h3>Saldo de presupuestos del almacenaje</h3>
+        </mat-card>
+      </div>
+    </div>
+    <mat-card>
+      <form autocomplete="off" [formGroup]="formCabecera">
+        <div class="row">
+          <div class="col-xl-3">
+            <ng-select [clearable]="false" placeholder="Empresa" formControlName="empresa"
+                notFoundText="No hay empresas disponibles" (change)="fnLlenarTabla()">
+                <ng-option *ngFor="let element of cbEmpresas" [value]="element.nId">
+                  {{element.sDescripcion}}
+                </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <mat-radio-group aria-label="Seleccione una opción" formControlName="bPoseeAlmacenaje" (change)="fnLlenarTabla()">
+              <div class="row" style="padding-top: 20px;">
+                <div class="col-xl-3">
+                  Tiene almacenaje:
+                </div>
+                <div class="col-xl-3">
+                  <mat-radio-button value="0">Ambos</mat-radio-button>
+                </div>
+                <div class="col-xl-3">
+                  <mat-radio-button value="1">Si tiene</mat-radio-button>
+                </div>
+                <div class="col-xl-3">
+                  <mat-radio-button value="2">No tiene</mat-radio-button>
+                </div>
+              </div>
+            </mat-radio-group>
+          </div>
+          <div class="col-xl-3">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Buscar:</mat-label>
+              <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+              <button mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="this.txtFiltro.setValue(''); fnGenerarTabla()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <div class="mt-3">
+        <div id="listaMobile" class="mat-elevation-z8 scroll-table">
+          <div class="example-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+              <ng-container matColumnDef="sNombreComercial">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="min-width: 200px;"> Cliente </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cliente: ' style="min-width: 200px;">
+                  <ngb-highlight [result]="element.sNombreComercial" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sCentroCosto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Presupuesto: '>
+                  <ngb-highlight [result]="element.sCodCentroCosto + ' ' + element.sCentroCosto" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sDirectorCuentas">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gerente de Cuenta </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Gerente de Cuenta: '>
+                  <ngb-highlight [result]="element.sDirectorCuentas" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sEjecutivo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ejecutivo </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ejecutivo: '>
+                  <ngb-highlight [result]="element.sEjecutivo" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dFechaIni">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Inicio de Presupuesto </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Inicio de Campaña: '>
+                  <ngb-highlight [result]="element.dFechaIni" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dFechaFin">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Término de Presupuesto </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Término de Campaña: '>
+                  <ngb-highlight [result]="element.dFechaFin" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sAlmacen">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacén </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Almacén: '>
+                  <ngb-highlight [result]="element.sCodAlmacen + ' - ' + element.sAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sPagaAlmacenamiento">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Paga almacenamiento </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Paga almacenamiento: '>
+                  <ngb-highlight [result]="element.sPagaAlmacenamiento" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nSaldo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Saldo: '>
+                  <ngb-highlight [result]="element.nSaldo" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nPallet">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Pallets </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Pallets: '>
+                  <ngb-highlight [result]="element.nPallet" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nVolumen">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Volumen </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Volumen: '>
+                  <ngb-highlight [result]="element.nVolumen" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nDiasExcedidos">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Dias Excedidos </th>
+                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Dias Excedidos: '>
+                  <ngb-highlight [result]="element.nDiasExcedidos" [term]="txtFiltro.value"></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              [ngClass]="{'registro-red': row.sPagaAlmacenamiento == 'NO'}">
+              </tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+              </tr>
+            </table>
+          </div>
+          <div class="paginator-fixed">
+            <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+</div>

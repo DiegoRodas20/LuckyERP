@@ -1,0 +1,371 @@
+<div class="mb-3 col-md-12">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h4 class="col-md-10 offset-md-1 card-header mb-4">
+            Reporte Registros de Ventas
+        </h4>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)" [disabled]="btn.estado">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="card mt-3 mb-4">
+        <div class="card-body">
+
+            <form autocomplete="off" [formGroup]="formRegistroVentas">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-radio-group formControlName="rbRegistroVentas">
+
+                            <div class="form-row">
+
+                                <div class="col-md-4 align-self-center">
+                                    <mat-radio-button [value]="true" (click)="cambiarOpcion(1)">
+                                        Año actual
+                                    </mat-radio-button>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field class="input">
+                                        <mat-label>Año</mat-label>
+                                        <input matInput readonly formControlName="anio">
+                                        <mat-error>Ingresar año</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-4 align-self-center">
+                                    <mat-radio-button (click)="cambiarOpcion(2)">
+                                        Rango de fechas
+                                    </mat-radio-button>
+                                </div>
+
+                                <div *ngIf="opcionSeleccionada == 2" class="col-md-4">
+                                    <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Fecha Inicio</mat-label>
+                                        <input matInput formControlName="fechaInicio" [matDatepicker]="pickerInicio">
+                                        <mat-datepicker-toggle matSuffix [for]="pickerInicio">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker touchUi #pickerInicio></mat-datepicker>
+                                        <mat-error>Necesita seleccionar la fecha inicial</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="opcionSeleccionada == 2" class="col-md-4">
+                                    <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Fecha Fin</mat-label>
+                                        <input matInput formControlName="fechaFin" [matDatepicker]="pickerFin">
+                                        <mat-datepicker-toggle matSuffix [for]="pickerFin">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker touchUi #pickerFin></mat-datepicker>
+                                        <mat-error>Necesita seleccionar la fecha fin</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Listado de Ppto pendientes de facturar -->
+    <div *ngIf="tablaEstado" id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSourceRegistroVenta" matSort>
+
+                <!-- Columna Tipo S/M -->
+                <ng-container matColumnDef="tipoServicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña"> Tipo S/M </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Tipo S/M: '>
+                        {{row.tipoServicio}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Estado del Comprobante -->
+                <ng-container matColumnDef="estadoComprobante">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Estado del comprobante
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                        data-label='Estado del comprobante: '>
+                        {{row.estadoComprobante}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Documento -->
+                <ng-container matColumnDef="documento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Documento
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Documento: '>
+                        {{row.documento}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Comprobante Afectado -->
+                <ng-container matColumnDef="comprobanteAfectado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Comprobante afectado
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Comprobante afectado: '>
+                        {{row.comprobanteAfectado}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Orden de Compra -->
+                <ng-container matColumnDef="ordenCompra">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Orden de compra
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Orden de compra: '>
+                        {{row.ordenCompra}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Aceptación -->
+                <ng-container matColumnDef="aceptacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Aceptación
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Aceptación: '>
+                        {{row.aceptacion}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Orden de Servicio -->
+                <ng-container matColumnDef="ordenServicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Orden de Servicio
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Orden de Servicio: '>
+                        {{row.ordenServicio}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Fecha documento -->
+                <ng-container matColumnDef="fechaDocumento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Fecha documento
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Fecha documento: '>
+                        {{row.fechaDocumento}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Presupuesto -->
+                <ng-container matColumnDef="presupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Presupuesto
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Presupuesto: '>
+                        {{row.presupuesto}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Nombre Presupuesto -->
+                <ng-container matColumnDef="nombrePresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaGrande">
+                        Nombre Presupuesto
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Nombre Presupuesto: '>
+                        {{row.nombrePresupuesto}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Fecha Inicio -->
+                <ng-container matColumnDef="fechaInicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Fecha Inicio
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Fecha Inicio: '>
+                        {{row.fechaInicio}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Fecha Fin -->
+                <ng-container matColumnDef="fechaFin">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Fecha Fin
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Fecha Fin: '>
+                        {{row.fechaFin}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Directora General -->
+                <ng-container matColumnDef="directoraGeneral">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Directora General
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Directora General: '>
+                        {{row.directoraGeneral}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Gerente de Cuentas -->
+                <ng-container matColumnDef="gerenteCuentas">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Gerente de Cuentas
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Gerente de Cuentas: '>
+                        {{row.gerenteCuentas}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Ejecutivo (a) -->
+                <ng-container matColumnDef="ejecutivo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Ejecutivo (a)
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Ejecutivo (a): '>
+                        {{row.ejecutivo}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Cliente -->
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Cliente
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cliente: '>
+                        {{row.cliente}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Servicio -->
+                <ng-container matColumnDef="servicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaMediana">
+                        Servicio
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Servicio: '>
+                        {{row.servicio}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Marca -->
+                <ng-container matColumnDef="marca">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Marca
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Marca: '>
+                        {{row.marca}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Oficina ordenante -->
+                <ng-container matColumnDef="oficinaOrdenante">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Oficina ordenante
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Oficina ordenante: '>
+                        {{row.oficinaOrdenante}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Total Presupuesto -->
+                <ng-container matColumnDef="totalPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Total Presupuesto
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Total Presupuesto: '>
+                        {{row.totalPresupuesto}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna A Cuenta -->
+                <ng-container matColumnDef="aCuenta">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        A Cuenta
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='A Cuenta: '>
+                        {{row.aCuenta}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Redondeo -->
+                <ng-container matColumnDef="redondeo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Redondeo
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Redondeo: '>
+                        {{row.redondeo}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Sub Total -->
+                <ng-container matColumnDef="subTotal">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Sub Total
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Sub Total: '>
+                        {{row.subTotal}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna IGV -->
+                <ng-container matColumnDef="igv">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        IGV
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='IGV: '>
+                        {{row.igv}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Total Factura -->
+                <ng-container matColumnDef="totalFactura">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Total Factura
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Total Factura: '>
+                        {{row.totalFactura}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Ciudad -->
+                <ng-container matColumnDef="ciudad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Ciudad
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Ciudad: '>
+                        {{row.ciudad}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Facturación por Ciudad -->
+                <ng-container matColumnDef="facturacionCiudad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="columnaPequeña">
+                        Facturación por Ciudad
+                    </th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                        data-label='Facturación por Ciudad: '>
+                        {{row.facturacionCiudad}}
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</div>

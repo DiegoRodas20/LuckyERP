@@ -1,0 +1,137 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleIncidencia, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsIncidencia}">add</i>
+    </button>
+    <div [@speedDialStagger]="abIncidencia.length">
+        <button *ngFor="let btn of abIncidencia; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleIncidencia, ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_incidencia" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Incidencia</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <mat-accordion>
+                <!-- Información incidencia -->
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información de incidencia :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">feedback</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgIncidencia" [formGroup]="fgIncidencia" class="col-lg-12">
+
+                            <!-- Contrato origen -->
+                            <div class="col-sm" style="padding: 0px;">
+                                <h6>Contrato origen:</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Inicio</mat-label>
+                                        <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechIni></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Término</mat-label>
+                                        <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechFin></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <!-- Nuevo contrato -->
+                            <div class="col-sm" style="padding: 0px;">
+                                <h6>Nuevo contrato:</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Inicio</mat-label>
+                                        <input formControlName="T1_dFechIni" matInput [matDatepicker]="T1_dFechIni" [errorStateMatcher]="matcher">
+                                        <mat-datepicker-toggle matSuffix [for]="T1_dFechIni"></mat-datepicker-toggle>
+                                        <mat-datepicker #T1_dFechIni></mat-datepicker>
+                                        <mat-error *ngIf="getIncidencia.T1_dFechIni.hasError('required')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Término</mat-label>
+                                        <input formControlName="T1_dFechFin" matInput [matDatepicker]="T1_dFechFin" [errorStateMatcher]="matcher">
+                                        <mat-datepicker-toggle matSuffix [for]="T1_dFechFin"></mat-datepicker-toggle>
+                                        <mat-datepicker #T1_dFechFin></mat-datepicker>
+                                        <mat-error *ngIf="getIncidencia.T1_dFechFin.hasError('required')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Motivo</mat-label>
+                                        <mat-select formControlName="T1_nIdMotivo" [errorStateMatcher]="matcher">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboMotivo" [value]="item.nEleCod">
+                                                {{item.cEleNam}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="getIncidencia.T1_nIdMotivo.hasError('noSelect')">. Obligatorio</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Observación</mat-label>
+                                        <textarea matInput placeholder="Escribir aqui...." formControlName="T1_sObservacion" style="max-height: 90px; min-height: 90px;" [errorStateMatcher]="matcher"></textarea>
+                                        <mat-error *ngIf="getIncidencia.T1_sObservacion.hasError('maxLength')">. Lóngitud inválida</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbIncidencia" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

@@ -1,0 +1,94 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Características: {{this.subFamilia?.descripcion}}</h5>
+    </div>
+
+    <div>
+        <div class="col-md-10 offset-md-1">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-9 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-8 col-sm-8 col-8">
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Buscar:</mat-label>
+                                        <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                            mat-icon-button aria-label="Clear"
+                                            (click)="this.txtFiltro.setValue(''); GetAllCaracteristica();">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo"
+                                        (click)="fnAgregarRegistro()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </div>
+
+                                <div class="col-md-2 col-sm-2 col-2">
+                                    <button mat-mini-fab class="fab-toggler" matTooltip="Regresar"
+                                        (click)="fnRegresar()">
+                                        <i class="material-icons">keyboard_arrow_left</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="tabla-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <button (click)="fnSeleccionarRegistro(row)" mat-stroked-button color="accent"
+                                            matTooltip="Ver detalle">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nombre">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Característica
+                                    </th>
+                                    <td data-label='Característica: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.nombre" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="!row.bEstado ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

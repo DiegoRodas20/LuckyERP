@@ -1,0 +1,74 @@
+<!-- #region Spinner -->
+<ngx-spinner
+  name="spi_asistenciap_planning"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- #endregion -->
+
+<!-- #region FB -->
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="clickGrupoFb()">
+    <i class="material-icons" [@fabToggler]="{ value: animacionFb }">add</i>
+  </button>
+  <div [@speedDialStagger]="opcionesFb.length">
+    <button
+      *ngFor="let btn of opcionesFb; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickOpcionFb(ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region HEADER-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Cambiar fecha del planning</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="cerrarModal()"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<!-- #endregion -->
+
+<!-- #region PRINCIPAL -->
+<div class="modal-body">
+  <div class="row" style="margin-bottom: 15px">
+    <!-- Cuerpo  -->
+    <div class="modal-body">
+      <mwl-calendar-month-view
+        [viewDate]="viewDate"
+        [events]="events"
+        [locale]="locale"
+        [refresh]="refresh"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+        (dayClicked)="dayClick($event)"
+      >
+      </mwl-calendar-month-view>
+    </div>
+
+    <mat-progress-bar
+      *ngIf="false"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+</div>
+<!-- #endregion -->

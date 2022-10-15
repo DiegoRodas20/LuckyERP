@@ -1,0 +1,15 @@
+table {
+    width: 100%;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 250px;
+}

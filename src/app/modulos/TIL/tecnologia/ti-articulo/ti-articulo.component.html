@@ -1,0 +1,79 @@
+<div class="clsprincipal">
+
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+          color="secondary" (click)="clickFab(ibtn)">
+          <i class="material-icons">{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="col-md-12 mb-2">
+    <h3 class="card-header center-text-card">Catálogo de Artículos</h3>
+  </div>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-12">
+        <mat-form-field>
+          <mat-label>Filtrar</mat-label>
+          <input matInput (keyup)="applyFilter($event.target.value)" autocomplete="off" #input>
+          <button *ngIf="input.value" mat-button matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+    <div id="listaMobile" class="example-container mat-elevation-z8" [style.height.px]="540">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+
+          <!-- #region Designación de sort en header -->
+          <ng-template [ngIf]="col.field == 'accion'" [ngIfElse]="withSort">
+            <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width" [style.textAlign]="'center'">
+              {{col.header}}
+            </th>
+          </ng-template>
+          <ng-template #withSort>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width.px]="col.width"> {{col.header}} </th>
+          </ng-template>
+          <!-- #endregion -->
+
+          <!-- #region Formación de rows dependiendo del tipo -->
+          <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: " [style.textAlign]="col.align">
+            <span *ngSwitchCase="null">
+              <ngb-highlight [result]="row[col.field]" [term]="input.value"></ngb-highlight>
+            </span>
+            <span *ngSwitchCase="'accion'">
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+                mat-stroked-button color="accent">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="after">
+                <button mat-menu-item (click)="verDetalle(row)">
+                  <mat-icon color="accent">touch_app</mat-icon>
+                  <span>Ver Detalle</span>
+                </button>
+                <button mat-menu-item (click)="verImagen(row)" [disabled]="!hasImagen(row)">
+                  <mat-icon color="accent">image</mat-icon>
+                  <span>{{ hasImagen(row) ? 'Ver Foto' : 'No contiene imagen'}}</span>
+                </button>
+              </mat-menu>
+            </span>
+          </td>
+          <!-- #endregion -->
+
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[50, 100, 200]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<!-- Div Principal -->
+<div style="padding: 80px 0px; min-height: calc(100% - 123px); padding-bottom: 0px;">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Control de Personal</h5>
+
+            <div class="fab-container">
+                <button [@tada]="{value: tadaLista}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                </button>
+                <div [@speedDialStagger]="abLista.length">
+                    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="body-listap" class="card-body" style="padding-bottom: 0px;">
+
+                <div class="icard melevation col-xl-12">
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <h6>Aplicar filtro por</h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+
+                    <form autocomplete="off" id="fgListaP" [formGroup]="fgListaP">
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nombres o documento de identidad</mat-label>
+                                    <input type="text" matInput formControlName="sNombres">
+                                    <button style="outline: none;" mat-button *ngIf="getListaP.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getListaP.sNombres.patchValue('')">
+                                    <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Planilla</mat-label>
+                                    <mat-select formControlName="sCodPlla">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboPlanilla" [value]="item.sCodPlla">
+                                            {{item.sCodPlla}} - {{item.sDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Categoria</mat-label>
+                                    <mat-select formControlName="sCategoria">
+                                        <mat-option>--</mat-option>
+                                        <mat-option value="reclutamiento">Reclutamiento</mat-option>
+                                        <mat-option value="planilla">Planilla</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-sm">
+                        <h6>Lista de personal</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="listap" class="melevation">
+                            <table #mtLista mat-table [dataSource]="listaDS" style="width: 100%;" matSort>
+
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <!-- <ng-container matColumnDef="action" sticky> -->
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="showModal(element)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                        <!-- <button matTooltip="Visualizar" class="btn btn-light" (click)="showModal(element)"><i aria-hidden="true" class="fa fa-eye"></i></button> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPlla">
+                                    <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sTipo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sTipo}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                        <ngb-highlight [result]="element.sDocumento" [term]="getListaP.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                        <ngb-highlight [result]="element.sNombres | titlecase" [term]="getListaP.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Ingreso </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha ingreso :'> {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dFechFin">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> F. Cese </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha cese :'> {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCategoria">
+                                    <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-sub-title'>
+                                        <ngb-highlight [result]="element.sCategoria | titlecase" [term]="getListaP.sCategoria.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="listaDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="listaDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: listaDC;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="listaDS && this.listaDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbLista" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>
+
+<ng-snotify></ng-snotify>

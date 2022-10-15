@@ -1,0 +1,8 @@
+<div class="mb-3 p-3" style="text-align: center;">
+    <mat-card class="title-card"> Cargo por Cliente </mat-card>
+</div>
+<app-table-cargos (addButtonAction)="agregarCliente($event)" [lista]="listaCargosCliente" [tipoLista]="4"></app-table-cargos>
+<div mat-dialog-actions align="end">
+    <!-- <button mat-raised-button color="primary">Guardar</button> -->
+    <button mat-raised-button color="warn" (click)="onNoClick()">Salir</button>
+</div>

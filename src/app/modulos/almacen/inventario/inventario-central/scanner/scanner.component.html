@@ -1,0 +1,67 @@
+<div class="scanner-shell" [hidden]="!hasDevices">
+
+    <!-- <header> -->
+    <div class=" col-md-10 offset-md-1">
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10 col-10">
+                <mat-form-field>
+                    <mat-select [value]="deviceSelected" (valueChange)="onDeviceSelectChange($event)">
+                        <mat-option value="">No hay cámara seleccionada</mat-option>
+                        <mat-option *ngFor="let device of availableDevices" [value]="device.deviceId">{{device.label}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                <button mat-mini-fab class="fab-secondary" color="accent" (click)="salir()">
+                        <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+                    </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- </header> -->
+
+    <br>
+    <br>
+    <zxing-scanner [torch]="torchEnabled" [device]="deviceCurrent" (deviceChange)="onDeviceChange($event)" (scanSuccess)="onCodeResult($event)" [formats]="formatsEnabled" [tryHarder]="tryHarder" (permissionResponse)="onHasPermission($event)" (camerasFound)="onCamerasFound($event)"
+        (torchCompatible)="onTorchCompatible($event)"></zxing-scanner>
+
+</div>
+
+<ng-container *ngIf="hasPermission === undefined">
+
+    <h2>Esperando permisos</h2>
+
+    <blockquote>
+        Si su dispositivo no cuenta con cámaras, no se le podrá solicitar el permiso
+    </blockquote>
+
+</ng-container>
+
+<ng-container *ngIf="hasPermission === false">
+
+    <h2>Usted negó el pérmiso de la cámara, no es posible escanear sin él.</h2>
+
+</ng-container>
+
+<ng-container *ngIf="hasDevices === undefined">
+
+    <h2>No se pudieron verificar los dispositivos</h2>
+
+    <blockquote>
+        Esto puede deberse a algún error de permisos
+    </blockquote>
+
+</ng-container>
+
+<ng-container *ngIf="hasDevices === false">
+
+    <h2>No se encontraron dispositivos</h2>
+
+    <blockquote>
+        Creo que su dispotivio no tiene dispotivios multimedia conectados
+    </blockquote>
+
+</ng-container>

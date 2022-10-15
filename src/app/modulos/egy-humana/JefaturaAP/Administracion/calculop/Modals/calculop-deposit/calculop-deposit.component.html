@@ -1,0 +1,282 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+        <i class="material-icons" [@fabToggler]="{value: tsDeposit}">add</i>
+    </button>
+    <div [@speedDialStagger]="abDeposit.length">
+        <button *ngFor="let btn of abDeposit; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_deposit" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Depósito</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeDeposit()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+
+        <div id="dLeftDeposit" class="col-lg-6">
+
+            <mat-accordion #maDeposit="matAccordion">
+                <!-- Información del deposito -->
+                <mat-expansion-panel [expanded]="true" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del depósito :
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <a></a>
+                        </mat-panel-description>
+                        <mat-icon>account_balance</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgDeposit" [formGroup]="fgDeposit" class="col-xl-12">
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;" appMesYearFormat>
+                                        <mat-label>Devengue</mat-label>
+                                        <input matInput [matDatepicker]="dFechDev_Deposit" formControlName="dDevengue" style="text-transform: capitalize;">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechDev_Deposit" disabled></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechDev_Deposit></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Periodo</mat-label>
+                                        <input type="text" matInput formControlName="sPeriodo">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Planilla</mat-label>
+                                        <input type="text" matInput formControlName="sPlanilla">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Usuario</mat-label>
+                                        <input type="text" matInput formControlName="sUsuario">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="col-lg-6">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Fecha y hora</mat-label>
+                                        <input type="text" matInput formControlName="dtReg">
+                                        <mat-datepicker-toggle matSuffix [for]="dtReg" disabled>
+                                            <mat-icon matDatepickerToggleIcon>schedule</mat-icon>
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #dtReg></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>N° Personas</mat-label>
+                                        <input type="text" style="text-align: right;" matInput formControlName="nCantPerso">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Total ( S/. )</mat-label>
+                                        <input type="text" style="text-align: right;" matInput formControlName="nTotal">
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-sm">
+                    <h6>Resumen por Banco :</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 20px;">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="melevation">
+                        <table mat-table [dataSource]="dsDeposit" style="width: 100%;">
+
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button matTooltip="Visualizar" matTooltipPosition="left" mat-stroked-button color="accent" (click)="ClickBanco(element)">
+                                         <mat-icon>visibility</mat-icon>
+                                      </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sBanco">
+                                <th mat-header-cell *matHeaderCellDef> Banco </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Banco: '> {{element.sBanco}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nCantPerso">
+                                <th mat-header-cell *matHeaderCellDef> N° Personas </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Personas: '> {{element.nCantPerso}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nTotal">
+                                <th mat-header-cell *matHeaderCellDef> Total </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Total: '> {{ (element.nTotal * 1) | number : '1.2-2' }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nEstado">
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;">Estado</th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;" class='has_label_on_mobile' data-label='Estado: '>
+                                    <i [ngStyle]="{'color': ( element.nEstado === 0 ) ? '#fff3cd' : '#d1e7dd' }" matTooltip="{{(element.nEstado === 0) ? 'Pendiente' : 'Procesado'}}" matTooltipPosition="right" class="cssEstado material-icons">circle</i>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dcDeposit"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcDeposit;"></tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="row">
+                <div class="col-sm">
+                    <h6>Banco seleccionado : {{ sBancoClick }}</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 20px;">
+                </div>
+            </div>
+
+            <mat-accordion #maBanco="matAccordion" multi>
+                <!-- Lista de Trabajadores -->
+                <mat-expansion-panel id="mapLista" #mapLista [disabled]="true" [expanded]="false">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Trabajadores :
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <!-- <a></a> -->
+
+                            <input class="inputExpansion" type="text" matInput [formControl]="fcFilter">
+                            <button style="outline: none;" class="buttonExpansion" mat-button *ngIf="fcFilter.value" matSuffix mat-icon-button aria-label="Clear" (click)="fcFilter.patchValue('')">
+                                <mat-icon>close</mat-icon>
+                            </button>
+
+                        </mat-panel-description>
+                        <mat-icon>groups</mat-icon>
+                    </mat-expansion-panel-header>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-lg-12">
+
+                    <div class="melevation">
+                        <table mat-table [dataSource]="dsLista" style="width: 100%;">
+
+                            <ng-container matColumnDef="sNombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                    <ngb-highlight [result]="element.sNombres | titlecase" [term]="fcFilter.value"></ngb-highlight>
+                                    <!-- {{element.sNombres}} -->
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sTipo">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sTipo}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="sDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                    <ngb-highlight [result]="element.sDocumento" [term]="fcFilter.value"></ngb-highlight>
+                                    <!-- {{element.sDocumento}} -->
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nImporte">
+                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Importe </th>
+                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe: '> {{ (element.nImporte * 1) | number : '1.2-2' }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="dcLista.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dcLista"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcLista;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dsLista && this.dsLista.filteredData.length > 0"></mat-footer-row>
+                        </table>
+                    </div>
+
+                    <mat-paginator #pagLista style="display: contents;" [hidePageSize]="false" [pageSize]="10"></mat-paginator>
+
+                </div>
+            </div>
+
+            <hr style="margin-top: 0px; margin-bottom: 20px;">
+
+            <mat-accordion multi>
+                <!-- Sustento -->
+                <mat-expansion-panel #mapSustento id="mapSustento" [disabled]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Fecha de pago :
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <a>{{ sFechaPago }}</a>
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">receipt_long</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <ngx-doc-viewer *ngIf="urlSustento !== ''" [url]="urlSustento" viewer="url" style="width: 100%; height: 445px">
+                    </ngx-doc-viewer>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbDeposit" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

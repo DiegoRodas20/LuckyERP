@@ -1,0 +1,193 @@
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+    z-index: 141;
+}
+
+.fab-toggler {
+    float: right;
+    z-index: 100;
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 2px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: rgba(255, 64, 129, 0.8);
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); */
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255, 64, 129, 0.4);
+}
+
+.divAvatar {
+    text-align: center;
+    padding-bottom: 17px;
+}
+
+.imgAvatar {
+    background-size: cover;
+    height: 100px;
+    width: 100px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border-style: outset;
+}
+
+.mat-input-element:disabled {
+    color: black !important;
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+}
+
+.divFile {
+    text-align: center;
+    padding: 15px;
+}
+
+.imgFile {
+    border-style: dashed;
+    width: 100%;
+    height: 400px;
+    object-fit: none;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-cell {
+    min-height: 50px;
+}
+
+:host ::ng-deep .cal-month-view .cal-cell-top {
+    min-height: 50px;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-cell.cal-today .cal-day-number {
+    font-size: 1.2em !important;
+}
+
+:host ::ng-deep .cal-month-view .cal-header {
+    background-color: #f3f0f0;
+}
+
+:host ::ng-deep .cal-month-view .cal-events {
+    display: none;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-badge {
+    background-color: #ff4081;
+    margin-top: 0px;
+    margin-left: 0px;
+    font-size: 0px;
+}
+
+:host ::ng-deep .cal-month-view .cal-events {
+    display: none;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-number {
+    cursor: pointer;
+}
+
+agm-map {
+    height: 400px;
+}
+
+:host ::ng-deep ng-image-fullscreen-view .ng-image-fullscreen-view .lightbox-wrapper .close {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAM1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACjBUbJAAAAEXRSTlMADKsoPJ8Ew//n879T+8sY13W/vG8AAAEBSURBVHgB7daxAcJAEAPBxxh4DBj6r5ZEibObzMGpgJ1Uo9fr9Xq93rl3Wa6jvPV25/5jPsvCus3lzv1ZEtKfJKQfodSPgP0ItT4JrzlrQvrZrQy8P0Xh0N/WkbngfRe874L3XfC+C953wfsueB8F75vgfRO8b4L3TfC+Cd43wfsmeB8F76PgfRe874L3UfA+Cd6HfwWPzPsueN8F76vgfRC8v31I8P76JsH7Y5jgfRO8b4L3TfC+Cd43wfsmeB8F77vgfRe874L3XfC+C953wfsuZHu1fxSWMvD91fpH4XEZIFT7EdIXodaPkL4JtX6E9EnYS/0Ir/R7vV6v1+uddX+z4icAfdG+MQAAAABJRU5ErkJggg==) !important;
+}
+
+.mat-expansion-panel-header[aria-disabled="true"] {
+    color: black !important;
+}
+
+.mat-expansion-panel-header {
+    height: 50px !important;
+    border-bottom-style: solid;
+    border-bottom-width: 0.5px;
+    border-bottom-color: #8080805c;
+}
+
+.mat-expansion-panel {
+    border-top-color: #ff4081;
+    border-top-width: 2px;
+    border-top-style: solid;
+}
+
+:host ::ng-deep .mat-expansion-panel-body {
+    padding-top: 15px !important;
+    padding-bottom: 5px !important;
+}
+
+.melevation {
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.mat-accordion .mat-expansion-panel:not(.mat-expansion-panel-spacing) {
+    border-top-style: none;
+}
+
+:host ::ng-deep #spi_ .loading-text {
+    top: 85%;
+    text-align-last: center;
+    text-align: center;
+    width: 100%;
+}
+
+:host ::ng-deep #spi_ .loading-text p {
+    color: white;
+    font-size: 20px;
+}
+
+:host ::ng-deep #spi_ img {
+    width: 369px;
+    height: 277px;
+}
+
+:host ::ng-deep #spi_ .overlay {
+    z-index: 140 !important;
+}
+
+:host ::ng-deep #spi_ .overlay>div:not(.loading-text) {
+    top: 45% !important;
+}

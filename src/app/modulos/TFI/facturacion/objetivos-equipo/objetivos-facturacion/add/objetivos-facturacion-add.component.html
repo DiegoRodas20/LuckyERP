@@ -1,0 +1,170 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Registros de Objetivos de Facturación
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <mat-card class="mb-4">
+
+        <div class="form-row">
+            <div class="col-md-6 subtitulos">
+                Mostrando el año: {{this.anioActual}}
+            </div>
+        </div>
+
+        <div class="mt-4">
+
+            <div class="form-row">
+                <div class="col-md-6 subtitulos">
+                    Grupos y Objetivos mensuales:
+                </div>
+
+                <!-- Opciones generales Objetivo -->
+                <div class="col-md-6 text-right">
+                    <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary"
+                        matTooltipPosition="left" matTooltip="Agregar Objetivo" (click)="agregarObjetivoMensual()">
+                        <mat-icon color="accent" class="material-icons">note_add</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lista Grupos y Objetivos mensuales -->
+            <div id="listaMobile" class="mat-elevation-z8 mt-4">
+                <div class="example-container">
+
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <!-- Seleccionar -->
+                        <ng-container matColumnDef="seleccionar" sticky>
+                            <th mat-header-cell *matHeaderCellDef class="clsColumnaLib">Seleccionar</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+
+                                <!-- Listar Objetivos x Ejecutivo -->
+                                <mat-icon matTooltip="Seleccionar Objetivo" class="pr-5" style="cursor: pointer"
+                                    (click)="listarClientexGrupo(row)" color="accent">
+                                    keyboard_arrow_right
+                                </mat-icon>
+
+                            </td>
+                        </ng-container>
+
+                        <!-- Columna Direccion -->
+                        <ng-container matColumnDef="direccion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Dirección</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Dirección: '>
+                                {{row.direccion}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Columna Cliente -->
+                        <ng-container matColumnDef="cliente">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Cliente</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cliente: '>
+                                {{row.cliente}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Columna Mes -->
+                        <ng-container matColumnDef="mes">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Mes</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Mes: '>
+                                {{row.mes}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Columna Objetivo -->
+                        <ng-container matColumnDef="objetivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Objetivo</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Objetivo: '>
+                                {{row.montoObjetivo | number:'1.2-2'}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Regularización -->
+                        <ng-container matColumnDef="regularizacion">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Regularización
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                                data-label='Regularización: '>
+                                {{row.montoRegularizacion | number:'1.2-2'}}</td>
+                        </ng-container>
+
+                        <!-- Motivo -->
+                        <ng-container matColumnDef="motivo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Motivo</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Motivo: '>
+                                {{row.motivo}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Columna Obj. Covid -->
+                        <ng-container matColumnDef="objetivocovid">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Obj. Covid</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Obj. Covid: '>
+                                {{row.montoObjCovid | number:'1.2-2'}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Opciones -->
+                        <ng-container matColumnDef="opciones">
+                            <th mat-header-cell *matHeaderCellDef class="clsColumnaLib">Opcion</th>
+                            <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+
+                                <!-- Editar -->
+                                <mat-icon matTooltip="Editar" class="pr-5" style="cursor: pointer"
+                                    (click)="editarObjetivoMensual(row.codigoObjGrupo)" color="accent">edit
+                                </mat-icon>
+
+                                <!-- Eliminar -->
+                                <mat-icon matTooltip="Eliminar" (click)="eliminarObjetivoMensual(row.codigoObjGrupo)"
+                                    style="cursor: pointer" color="accent">delete
+                                </mat-icon>
+
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+                    </table>
+                </div>
+            </div>
+
+            <!-- Suma Objetivos -->
+            <div class="form-row">
+                <div class="col-md-4"></div>
+                <div class="col-md-2 ">
+                    <div class="form-control montosuma">
+                        Objetivo Suma: 0.0
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <div class="form-control montosuma">
+                        Obj. Covid Suma: 0.0
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </mat-card>
+
+    <br>
+</div>

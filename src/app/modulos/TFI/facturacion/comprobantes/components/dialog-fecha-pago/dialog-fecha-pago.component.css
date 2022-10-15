@@ -1,0 +1,39 @@
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 330px  !important;
+}
+
+table {
+    width: 100%;
+}
+
+td,
+th {
+    font-size: 14px;
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+    height: 40px;
+    margin-left: 10px
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+    height: 10px;
+    margin-left: 10px;
+}
+
+.example-container {
+    width: 100%;
+    overflow: auto;
+    height: 521px;
+}

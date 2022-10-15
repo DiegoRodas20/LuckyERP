@@ -1,0 +1,146 @@
+   /* ----------------------------------- */
+   /* LISTADO REQUERIMIENTO PERSONAL  */
+   /* ----------------------------------- */
+   
+   /* Botones Flotantes */
+
+  .fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+  }
+  
+  /* Titulo Card  */
+
+  .card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+  }
+
+  /* Radio Buttons */
+
+  .example-margin {
+    margin: 0 10px;
+  }
+
+  /* Mat Table */
+
+  table {
+    width: 100%;
+  }
+  
+  td, th {
+      font-size: 14px;
+  }
+
+  .example-container {
+    height: 400px;
+    width: 100%;
+    overflow: auto;
+  }
+  
+  /* Mat Sort Color Blanco */
+
+  :host /deep/ .mat-sort-header-arrow {
+    color: white;
+  }
+
+  .margintop {
+      margin-top: 0px !important;
+  }
+  
+
+ /* ----------------------------------- */
+ /* STEPPER NUEVO/EDITAR REQUERIMIENTO  */
+ /* ----------------------------------- */
+
+
+  .documento {
+    border-bottom: 3px solid lightgray;
+  }
+  
+  .mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-form-field {
+    margin-top: 16px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  :host /deep/ form .ng-invalid label {
+    color: #f44336;
+  }
+  
+  :host /deep/ .mat-form-field-disabled input {
+    color           : black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  
+  :host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+    color           : black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  
+  :host /deep/ .mat-form-field-disabled textarea {
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  
+  
+  .container {
+    max-width: 90%;
+  }
+  
+  mat-radio-button {
+    padding: 10px;
+  }
+  
+  textarea {
+    height: 150px;
+  }
+  
+  @media only screen and (max-width: 766px) {
+    .requerimiento {
+      border-right : 0;
+      border-bottom: 3px solid lightgray;
+    }
+  }
+  
+  .clsSubtitulo {
+    background : #334D6E;
+    height     : 2rem;
+    width      : 100%;
+    text-align : center;
+    color      : white;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+    align-items: center;
+    padding-top: 0.2rem;
+  }
+
+  table th {
+    background-color: #334D6E;
+    color           : white;
+  }
+  

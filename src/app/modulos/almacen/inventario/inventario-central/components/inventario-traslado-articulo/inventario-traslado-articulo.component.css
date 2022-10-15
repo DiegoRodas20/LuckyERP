@@ -1,0 +1,40 @@
+.subtitulo {
+  color: #334d6e;
+  font-weight: initial;
+  letter-spacing: 1px;
+}
+
+.titulo-sub {
+  color: #334d6e;
+  font-weight: 500;
+}
+
+.alinear-centro {
+  align-self: center;
+  margin-right: 10px;
+}
+
+.clsColumnaOpc {
+  width: 80px;
+}
+
+.clsColumnaLarge {
+  width: 400px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaLittle {
+  width: 100px;
+}
+
+.traslado {
+  max-width: 130;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}

@@ -1,0 +1,144 @@
+<div class=" col-md-10 offset-md-1">
+    <div style="padding-top: 70px;">
+        <div class="mb-3" style="text-align: center;">
+            <h3 class="card-header">Traslado de Documento</h3>
+        </div>
+    </div>
+
+    <form autocomplete="off" [formGroup]="form">
+        <mat-card>
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <!-- <mat-form-field class="example-full-width">
+                        <mat-label>Buscar Código Presupuesto</mat-label>
+                        <input type="text" matInput placeholder="202563" formControlName="documento" maxlength="6" (keyup)="validarPresupuesto($event)">
+                    </mat-form-field> -->
+                    <!-- <small *ngIf="documentoNotFound" class="text-danger"> El presupuesto ingresado no existe </small> -->
+                    <ng-select appendTo="body" [clearable]="true" placeholder="Presupuesto" formControlName="documento" (change)="validarPresupuesto($event)">
+                        <ng-option *ngFor="let item of listaPresupuesto" [value]="item.codigo">
+                            {{item.descripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class=" col-lg-4 col-md-4">
+                    <mat-form-field class="example-full-width" style="padding-top: 13px;">
+                        <mat-label>Nombre</mat-label>
+                        <input type="text" matInput placeholder="Alicorp" formControlName="nombre" readonly>
+                    </mat-form-field>
+                </div>
+                <div class=" col-lg-3 col-md-3">
+                    <mat-form-field class="example-full-width" style="padding-top: 13px;">
+                        <mat-label>Tipo de Documento</mat-label>
+                        <mat-select formControlName="tipo" formControlName="tipo" (selectionChange)="cambioTipo($event.value)">
+                            <mat-option *ngFor="let item of listaTipoDocumento" [value]="item.cEleCod"> {{ item.cEleCod }} - {{ item.cEleNam }} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" col-log-1 col-md-1">
+                    <button mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon" (click)="buscarDocumento()" [disabled]="disabledButton">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class=" col-lg-4 col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Cliente</mat-label>
+                        <input type="text" matInput placeholder="Alicorp" formControlName="cliente" readonly style="color: rgb(236, 0, 140);">
+                    </mat-form-field>
+                </div>
+                <div class=" col-lg-3 col-md-3">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Estado</mat-label>
+                        <input type="text" matInput formControlName="estado" readonly >
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card>
+
+        <div id="listaMobile" class=" mat-elevation-z8 mt-5">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" sort class="">
+
+                    <ng-container matColumnDef="opciones" sticky>
+                        <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Ver Detalle: '>
+                            <button mat-stroked-button color="accent" (click)="verDetalle(element)">
+                                <mat-icon>touch_app</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="ccosto">
+                        <th mat-header-cell *matHeaderCellDef> Presupuesto </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Presupuesto: '> {{element.sCodCC}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="doc">
+                        <th mat-header-cell *matHeaderCellDef> Doc </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Doc: '> {{element.sTipoDoc}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="numero">
+                        <th mat-header-cell *matHeaderCellDef> Número </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Número: '> {{element.nNumero}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="titulo">
+                        <th mat-header-cell *matHeaderCellDef> Título </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Título: '> {{element.sTitulo}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="solicitante">
+                        <th mat-header-cell *matHeaderCellDef> N° Documento </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='N° Documento: '> {{element.dni}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="nombreSolicita">
+                        <th mat-header-cell *matHeaderCellDef> Nombre Solicitante </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Nombre Solicitante: '> {{element.nombreSolicitante}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef> Total </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Total: '> {{element.total | number:'1.2-2'}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="year">
+                        <th mat-header-cell *matHeaderCellDef> Año </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Año: '> {{ (element.dFechaRegistro | date: 'yyyy') === "0001" ? "" : (element.dFechaRegistro | date: 'yyyy') }} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="mes">
+                        <th mat-header-cell *matHeaderCellDef> Mes </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Mes: '> {{ obtenerNombreMes(element.dFechaRegistro | date:'MM') }} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="nombreEjecutivo">
+                        <th mat-header-cell *matHeaderCellDef> Nombre Ejecutivo </th>
+                        <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Nombre Ejecutivo: '> {{element.nombreEjecutivo}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </div>
+        <div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="mt-3" showFirstLastButtons></mat-paginator>
+        </div>
+
+    </form>
+
+</div>

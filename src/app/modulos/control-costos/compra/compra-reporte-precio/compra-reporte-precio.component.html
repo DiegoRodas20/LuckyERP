@@ -1,0 +1,282 @@
+<div class="clsprincipal">
+
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Reporte de Precios Histórico</h5>
+        <div class="row"><br /></div>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-12">
+                            <form [formGroup]="formReportePrecios">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Filtrar por Año:</label>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Filtrar por Proveedor:</label>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Filtrar por Artículo:</label>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 80%;">
+                                            <mat-label>Año:</mat-label>
+                                            <mat-select formControlName="cboAnio">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vAnio of lAnio" [value]="vAnio.sDesc">
+                                                    {{vAnio.sDesc}}</mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                .Obligatorio
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-radio-group style="width: 100%;" formControlName="rbProveedor">
+                                            <div class="form-row">
+                                                <div style="padding-left: 0px !important;"
+                                                    class="d-flex align-content-center">
+                                                    <mat-radio-button (click)="fnCambiarProveedor(0)"
+                                                        style="padding-top: 15px;"
+                                                        class="form-group d-flex align-items-center" [value]="0">
+                                                        Todos
+                                                    </mat-radio-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div style="padding-left: 0px !important;"
+                                                    class="col-md-4 d-flex align-content-center">
+                                                    <mat-radio-button (click)="fnCambiarProveedor(1)"
+                                                        class="form-group d-flex align-items-center" [value]="1">
+                                                        Específico
+                                                    </mat-radio-button>
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <ng-select appendTo="body" [clearable]="true"
+                                                        placeholder="Proveedor" formControlName="cboProveedor"
+                                                        notFoundText="No hay proveedores registrados">
+                                                        <ng-option *ngFor="let vProv of lProveedor"
+                                                            [value]=" vProv.nIdProveedor ">
+                                                            {{ vProv.sRazonSocial }}
+                                                        </ng-option>
+                                                    </ng-select>
+
+<!-- 
+
+
+                                                    <mat-form-field style="width: 100%;">
+                                                        <mat-label>Proveedor:</mat-label>
+                                                        <mat-select formControlName="cboProveedor">
+                                                            <mat-option>Seleccione</mat-option>
+                                                            <mat-option *ngFor="let vProv of lProveedor"
+                                                                [value]="vProv.nIdProveedor">
+                                                                {{vProv.sRazonSocial}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error>
+                                                            .Obligatorio
+                                                        </mat-error>
+                                                    </mat-form-field> -->
+                                                </div>
+                                            </div>
+                                        </mat-radio-group>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-radio-group style="width: 100%;" formControlName="rbArticulo">
+                                            <div class="form-row">
+                                                <div style="padding-left: 0px !important;"
+                                                    class="d-flex align-content-center">
+                                                    <mat-radio-button (click)="fnCambiarArticulo(0)"
+                                                        style="padding-top: 15px;"
+                                                        class="form-group d-flex align-items-center" [value]="0">
+                                                        Todos
+                                                    </mat-radio-button>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div style="padding-left: 0px !important;"
+                                                    class="col-md-4 d-flex align-content-center">
+                                                    <mat-radio-button (click)="fnCambiarArticulo(1)"
+                                                        class="form-group d-flex align-items-center" [value]="1">
+                                                        Específico
+                                                    </mat-radio-button>
+                                                </div>
+                                                <div class="form-group col-md-6">
+
+                                                    <ng-select appendTo="body" [clearable]="true"
+                                                        placeholder="Artículo" formControlName="cboArticulo"
+                                                        notFoundText="No hay artículos registrados">
+                                                        <ng-option *ngFor="let vArt of lArticulo"
+                                                            [value]=" vArt.nIdArticulo ">
+                                                            {{ vArt.sNombreProducto }}
+                                                        </ng-option>
+                                                    </ng-select>
+
+                                                    <!-- <mat-form-field style="width: 100%;">
+                                                        <mat-label>Artículo:</mat-label>
+                                                        <mat-select formControlName="cboArticulo">
+                                                            <mat-option>Seleccione</mat-option>
+                                                            <mat-option *ngFor="let vArt of lArticulo"
+                                                                [value]="vArt.nIdArticulo">
+                                                                {{vArt.sNombreProducto}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error>
+                                                            .Obligatorio
+                                                        </mat-error>
+                                                    </mat-form-field> -->
+                                                </div>
+                                            </div>
+                                        </mat-radio-group>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div *ngIf="nMostrar == 1" class="form-group col-md-12">
+                        <div id="listaMobile" class="mat-elevation-z8">
+                            <div class="example-container">
+                                <table mat-table matTableExporter [dataSource]="dataSource" matSort>
+
+                                    <ng-container matColumnDef="fechaOc">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Fecha
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Fecha: '>{{row.fechaOc}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sCentroCosto">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaXLarge">
+                                            Ppto/CCosto
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaXLarge"
+                                            data-label='Partida: '>{{row.sCentroCosto}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sTipoDoc">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Doc
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Doc: '>{{row.sTipoDoc}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nroOC">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Nro OC
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Nro OC: '> {{row.nroOC}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sRuc">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Proveedor
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Proveedor: '>{{row.sRuc}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sRazonSocial">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaXLarge">
+                                            Razón Social
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaXLarge"
+                                            data-label='Razon Social: '>{{row.sRazonSocial}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sCodArticulo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Articulo
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Cod Articulo: '>{{row.sCodArticulo}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sNombreProducto">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Articulo Nombre
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib"
+                                            data-label='Articulo Nombre: '>{{row.sNombreProducto}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nCantidad">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNumber">
+                                            Cantidad
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaNumber"
+                                            data-label='Cantidad: '>{{row.nCantidad}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nPrecio">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaNumber">
+                                            Precio
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaNumber"
+                                            data-label='Precio: '>{{row.nPrecio}} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[10, 20]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <pre>
+        Estado del formulario {{formReportePrecios.valid}}
+      <br />
+        Status: {{formReportePrecios.status}}
+      </pre>
+
+    <pre>
+      {{ formReportePrecios.value | json }}
+      </pre> -->
+
+
+<!--Zona de botones flotantes-->
+
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary"
+            color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.estado">
+            <i class="material-icons" matTooltip="{{btn.tool}}"
+                matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<!-- <div class="fab-container">
+    <div>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" (click)="fnGenerarReportePreciosOC()"
+            matTooltipPosition="left" matTooltip="Buscar" color="secondary"><i class="material-icons">search</i>
+        </button>
+
+        <button mat-raised-button mat-mini-fab [disabled]="" class="fab-secondary" matTooltipPosition="left"
+            matTooltip="Descargar Archivo" color="secondary" (click)="fnDescargarExcel()"><i
+                class="material-icons">cloud_download</i>
+        </button>
+    </div>
+</div> -->

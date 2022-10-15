@@ -1,0 +1,171 @@
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+      <button *ngIf="btn.state" mat-mini-fab
+        class="fab-secondary"
+        [matTooltip]="btn.tool"
+        matTooltipPosition="left"
+        color="secondary"
+        (click)="clickFab(ibtn)">
+        <i class="material-icons" >{{btn.icon}}</i>
+      </button>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Contenido -->
+<div>
+  <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Permisos de Usuarios / Artículos</mat-card>
+  </div>
+  <mat-dialog-content class="mb-3">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Buscar</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Angel Flores" [formControl]="txtFiltro" #input>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div id="listaMobile" class="mat-elevation-z8 mb-3">
+      <form class="example-container" [formGroup]="permisoUsuarioArticuloForm">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+           <!-- Opcion Column -->
+          <ng-container matColumnDef="nId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">Opcion</th>
+            <td mat-cell data-label='Opciones: ' *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc">
+              <button mat-icon-button color="accent" matTooltip="Opciones" [matMenuTriggerFor]="menu" *ngIf="columnaActualizar != row">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="fnActualizarPermiso(row)">
+                  <mat-icon color="accent">touch_app</mat-icon>
+                  <span>Actualizar</span>
+                </button>
+              </mat-menu>
+              <button mat-icon-button color="accent" matTooltip="Guardar" (click)="fnGuardarPermiso(row)" *ngIf="columnaActualizar == row">
+                <mat-icon>save</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Usuario Column -->
+          <ng-container matColumnDef="sUsuario">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+            <td mat-cell *matCellDef="let row" data-label='Usuario: ' class="has_label_on_mobile" >
+              <ngb-highlight [result]="row.sUsuario" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Nombre Column -->
+          <ng-container matColumnDef="sNombreUsuario">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell *matCellDef="let row" data-label='Nombre: ' class="has_label_on_mobile" >
+              <ngb-highlight [result]="row.sNombreUsuario | titlecase" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Agregar Column -->
+          <ng-container matColumnDef="bAgregar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Agregar </th>
+            <td mat-cell *matCellDef="let row" data-label='Agregar: ' class="has_label_on_mobile" style="text-align: center;">
+              <!-- Visualizar -->
+              <mat-checkbox [disableRipple]="columnaActualizar != row" [checked]="row.bAgregar" *ngIf="columnaActualizar != row && row.bAgregar"
+              (click)="$event.preventDefault()" style="cursor: default;"></mat-checkbox>
+              <!-- Editar -->
+              <mat-slide-toggle *ngIf="columnaActualizar == row" formControlName="agregar"></mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- Modificar Column -->
+          <ng-container matColumnDef="bModificar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Modificar </th>
+            <td mat-cell *matCellDef="let row" data-label='Modificar: ' class="has_label_on_mobile" style="text-align: center;">
+              <!-- Visualizar -->
+              <mat-checkbox [disableRipple]="columnaActualizar != row" [checked]="row.bModificar" *ngIf="columnaActualizar != row && row.bModificar"
+              (click)="columnaActualizar != row ? $event.preventDefault() : null" style="cursor: default;"></mat-checkbox>
+              <!-- Editar -->
+              <mat-slide-toggle *ngIf="columnaActualizar == row" formControlName="modificar"></mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- Duplicar Column -->
+          <ng-container matColumnDef="bDuplicar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Duplicar </th>
+            <td mat-cell *matCellDef="let row" data-label='Eliminar: ' class="has_label_on_mobile" style="text-align: center;">
+              <!-- Visualizar -->
+              <mat-checkbox [disableRipple]="columnaActualizar != row" [checked]="row.bDuplicar" *ngIf="columnaActualizar != row && row.bDuplicar"
+              (click)="columnaActualizar != row ? $event.preventDefault() : null" style="cursor: default;"></mat-checkbox>
+              <!-- Editar -->
+              <mat-slide-toggle *ngIf="columnaActualizar == row" formControlName="duplicar"></mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+      </form>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </mat-dialog-content>
+</div>
+
+<!-- Modal para agregar almacen -->
+<div class="combobox-modal-container">
+  <ng-template #content let-modal>
+    <div class="modal-header header-modal-lucky">
+      <h5 class="modal-title" id="exampleModalLabel">Crear permisos</h5>
+      <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close"
+        (click)="closeModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <mat-card>
+          <form [formGroup]="agregarPermisoForm" autocomplete="off">
+            <div class="row">
+              <div class="col-10">
+                <ng-select [clearable]="true" placeholder="Usuarios" formControlName="cbUsuario"
+                  notFoundText="No hay presupuestos disponibles">
+                  <ng-option *ngFor="let element of cbUsuarios" [value]="element.nId">
+                    {{element.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+                <mat-error
+                  *ngIf="agregarPermisoForm.get('cbUsuario').hasError('required') && agregarPermisoForm.get('cbUsuario').touched">
+                  Seleccione un presupuesto
+                </mat-error>
+              </div>
+              <div class="col-2 buttonAlmacenAdd">
+                <button mat-mini-fab class="fab-toggler" (click)="fnCrearPermiso()">
+                  <i class="material-icons" matTooltip="Crear permiso" matTooltipPosition="left">save</i>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <mat-slide-toggle formControlName="agregar">Agregar</mat-slide-toggle>
+              </div>
+              <div class="col-md-3">
+                <mat-slide-toggle formControlName="modificar">Modificar</mat-slide-toggle>
+              </div>
+              <div class="col-md-3">
+                <mat-slide-toggle formControlName="duplicar">Duplicar</mat-slide-toggle>
+              </div>
+            </div>
+          </form>
+        </mat-card>
+    </div>
+  </ng-template>

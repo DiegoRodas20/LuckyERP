@@ -1,0 +1,188 @@
+.container_tabla {
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.example-container {
+    height: 450px;
+    width: 100%;
+    overflow: auto;
+}
+
+.example-container table {
+    width: 1000px;
+}
+
+table th {
+    background-color: #334D6E;
+    color: white;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+ :host /deep/ form .ng-invalid label {
+    color: #f44336;
+}
+
+ :host /deep/ .mat-form-field-disabled label {
+    color: black;
+    BACKGROUND-COLOR: #fff;
+}
+
+ :host /deep/ .mat-form-field-disabled textarea {
+    BACKGROUND-COLOR: #d0d3d6;
+    color: black;
+}
+
+.mat-input-element:disabled,
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+    color: black;
+}
+
+.titulo {
+    background-color: #334d6e;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+:host /deep/ table thead {
+    background-color: #334D6E;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
+}
+
+.card-header {
+    padding: 0px;
+    background-color: rgb(51, 77, 110);
+    color: white;
+}
+
+.principal {
+    padding: 64px 0px 0px 0px !important;
+}
+
+.clsprincipal {
+    padding: 60px 5px 0px 5px;
+}
+
+.contenedor_tabla {
+    min-height: 200px;
+    max-height: 350px;
+    overflow: auto;
+}
+
+.anchoCol {
+    width: 100px;
+}
+
+.anchoMin {
+    width: 80px;
+}
+
+.anchoMaterial {
+    width: 300px;
+}
+
+.pPresupuesto {
+    padding-left: 120px;
+}
+
+.anchoArtDet {
+    width: 220px;
+}
+
+.anchoColPpto {
+    width: 280px;
+}
+
+.anchoColS {
+    width: 110px;
+}
+
+.mat-header-row {
+    background-color: rgb(51, 77, 110);
+    height: 36px;
+}
+
+.mat-header-row .mat-header-cell {
+    color: white;
+    height: 36px;
+}
+
+
+/* 
+:host ::ng-deep .mat-horizontal-stepper-header-container {
+  display: none;
+} */
+
+.centerTotales {
+    text-align: center;
+}
+
+.centerderecha {
+    text-align: right;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+    /* box-sizing: border-box;
+    flex-direction: column-reverse !important;
+    height: auto; */
+    padding-right: 20% !important;
+    padding-left: 20% !important;
+}

@@ -1,0 +1,186 @@
+.contenedorComponente {
+  min-height: 100vh;
+  padding-top: 90px;
+  margin-bottom: 20px;
+}
+
+/* Header de componente */
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-form-field-flex {
+  padding-bottom: 6px;
+}
+
+/* Area de botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Estilos del Formulario */
+
+.contenedorAuditoria {
+  display: flex;
+}
+
+.clsSeparador {
+  height: 100%;
+  border-right: 2px solid rgb(236, 0, 140);
+}
+
+.mat-form-field-disabled input,
+.mat-select-disabled .mat-select-value {
+  color: black;
+}
+:host ::ng-deep ng-select-value,
+:host
+  ::ng-deep
+  .ng-select.ng-select-disabled
+  .ng-select-container
+  .ng-value-container
+  .ng-value {
+  color: black !important;
+}
+
+.ngSelectError {
+  position: absolute;
+  bottom: 0px;
+  font-size: 12px;
+}
+
+/* Tamanho del ng-select igual a inputs*/
+.ng-select-container {
+  height: 45px;
+}
+
+/* Estilo del acordeon */
+.mat-expanded > .mat-expansion-panel-header {
+  /* Estilo del acordeon*/
+  background-color: #e1e1e1;
+}
+
+.campoAuditoriaAcordeon {
+  display: none;
+}
+
+:host ::ng-deep .campoAuditoriaAcordeon mat-panel-title,
+:host ::ng-deep .campoAcordeon mat-panel-title {
+  justify-content: space-between;
+  line-height: 40px;
+  color: #334d6e;
+  font-weight: bold;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+}
+
+.icon-activo-table {
+  position: relative;
+  top: 6px;
+  cursor: pointer;
+}
+
+.paginator-fixed {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+/* Input edit tabla*/
+.campoTablaRow{
+  position: relative;
+  height: 70px;
+}
+
+.inputTablaEditar{
+  position: absolute;
+  width: 90%;
+  padding-top: 8px;
+  top: 2px;
+  left: 0;
+}
+
+.campoTablaEditar{
+  color:rgb(51, 77, 110)
+}
+
+.campoTablaRow{
+  cursor: pointer;
+}
+
+.campoTablaEditarVacio{
+  cursor: pointer;
+  color: grey;
+}
+
+.campoTablaRow:hover .campoTablaEditar{
+  color:rgb(51, 77, 110);
+}
+
+.badgeCampoTablaEditar{
+  display: none;
+}
+
+.campoTablaRow:hover .campoTablaEditar + .badgeCampoTablaEditar{
+  display: initial;
+}
+
+:host /deep/ .badgeCampoTablaEditar .mat-badge-content {
+  font-family: 'Material Icons';
+}
+
+/* Chiplist */
+.chip-blue{
+  background-color: rgb(85, 153, 255);
+}
+
+@media screen and (max-width: 1199px) {
+  /* Campo auditoria */
+  .campoAuditoria {
+    display: none;
+  }
+
+  .contenedorAuditoria {
+    display: block;
+  }
+
+  .campoAuditoriaAcordeon {
+    display: block;
+    margin: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .clsSeparador {
+    height: 0;
+    border: none;
+  }
+}

@@ -1,0 +1,46 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">{{sTitulo}}
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form class="row" [formGroup]="formCaracteristica">
+            <div class="col-md-8">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Característica:</mat-label>
+                    <input type="text" matInput formControlName="txtNombre">
+                    <mat-error *ngIf="txtNombreError">{{ txtNombreError }}</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Estado:</mat-label>
+                    <mat-select formControlName="cboEstado">
+                        <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.estado">
+                            {{vEstado.sDescripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="cboEstadoError">{{ cboEstadoError }}</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+
+        <!-- <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="this.dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button> -->
+
+    </div>
+</mat-dialog-actions>

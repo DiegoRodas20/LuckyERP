@@ -1,0 +1,198 @@
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+            <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons">{{btn.icon}}</i>
+            </button>
+        </ng-container>
+    </div>
+</div>
+
+<div class="mb-3" style="text-align: center; position: relative;">
+    <mat-card class="title-card ">{{titulo}}</mat-card>
+    <button mat-icon-button class="closeButtonModal" (click)="fnSalir()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content id="activoDialogContainer">
+    <div class="row mx-auto mb-3" [formGroup]="formAsignacionActivo" style="width: 100%;">
+        <div class="col-md-4 mt-1">
+            <ng-select [clearable]="false" placeholder="Tipo de Activo" formControlName="tipoActivo"
+                notFoundText="No hay tipos de activos disponibles" appendTo='body' (change)="fnLlenarComboboxActivos(1)">
+                <ng-option *ngFor="let element of listaTipoActivos" [value]="element.nId">
+                    {{element.sDescripcion}}
+                </ng-option>
+            </ng-select>
+        </div>
+
+        <div class="col-md-7 col-10 mt-1">
+            <ng-select [clearable]="false" placeholder="Activo" formControlName="activo"
+                notFoundText="No hay activos disponibles" appendTo='body' (change)="fnCambiarComboboxActivo();">
+                <ng-option *ngFor="let element of listaActivos" [value]="element.nId">
+                    {{element.sDescripcion}}
+                </ng-option>
+            </ng-select>
+            <mat-error class="ngSelectError"
+                *ngIf="this.formAsignacionActivo.get('activo').hasError('required') && formAsignacionActivo.get('activo').touched">
+                Debe seleccionar un activo para agregar
+            </mat-error>
+        </div>
+
+        <div class="col-1 mt-1 mx-auto d-flex justify-content-center">
+            <img width="40px" height="40px" [src]="rutaImagen == '' || rutaImagen == null ? '/assets/img/SinImagen.jpg' : rutaImagen" (click)="fnVerImagen()" *ngIf="rutaImagen">
+        </div>
+
+        <div class="col-md-12 mt-1" *ngIf="formAsignacionActivo.get('datosActivo').value">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Datos del activo</mat-label>
+                <input matInput formControlName="datosActivo" readonly>
+            </mat-form-field>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-3': existeDescuentoEfectivo || existePenalidad, 
+            'col-md-4': !existeDescuentoEfectivo && !existePenalidad
+        }">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Monto de descuento inicial</mat-label>
+                <input type="number" matInput formControlName="importeDescuento"
+                    (keydown)="fnValidarCaracteresNumericos($event)"
+                    (paste)="fnValidarCaracteresNumericosClipboard($event)" placeholder="0.00"
+                    autocomplete="off">
+                <mat-error
+                    *ngIf="this.formAsignacionActivo.get('importeDescuento').hasError('pattern') && this.formAsignacionActivo.get('importeDescuento').touched">
+                    El monto asignado debe tener el formato correcto
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-3" *ngIf="existeDescuentoEfectivo">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Monto de descuento efectivo</mat-label>
+                <input type="number" matInput formControlName="importeEfectivo" readonly>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-3" *ngIf="!existeDescuentoEfectivo && existePenalidad">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Penalidad Actual</mat-label>
+                <input type="number" matInput formControlName="penalidad" readonly>
+            </mat-form-field>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-3': existeDescuentoEfectivo || existePenalidad, 
+            'col-md-4': !existeDescuentoEfectivo && !existePenalidad
+        }">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Usuario Asignó</mat-label>
+                <input type="text" matInput formControlName="usuarioAsigno" readonly>
+            </mat-form-field>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-3': existeDescuentoEfectivo || existePenalidad, 
+            'col-md-4': !existeDescuentoEfectivo && !existePenalidad
+        }">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Fecha Asignó</mat-label>
+                <input matInput [matDatepicker]="fechaAsignoPicker"
+                    formControlName="fechaAsigno" readonly>
+                <mat-datepicker #fechaAsignoPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-12 mt-1">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Componentes del artículo</mat-label>
+                <mat-chip-list #chipListComponentes style="height: 51.5px;">
+                    <mat-chip *ngFor="let chipElement of chipElementsComponentes"
+                        [ngClass]="{
+                            'chip-blue': chipElement.bRepotenciado
+                        }">
+                        {{chipElement.sDescripcion}}
+                    </mat-chip>
+                    <input [matChipInputFor]="chipListComponentes" readonly [disabled]="chipElementsComponentes != []">
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-11 col-10 mt-3': data.estaEditando, 
+            'col-12 mt-3': !data.estaEditando
+        }" *ngIf="!estaDevolviendo || vistaTotal">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Fotos del Activo (Entrega)</mat-label>
+                <mat-chip-list #chipListObservacionesEntrega style="height: 51.5px;">
+                    <mat-chip *ngFor="let chipElement of chipElementsObservacionesEntrega" (click)="fnVerImagenObservacion(chipElement)">
+                        {{chipElement.sObservacion}}
+                    </mat-chip>
+                    <input [matChipInputFor]="chipListObservacionesEntrega" readonly [disabled]="chipElementsObservacionesEntrega != []">
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+    
+        <div class="col-1 mt-3 mx-auto btnControlRelative" *ngIf="data.estaEditando && !estaDevolviendo">
+            <button mat-icon-button (click)="fnAbrirDialogAgregarObservaciones()" color="accent" matTooltip="Subir Foto"
+                type="button">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-11 col-10 mt-3': data.estaEditando, 
+            'col-12 mt-3': !data.estaEditando
+        }" *ngIf="estaDevolviendo || vistaTotal">
+            <mat-form-field class="example-chip-list" style="width: 100%">
+                <mat-label>Fotos del Activo (Devolución)</mat-label>
+                <mat-chip-list #chipListObservacionesDevolucion style="height: 51.5px;">
+                    <mat-chip *ngFor="let chipElement of chipElementsObservacionesDevolucion" (click)="fnVerImagenObservacion(chipElement)">
+                        {{chipElement.sObservacion}}
+                    </mat-chip>
+                    <input [matChipInputFor]="chipListObservacionesDevolucion" readonly [disabled]="chipElementsObservacionesDevolucion != []">
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+
+        <div class="col-1 mt-3 mx-auto btnControlRelative" *ngIf="data.estaEditando && estaDevolviendo">
+            <button mat-icon-button (click)="fnAbrirDialogAgregarObservaciones()" color="accent" matTooltip="Subir Foto"
+                type="button">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <div [ngClass]="{
+            'col-md-11 col-10 mt-3': data.estaEditando, 
+            'col-12 mt-3': !data.estaEditando
+        }">
+            <mat-form-field style="width: 100%">
+                <mat-label>Observación general</mat-label>
+                <textarea matInput placeholder="Escriba de forma general las observaciones encontradas" formControlName="observacion" style=" min-height:60px; resize: none;"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="col-1 mt-3 mx-auto btnControlRelative" *ngIf="estaCreando && data.estaEditando && !estaDevolviendo">
+            <button mat-mini-fab (click)="fnAgregarActivo()" color="secondary" matTooltip="Asignar Activo"
+                type="button" class="ml-auto">
+                <mat-icon>check</mat-icon>
+            </button>
+        </div>
+        <div class="col-1 mt-3 mx-auto btnControlRelative" *ngIf="estaEditando && data.estaEditando && !estaDevolviendo">
+            <button mat-mini-fab (click)="fnModificarActivo()" color="secondary" matTooltip="Guardar Activo"
+                type="button" class="ml-auto">
+                <mat-icon>check</mat-icon>
+            </button>
+        </div>
+        <div class="col-1 mt-3 mx-auto btnControlRelative" *ngIf="estaEditando && data.estaEditando && estaDevolviendo">
+            <button mat-mini-fab (click)="fnDevolverActivo()" color="secondary" matTooltip="Devolver Activo"
+                type="button" class="ml-auto">
+                <mat-icon>reply</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="clspantallaAjuste"> 
+     <div class="clstituloCrtl"> 
+        <h3>Nueva Autoliquidación de Movilidad</h3>
+    </div> 
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="fnButtonFloat(btn)">
+              <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" [formGroup]="fgBusqueda">
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-label>Año</mat-label>
+                     <mat-select formControlName="anio" (selectionChange)="changeAnio()">  
+                        <mat-option *ngFor="let vMatOpcion of lblanio"    [value]="vMatOpcion.sYear">
+                            {{vMatOpcion.sYear}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field >
+                    <mat-label>Mes</mat-label>
+                     <mat-select formControlName="mes" (selectionChange)="changeMes()">  
+                        <mat-option *ngFor="let vMatOpcion of lblmes" [value]="vMatOpcion.nMes">
+                            {{vMatOpcion.sMes}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-label>Quincena</mat-label>
+                     <mat-select formControlName="quincena"> 
+                        <mat-option *ngFor="let vMatOpcion of lblquin" [value]="vMatOpcion.nQuincena">
+                            {{vMatOpcion.sQuincena}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+            <div class="col-sm-3">
+                <mat-form-field>
+                    <mat-label>Estado</mat-label>
+                     <mat-select formControlName="estado"> 
+                        <mat-option *ngFor="let vMatOpcion of lblestado" [value]="vMatOpcion.nOpcion">
+                            {{vMatOpcion.sOpcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+        </div> 
+        <div class="example-container mat-elevation-z8 clsTablePri">
+            <table mat-table [dataSource]="dataSourceAL" matSort 
+            #TableALSort="matSort"
+            >
+                <ng-container matColumnDef="plla">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > PLLA </th>
+                    <td mat-cell *matCellDef="let row"> {{row.sPlla}} </td>
+                </ng-container>     
+                <ng-container matColumnDef="nroDoc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > Nro Documento </th>
+                    <td mat-cell *matCellDef="let row"> {{row.sDocumento}} </td>
+                </ng-container>    
+                <ng-container matColumnDef="nombreCompleto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > Apellidos y nombres </th>
+                    <td mat-cell *matCellDef="let row"> {{row.sNombre}} </td>
+                </ng-container>    
+                <ng-container matColumnDef="dias">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > Vs </th>
+                    <td mat-cell *matCellDef="let row"> {{row.sDiasVs}} </td>
+                </ng-container>    
+                <ng-container matColumnDef="importe">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > Importe </th>
+                    <td mat-cell *matCellDef="let row"> {{row.sImporteDescontar}} </td>
+                </ng-container>    
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header  > Estado </th>
+                    <td mat-cell *matCellDef="let row"> {{row.estado}} </td>
+                </ng-container> 
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAL; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAL;">
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

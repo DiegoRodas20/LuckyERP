@@ -1,0 +1,115 @@
+.clsTituloModal {
+    place-items     : center;
+    display         : grid !important;
+    background-color: #334d6e;
+    color           : #fff;
+    /* padding         : 0.7rem; */
+    font-size       : 1.8rem;
+    margin          : 4px;
+}
+
+.clsTituloPuesto {
+    font-size : 1.75rem;
+    color     : #084eae;
+    text-align: center;
+    margin    : 0px
+}
+
+.clsSubtitulo {
+    color      : #1558b2;
+    font-weight: 700;
+}
+
+.clsReglon {
+    border       : 1.5px solid #898b8d;
+    width        : 88%;
+    align-content: center;
+    margin-left  : 6%;
+}
+
+.clsClose {
+    position     : relative;
+    color        : white;
+    float        : right;
+    margin-bottom: 0.1rem;
+    padding-top  : 0.1rem;
+    bottom       : 3.5rem
+}
+
+.clsCircle {
+    font-size   : 10px;
+    margin-right: 2px;
+}
+
+.clsInformacion {
+    color: #2c68b9;
+}
+
+.clsBoton {
+    background-color: #da236f;
+    color           : #fff;
+    font-weight     : 500;
+    border          : 2px solid #da236f;
+}
+
+.clsInfoTiempo {
+    color        : #2c68b9;
+    height       : 2rem;
+    padding-right: 0px;
+}
+
+.clsDivTiempo {
+    height: 2rem;
+}
+
+.clsFormSelectTiempo {
+    bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .clsDivTiempo {
+        height: auto;
+    }
+
+    .clsDivSelectTiempo {
+        height: 3rem;
+    }
+
+    .scrollMov {
+        overflow: scroll;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .clsDivSelectTiempo {
+        height : 3rem;
+        padding: 0px
+    }
+
+}
+
+.clsIrBoton{
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    cursor:pointer
+}
+
+
+
+/* Header */
+
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color: white;
+    text-align: center;
+}
+
+.example-full-width{
+    width: 100%;
+}
+
+.marginbottom{
+    margin-bottom: 2.2rem;
+}

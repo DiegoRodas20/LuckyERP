@@ -1,0 +1,76 @@
+table {
+  width: 100%;
+  margin: 20px auto 0px auto;
+}
+
+.browser-filter {
+  margin-top: 10px;
+  float: right;
+  width: 100%;
+}
+
+.example-container {
+  width: 100%;
+  overflow: auto;
+  height: 300px;
+}
+
+/* Botones */
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-bottom: 10px;
+  outline: none;
+}
+
+.modal {
+  background-color: rgb(0, 0, 0, 0.25);
+}
+
+/* Estilos del boton de agregar almacen*/
+.buttonAlmacenAdd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos del modal */
+
+/* modal animation */
+:host ::ng-deep .combobox-modal-container .modal-content{
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+::ng-deep .custom-modal-parametros {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes example {
+  0%   {transform: scale(0.5)}
+  75%  {transform: scale(1.1)}
+  100% {transform: scale(1)}
+}
+
+@media screen and (max-width: 960px) {
+  .example-container {
+    height: 200px;
+  }
+}

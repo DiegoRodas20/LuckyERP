@@ -1,0 +1,34 @@
+.contenedor {
+    margin-top: 70px;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+
+/* Estilos del texto tabs*/
+
+:host ::ng-deep .mat-tab-label-active {
+    opacity: 1 !important;
+    background-color: #334D6E;
+}
+
+ :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 16px !important;
+    font-weight: normal !important;
+    color: #334D6E;
+}
+
+ :host ::ng-deep .mat-tab-label-active .mat-tab-label-content {
+    color: white;
+}
+
+
+/* .container-fluid {
+    height: 200px;
+  } */

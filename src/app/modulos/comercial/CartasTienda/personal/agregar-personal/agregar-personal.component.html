@@ -1,0 +1,128 @@
+<div class="mt-4">
+  <!-- #region BUSCADOR DE PERSONAS -->
+  <div class="row">
+    <div class="col-md-6">
+      <p class="label_buscar_personal">
+        Aqui puedes agregar el personal de las cartas:
+      </p>
+      <mat-form-field class="full-width">
+        <input
+          type="text"
+          placeholder="Buscar persona por el NOMBRE | APELLIDO"
+          aria-label="Number"
+          matInput
+          [formControl]="myControl"
+          [matAutocomplete]="auto"
+          (keyup.enter)="opcionEscrita()"
+        />
+        <mat-autocomplete
+          [panelWidth]="auto"
+          autoActiveFirstOption
+          #auto="matAutocomplete"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="
+              option.primerNombre +
+              ' ' +
+              option.segundoNombre +
+              ' ' +
+              option.apellidoPat +
+              ' ' +
+              option.apellidoMat +
+              ''
+            "
+            (click)="opcionSeleccionada(option)"
+          >
+            {{ devolverDataPersona(option) }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col-md-6">
+      <p class="label_buscar_personal">Aqui puedes seleccionar la tienda:</p>
+      <mat-form-field class="full-width">
+        <mat-label>Escoge la tienda</mat-label>
+        <mat-select
+          (selectionChange)="tiendaSeleccionadaCombo()"
+          [(ngModel)]="tiendaSeleccionada"
+        >
+          <mat-option *ngFor="let tienda of listaTiendas" [value]="tienda.pId">
+            {{ tienda.pNombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="contenedor_formulario">
+    <!-- #region LISTA DE CAMPOS GENERADOS-->
+    <div *ngFor="let campo of listaCamposComunes | async">
+      <!-- #region CAMPO PARA NUMEROS -->
+      <div *ngIf="campo.pIdTipoCampo === 1">
+        <app-numero-campo-empleado
+          (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+          [label]="campo.pNombre"
+          [valor]="dataEnviaComponenteCampo(this.dataPersona[campo.pIdCampo])"
+        ></app-numero-campo-empleado>
+      </div>
+      <!-- #endregion-->
+
+      <!-- #region CAMPO PARA  TEXTO-->
+      <div *ngIf="campo.pIdTipoCampo === 2">
+        <app-texto-campo-empleado
+          (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+          [label]="campo.pNombre"
+          [valor]="dataEnviaComponenteCampo(this.dataPersona[campo.pIdCampo])"
+        ></app-texto-campo-empleado>
+      </div>
+      <!-- #endregion-->
+
+      <!-- #region CAMPO DE TIPO DESPLEGABLE-->
+      <div *ngIf="campo.pIdTipoCampo === 3">
+        <app-desplegable-campo-empleado
+          (valorOutput)="recibiendoDataDesplegable(campo.pIdCampo, $event)"
+          [label]="campo.pNombre"
+          [CampoID]="campo.pIdCampo"
+        ></app-desplegable-campo-empleado>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region CAMPO TIPO FECHA -->
+      <div *ngIf="campo.pIdTipoCampo === 4">
+        <app-fecha-campo-empleado
+          (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+          [label]="campo.pNombre"
+          [valorEntrada]="null"
+        ></app-fecha-campo-empleado>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region CAMPO DE TIPO HORA-->
+      <div *ngIf="campo.pIdTipoCampo === 5">
+        <app-hora-campo-empleado
+          (valorOutput)="this.dataPersona[campo.pIdCampo] = $event"
+          [label]="campo.pNombre"
+        ></app-hora-campo-empleado>
+      </div>
+      <!-- #endregion-->
+    </div>
+    <!-- #endregion -->
+  </div>
+
+  <!-- #region BOTON GUARDAR -->
+  <div class="text-center">
+    <button
+      mat-flat-button
+      (click)="agregarPersonal()"
+      [disabled]="!validacionDatosPersonal()"
+      [ngClass]="{
+        boton_pasivo: !validacionDatosPersonal(),
+        boton_activo: validacionDatosPersonal()
+      }"
+    >
+      AGREGAR
+    </button>
+  </div>
+  <!-- #endregion -->
+</div>

@@ -1,0 +1,20 @@
+<div class="col-xl-10 mx-auto" style="padding-top: 90px;">
+
+    <mat-tab-group mat-align-tabs="center" #tabs>
+        <!-- Reporte de rutas y transporte-->
+        <mat-tab label="Rutas Transporte">
+            <app-rutas-transporte></app-rutas-transporte>
+        </mat-tab>
+
+        <!-- Reporte de gastos de distribucion y courier-->
+        <mat-tab label="Distribución y Courier">
+            <app-log-gasto-courier></app-log-gasto-courier>
+        </mat-tab>
+
+        <!-- Reporte de gastos de pptos clientes-->
+        <mat-tab label="Factura por cliente">
+            <app-log-gasto-pptos></app-log-gasto-pptos>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>

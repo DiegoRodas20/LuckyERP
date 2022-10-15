@@ -1,0 +1,166 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container" *ngIf="vPrincipal">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="clickFab(ibtn)">
+      <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+    </button>
+  </div>
+</div>
+
+<div class="col-xl-10 mx-auto" [ngStyle]="{ 'padding-top' : (idPerfil != 614 && idPerfil != 2324 && idPerfil != 0) ? '90px' : '20px' }" [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+  <div>
+    <div [ngStyle]="{ 'display' : (idPerfil != 614 && idPerfil != 2324 && idPerfil != 0) ? 'block' : 'none' }" style="display: none">
+      <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">
+          <h3>Registro de gasto distribuido/facturas</h3>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Inicio del Busqueda -->
+    <div class="row">
+      <div class="col-xl-6">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Buscar Factura:</mat-label>
+          <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar($event)">
+          <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+            aria-label="Clear" (click)="this.txtFiltro.setValue('');fnListarFacturas()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6">
+        <div class="col-xl-12">
+          <mat-radio-group aria-label="Selecciona una opcion" class="row checkbox-container" [formControl]="filtroEstado" (change)="fnListarFacturas()">
+            <div class="col-xl-3 col-sm-6">
+              <mat-radio-button value="0" class="example-margin">Todos</mat-radio-button>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+              <mat-radio-button value="2051" class="example-margin">Pendientes</mat-radio-button>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+              <mat-radio-button value="2055" class="example-margin">Aprobados</mat-radio-button>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+              <mat-radio-button value="2100" class="example-margin">Devueltos</mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- nueva tabla material -->
+  <div class="mx-auto">
+    <div id="listaMobile" class="mat-elevation-z8">
+      <div class="example-container">
+        <table mat-table [dataSource]="dsFacturas" matSort style="width: 100%;">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="nIdGastoCosto" sticky>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción</th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Opción: '>
+
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right"
+                mat-stroked-button color="accent">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="after">
+                <button mat-menu-item (click)="fnVerDetalle(row.nIdGastoCosto)">
+                  <mat-icon color="accent">touch_app</mat-icon>
+                  <span>Detalle</span>
+                </button>
+                <button mat-menu-item (click)="fnAbrirDialog(row.nIdGastoCosto)">
+                  <mat-icon color="accent">attach_file</mat-icon>
+                  <span>Adjuntar Archivo</span>
+                </button>
+              </mat-menu>
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sNumero">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Número </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Número: '>
+              <ngb-highlight [result]="row.sNumero" [term]="txtFiltro.value"></ngb-highlight>
+          </ng-container>
+
+          <ng-container matColumnDef="sTitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Título </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Título: '>
+              <ngb-highlight [result]="row.sTitulo" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sNombreComercial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Proveedor </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Proveedor: '>
+              <ngb-highlight [result]="row.sNombreComercial" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container matColumnDef="sNombreCompleto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Solicitante </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Solicitante: '>
+              <ngb-highlight [result]="row.sNombreCompleto" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sFecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Fecha </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Fecha: '>
+              <ngb-highlight [result]="row.sFecha" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sFactura">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> N° Factura </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='N° Factura: '>
+              <ngb-highlight [result]="row.sFactura" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sMoneda">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Moneda </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Moneda: '>
+              <ngb-highlight [result]="row.sMoneda" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nTotal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Total </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Total: '>
+              <ngb-highlight [result]="row.nTotal | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sEstado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Estado </th>
+            <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Estado: '>
+              <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [ngClass]="{'make-blue': row.sEstado==='Aprobado Presupuestos','make-red': row.sEstado==='Devuelto Presupuestos'}">
+          </tr>
+        </table>
+
+      </div>
+      <mat-paginator [pageSizeOptions]="[20, 40, 60]"></mat-paginator>
+
+    </div>
+  </div>
+</div>
+
+<app-registroFacturaCrear [idPerfil]="idPerfil" [pOpcion]="pOpcion" [pFactura]="vFactura" (newEvent)="eventTempF($event)" *ngIf="vSecundario">
+</app-registroFacturaCrear>

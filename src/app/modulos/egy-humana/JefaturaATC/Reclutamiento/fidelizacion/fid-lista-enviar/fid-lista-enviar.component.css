@@ -1,0 +1,21 @@
+.red{
+    color: red; 
+    font-weight: bold;
+}
+
+.green{ 
+    color: green; 
+    font-weight: bold;
+}
+
+.clsColumnaUsuario{
+width:50%   
+}
+
+.clsColumnaDocumentos{
+width:25%
+}
+
+.clsColumnaEnviar{
+width: 25%;
+}

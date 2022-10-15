@@ -1,0 +1,60 @@
+   /* Botones Flotantes */
+
+   .fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+  }
+  
+  /* Titulo Card  */
+
+  .card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+  }
+
+  /* Radio Buttons */
+
+  .example-margin {
+    margin: 0 10px;
+  }
+  
+  /* Mat Table */
+
+  table {
+    width: 100%;
+  }
+  
+  td, th {
+      font-size: 14px;
+  }
+
+  .example-container {
+    height: 400px;
+    width: 100%;
+    overflow: auto;
+  }
+  
+  /* Mat Sort Color Blanco */
+
+  :host /deep/ .mat-sort-header-arrow {
+    color: white;
+  }

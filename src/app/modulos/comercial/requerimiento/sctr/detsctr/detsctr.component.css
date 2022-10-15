@@ -1,0 +1,152 @@
+mat-form-field{
+    width: 100%;
+}
+
+:host /deep/  form .ng-invalid .ng-placeholder{
+    color: #f44336 !important; 
+  }
+
+  :host /deep/  form .ng-invalid label{
+    color: #f44336; 
+  }
+  :host /deep/  .mat-form-field-disabled input{
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  } 
+  :host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  
+  :host /deep/  .mat-form-field-disabled textarea{  
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+
+  
+  .fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+
+
+table ng-select{
+  width: 90%;
+}
+
+ 
+:host /deep/ table thead{ 
+  background-color: #334D6E;   
+} 
+
+table  th{ 
+  color: white; 
+} 
+
+
+.example-container-partida{
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+td:nth-child(2) {
+  text-align: center;
+}
+th:nth-child(2) {
+  
+  text-align: center;
+} 
+td:nth-child(3) {
+  text-align: center;
+}
+th:nth-child(3) {
+  
+  text-align: center;
+}
+td:nth-child(4) {
+  text-align: center;
+}
+th:nth-child(4) {
+ 
+  text-align: center;
+}
+td:nth-child(5) {
+  text-align: center;
+}
+th:nth-child(5) {
+
+  text-align: center;
+}
+
+:host /deep/ .ng-select {
+  padding-bottom: 0.0em;
+}
+
+:host /deep/ .ng-select-disabled .ng-value-label {
+  color: black;
+  BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ .ng-select .ng-select-container .ng-value-container {
+  align-items: stretch;
+  padding: .0em 0;
+  border-top: .0em solid transparent;
+}
+
+:host /deep/  .ng-select .ng-select-container {
+  color: rgba(0,0,0,0.87);
+  align-items: baseline;
+  min-height: 20px;
+}
+
+:host /deep/  .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  padding-bottom: 1.25em;
+}
+
+.informacion_tipo_personal {
+  color: #ff4081;
+}
+
+.numero_personas_registradas {
+  font-weight: 500;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+}
+
+.clsOption{
+width: 10%
+}
+
+.clsSucursal{
+  width: 15%;
+}
+
+.clsDepositario{
+  width: 50%;
+}
+
+.clsTable{
+  width: 100%;
+}

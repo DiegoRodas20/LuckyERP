@@ -1,0 +1,93 @@
+.pink {
+  color: #ff4081;
+}
+.panel-title {
+  color: #002c4b;
+  font-weight: bold;
+  padding-top: 10px;
+}
+.mat-expansion-panel-header{
+  height: auto !important;
+}
+
+.clsprincipal {
+  padding: 80px 15px 0px 15px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+}
+
+.example-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}
+
+.container-vehiculo {
+  height: 300px;
+  overflow: auto;
+}
+
+.clsColumnaLarge {
+  width: 250px;
+}
+
+.clsColumnaLib {
+  width: 200px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-cell:last-of-type,
+th.mat-header-cell:last-of-type {
+  padding: 0.25em 0.25em !important;
+}
+
+.container-vehiculo table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.container-vehiculo th{
+  text-align: center;
+}
+
+.cono{
+  font-weight: bold;
+}

@@ -1,0 +1,154 @@
+<!-- #region Spinner -->
+<ngx-spinner
+  name="spi_main"
+  [fullScreen]="true"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- #endregion -->
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px)">
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">Gestión de planning</h5>
+      <!-- #region Fab -->
+      <div class="fab-container">
+        <button
+          [@tada]="{ value: tadaMain }"
+          mat-mini-fab
+          class="fab-toggler"
+          (click)="onToggleFab(1, -1)"
+        >
+          <i class="material-icons" [@fabToggler]="{ value: tsMain }">add</i>
+        </button>
+        <div [@speedDialStagger]="abMain.length">
+          <button
+            *ngFor="let btn of abMain; let ibtn = index"
+            mat-mini-fab
+            class="fab-secondary"
+            color="secondary"
+            (click)="clickFab(1, ibtn)"
+          >
+            <i
+              class="material-icons"
+              matTooltip="{{ btn.tool }}"
+              matTooltipPosition="left"
+              >{{ btn.icon }}</i
+            >
+          </button>
+        </div>
+      </div>
+
+      <!-- #endregion -->
+
+      <!-- #region Card Body -->
+
+      <div class="card-body" style="padding-bottom: 0px">
+        <div class="icard melevation col-xl-12">
+          <div class="row">
+            <!-- Imagen -->
+            <div class="col-lg-2" style="text-align: center">
+              <img
+                class="imgAvatar"
+                src="../../../../../../assets/img/LuckyAvatar.png"
+                alt=""
+              />
+            </div>
+
+            <!-- Información del personal -->
+            <div
+              class="col-lg-4"
+              style="padding-top: 25px; padding-bottom: 20px"
+            >
+              <h4 style="font-size: 20px">Flores Valverde Angel Enrique</h4>
+              <h6 style="font-size: 14px; color: rgba(0, 0, 0, 0.54)">
+                Documento nacional de identidad : 48310487
+              </h6>
+            </div>
+
+            <mat-divider [vertical]="true"></mat-divider>
+
+            <!-- Filtro -->
+            <div class="col-lg">
+              <div class="row" style="margin-left: 0px">
+                <h6>Aplicar filtro por :</h6>
+                <hr style="margin-top: 0px; margin-bottom: 10px" />
+              </div>
+
+              <form autocomplete="off" id="fgMain" [formGroup]="formFilter">
+                <div class="form-row">
+                  <!-- Cliente -->
+                  <div class="col-lg-4">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Cliente</mat-label>
+                      <mat-select formControlName="sClient">
+                        <mat-option>--</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Centro de costo -->
+                  <div class="col-lg-4">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Centro de costo</mat-label>
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="sCentrocosto"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Fecha Devengue -->
+                  <div class="col-lg-4"></div>
+
+                  <!-- Nombre o documento de identidad -->
+                  <div class="col-lg-8">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Nombre o documento de identidad</mat-label>
+                      <input type="text" matInput formControlName="sNombre" />
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Cliente -->
+                  <div class="col-lg-4">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Estado</mat-label>
+                      <mat-select formControlName="nEstado">
+                        <mat-option>Vigente</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Canal -->
+                  <div class="col-lg-4">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Canal</mat-label>
+                      <mat-select formControlName="nCanal">
+                        <mat-option>Enero del 2021</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Canal -->
+                  <div class="col-lg-4">
+                    <mat-form-field style="width: 100%">
+                      <mat-label>Canal</mat-label>
+                      <mat-select formControlName="nPerfil">
+                        <mat-option>Enero del 2021</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--#endregion  -->
+    </div>
+  </div>
+</div>

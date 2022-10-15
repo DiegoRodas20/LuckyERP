@@ -1,0 +1,69 @@
+<form [formGroup]="form" autocomplete="off">
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-12">
+      <mat-form-field>
+        <mat-label>Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" formControlName="txtFiltro">
+        <button mat-icon-button mat-button matSuffix *ngIf="txtFiltroField?.value" (click)="fnClean()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-2 col-md-4 col-12" *ngIf="isDistribucion">
+      <mat-form-field>
+        <mat-label>Cód. Transporte</mat-label>
+        <input matInput formControlName="txtCodTransporte" [maxlength]="maxCodTransporte">
+        <button mat-button matSuffix mat-icon-button *ngIf="txtCodTransporteField?.value"
+          (click)="fnCleanCodTransporte()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button mat-button matSuffix mat-icon-button *ngIf="txtCodTransporteField?.value" (click)="fnSelectMultiple()">
+          <i class="material-icons" matTooltip="Autoseleccionar" matTooltipPosition="above">done_all</i>
+        </button>
+        <mat-error *ngIf="txtCodTransporteError">{{ txtCodTransporteError }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-2 col-md-4 col-12">
+      <mat-form-field>
+        <mat-label>Total Precio</mat-label>
+        <input matInput [value]="sumaPrecio | number :'1.2-2'" readonly>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-5 col-md-4 col-12" *ngIf="isDistribucion">
+      <mat-form-field>
+        <mat-label>Transportes Seleccionados</mat-label>
+        <input matInput formControlName="txtCodConcatenado" readonly>
+      </mat-form-field>
+    </div>
+  </div>
+  <div id="listaMobile" class="mat-elevation-z8">
+    <div class="example-container">
+      <table mat-table [dataSource]="dataSource" matSort formArrayName="operaciones">
+        <ng-container matColumnDef="accion">
+          <th mat-header-cell class="sticky-header" *matHeaderCellDef>Selección</th>
+          <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="getIndex(i)">
+            <mat-checkbox formControlName="isCheck" (change)="fnSelect(getIndex(i))">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+          <th mat-header-cell class="sticky-header" *matHeaderCellDef mat-sort-header> {{col.header}} </th>
+          <td mat-cell *matCellDef="let element" class='header_mobile' id="{{col.header}}: ">
+            <span *ngSwitchCase="'none'">
+              <ngb-highlight [result]="element[col.field]" [term]="txtFiltroField?.value"></ngb-highlight>
+            </span>
+            <span *ngSwitchCase="'decimal2'">
+              {{element[col.field] | number :'1.2-2'}}
+            </span>
+            <span *ngSwitchCase="'decimal6'">
+              {{element[col.field] | number :'1.6-6'}}
+            </span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+  </div>
+</form>

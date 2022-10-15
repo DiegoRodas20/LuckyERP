@@ -1,0 +1,52 @@
+<div class="form-row">
+  <div class="form-group col-md-12">
+
+    <h5 mat-dialog-title class="w-100 card-header text-center">
+      {{titulo}}
+    </h5>
+
+    <div class="col-md-12">
+      <form [formGroup]="HistoricoForm">
+        <div class="form-row">
+
+          <!-- Fecha Inicio -->
+          <div class="col-md-12">
+            <mat-form-field>
+              <mat-label>Fecha Inicio</mat-label>
+              <input matInput [matDatepicker]="fi" (dateInput)="fnfecha(0,$event.value)" formControlName="Fechaini">
+              <mat-datepicker-toggle matSuffix [for]="fi"></mat-datepicker-toggle>
+              <mat-datepicker #fi disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <!-- Fecha Fin -->
+          <div class="col-md-12">
+            <mat-form-field>
+              <mat-label>Fecha Fin</mat-label>
+              <input matInput [matDatepicker]="ff" (dateInput)="fnfecha(1,$event.value)" formControlName="FechaFin">
+              <mat-datepicker-toggle matSuffix [for]="ff"></mat-datepicker-toggle>
+              <mat-datepicker #ff disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <!-- Mensaje de error -->
+          <div class="form-group col-md-12">
+            <mat-error *ngIf="Val">{{Mensaje}}</mat-error>
+          </div>
+
+          <!-- Opciones -->
+          <div class="col-md-12 text-right">
+            <button mat-raised-button class="mr-2" (click)="onNoClick()">Salir</button>
+            <button mat-raised-button color="accent" (click)="fnExcel()">Descargar</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

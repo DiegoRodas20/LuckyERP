@@ -1,0 +1,274 @@
+<div class="row"><br /></div>
+<div class="form-row">
+  <h5 style="width: 100%;text-align: center;" class="card-header center-text-card">{{title}}
+  </h5>
+  <div class="row"><br /></div>
+</div>
+<form [formGroup]="formVehiculo" class="form-row" style="margin-top: 15px;">
+  <div class="form-group col-md-4">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Placa:</mat-label>
+      <input [readonly]="bSoloLectura && this.pVehiculo!=null" type="text"
+        (input)="fnEvitarEspaciosAmbosLados('txtPlaca')" (blur)="fnVerificarPlaca()" matInput placeholder="Placa" #input
+        [value]="input.value.toUpperCase()" formControlName="txtPlaca">
+      <mat-error *ngIf="formVehiculo.get('txtPlaca').hasError('required')">
+        .Obligatorio</mat-error>
+      <mat-error *ngIf="formVehiculo.get('txtPlaca').hasError('caracterValidator')">
+        .El texto no debe contener: "/", "|", "?"</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Marca:</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtMarca')" type="text" matInput placeholder="Marca"
+        formControlName="txtMarca">
+      <mat-error *ngIf="formVehiculo.get('txtMarca').hasError('required')">
+        .Obligatorio</mat-error>
+      <mat-error *ngIf="formVehiculo.get('txtMarca').hasError('caracterValidator')">
+        .El texto no debe contener: "/", "|", "?"</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Color:</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtColor')" type="text" matInput placeholder="Color"
+        formControlName="txtColor">
+      <mat-error *ngIf="formVehiculo.get('txtColor').hasError('required')">
+        .Obligatorio</mat-error>
+      <mat-error *ngIf="formVehiculo.get('txtColor').hasError('caracterValidator')">
+        .El texto no debe contener: "/", "|", "?"</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Año:</mat-label>
+      <input [readonly]="bSoloLectura"
+        (input)="fnEvitarNegativos('txtAnio');fnRedondear('txtAnio'); fnNCaracteres('txtAnio',4)" type="number" matInput
+        placeholder="2000" formControlName="txtAnio">
+      <mat-error *ngIf="formVehiculo.get('txtAnio').hasError('required')">
+        .Obligatorio</mat-error>
+      <mat-error *ngIf="formVehiculo.get('txtAnio').hasError('min') || formVehiculo.get('txtAnio').hasError('max')">
+        .Año no valido</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Modelo:</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtModelo')" type="text" matInput placeholder="Modelo"
+        formControlName="txtModelo">
+      <mat-error *ngIf="formVehiculo.get('txtModelo').hasError('required')">
+        .Obligatorio</mat-error>
+      <mat-error *ngIf="formVehiculo.get('txtModelo').hasError('caracterValidator')">
+        .El texto no debe contener: "/", "|", "?"</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Tipo:</mat-label>
+      <mat-select formControlName="cboTipo" [errorStateMatcher]="matcher">
+        <mat-option *ngFor="let vTipo of lTipo" [value]="vTipo.nId">
+          {{vTipo.sDescripcion}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="formVehiculo.get('cboTipo').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-6">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Descripción:</mat-label>
+      <input readonly [value]="generarDescripcion" type="text" matInput placeholder="Descripción"
+        formControlName="txtDescripcion">
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Nro. Pasajeros:</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtPasajero');fnRedondear('txtPasajero');"
+        type="number" matInput placeholder="00" formControlName="txtPasajero">
+      <mat-error *ngIf="formVehiculo.get('txtPasajero').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Peso Carga (Kg.):</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtPesoCarga');" type="number" matInput
+        placeholder="00" formControlName="txtPesoCarga">
+      <mat-error *ngIf="formVehiculo.get('txtPesoCarga').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Alto (metros):</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtAlto');" type="number" matInput placeholder="00"
+        formControlName="txtAlto">
+      <mat-error *ngIf="formVehiculo.get('txtAlto').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Ancho (metros):</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtAncho');" type="number" matInput placeholder="00"
+        formControlName="txtAncho">
+      <mat-error *ngIf="formVehiculo.get('txtAncho').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Largo (metros):</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtLargo');" type="number" matInput placeholder="00"
+        formControlName="txtLargo">
+      <mat-error *ngIf="formVehiculo.get('txtLargo').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-6 col-md-2">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Volumen Carga (m^3):</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtVolumenCarga');" type="number" matInput
+        placeholder="00" formControlName="txtVolumenCarga">
+      <mat-error *ngIf="formVehiculo.get('txtVolumenCarga').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Nro. Puertas:</mat-label>
+      <input [readonly]="bSoloLectura" (input)="fnEvitarNegativos('txtNumPuerta');fnRedondear('txtNumPuerta');"
+        type="number" matInput placeholder="0" formControlName="txtNumPuerta">
+      <mat-error *ngIf="formVehiculo.get('txtNumPuerta').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Revisión Técnica:</mat-label>
+      <input (click)="pickerRevision.open()" readonly formControlName="cboFechaTecnica" matInput
+        [matDatepicker]="pickerRevision">
+      <mat-datepicker-toggle matSuffix [for]="pickerRevision"></mat-datepicker-toggle>
+      <mat-datepicker #pickerRevision></mat-datepicker>
+      <mat-error *ngIf="formVehiculo.get('cboFechaTecnica').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Fecha SOAT:</mat-label>
+      <input (click)="pickerSOAT.open()" readonly formControlName="cboFechaSoat" matInput [matDatepicker]="pickerSOAT">
+      <mat-datepicker-toggle matSuffix [for]="pickerSOAT"></mat-datepicker-toggle>
+      <mat-datepicker #pickerSOAT></mat-datepicker>
+      <mat-error *ngIf="formVehiculo.get('cboFechaSoat').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Vence Circulación:</mat-label>
+      <input (click)="pickerCirculacion.open()" readonly formControlName="cboVenceCirculacion" matInput
+        [matDatepicker]="pickerCirculacion">
+      <mat-datepicker-toggle matSuffix [for]="pickerCirculacion"></mat-datepicker-toggle>
+      <mat-datepicker #pickerCirculacion></mat-datepicker>
+      <mat-error *ngIf="formVehiculo.get('cboVenceCirculacion').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Vencimiento Extintor:</mat-label>
+      <input (click)="pickerExtintor.open()" readonly formControlName="cboVenceExtintor" matInput
+        [matDatepicker]="pickerExtintor">
+      <mat-datepicker-toggle matSuffix [for]="pickerExtintor"></mat-datepicker-toggle>
+      <mat-datepicker #pickerExtintor></mat-datepicker>
+      <mat-error *ngIf="formVehiculo.get('cboVenceExtintor').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Vencimiento Certificado:</mat-label>
+      <input (click)="pickerCertificado.open()" readonly formControlName="cboFechaVenceCert" matInput
+        [matDatepicker]="pickerCertificado">
+      <mat-datepicker-toggle matSuffix [for]="pickerCertificado"></mat-datepicker-toggle>
+      <mat-datepicker #pickerCertificado></mat-datepicker>
+      <mat-error *ngIf="formVehiculo.get('cboFechaVenceCert').hasError('required')">
+        .Obligatorio</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="pVehiculo!=null" class="form-group col-md-3">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Estado:</mat-label>
+      <input [formControl]="txtEstado" style="color: rgb(236, 0, 140);" readonly type="text" matInput
+        placeholder="Estado">
+    </mat-form-field>
+  </div>
+
+  <div class="form-group col-md-3 d-flex align-items-center">
+    <mat-slide-toggle labelPosition="before" formControlName="stLucky">¿Es de Lucky?</mat-slide-toggle>
+  </div>
+
+
+
+  <!--Zona de botones flotantes-->
+  <div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista">
+      <!--Para guardar-->
+      <button matTooltipPosition="left" *ngIf="pVehiculo==null && abLista>0" mat-mini-fab type="button" color="primary"
+        (click)="fnAnadirVehiculo()" matTooltip="Agregar">
+        <i class="material-icons">save</i>
+      </button>
+
+      <!--Para modificar-->
+      <button matTooltipPosition="left" *ngIf="pVehiculo!=null && bModificando==false && abLista>0" mat-raised-button mat-mini-fab
+        class="fab-secondary" matTooltip="Modificar" color="secondary" (click)="fnModificar()"><i
+          class="material-icons">create</i></button>
+
+      <!--Para guardar lo modificado-->
+      <button matTooltipPosition="left" *ngIf="pVehiculo!=null && bModificando==true && abLista>0" mat-mini-fab type="button"
+        color="primary" (click)="fnGuardarVehiculo()" matTooltip="Guardar">
+        <i class="material-icons">save</i>
+      </button>
+
+      <!--Para activar-->
+      <button matTooltipPosition="left" *ngIf="pVehiculo!=null && this.pVehiculo?.nIdEstado!=589 && bModificando==false && abLista>0"
+        type="button" mat-mini-fab matTooltip="Activar" color="accent" (click)="fnActivar()">
+        <i class="material-icons">check</i>
+      </button>
+
+      <!--Para inactivar-->
+      <button matTooltipPosition="left" *ngIf="pVehiculo!=null && this.pVehiculo?.nIdEstado!=591 && bModificando==false && abLista>0"
+        type="button" mat-mini-fab matTooltip="Inactivar" color="secondary" (click)="fnInactivar()">
+        <i class="material-icons">block</i>
+      </button>
+
+      <!--Para salir-->
+      <button *ngIf="abLista>0" matTooltipPosition="left" mat-mini-fab type="button" color="warn" (click)="fnSalir()" matTooltip="Atrás">
+        <i class="material-icons">exit_to_app</i>
+      </button>
+    </div>
+  </div>
+</form>

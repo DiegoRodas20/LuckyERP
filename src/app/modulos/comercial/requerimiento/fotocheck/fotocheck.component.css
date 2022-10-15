@@ -1,0 +1,220 @@
+.card-header {
+    background-color: rgb(51, 77, 110);
+    color           : white;
+}
+
+.example-container {
+    width   : 100%;
+    overflow: auto;
+}
+
+.example-container table {
+    min-width: 100%;
+}
+
+table th {
+    background-color: #334D6E;
+    color           : white;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width    : 100%;
+}
+
+th,
+td {
+    padding-right: 30px !important;
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type {
+    padding-left: 24px;
+}
+
+tr:hover {
+    background: whitesmoke;
+}
+
+tr:active {
+    background: #efefef;
+}
+
+.clsprincipal {
+    min-width: 320px;
+}
+
+.example-button-container {
+    display        : flex;
+    justify-content: center;
+    width          : 120px;
+    margin-left    : 10px;
+}
+
+.example-button-container {
+    display        : flex;
+    justify-content: center;
+    width          : 120px;
+}
+
+button:focus {
+    outline      : 0px auto !important;
+    outline-color: 0px transparent !important;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+    color           : black;
+    BACKGROUND-COLOR: #d0d3d6;
+}
+
+:host /deep/ form .ng-invalid label {
+    color: #f44336;
+}
+
+:host /deep/ form .ng-invalid .ng-placeholder {
+    color: #f44336 !important;
+}
+
+.clsTableCreate table th {
+    min-width: 200px !important;
+    max-width: 350px !important;
+}
+
+.clsTableCreate table th:first-of-type {
+    min-width: 126px !important;
+}
+
+.clsTableCreate table .ng-select {
+    cursor   : default;
+    display  : flex;
+    outline  : none;
+    overflow : hidden;
+    position : relative;
+    max-width: 350px !important;
+}
+
+
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell {
+    padding            : 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    max-width          : 200px;
+}
+
+td.mat-cell[_ngcontent-xsj-c368] {
+    padding            : 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    max-width          : 100px !important;
+}
+
+/* Contenedor del botón +*/
+.fab-container {
+    position      : fixed;
+    top           : 85px;
+    right         : 35px;
+    z-index       : 101;
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+    margin-top    : 5px;
+}
+
+.fab-container>div {
+    display       : flex;
+    flex-direction: column;
+    align-items   : center;
+    margin-bottom : 5px;
+
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline   : none;
+}
+
+.fab-toggler {
+    float  : right;
+    z-index: 101;
+    outline: none;
+}
+
+/* Fin Contenedor del botón +*/
+
+.clsBotonIzq {
+    float        : left;
+    padding-left : 1%;
+    padding-right: 0px;
+    width        : auto;
+}
+
+.clsBotonDer {
+    float       : right;
+    padding-left: 1%;
+    width       : auto;
+}
+
+
+
+
+#capa1 {
+    position: absolute;
+    z-index : 0;
+
+    margin-top: 90px;
+    width     : 312px;
+    height    : 230px;
+
+    display        : flex;
+    justify-content: center;
+
+
+}
+
+#capa2 {
+    position: absolute;
+    z-index : 1;
+}
+
+#capa3 {
+    position  : absolute;
+    z-index   : 2;
+    text-align: center;
+    color     : white;
+    margin-top: 310px;
+    width     : 312px;
+}
+
+#capa4 {
+    position  : absolute;
+    z-index   : 2;
+    text-align: center;
+    color     : black;
+    margin-top: 440px;
+    width     : 312px;
+}
+
+
+.ImagenFondo {
+    width : 312px;
+    height: 490px;
+}
+
+.ImagenPersonal {
+    height: 230px;
+    width : 230px;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+.clsShow {
+    display: block;
+  }
+  
+  .clsHide {
+    display: none !important;
+  }

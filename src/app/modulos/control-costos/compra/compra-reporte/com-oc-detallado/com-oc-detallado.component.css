@@ -1,0 +1,62 @@
+#container {
+    padding-top: 70px;
+}
+
+.title-card {
+    background-color: #334D6E;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.titulo {
+    color: #002c4b;
+    font-weight: bold;
+    padding-top: 12px;
+}
+
+#contenido {
+    margin-top: 10px;
+}
+
+#contenido mat-form-field {
+    margin-top: 13px;
+}
+
+#group-radio {
+    display: none;
+    display: flex;
+    justify-content: space-around;
+    margin-right: 94px;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}

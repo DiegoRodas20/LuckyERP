@@ -1,0 +1,234 @@
+<div class="form-row" style="margin-top: 15px;">
+    <div class="form-group col-md-12">
+        <!-- Inicio del contenido -->
+        <div class="row justify-content-center">
+            <div class="col-md-9 offset-md-1">
+                <div class="form-row">
+                    <div class="col-md-8 col-sm-8 col-10">
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Buscar almacén - destino almacén:</mat-label>
+                            <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar()">
+                            <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                                aria-label="Clear"
+                                (click)="this.txtFiltro.setValue(''); fnListarOperacionAlmacenDestino();">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-2">
+                        <button mat-mini-fab class="fab-toggler" matTooltip="Nuevo almacén - destino almacén"
+                            (click)="fnAbrirModal()">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <input data-toggle="modal" data-target="#modalOperacionAlm" #modalOperacionAlm type="hidden"
+                            name="button">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- nueva tabla material -->
+        <div id="listaMobile" class="mat-elevation-z8">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="nId" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"></th>
+                        <td data-label='Ver detalle: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaOpc">
+                            <button (click)="fnSeleccionarOpAlmacenDest(row)" mat-icon-button color="accent"
+                                matTooltip="Ver detalle">
+                                <mat-icon> touch_app</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sAlmacen">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Almacén Origen
+                        </th>
+                        <td data-label='Almacén Origen: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sOperacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Operación
+                        </th>
+                        <td data-label='Operación: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sOperacion" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sAlmacenDestino">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Almacén Destino
+                        </th>
+                        <td data-label='Almacén Destino: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sAlmacenDestino" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sEstado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                        </th>
+                        <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="row.nIdEstado==591 ? 'make-gris' : ''">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<!--Modal para agregar y modificar-->
+<div class="modal fade  bd-example-modal-xl" id="modalOperacionAlm" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalOperacionAlm"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalOperacionAlmAlmLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <!--Cuando se va a registrar-->
+                    <form *ngIf="pOpcion==1" class="row col-md-12" [formGroup]="formOpAlmacen">
+                        <div class="form-group col-md-6">
+                            <ng-select appendTo="body" [clearable]="false" formControlName="cboAlmacen"
+                                placeholder="Almacén origen" required>
+                                <ng-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen.nId">
+                                    {{vAlmacen.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formOpAlmacen.get('cboAlmacen').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <ng-select (change)="fnFiltrarOperacion($event)" appendTo="body" [clearable]="false"
+                                formControlName="cboOperacion" placeholder="Operación" required>
+                                <ng-option *ngFor="let vOperacion of lOperacion" [value]="vOperacion.nId">
+                                    {{vOperacion.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formOpAlmacen.get('cboOperacion').hasError('required')">
+                                .Obligatorio</mat-error>
+
+                        </div>
+                        <div class="form-group col-md-6">
+                            <ng-select appendTo="body" [clearable]="false" formControlName="cboAlmacenDestino"
+                                placeholder="Almacén Destino" required>
+                                <ng-option *ngFor="let vAlmacen of lAlmacenDestino" [value]="vAlmacen.nId">
+                                    {{vAlmacen.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formOpAlmacen.get('cboAlmacenDestino').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button mat-mini-fab color="accent" (click)="fnAnadirAlmDestOperacion()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--Cuando se va a modificar-->
+
+                    <form *ngIf="pOpcion==2" class="row col-md-12" [formGroup]="formOpAlmacenAct">
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Almacén origen:</mat-label>
+                                <input type="text" matInput placeholder="AA" formControlName="txtAlmacen"
+                                    [errorStateMatcher]="matcher" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <ng-select style="padding-bottom:3.5px; bottom:0.42rem" (change)="fnFiltrarOperacion($event)" appendTo="body" [clearable]="false"
+                                formControlName="cboOperacion" placeholder="Operación" required>
+                                <ng-option *ngFor="let vOperacion of lOperacion" [value]="vOperacion.nId">
+                                    {{vOperacion.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formOpAlmacenAct.get('cboOperacion').hasError('required')">
+                                .Obligatorio</mat-error>
+
+                        </div>
+                        <div class="form-group col-md-6">
+                            <ng-select style="padding-bottom:3.5px; bottom:0.42rem" appendTo="body" [clearable]="false" formControlName="cboAlmacenDestino"
+                                placeholder="Almacén Destino" required>
+                                <ng-option *ngFor="let vAlmacen of lAlmacenDestino" [value]="vAlmacen.nId">
+                                    {{vAlmacen.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <mat-error *ngIf="formOpAlmacenAct.get('cboAlmacenDestino').hasError('required')">
+                                .Obligatorio</mat-error>
+                        </div>
+
+                        <!-- <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Operación:</mat-label>
+                                <input readonly type="text" matInput placeholder="AA" formControlName="txtOperacion"
+                                    [errorStateMatcher]="matcher">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Almacén Destino:</mat-label>
+                                <input type="text" matInput placeholder="AA" formControlName="txtAlmacenDestino"
+                                    [errorStateMatcher]="matcher" readonly>
+                            </mat-form-field>
+                        </div> -->
+
+                        <div class="form-group col-md-3 col-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select formControlName="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nId">
+                                        {{vEstado.sDescripcion}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Modificar" mat-mini-fab color="accent"
+                                (click)="fnModificarAlmDestOperacion()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-3 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent"
+                                (click)="fnGuardarAlmDestOperacion()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

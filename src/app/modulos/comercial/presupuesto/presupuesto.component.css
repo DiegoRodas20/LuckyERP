@@ -1,0 +1,124 @@
+ 
+ 
+ table ng-select{
+   width: 80%;
+ }
+
+ .fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+  margin-top: 10px;
+  outline: none;
+}
+ 
+ 
+ .clsColumnapartida{
+   width: 320px;
+ }
+ .example-container {
+     height: 350px;
+     width: 100%;
+     overflow: auto;
+   }
+   .example-container table {
+     width: 1300px;
+   } 
+   .clsEstatico{
+     position: -webkit-sticky;
+     position: sticky;
+     top: 0; 
+     z-index: 1;
+     text-align: center;
+     width: 100%;
+   }
+   table th{ 
+     background-color: #334D6E;  
+     color: white; 
+   } 
+   .example-container-sub {
+     height: 150px;
+     width: 100%;
+     overflow: auto;
+   }
+ 
+   .example-container-partida{
+     height: 250px;
+     width: 100%;
+     overflow: auto;
+   }
+ 
+   .clspartida{
+     width: 1300px;
+   }
+ 
+ 
+ 
+   .example-container-sub-min{
+     height: 220px;
+     width: 100%;
+     overflow: auto;
+   }
+   .example-container-sub-min table{ 
+     width: 100%;
+   }
+    
+ 
+   .example-container-sub table {
+     width: 150px;
+   } 
+ 
+   mat-form-field{ 
+     width: 100%; 
+   } 
+   .example-section{
+     padding-top: 15px;
+   }
+ 
+   :host /deep/  form .ng-invalid .ng-placeholder{
+     color: #f44336 !important; 
+   }
+ 
+   :host /deep/  form .ng-invalid label{
+     color: #f44336; 
+   }
+   :host /deep/  .mat-form-field-disabled input{
+     color: black;
+     BACKGROUND-COLOR: #d0d3d6;
+   } 
+   :host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+     color: black;
+     BACKGROUND-COLOR: #d0d3d6;
+   }
+   
+   :host /deep/  .mat-form-field-disabled textarea{  
+     BACKGROUND-COLOR: #d0d3d6;
+   }
+   .clsCodigoP{
+     width: 20%;
+   }
+   .clsNombrep{
+     width: 70%;
+   }
+ 
+   .clsNombre{
+     width: 90%;
+   }
+ 
+   .clsClick{
+     cursor: pointer;
+   }

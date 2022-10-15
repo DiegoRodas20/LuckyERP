@@ -1,0 +1,378 @@
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px); padding-bottom: 20px;">
+    <div class="container-fluid">
+        <div class="card">
+
+            <h5 class="card-header">Digitalización de documentos</h5>
+
+            <div class="fab-container">
+                <button [@tada]="{value: tadaMain}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                <p style="color: white; padding-top: 50px;">Cargando información...</p>
+            </ngx-spinner>
+
+            <div id="body-main" class="card-body">
+                <div class="row">
+
+                    <div id="dLeftMain" class="col-lg-6">
+                        <mat-accordion #maMain="matAccordion" multi>
+
+                            <!-- Información personal -->
+                            <mat-expansion-panel [expanded]="true">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Información del personal :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+                                        <a>{{getMain.sNombres.value}}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <mat-horizontal-stepper>
+
+                                    <mat-step>
+
+                                        <div class="row">
+
+                                            <div class="col-xl-3 divAvatar">
+                                                <a>
+                                                    <span class="imgBadge">{{getMain.sCodPlla.value}}</span>
+                                                    <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                                </a>
+                                            </div>
+
+                                            <div id="fgMain" [formGroup]="fgMain" class="col-xl-9">
+
+                                                <div class="form-row">
+
+                                                    <div class="col-lg-8">
+                                                        <mat-form-field style="width: 100%;">
+                                                            <mat-label>Tipo</mat-label>
+                                                            <input type="text" matInput formControlName="sTipo">
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-lg-4">
+                                                        <mat-form-field style="width: 100%;">
+                                                            <mat-label>N° Documento</mat-label>
+                                                            <input type="text" matInput formControlName="sDocumento">
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+
+                                                    <div class="col-lg-12">
+                                                        <mat-form-field style="width: 100%;">
+                                                            <mat-label>Apellidos y nombres</mat-label>
+                                                            <input type="text" matInput formControlName="sNombres">
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+
+                                                    <div class="col-lg-4">
+                                                        <mat-form-field style="width: 100%;">
+                                                            <mat-label>Ciudad</mat-label>
+                                                            <input type="text" matInput formControlName="sCiudad">
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-lg-4">
+                                                        <mat-form-field style="width: 100%;" appDateFormat>
+                                                            <mat-label>Fecha ingreso</mat-label>
+                                                            <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                                            <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                                            <mat-datepicker #dFechIni></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-lg-4">
+                                                        <mat-form-field style="width: 100%;" appDateFormat>
+                                                            <mat-label>Fecha término</mat-label>
+                                                            <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                                            <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                                            <mat-datepicker #dFechFin></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="dStep row">
+                                            <button style="float: right;" mat-button matStepperNext [disabled]="getMain.nIdPersonal.value === 0">Siguiente</button>
+                                        </div>
+
+                                    </mat-step>
+
+                                    <mat-step>
+
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <h6>Periodo Laboral :</h6>
+                                                <hr style="margin-top: 0px; margin-bottom: 20px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="melevation" style="margin-right: 1px; margin-left: 1px;">
+                                                    <table mat-table [dataSource]="PerLabDS" style="width: 100%;">
+
+                                                        <!-- N° Column -->
+                                                        <ng-container matColumnDef="action">
+                                                            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> N° </th>
+                                                            <td style="text-align: center;" mat-cell *matCellDef="let element; let i = index">
+                                                                <button matTooltip="Seleccionar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnPerLab(element.nIdPerLab)">
+                                                                    {{i + 1}}
+                                                                </button>
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <!-- Inicio Column -->
+                                                        <ng-container matColumnDef="dFechIni">
+                                                            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Inicio </th>
+                                                            <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Inicio :'> {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                                        </ng-container>
+
+                                                        <!-- Término Column -->
+                                                        <ng-container matColumnDef="dFechFin">
+                                                            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Término </th>
+                                                            <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Término :'> {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                                        </ng-container>
+
+                                                        <!-- Motivo Column -->
+                                                        <!-- <ng-container matColumnDef="sMotivo">
+                                                            <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                                                            <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Motivo :'>
+                                                                <ngb-highlight class="ellipsis" [result]="element.sMotivo"></ngb-highlight>
+                                                            </td>
+                                                        </ng-container> -->
+
+                                                        <tr mat-header-row *matHeaderRowDef="PerLabDC; sticky: true"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: PerLabDC;"></tr>
+
+                                                    </table>
+                                                </div>
+                                                <mat-paginator #pagPerLab style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                                            </div>
+                                        </div>
+
+                                        <div class="dStep row">
+                                            <button style="float: left;" mat-button matStepperPrevious>Anterior</button>
+                                        </div>
+
+                                    </mat-step>
+
+                                </mat-horizontal-stepper>
+
+                            </mat-expansion-panel>
+
+                            <!-- Documentos -->
+                            <mat-expansion-panel #mep_filtro [disabled]="disabled_Filtro">
+
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        Documentos :
+                                    </mat-panel-title>
+                                    <mat-panel-description style="margin-right: 0px;">
+                                        <a>{{getPerLab}}</a>
+                                    </mat-panel-description>
+                                    <mat-icon style="margin-right: 10px;">description</mat-icon>
+                                </mat-expansion-panel-header>
+
+                                <div class="row">
+                                    <div [formGroup]="fgFilter" class="col-lg-12">
+                                        <div class="form-row">
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Tipo documento</mat-label>
+                                                    <mat-select formControlName="nIdTipo">
+                                                        <mat-option>--</mat-option>
+                                                        <mat-option *ngFor="let item of cboTipoDoc" [value]="item.nIdTipo">
+                                                            {{item.sDocumento}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <mat-form-field style="width: 100%;">
+                                                    <mat-label>Documento</mat-label>
+                                                    <input type="text" matInput formControlName="sDocumento">
+                                                    <button style="outline: none;" mat-button *ngIf="getFilter.sDocumento.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sDocumento.patchValue('')">
+                                                        <mat-icon>close</mat-icon>
+                                                    </button>
+                                                </mat-form-field>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top: 20px;">
+                                    <div class="col-sm">
+                                        <h6>Lista de documentos</h6>
+                                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div #dTableDoc class="melevation" id="dTableDoc">
+                                            <table mat-table [dataSource]="DocDS" style="width: 100%;" multiTemplateDataRows>
+
+                                                <!-- View Column -->
+                                                <ng-container matColumnDef="view">
+                                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnViewDoc(element, 0)">
+                                                            <mat-icon>visibility</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+
+                                                <!-- Documento Column -->
+                                                <ng-container matColumnDef="sDocumento">
+                                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Documento :'>
+                                                        <ngb-highlight [result]="element.sDocumento" [term]="getFilter.sDocumento.value"></ngb-highlight>
+                                                    </td>
+                                                </ng-container>
+
+                                                <!-- More Column -->
+                                                <ng-container matColumnDef="more">
+                                                    <th mat-header-cell *matHeaderCellDef></th>
+                                                    <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                                        <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                                                    </td>
+                                                </ng-container>
+
+                                                <!-- More Expanded -->
+                                                <ng-container matColumnDef="expanded_More">
+                                                    <td mat-cell *matCellDef="let element" [attr.colspan]="DocDC.length">
+                                                        <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                                            <div class="row" style="padding: 10px;">
+                                                                <div class="col-lg-12">
+
+                                                                    <!-- Histórico de documentos -->
+                                                                    <div class="row" style="padding-left: 15px;">
+                                                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                                            <h6>Histórico:</h6>
+                                                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div id="dTableExpanded" class="melevation">
+                                                                        <table #mtExpanded mat-table [dataSource]="ExpandedDS" style="width: 100%;">
+
+                                                                            <!-- Position Column -->
+                                                                            <ng-container matColumnDef="position">
+                                                                                <th mat-header-cell *matHeaderCellDef> N° </th>
+                                                                                <td mat-cell *matCellDef="let element; let i = index;">{{i + 1}}</td>
+                                                                            </ng-container>
+
+                                                                            <!-- Inicio Column -->
+                                                                            <ng-container matColumnDef="dFechIni">
+                                                                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Inicio </th>
+                                                                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Inicio :'> {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                                                            </ng-container>
+
+                                                                            <!-- Término Column -->
+                                                                            <ng-container matColumnDef="dFechFin">
+                                                                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Término </th>
+                                                                                <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Término :'> {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                                                            </ng-container>
+
+                                                                            <!-- Action Column -->
+                                                                            <ng-container matColumnDef="action">
+                                                                                <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                                                                <td style="text-align: center;" mat-cell *matCellDef="let element; let i = index;">
+                                                                                    <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="btnViewDoc(element, i)">
+                                                                                        <mat-icon>visibility</mat-icon>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </ng-container>
+
+                                                                            <!-- No Data -->
+                                                                            <ng-container matColumnDef="noData">
+                                                                                <mat-footer-cell *matFooterCellDef [attr.colspan]="ExpandedDC.length">
+                                                                                    No se encuentran registros.
+                                                                                </mat-footer-cell>
+                                                                            </ng-container>
+
+                                                                            <tr mat-header-row *matHeaderRowDef="ExpandedDC; sticky: true"></tr>
+                                                                            <tr mat-row *matRowDef="let element; columns: ExpandedDC;"></tr>
+                                                                            <mat-footer-row *matFooterRowDef="['noData']" [hidden]="ExpandedDS && this.ExpandedDS.filteredData.length > 0"></mat-footer-row>
+                                                                        </table>
+                                                                    </div>
+                                                                    <mat-paginator #pagExpanded style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="noData">
+                                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="DocDC.length">
+                                                        No se encuentran registros.
+                                                    </mat-footer-cell>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="DocDC; sticky: true"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: DocDC;"></tr>
+                                                <tr mat-row class="expandedMore" *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none; margin: 0px; padding: 0px;"></tr>
+                                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="DocDS && this.DocDS.filteredData.length > 0"></mat-footer-row>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagDoc style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                                    </div>
+                                </div>
+
+                            </mat-expansion-panel>
+
+                        </mat-accordion>
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <h6>Vista previa del documento : {{ this.sDocumento }}</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 20px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg">
+                            <!-- <iframe id="iframe-digi" style="width: 100%;height:725px;border-style: groove;"></iframe> -->
+                            <ngx-doc-viewer [url]="urlDocumento" viewer="google" style="width:100%;height:755px;border-style: groove;" [googleCheckContentLoaded]=true [googleCheckInterval]=3000></ngx-doc-viewer>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+/* Botones */
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+/* Card container */
+
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 28px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+.center-text-card {
+  text-align: center;
+}
+/* Formulario */
+
+.controlls-container {
+  padding-bottom: 10px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.toggle-parametro {
+  padding-top: 18px;
+}
+
+::ng-deep.mat-checkbox-checked.mat-accent.mat-checkbox-disabled
+  .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #ff4081 !important;
+}
+
+:host ::ng-deep .inputAcordeon .mat-form-field-infix {
+  padding-bottom: 19px;
+}
+
+.clsHide {
+  display: none;
+}
+
+@media screen and (max-width: 769px) {
+  mat-form-field {
+    padding-top: 18px;
+  }
+  .controlls-container {
+    padding-bottom: 25px;
+  }
+}

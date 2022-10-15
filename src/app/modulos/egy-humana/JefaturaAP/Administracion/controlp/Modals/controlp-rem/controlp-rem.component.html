@@ -1,0 +1,182 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsRem}">monetization_on</i>
+    </button>
+    <div [@speedDialStagger]="abRem.length">
+        <button *ngFor="let btn of abRem; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_rem" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Remuneración</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row" style="padding: 20px 20px 15px; padding-bottom: 2px;">
+
+        <!-- left section -->
+        <div class="col-xl-6 fdiv-left" style="padding-bottom: 15px; padding-left: 0px;">
+            <div id="fgRem" [formGroup]="fgRem">
+
+                <div class="row">
+                    <div class="col-sm">
+                        <h6>Salario</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-lg-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Tipo</mat-label>
+                            <mat-select formControlName="A7_nTipoSalario" (valueChange)="EnabledMonto($event)" [errorStateMatcher]="matcher">
+                                <mat-option>--</mat-option>
+                                <mat-option *ngFor="let item of cboTipoSalario" [value]="item">
+                                    {{item.sDesc}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="getRem.A7_nTipoSalario.hasError('noSelect')">. Obligatorio</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Monto</mat-label>
+                            <span matPrefix>S/ &nbsp;</span>
+                            <input type="number" matInput formControlName="T7_nMonto" [errorStateMatcher]="matcher">
+                            <mat-error *ngIf="getRem.T7_nMonto.hasError('vMonto')">. Obligatorio</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm">
+                        <h6>Estructura salarial</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="melevation">
+                            <table #tRem mat-table [dataSource]="dsRem" style="width: 100%;" cdkDropList [cdkDropListData]="dsRem" (cdkDropListDropped)="dropConcepto($event)">
+
+                                <ng-container matColumnDef="action">
+                                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Acción </th>
+                                    <td style="text-align: center;" mat-cell *matCellDef="let element">
+                                        <button matTooltip="Editar" matTooltipPosition="left" mat-icon-button color="accent" (click)="editConcepto(element)">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button matTooltip="Remover" matTooltipPosition="right" mat-icon-button color="accent" (click)="removeConcepto(element)">
+                                            <mat-icon>remove_circle</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="position">
+                                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <mat-icon style="pointer-events: all;" cdkDragHandle>reorder</mat-icon>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="dsc_">
+                                    <th mat-header-cell *matHeaderCellDef> Concepto </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Concepto :'> {{element.dsc_}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nImporte">
+                                    <th mat-header-cell *matHeaderCellDef> Importe ( S/ ) </th>
+                                    <td style="text-align: center;" mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe ( S/ ) :'> {{ (element.nImporte * 1) | number : '1.2-2'}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="dcRem.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="dcRem"></tr>
+                                <tr mat-row *matRowDef="let row; columns: dcRem;" cdkDragLockAxis="y" cdkDrag [cdkDragData]="row"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dsRem && this.dsRem.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <!-- right section -->
+        <div class="col-xl-6 p-0">
+
+            <div class="row">
+                <div class="col-sm">
+                    <h6>Selección</h6>
+                    <hr style="margin-top: 0px; margin-bottom: 10px;">
+                </div>
+            </div>
+
+            <div class="fdiv-select" style="height: 50px;" id="fgRem_select" [formGroup]="fgRem_select">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Concepto</mat-label>
+                            <input type="string" matInput formControlName="dsc" [readonly]="true">
+                            <button style="outline: none;" mat-button *ngIf="getRem_select.dsc.value" matSuffix mat-icon-button aria-label="Clear" (click)="selectConcepto('', 0)">
+                            <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-lg-3">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Importe</mat-label>
+                            <span matPrefix>S/ &nbsp;</span>
+                            <input type="number" matInput formControlName="nImporte">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-lg-4" style="padding-top: 5px;">
+                        <button mat-raised-button color="accent" style="width: 100%; padding-left: 5px; outline: none;" [disabled]="fgRem_select.invalid" (click)="addConcepto()">
+                            <mat-icon>add</mat-icon>
+                            Añadir
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <mat-selection-list style="padding-bottom: 15px;" [multiple]="false">
+                <mat-list-option style="margin-top: 5px;" class="card" *ngFor="let item of aConceptos" (click)="selectConcepto(item, 1)" [value]="item.nIdConcepto" [disabled]="item.dis">
+                    <div class="row" style="align-items: center;">
+                        <button mat-icon-button color="accent" [disabled]="item.dis">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <a>{{item.dsc}}</a>
+                    </div>
+                </mat-list-option>
+            </mat-selection-list>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbRem" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

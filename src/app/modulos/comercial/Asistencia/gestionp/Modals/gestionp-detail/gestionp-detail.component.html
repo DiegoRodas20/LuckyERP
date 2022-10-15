@@ -1,0 +1,1253 @@
+<ngx-spinner
+  name="spi_incentivo"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<!-- #region FB -->
+<div class="fab-container">
+  <button
+    [@tada]="{ value: tadaIncentivo }"
+    mat-mini-fab
+    class="fab-toggler"
+    (click)="onToggleFab(toggleIncentivo, -1)"
+  >
+    <i class="material-icons" [@fabToggler]="{ value: tsIncentivo }">add</i>
+  </button>
+  <div [@speedDialStagger]="abIncentivo.length">
+    <button
+      *ngFor="let btn of abIncentivo; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickFab(toggleIncentivo, ibtn)"
+      [disabled]="btn.dis"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region HEADER -->
+<div class="modal-header">
+  <h4 class="modal-title">Detalle del planning</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closemodal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+<!-- #endregion -->
+
+<!--#region Principal  -->
+
+<div class="modal-body">
+  <div class="row" STYLE="margin-bottom: 15px">
+    <div class="col-lg-6">
+      <mat-accordion multi>
+        <mat-expansion-panel
+          [expanded]="modoEscritorio"
+          [disabled]="modoEscritorio"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> {{ titulo }} </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon *ngIf="boolAutomatico" style="margin-right: 10px"
+              >account_circle</mat-icon
+            >
+            <mat-slide-toggle
+              *ngIf="!boolAutomatico"
+              [checked]="boolToggle"
+              (change)="Automatico($event)"
+            ></mat-slide-toggle>
+          </mat-expansion-panel-header>
+
+          <mat-horizontal-stepper>
+            <mat-step>
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="row">
+                    <div
+                      id="fgPresupuesto"
+                      [formGroup]="formPresupuesto"
+                      class="col-lg-12"
+                    >
+                      <div class="form-row">
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Presupuesto</mat-label>
+                            <input matInput formControlName="nPptos" readonly />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Campaña</mat-label>
+                            <input
+                              matInput
+                              formControlName="sCampania"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Cliente</mat-label>
+                            <input
+                              matInput
+                              formControlName="sCliente"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div id="fgFecha" [formGroup]="formFecha" class="col-lg-12">
+                      <div class="form-row">
+                        <div class="col-lg-6">
+                          <mat-form-field style="width: 100%" appDateFormat>
+                            <mat-label>Inicio</mat-label>
+                            <input
+                              formControlName="sFechaIni"
+                              matInput
+                              [matDatepicker]="sFechaIni"
+                              readonly
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="sFechaIni">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #sFechaIni></mat-datepicker>
+                            <mat-error
+                              *ngIf="
+                                formFecha.controls.sFechaIni.touched &&
+                                formFecha.controls.sFechaIni.invalid
+                              "
+                            >
+                              <span
+                                *ngIf="
+                                  formFecha.controls.sFechaIni.errors.required
+                                "
+                                >Fecha inicio es <strong>requerido</strong>
+                              </span>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-6">
+                          <mat-form-field style="width: 100%" appDateFormat>
+                            <mat-label>Término</mat-label>
+                            <input
+                              formControlName="sFechaFin"
+                              matInput
+                              [matDatepicker]="sFechaFin"
+                              readonly
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="sFechaFin">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #sFechaFin></mat-datepicker>
+                            <mat-error
+                              *ngIf="
+                                formFecha.controls.sFechaFin.touched &&
+                                formFecha.controls.sFechaFin.invalid
+                              "
+                            >
+                              <span
+                                *ngIf="
+                                  formFecha.controls.sFechaFin.errors.required
+                                "
+                                >Fecha fin es <strong>requerido</strong>
+                              </span>
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dStep row">
+                <button
+                  (click)="titulo = 'Informacion del responsable : '"
+                  style="float: right"
+                  mat-button
+                  matStepperNext
+                >
+                  Siguiente
+                </button>
+              </div>
+            </mat-step>
+
+            <mat-step>
+              <div class="row">
+                <div class="col-xl-12">
+                  <div class="row">
+                    <div
+                      id="fgPresupuesto"
+                      [formGroup]="formInfoResponsable"
+                      class="col-lg-12"
+                    >
+                      <div class="form-row">
+                        <div class="col-lg-12">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Apellidos o Nombres</mat-label>
+                            <input
+                              matInput
+                              formControlName="sNombreCompleto"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Tipo</mat-label>
+                            <input matInput formControlName="sTipo" readonly />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Documento</mat-label>
+                            <input
+                              matInput
+                              formControlName="sDocumento"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Ciudad</mat-label>
+                            <input
+                              matInput
+                              formControlName="sCiudad"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Ingreso</mat-label>
+                            <input
+                              matInput
+                              formControlName="sIngreso"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
+                        <div class="col-lg-4">
+                          <mat-form-field style="width: 100%">
+                            <mat-label>Cese</mat-label>
+                            <input matInput formControlName="sCese" readonly />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dStep row">
+                <button
+                  (click)="titulo = 'Información del planning :'"
+                  style="float: left"
+                  mat-button
+                  matStepperPrevious
+                >
+                  Anterior
+                </button>
+                <button
+                  (click)="
+                    [
+                      (titulo = 'Seleccion automatica :'),
+                      (boolAutomatico = false)
+                    ]
+                  "
+                  style="float: right"
+                  mat-button
+                  matStepperNext
+                >
+                  Siguiente
+                </button>
+              </div>
+            </mat-step>
+
+            <mat-step>
+              <div class="row">
+                <div class="col-lg-8">
+                  <mwl-calendar-month-view
+                    [viewDate]="viewDate"
+                    [events]="events"
+                    [locale]="locale"
+                    [refresh]="refresh"
+                    [weekStartsOn]="weekStartsOn"
+                    [weekendDays]="weekendDays"
+                  >
+                  </mwl-calendar-month-view>
+                </div>
+                <div class="col-lg-4">
+                  <form [formGroup]="formAutoMatico">
+                    <div class="form-row">
+                      <div class="col-lg-12">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Hora Inicio</mat-label>
+                          <mat-select formControlName="Ingreso">
+                            <mat-option
+                              *ngFor="let item of cboIngreso"
+                              [value]="item.cNomEle"
+                            >
+                              {{ item.cNomEle }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              formAutoMatico.controls.Ingreso.touched &&
+                              formAutoMatico.controls.Ingreso.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="
+                                formAutoMatico.controls.Ingreso.errors.required
+                              "
+                              >La hora ingreso es <strong>requerido</strong>
+                            </span>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-lg-12">
+                        <mat-form-field style="width: 100%">
+                          <mat-label>Hora Fin</mat-label>
+                          <mat-select formControlName="Salida">
+                            <mat-option
+                              *ngFor="let item of cboSalida"
+                              [value]="item.cNomEle"
+                            >
+                              {{ item.cNomEle }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              formAutoMatico.controls.Salida.touched &&
+                              formAutoMatico.controls.Salida.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="
+                                formAutoMatico.controls.Salida.errors.required
+                              "
+                              >La hora salida es <strong>requerido</strong>
+                            </span>
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="dStep row">
+                <button
+                  (click)="
+                    [
+                      (boolAutomatico = true),
+                      (titulo = 'Informacion del responsable : ')
+                    ]
+                  "
+                  style="float: left"
+                  mat-button
+                  matStepperPrevious
+                >
+                  Anterior
+                </button>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6">
+      <mat-accordion multi>
+        <mat-expansion-panel
+          [expanded]="modoEscritorio"
+          [disabled]="modoEscritorio"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>Selección del personal :</mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="card__row">
+            <div id="card_inner2" class="card__inner">
+              <div class="card__face card__face--front">
+                <div class="row">
+                  <div class="col-lg-3 divAvatar">
+                    <img
+                      class="imgAvatar"
+                      src="../../../../../assets/img/LuckyAvatar.png"
+                      (click)="clickFlipCard()"
+                      alt=""
+                    />
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="row">
+                      <div
+                        id="fgInfoPerso"
+                        [formGroup]="formInfoPerso"
+                        class="col-lg-12"
+                      >
+                        <div class="form-row">
+                          <div class="col-lg-12">
+                            <ng-select
+                              placeholder="Trabajador"
+                              appendTo="body"
+                              bindLabel="name"
+                              formControlName="cliente"
+                              (change)="getCliente()"
+                            >
+                              <ng-option
+                                *ngFor="let cliente of person2"
+                                [value]="cliente"
+                              >
+                                {{ cliente.sNombre }}
+                              </ng-option>
+                            </ng-select>
+
+                            <mat-error
+                              *ngIf="
+                                formInfoPerso.controls.cliente.touched &&
+                                formInfoPerso.controls.cliente.invalid
+                              "
+                            >
+                              <span
+                                *ngIf="
+                                  formInfoPerso.controls.cliente.errors.required
+                                "
+                                >El cliente es <strong>requerido</strong>
+                              </span>
+                            </mat-error>
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Perfil</mat-label>
+                              <mat-select formControlName="Perfil">
+                                <mat-option
+                                  *ngFor="let item of categoria"
+                                  [value]="item"
+                                >
+                                  {{ item.sCategoria }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error
+                                *ngIf="
+                                  formInfoPerso.controls.Perfil.touched &&
+                                  formInfoPerso.controls.Perfil.invalid
+                                "
+                              >
+                                <span
+                                  *ngIf="
+                                    formInfoPerso.controls.Perfil.errors
+                                      .required
+                                  "
+                                  >El perfil es <strong>requerido</strong>
+                                </span>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Canal</mat-label>
+                              <mat-select formControlName="Canal">
+                                <mat-option
+                                  *ngFor="let item of canal"
+                                  [value]="item"
+                                >
+                                  {{ item.sCanal }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error
+                                *ngIf="
+                                  formInfoPerso.controls.Canal.touched &&
+                                  formInfoPerso.controls.Canal.invalid
+                                "
+                              >
+                                <span
+                                  *ngIf="
+                                    formInfoPerso.controls.Canal.errors.required
+                                  "
+                                  >El canal es <strong>requerido</strong>
+                                </span>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Hora Inicio</mat-label>
+                              <mat-select formControlName="Ingreso">
+                                <mat-option
+                                  *ngFor="let item of cboIngreso"
+                                  [value]="item.cNomEle"
+                                >
+                                  {{ item.cNomEle }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error
+                                *ngIf="
+                                  formInfoPerso.controls.Ingreso.touched &&
+                                  formInfoPerso.controls.Ingreso.invalid
+                                "
+                              >
+                                <span
+                                  *ngIf="
+                                    formInfoPerso.controls.Ingreso.errors
+                                      .required
+                                  "
+                                  >La hora ingreso es <strong>requerido</strong>
+                                </span>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Hora Fin</mat-label>
+                              <mat-select formControlName="Salida">
+                                <mat-option
+                                  *ngFor="let item of cboSalida"
+                                  [value]="item.cNomEle"
+                                >
+                                  {{ item.cNomEle }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error
+                                *ngIf="
+                                  formInfoPerso.controls.Salida.touched &&
+                                  formInfoPerso.controls.Salida.invalid
+                                "
+                              >
+                                <span
+                                  *ngIf="
+                                    formInfoPerso.controls.Salida.errors
+                                      .required
+                                  "
+                                  >La hora salida es <strong>requerido</strong>
+                                </span>
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card__face card__face--back">
+                <div class="row">
+                  <div class="col-xl-3 divAvatar">
+                    <a>
+                      <img
+                        class="imgAvatar"
+                        src="../../../../../assets/img/LuckyInfo.png"
+                        (click)="clickFlipCard()"
+                        alt=""
+                      />
+                    </a>
+                  </div>
+
+                  <div class="col-xl-9">
+                    <div class="row">
+                      <div
+                        id="fgDocumento"
+                        [formGroup]="formDocumento"
+                        class="col-lg-12"
+                      >
+                        <div class="form-row">
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Tipo </mat-label>
+                              <input
+                                matInput
+                                formControlName="sTipo"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-6">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>N° Documento</mat-label>
+                              <input
+                                matInput
+                                formControlName="documento"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div
+                        id="fgDetalle"
+                        [formGroup]="formDetalle"
+                        class="col-lg-12"
+                      >
+                        <div class="form-row">
+                          <div class="col-lg-4">
+                            <mat-form-field style="width: 100%">
+                              <mat-label>Ciudad</mat-label>
+                              <input
+                                matInput
+                                formControlName="ciudad"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-4">
+                            <mat-form-field style="width: 100%" appDateFormat>
+                              <mat-label>Ingreso</mat-label>
+                              <input
+                                matInput
+                                formControlName="Ingreso"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-lg-4">
+                            <mat-form-field style="width: 100%" appDateFormat>
+                              <mat-label>Cese</mat-label>
+                              <input matInput formControlName="Cese" readonly />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fab-perso">
+            <button mat-mini-fab class="fab-toggler-perso">
+              <i class="material-icons" [@fabToggler]="{ value: tsPerso }"
+                >control_camera</i
+              >
+            </button>
+            <div [@speedDialStagger]="abPerso.length">
+              <button
+                *ngFor="let btn of abPerso; let ibtn = index"
+                mat-mini-fab
+                class="fab-secondary-perso"
+                color="secondary"
+                (click)="clickFab(1, ibtn)"
+              >
+                <i
+                  class="material-icons"
+                  matTooltip="{{ btn.tool }}"
+                  matTooltipPosition="below"
+                  >{{ btn.icon }}</i
+                >
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <hr />
+  <div class="row" style="margin-top: 15px">
+    <div class="col-sm">
+      <h6>Lista de Trabajadores :</h6>
+      <hr style="margin-top: 0px; margin-bottom: 20px" />
+    </div>
+  </div>
+
+  <div class="col-lg-12" style="padding: 0px">
+    <div id="dTableExpanded" class="melevation">
+      <table
+        multiTemplateDataRows
+        mat-table
+        [dataSource]="TableDt"
+        style="width: 100%"
+      >
+        <!-- Apellido y nombres Column -->
+        <ng-container matColumnDef="sNombreCompleto">
+          <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="m-card-title"
+            data-label="Apellidos y nombres :"
+          >
+            {{ element.sNombreCompleto | titlecase }}
+          </td>
+        </ng-container>
+
+        <!-- Planilla Column -->
+        <ng-container matColumnDef="nIdPlla">
+          <th mat-header-cell *matHeaderCellDef>Plla</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Tipo de planilla :"
+          >
+            {{ element.nIdPlla }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sTDoc">
+          <th mat-header-cell *matHeaderCellDef>Tipo Documento</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Tipo Documento : "
+          >
+            {{ element.sTDoc }}
+          </td>
+        </ng-container>
+
+        <!-- N° Documento Column -->
+        <ng-container matColumnDef="sDocumento">
+          <th mat-header-cell *matHeaderCellDef>Documento</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="N° Documento : "
+          >
+            {{ element.sDocumento }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sSucursal">
+          <th mat-header-cell *matHeaderCellDef>Sucursal</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Sucursal "
+          >
+            {{ element.sSucursal }}
+          </td>
+        </ng-container>
+
+        <!-- Ciudad Column -->
+        <ng-container matColumnDef="sHoraIni">
+          <th mat-header-cell *matHeaderCellDef>Hora Inicio</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Hora Inicio :"
+          >
+            {{ element.sHoraIni }}
+          </td>
+        </ng-container>
+
+        <!-- Bruto Column -->
+        <ng-container matColumnDef="sHoraFin">
+          <th mat-header-cell *matHeaderCellDef>Hora Fin</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Hora Fin: "
+          >
+            {{ element.sHoraFin }}
+          </td>
+        </ng-container>
+
+        <!-- Bruto Column -->
+        <ng-container matColumnDef="sCanal">
+          <th mat-header-cell *matHeaderCellDef>Canal</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Canal : "
+          >
+            {{ element.sCanal }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sPerfil">
+          <th mat-header-cell *matHeaderCellDef>Perfil</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="Perfil : "
+          >
+            {{ element.sPerfil }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nDias">
+          <th mat-header-cell *matHeaderCellDef># Dias</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="has_label_on_mobile"
+            data-label="# Dias : "
+          >
+            {{ element.nDias }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="more">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td
+            mat-cell
+            *matCellDef="let element; let row"
+            (click)="clickExpanded(row)"
+          >
+            <span
+              [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'"
+              class="material-icons"
+              style="cursor: pointer"
+              >expand_more</span
+            >
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expanded_More">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="MainDC.length">
+            <div
+              class="example-element-detail"
+              [@detailExpand]="
+                element == expandedMore ? 'expanded' : 'collapsed'
+              "
+            >
+              <div class="row">
+                <div class="col-lg-12">
+                  <mat-horizontal-stepper [linear]="true" #stepperExpand>
+                    <mat-step>
+                      <div class="row" style="padding: 10px">
+                        <div class="col-lg-6">
+                          <mwl-calendar-month-view
+                            [viewDate]="viewDateExpan"
+                            [events]="eventsExpand"
+                            [locale]="locale"
+                            [refresh]="refreshExpand"
+                            [weekStartsOn]="weekStartsOnExpand"
+                            [weekendDays]="weekendDaysExpand"
+                          >
+                          </mwl-calendar-month-view>
+                        </div>
+                        <div class="col-lg-6">
+                          <mat-accordion multi class="mb-1">
+                            <mat-expansion-panel
+                              [expanded]="modoEscritorio"
+                              [disabled]="modoEscritorio"
+                            >
+                              <mat-expansion-panel-header>
+                                <mat-panel-title
+                                  >Calendario Laboral : 1 de Febrero del
+                                  2021</mat-panel-title
+                                >
+                                <mat-panel-description
+                                  style="margin-right: 0px"
+                                >
+                                </mat-panel-description>
+                                <mat-icon style="margin-right: 10px"
+                                  >account_circle</mat-icon
+                                >
+                              </mat-expansion-panel-header>
+                              <div class="row">
+                                <form class="col-lg-12">
+                                  <div class="form-row">
+                                    <div class="col-lg-6">
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Horario Laboral</mat-label>
+                                        <input
+                                          matInput
+                                          value="09:00 a.m a 18:00 p.m"
+                                        />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Dia Laboral</mat-label>
+                                        <input matInput value="Planificado" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Dia Laboral</mat-label>
+                                        <input matInput value="Planificado" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Dia Laboral</mat-label>
+                                        <input matInput value="Medio dia" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-12">
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Ruta</mat-label>
+                                        <input matInput value="Las rutas" />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </div>
+                    </mat-step>
+                    <mat-step>
+                      <div class="row" style="padding: 10px">
+                        <div class="col-lg-6">
+                          <mwl-calendar-month-view
+                            [viewDate]="viewDateExpan"
+                            [events]="eventCalendarSelecion"
+                            [locale]="locale"
+                            [refresh]="refreshExpand"
+                            [weekStartsOn]="weekStartsOnExpand"
+                            [weekendDays]="weekendDaysExpand"
+                            (dayClicked)="dayClicked($event.day)"
+                          >
+                          </mwl-calendar-month-view>
+                        </div>
+                        <mat-divider [vertical]="true"></mat-divider>
+                        <div class="col-lg-5">
+                          <div class="row">
+                            <form class="col-lg-12" [formGroup]="formCalendar">
+                              <div class="form-row">
+                                <div class="col-lg-6">
+                                  <mat-label class="h5">Seleccion :</mat-label>
+                                  <mat-radio-group
+                                    class="example-radio-group"
+                                    formControlName="tiposeleccion"
+                                  >
+                                    <mat-radio-button
+                                      value="Automatico"
+                                      (change)="changeSelected($event)"
+                                      >Automatico</mat-radio-button
+                                    >
+                                    <mat-radio-button
+                                      value="Manual"
+                                      (change)="changeSelected($event)"
+                                      >Manual</mat-radio-button
+                                    >
+                                  </mat-radio-group>
+                                  <mat-form-field style="width: 90%">
+                                    <mat-label>Total Dias</mat-label>
+                                    <input
+                                      matInput
+                                      readonly
+                                      formControlName="cantDias"
+                                    />
+                                  </mat-form-field>
+                                </div>
+                                <mat-accordion multi class="col-lg-6">
+                                  <mat-expansion-panel
+                                    class="border-completo"
+                                    [expanded]="modoEscritorio"
+                                    [disabled]="modoEscritorio"
+                                  >
+                                    <div>
+                                      <div class="row">
+                                        <form class="col-lg-12">
+                                          <div class="form-row">
+                                            <h5>Informacion :</h5>
+                                            <hr />
+                                            <div class="col-lg-12">
+                                              <h6>Automatica:</h6>
+                                              <p>
+                                                La accion automatica tomara los
+                                                dias seleccionados en la
+                                                informacion del planning
+                                              </p>
+                                            </div>
+                                            <div class="col-lg-12">
+                                              <h6>Manual:</h6>
+                                              <p>
+                                                Es necesario seleccionar los
+                                                dias manualmente
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </mat-expansion-panel>
+                                </mat-accordion>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-step>
+                    <mat-step>
+                      <div class="row" style="padding: 10px">
+                        <div class="col-lg-6">
+                          <mwl-calendar-month-view
+                            [viewDate]="viewDateExpan"
+                            [events]="eventsExpand"
+                            [locale]="locale"
+                            [refresh]="refreshExpand"
+                            [weekStartsOn]="weekStartsOnExpand"
+                            [weekendDays]="weekendDaysExpand"
+                          >
+                          </mwl-calendar-month-view>
+                        </div>
+                        <div class="col-lg-6">
+                          <mat-accordion multi>
+                            <mat-expansion-panel
+                              [expanded]="modoEscritorio"
+                              [disabled]="modoEscritorio"
+                            >
+                              <mat-expansion-panel-header>
+                                <mat-panel-title>Descanso :</mat-panel-title>
+                                <mat-panel-description
+                                  style="margin-right: 0px"
+                                >
+                                </mat-panel-description>
+                              </mat-expansion-panel-header>
+
+                              <div class="row">
+                                <form class="col-lg-12">
+                                  <div class="form-row">
+                                    <div class="col-lg-6">
+                                      <mat-label>Seleccion :</mat-label>
+                                      <mat-radio-group
+                                        class="example-radio-group"
+                                      >
+                                        <mat-radio-button value="1"
+                                          >Semanal</mat-radio-button
+                                        >
+                                        <mat-radio-button value="2"
+                                          >Manual</mat-radio-button
+                                        >
+                                      </mat-radio-group>
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Total Dias</mat-label>
+                                        <input matInput value="2" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <div class="row">
+                                        <h5>Informacion :</h5>
+                                        <hr />
+                                        <form class="col-lg-12">
+                                          <div class="form-row">
+                                            <div class="col-lg-12">
+                                              <mat-form-field
+                                                style="width: 100%"
+                                              >
+                                                <mat-label
+                                                  >Automatica :</mat-label
+                                                >
+                                                <input
+                                                  matInput
+                                                  value="hiciste click en automatico"
+                                                />
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12">
+                                              <mat-form-field
+                                                style="width: 100%"
+                                              >
+                                                <mat-label>Manual</mat-label>
+                                                <input
+                                                  matInput
+                                                  value="hiciste click en manual"
+                                                />
+                                              </mat-form-field>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </div>
+                    </mat-step>
+                    <mat-step>
+                      <div class="row" style="padding: 10px">
+                        <div class="col-lg-6">
+                          <mwl-calendar-month-view
+                            [viewDate]="viewDateExpan"
+                            [events]="eventsExpand"
+                            [locale]="locale"
+                            [refresh]="refreshExpand"
+                            [weekStartsOn]="weekStartsOnExpand"
+                            [weekendDays]="weekendDaysExpand"
+                          >
+                          </mwl-calendar-month-view>
+                        </div>
+                        <div class="col-lg-6">
+                          <mat-accordion multi>
+                            <mat-expansion-panel
+                              [expanded]="modoEscritorio"
+                              [disabled]="modoEscritorio"
+                            >
+                              <mat-expansion-panel-header>
+                                <mat-panel-title
+                                  >Horario Laboral :</mat-panel-title
+                                >
+                                <mat-panel-description
+                                  style="margin-right: 0px"
+                                >
+                                </mat-panel-description>
+                              </mat-expansion-panel-header>
+
+                              <div class="row">
+                                <form class="col-lg-12">
+                                  <div class="form-row">
+                                    <div class="col-lg-6">
+                                      <mat-label>Seleccion :</mat-label>
+                                      <mat-radio-group
+                                        class="example-radio-group"
+                                      >
+                                        <mat-radio-button value="1"
+                                          >Regular</mat-radio-button
+                                        >
+                                        <mat-radio-button value="2"
+                                          >Tarde / Noche</mat-radio-button
+                                        >
+                                        <mat-radio-button value="2"
+                                          >Manual</mat-radio-button
+                                        >
+                                      </mat-radio-group>
+                                      <mat-form-field style="width: 100%">
+                                        <mat-label>Total Dias</mat-label>
+                                        <input matInput value="2" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <div class="row">
+                                        <h5>Informacion :</h5>
+                                        <hr />
+                                        <form class="col-lg-12">
+                                          <div class="form-row">
+                                            <div class="col-lg-12">
+                                              <mat-form-field
+                                                style="width: 100%"
+                                              >
+                                                <mat-label>Regular :</mat-label>
+                                                <input matInput value="09:00" />
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12">
+                                              <mat-form-field
+                                                style="width: 100%"
+                                              >
+                                                <mat-label
+                                                  >Tarde / Noche</mat-label
+                                                >
+                                                <input
+                                                  matInput
+                                                  value="hiciste click en tarde / noche"
+                                                />
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-lg-12">
+                                              <mat-form-field
+                                                style="width: 100%"
+                                              >
+                                                <mat-label>Manual</mat-label>
+                                                <input
+                                                  matInput
+                                                  value="hiciste click en manual"
+                                                />
+                                              </mat-form-field>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </mat-expansion-panel>
+                          </mat-accordion>
+                        </div>
+                      </div>
+                    </mat-step>
+                  </mat-horizontal-stepper>
+                </div>
+                <div class="col-lg-12 mb-2">
+                  <div class="fab-perso">
+                    <button mat-mini-fab class="fab-toggler-perso">
+                      <i
+                        class="material-icons"
+                        [@fabToggler]="{ value: tsExpand }"
+                        >control_camera</i
+                      >
+                    </button>
+                    <div [@speedDialStagger]="abExpand.length">
+                      <button
+                        *ngFor="let btn of abExpand; let ibtn = index"
+                        mat-mini-fab
+                        class="fab-secondary-perso"
+                        color="secondary"
+                        (click)="clickFab(2, ibtn)"
+                      >
+                        <i
+                          class="material-icons"
+                          matTooltip="{{ btn.tool }}"
+                          matTooltipPosition="below"
+                          >{{ btn.icon }}</i
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: MainDC"
+          [class.example-expanded-row]="expandedMore === element"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['expanded_More']"
+          class="example-detail-row"
+        ></tr>
+      </table>
+    </div>
+    <mat-paginator
+      #pagExpanded
+      style="display: contents"
+      [hidePageSize]="false"
+      [pageSize]="4"
+    ></mat-paginator>
+  </div>
+</div>

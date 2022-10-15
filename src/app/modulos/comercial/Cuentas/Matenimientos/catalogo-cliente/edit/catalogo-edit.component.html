@@ -1,0 +1,579 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Cliente: {{formEditar.controls.sRazonSocial.value}}
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Inputs Cliente -->
+    <mat-card class="mb-4">
+        <form [formGroup]="formEditar" autocomplete="off">
+            <div class="form-row col-md-12">
+
+                <!-- Tipo Entidad -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input w-100">
+                        <mat-label>Tipo Entidad</mat-label>
+                        <mat-select formControlName="nIdTipoEntidad">
+                            <mat-option *ngFor="let item of lTipoEntidad" [value]="item.nId">
+                                {{item.sDescripcion}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>Es necesario seleccionar la Entidad</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Tipo Contribuyente -->
+                <div class="form-group col-md-3">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Tipo Persona"
+                        formControlName="nIdTipoContribuyente" notFoundText="No hay datos registrados"
+                        (ngModelChange)="cambioTipoPersona($event)">
+                        <ng-option *ngFor="let item of lTipoContribuyente" [value]="item.nId">
+                            {{item.sDescripcion}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Tipo Documento -->
+                <div class="form-group col-md-3">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="false" placeholder="Tipo Documento"
+                        formControlName="nIdTipoDocumento" notFoundText="No hay datos registrados"
+                        (change)="cambioTipoDocumento($event)">
+                        <ng-option *ngFor="let item of lTipoDocumento" [value]="item.nId">
+                            {{item.sDescripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- Numero de Documento -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>N° Documento</mat-label>
+                        <input type="text" matInput placeholder="Ingrese el número de documento" (blur)="validarRuc()"
+                            formControlName="sRuc">
+                        <mat-error *ngIf="formEditar.get('sRuc').hasError('required')">El N° Documento es necesario
+                        </mat-error>
+                        <mat-error
+                            *ngIf="(nLongitudMin === nLongitudMax) && (formEditar.get('sRuc').hasError('maxlength') || formEditar.get('sRuc').hasError('minlength'))">
+                            El N° Documento debe tener {{this.nLongitudMax}} caracteres</mat-error>
+                        <mat-error
+                            *ngIf="(nLongitudMin !== nLongitudMax) && (formEditar.get('sRuc').hasError('maxlength') || formEditar.get('sRuc').hasError('minlength'))">
+                            El N° Documento debe tener entre {{this.nLongitudMin}} y {{this.nLongitudMax}} caracteres
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Razon Social -->
+                <div class="form-group col-md-6">
+                    <mat-form-field class="input">
+                        <mat-label> Razón Social/Nombre Completo </mat-label>
+                        <input matInput placeholder="Ingrese el nombre del Razón Social" formControlName="sRazonSocial"
+                            (blur)="validarRazonSocial()">
+                        <mat-error>La Razón Social o Nombre Completo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Nombre Comercial -->
+                <div class="form-group col-md-6">
+                    <mat-form-field class="input">
+                        <mat-label>Nombre Comercial</mat-label>
+                        <input matInput placeholder="Ingrese el nombre del comercial"
+                            formControlName="sNombreComercial">
+                        <mat-error>El Nombre Comercial es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Telefono 1 -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Telefono 1</mat-label>
+                        <input matInput placeholder="Ingrese el numero de telefono" formControlName="sTelefono1">
+                        <mat-error>El Telefono 1 es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Telefono 2 -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Telefono 2</mat-label>
+                        <input matInput placeholder="Ingrese el numero de telefono" formControlName="sTelefono2">
+                        <mat-error>El Telefono 2 es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Pagina Web -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label> Pagina web</mat-label>
+                        <input matInput placeholder="Pagina web" formControlName="sPaginaWeb">
+                        <mat-error>La Pagina web es necesaria</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto</mat-label>
+                        <input matInput placeholder="Contacto" formControlName="sContacto">
+                        <mat-error>El contacto es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto Correo -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto Correo</mat-label>
+                        <input matInput placeholder="Contacto Correo" formControlName="sContactoCorreo">
+                        <mat-error>El Contacto Correo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Contacto Telefono -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto Teléfono</mat-label>
+                        <input matInput placeholder="Contacto Telefono" formControlName="sContactoTelefono">
+                        <mat-error>El Contacto Teléfono es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Negocio/Actividad -->
+                <div class="form-group col-md-6">
+                    <ng-select class="ngselect" appendTo="body" [clearable]="true" placeholder="Negocio/Actividad"
+                        formControlName="nIdGiroNegocio" notFoundText="No hay datos registrados" required>
+                        <ng-option *ngFor="let item of lNegocioActividad" [value]="item.nId">
+                            {{item.sDescripcion}}</ng-option>
+                    </ng-select>
+                    <mat-error style="font-size: 12px;"
+                        *ngIf="formEditar.get('nIdGiroNegocio').hasError('required') && formEditar.get('nIdGiroNegocio').touched">
+                        Es necesario seleccionar el negocio o actividad</mat-error>
+                </div>
+
+                <!-- Contacto Cargo -->
+                <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                        <mat-label>Contacto cargo:</mat-label>
+                        <input matInput placehoder="Cargo" formControlName="sContactoCargo">
+                        <mat-error>El cargo es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Fee Personal -->
+                <div class="form-group col-md-1">
+                    <mat-form-field class="input">
+                        <mat-label>Fee Personal:</mat-label>
+                        <input matInput type="number" placehoder="Ingresar Fee Personal" formControlName="nFeePersonal">
+                        <mat-error>El Fee Personal es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Fee Operación -->
+                <div class="form-group col-md-1">
+                    <mat-form-field class="input">
+                        <mat-label>Fee Operación:</mat-label>
+                        <input matInput type="number" placehoder="Ingresar Fee Operación"
+                            formControlName="nFeeOperacion">
+                        <mat-error>El Fee Operación es necesario</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Usuario Creación -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Usuario Creación:</mat-label>
+                        <input matInput formControlName="sCreado" readonly>
+                    </mat-form-field>
+                </div>
+
+                <!-- Usuario Modificado -->
+                <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                        <mat-label>Usuario Modifico:</mat-label>
+                        <input matInput formControlName="sModificado" readonly>
+                    </mat-form-field>
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group col-md-2">
+                    <mat-form-field class="w-100">
+                        <mat-label>Estado:</mat-label>
+                        <input matInput readonly type="text" style="color: rgb(236, 0, 140);" formControlName="sEstado">
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </form>
+    </mat-card>
+
+    <mat-accordion class="example-headers-align">
+
+        <!-- Direccion Principal -->
+        <mat-expansion-panel>
+
+            <!-- Expansion Panel Header -->
+            <mat-expansion-panel-header>
+                <mat-panel-title> Direcciones del Cliente </mat-panel-title>
+                <mat-panel-description>
+                    <mat-icon color="accent">location_on</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="w-100">
+
+                <!-- Card Header Titulo-->
+                <div class="text-center mt-0 mb-2">
+                    <h5 class="col-md-10 offset-md-1 card-header mb-4">
+                        Registro de Direcciones
+                    </h5>
+                </div>
+
+                <!-- Inputs Dirección -->
+                <mat-card class="mb-4 select">
+                    <form [formGroup]="formDireccion" autocomplete="off">
+                        <div class="form-row">
+
+                            <!-- Departamento -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Departamento" formControlName="sDepartamento"
+                                    (ngModelChange)="listaProvincia($event)" notFoundText="No hay datos registrados"
+                                    required>
+                                    <ng-option *ngFor="let item of lDepartamento" [value]="item.sId">
+                                        {{item.sDescripcion}}</ng-option>
+                                </ng-select>
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formDireccion.get('sDepartamento').hasError('required') && formDireccion.get('sDepartamento').touched">
+                                    Es necesario seleccionar el Departamento</mat-error>
+                            </div>
+
+                            <!-- Provincia -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Provincia" formControlName="sProvincia"
+                                    (ngModelChange)="listaDistrito($event)" notFoundText="No hay datos registrados"
+                                    required>
+                                    <ng-option *ngFor="let item of lProvincia" [value]="item.sId">
+                                        {{item.sDescripcion}}</ng-option>
+                                </ng-select>
+
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formDireccion.get('sProvincia').hasError('required') && formDireccion.get('sProvincia').touched">
+                                    Es necesario seleccionar la Provincia
+                                </mat-error>
+                            </div>
+
+                            <!-- Distrito -->
+                            <div class="form-group col-md-4">
+                                <ng-select #cardselect class="ngselect" appendTo="body" [clearable]="true"
+                                    placeholder="Distrito" formControlName="sDistrito"
+                                    notFoundText="No hay datos registrados" required>
+                                    <ng-option *ngFor="let item of lDistrito" [value]="item.sId">
+                                        {{item.sDescripcion}}</ng-option>
+                                </ng-select>
+
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formDireccion.get('sDistrito').hasError('required') && formDireccion.get('sDistrito').touched">
+                                    Es necesario seleccionar el Distrito
+                                </mat-error>
+                            </div>
+
+                            <!-- Direccion -->
+                            <div class="form-group col-md-7">
+                                <mat-form-field class="input">
+                                    <mat-label>Dirección</mat-label>
+                                    <input matInput placeholder="Coloque la dirección" formControlName="sDireccion">
+                                    <mat-error>La dirección es necesaria</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Referencia -->
+                            <div class="form-group col-md-5">
+                                <mat-form-field class="input">
+                                    <mat-label>Referencia</mat-label>
+                                    <input matInput placeholder="Coloque la referencia" formControlName="sReferencia">
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Direccion Principal -->
+                            <div class="form-group col-md-7">
+                                <mat-slide-toggle formControlName="nPrincipal">
+                                    ¿Dirección Principal?
+                                </mat-slide-toggle>
+                                <br>
+                            </div>
+
+                            <!-- Guardar Direccion -->
+                            <div class="form-group col-md-3">
+                                <button mat-stroked-button color="primary" (click)="guardarDireccion()">
+                                    <mat-icon>add_location</mat-icon>
+                                    Guardar Dirección
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </mat-card>
+
+                <!-- Listado de Direcciones -->
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+
+                        <table mat-table [dataSource]="dataSourceDireccion" matSort>
+
+                            <!-- Opciones -->
+                            <ng-container matColumnDef="opciones">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Opción </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Opción: '>
+                                    <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
+                                        matTooltip="Desplegar" matTooltipPosition="right" color="accent">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu" xPosition="after">
+
+                                        <!-- Editar Direccion -->
+                                        <button (click)="editarDireccion(row)" type="button" mat-menu-item>
+                                            <mat-icon color="accent">edit</mat-icon>
+                                            <span>Editar</span>
+                                        </button>
+
+                                        <!-- Inactivar Direccion-->
+                                        <button *ngIf="row.sEstado == 'Activo'" [disabled]="row.nPrincipal == 1"
+                                            type="button" mat-menu-item
+                                            (click)="actualizarEstadoDireccion(row.nIdDireccion)">
+                                            <mat-icon color="accent">block</mat-icon>
+                                            <span>Inactivar</span>
+                                        </button>
+
+                                        <!-- Activar Direccion -->
+                                        <button *ngIf="row.sEstado == 'Inactivo'" type="button" mat-menu-item
+                                            (click)="actualizarEstadoDireccion(row.nIdDireccion)">
+                                            <mat-icon color="accent">check</mat-icon>
+                                            <span>Activar</span>
+                                        </button>
+
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+                            <!-- Direccion -->
+                            <ng-container matColumnDef="direccion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Dirección </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Dirección: '>
+                                    {{row.sDireccion}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Departamento -->
+                            <ng-container matColumnDef="departamento">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Departamento </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                                    data-label='Departamento: '>
+                                    {{row.sDepartamento}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Provincia -->
+                            <ng-container matColumnDef="provincia">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Provincia </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Provincia: '>
+                                    {{row.sProvincia}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Distrito -->
+                            <ng-container matColumnDef="distrito">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Distrito </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Distrito: '>
+                                    {{row.sDistrito}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Principal -->
+                            <ng-container matColumnDef="principal">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Es Principal</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile"
+                                    data-label='Es Principal: '>
+                                    {{row.sPrincipal}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Estado -->
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Estado </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Estado: '>
+                                    {{row.sEstado}}
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsDireccion; sticky: true"></tr>
+                            <tr mat-row *matRowDef=" let row; columns: displayedColumnsDireccion;"></tr>
+
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5,10,15]" showFirstLastButtons></mat-paginator>
+                </div>
+
+            </div>
+
+        </mat-expansion-panel>
+
+        <!-- Catálogo de Marcas -->
+        <mat-expansion-panel>
+
+            <!-- Expansion Panel Header -->
+            <mat-expansion-panel-header>
+                <mat-panel-title> Catálogo de Marcas </mat-panel-title>
+                <mat-panel-description>
+                    <mat-icon color="accent"> business </mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="w-100">
+
+                <!-- Card Header Titulo-->
+                <div class="text-center mt-0 mb-2">
+                    <h5 class="col-md-10 offset-md-1 card-header mb-4">
+                        Registro de Marcas
+                    </h5>
+                </div>
+
+                <!-- Filtros de Busqueda -->
+                <mat-card class="mb-4 select">
+                    <form [formGroup]="formCatalogoMarca" autocomplete="off">
+                        <div class="form-row">
+
+                            <div class="col-lg-6">
+                                <mat-form-field class="w-100">
+                                    <mat-label>Buscar:</mat-label>
+                                    <input matInput [formControl]="tFiltro" (keyup)="applyFilter($event)"
+                                        [(ngModel)]="searchKey" #input />
+                                    <button mat-button style="outline: none" matSuffix mat-icon-button
+                                        aria-label="Clear" (click)="limpiarFilter()">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Nombre Marca -->
+                            <div class="col-lg-4">
+                                <ng-select class="ngselect1" appendTo="body" [clearable]="true" placeholder="Marca"
+                                    formControlName="nIdDetCata" notFoundText="No hay datos registrados" required>
+                                    <ng-option *ngFor="let item of lMarca" [value]="item.nIdDetCata">
+                                        {{item.sDesc}}</ng-option>
+                                </ng-select>
+                                <mat-error style="font-size: 12px;"
+                                    *ngIf="formCatalogoMarca.get('nIdDetCata').hasError('required') && formCatalogoMarca.get('nIdDetCata').touched">
+                                    Es necesario seleccionar la marca
+                                </mat-error>
+                            </div>
+
+                            <!-- Guardar Marca -->
+                            <div class="col-lg-2">
+                                <button mat-stroked-button color="primary" (click)="guardarMarca()">
+                                    <mat-icon>add_circle</mat-icon>
+                                    Agregar Marca
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </mat-card>
+
+                <!-- Listado de Marcas -->
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+
+                        <table mat-table [dataSource]="dataSourceMarcas" matSort>
+
+                            <!-- Categoria -->
+                            <ng-container matColumnDef="categoria">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Categoria </th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Categoria: '>
+                                    {{row.categoria}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Nombre Linea -->
+                            <ng-container matColumnDef="linea">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Linea</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Linea: '>
+                                    {{row.linea}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Nombre Marca -->
+                            <ng-container matColumnDef="marca">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Marca</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Marca: '>
+                                    {{row.marca}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Estado -->
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Estado</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Estado: '>
+                                    {{row.sEstado}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Opciones -->
+                            <ng-container matColumnDef="opciones">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    Opción</th>
+                                <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Opción: '>
+                                    <button *ngIf="row.sEstado == 'Inactivo'"
+                                        (click)="actualizarEstadoMarca(row.nIdDetCatCli)" type="button"
+                                        matTooltip="Activar Marca" matTooltipPosition="right" mat-icon-button
+                                        color="accent">
+                                        <mat-icon>check</mat-icon>
+                                    </button>
+                                    <button *ngIf="row.sEstado == 'Activo'"
+                                        (click)="actualizarEstadoMarca(row.nIdDetCatCli)" type="button"
+                                        matTooltip="Inactivar Marca" matTooltipPosition="right" mat-icon-button
+                                        color="accent">
+                                        <mat-icon>block</mat-icon>
+                                    </button>
+
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsMarcas; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsMarcas;"></tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+
+    <br>
+</div>

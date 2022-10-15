@@ -1,0 +1,291 @@
+<div class="col-xl-10 mx-auto contenedorComponente" style="padding-top: 90px;"
+    [ngStyle]="{'display': (estaCargado) ? 'block' : 'none'}">
+
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">
+                    <h3>Requerimiento de Herramientas (TI)</h3>
+                </mat-card>
+            </div>
+        </div>
+
+        <mat-card class="mat-elevation-z8">
+            <form [formGroup]="formRequerimientoHerramienta">
+
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="row mt-1">
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Solicitante</mat-label>
+                                    <input matInput formControlName="solicitante" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <ng-select (change)="fnSeleccionarPresupuesto($event)" [clearable]="false"
+                                    placeholder="Presupuesto" formControlName="presupuesto"
+                                    notFoundText="No hay presupuestos disponibles">
+                                    <ng-option *ngFor="let element of listaPresupuestos"
+                                        [value]="element.nIdCentroCosto">
+                                        {{element.sCentroCosto}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error class="ngSelectError"
+                                    *ngIf="this.formRequerimientoHerramienta.get('presupuesto').hasError('required') && formRequerimientoHerramienta.get('presupuesto').touched">
+                                    Debe seleccionar un presupuesto
+                                </mat-error>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Cliente</mat-label>
+                                    <input style="color: rgb(236, 0, 140);" matInput formControlName="cliente" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Servicio</mat-label>
+                                    <input matInput formControlName="servicio" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Canal</mat-label>
+                                    <input matInput formControlName="canal" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Inicio - Fecha Fin</mat-label>
+                                    <input matInput formControlName="fechaPpto" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Ejecutivo de cuenta</mat-label>
+                                    <input matInput formControlName="ejecutivoCuenta" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <div class=" col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Título</mat-label>
+                                    <input matInput formControlName="titulo">
+                                    <mat-error
+                                        *ngIf="this.formRequerimientoHerramienta.get('titulo').hasError('required') && formRequerimientoHerramienta.get('titulo').touched">
+                                        Debe agregar un título
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha Solicitud</mat-label>
+                                    <input (click)="fechaSolicitudPicker.open()" matInput
+                                        [matDatepicker]="fechaSolicitudPicker" formControlName="fechaSolicitud"
+                                        readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaSolicitudPicker">
+                                    </mat-datepicker-toggle>
+
+                                    <mat-datepicker #fechaSolicitudPicker></mat-datepicker>
+
+                                    <mat-error
+                                        *ngIf="formRequerimientoHerramienta.get('fechaSolicitud').hasError('required')">
+                                        La fecha es obligatoria</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-8 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Observaciones</mat-label>
+                                    <input matInput formControlName="observaciones">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-4 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Monto Total</mat-label>
+                                    <input type="number" matInput formControlName="montoTotal" readonly>
+                                </mat-form-field>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-xl-2 contenedorAuditoria">
+                        <div class="row">
+                            <div class="col-xl-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-xl-10 campoAuditoria">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Número:</mat-label>
+                                    <input style="color: rgb(236, 0, 140);" type="text" matInput readonly
+                                        formControlName="numero">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Usuario Creación:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Creacion:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" matInput formControlName="estado" readonly
+                                        style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+
+                            </div>
+
+                            <mat-accordion class="campoAuditoriaAcordeon" style="width: 100%;">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <span style="vertical-align: middle;">Información de creación</span>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div>
+                                        <mat-form-field style="width: 100%;" class="mt-3">
+                                            <mat-label>Número:</mat-label>
+                                            <input style="color: rgb(236, 0, 140);" type="text" matInput readonly
+                                                formControlName="numero">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-3">
+                                            <mat-label>Usuario Creación:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Creación:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="estado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </mat-card>
+
+        <div class="mat-elevation-z8 mt-2">
+            <div id="listaMobile" class="scroll-table">
+                <div class="example-container">
+
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="opcion">
+                            <th mat-header-cell *matHeaderCellDef>
+
+                            </th>
+                            <td data-label='Eliminar: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <button [disabled]="!this.estaCreando && !this.estaEditando" mat-stroked-button
+                                    color="accent" matTooltip="Eliminar" (click)="fnEliminarFila(row);">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sDepositario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Personal </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Personal: '>
+                                <ngb-highlight [result]="row.sDepositario | titlecase" [term]="txtFiltro.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sCargo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargo </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Cargo: '>
+                                <ngb-highlight [result]="row.sCargo" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sSucursal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sucursal </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Sucursal: '>
+                                <ngb-highlight [result]="row.sSucursal" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sHerramienta">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Herramienta </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Herramienta: '>
+                                <ngb-highlight [result]="row.sHerramienta" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sPartida">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Partida: '>
+                                <ngb-highlight [result]="row.sPartida" [term]="txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nUnidades">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Total: '>
+                                <ngb-highlight [result]="row.nUnidades" [term]=" txtFiltro.value"></ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nTotal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                            <td mat-cell *matCellDef="let row" class='has_label_on_mobile' data-label='Total: '>
+                                <ngb-highlight [result]="row.nTotal | number: '1.4-4'" [term]="txtFiltro.value">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="paginator-fixed">
+                <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>

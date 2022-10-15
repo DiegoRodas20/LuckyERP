@@ -1,0 +1,301 @@
+<ngx-spinner name="spiDialog" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="clsprincipal">
+  <div class="col-md-10 offset-md-1" *ngIf="!hide">
+    <h5 class="card-header">Boletas Electrónicas</h5>
+  </div>
+
+  <div class="col-md-10 offset-md-1">
+    <div class="form-row" style="margin-top: 15px">
+      <div class="form-group col-md-12">
+        <!-- Inicio del Busqueda -->
+        <div class="row justify-content-center" *ngIf="!hide">
+
+
+          <div class="fab-container">
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+              <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+            </button>
+            <div [@speedDialStagger]="abLista">
+              <button *ngIf="abLista>0" mat-mini-fab color="secondary" class="fab-secondary" matTooltip="Filtrar"
+                (click)="fnListarboleta()">
+                <i class="material-icons">search</i>
+              </button>
+              <button *ngIf="abLista>0" mat-mini-fab color="secondary" class="fab-secondary" matTooltip="Nueva Boleta"
+                (click)="fnAbrirModal(lblName.id)">
+                <i class="material-icons">post_add</i>
+              </button>
+              <input data-toggle="modal" data-target="#modalBoleta" #modalBoleta type="hidden" name="button" />
+              <button *ngIf="abLista>0" type="button" mat-mini-fab [disabled]="!excelbutton" class="fab-secondary"
+                (click)="fnDescargarExcel()" matTooltip="Descargar Excel">
+                <i class="material-icons">cloud_download</i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-10">
+            <div class="form-row">
+              <div class="col-md-3 col-sm-3 col-12" style="margin-right: 10px">
+                <mat-form-field color="primary" style="width: 100%">
+                  <mat-label>Fecha Inicio</mat-label>
+                  <input readonly matInput (click)="picker.open()" [matDatepicker]="picker"
+                    [formControl]="fechaInicio" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker color="primary"></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3 col-sm-3 col-12">
+                <mat-form-field color="primary" style="width: 100%">
+                  <mat-label>Fecha Fin</mat-label>
+                  <input matInput readonly [matDatepicker]="pickerfin" (click)="pickerfin.open()"
+                    [formControl]="fechaFin" />
+                  <mat-datepicker-toggle matSuffix [for]="pickerfin"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerfin color="primary"></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 col-sm-4 col-12">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Buscar</mat-label>
+                  <input matInput [formControl]="txtFiltro" (input)="applyFilter()" />
+                  <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                    aria-label="Clear" (click)="this.txtFiltro.setValue(''); fnListarboleta();">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row justify-content-center"></div>
+          </div>
+        </div>
+
+        <!-- TABLA MATERIAL -->
+        <div id="listaMobile" class="example-container mat-elevation-z8" style="margin-top: 20px" *ngIf="!hide">
+          <table mat-table [dataSource]="dsBoleta" matSort style="width: 100%">
+            <ng-container matColumnDef="dFecha">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Fecha: ">
+                <ngb-highlight [result]="row.dFecha" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sBoleta_Electronica">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Boleta Electrónica
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Boletas Electronicas: ">
+                <ngb-highlight [result]="row.sBoleta_Electronica" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sDNI">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="DNI: ">
+                <ngb-highlight [result]="row.sDNI" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sNombreCompleto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Cliente: ">
+                <ngb-highlight [result]="row.sNombreCompleto" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCorreo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Correo: ">
+                <ngb-highlight [result]="row.sCorreo" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCodCC">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Presupuesto
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Presupuesto: ">
+                <ngb-highlight [result]="row.sCodCC" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nTotalBoleta">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Total Boleta
+              </th>
+              <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label="Total Boletas: ">
+                <ngb-highlight [result]="row.nTotalBoleta | number:'1.2-2'" [term]="txtFiltro.value"></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="obtenerDetalle(row)"></tr>
+          </table>
+        </div>
+        <mat-paginator *ngIf="!hide" [pageSizeOptions]="[20, 40, 60]"></mat-paginator>
+
+        <!-- LISTA DE PRODUCTOS -->
+        <h3 class="col-md-12 card-header" style="text-align: center" *ngIf="hide">
+          Lista de los Productos
+        </h3>
+
+        <br />
+
+        <div class="row" *ngIf="hide">
+          <div class="fab-container">
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFabExcel(1, -1)">
+              <i class="material-icons" [@fabToggler]="{value: tsListaExcel}">add</i>
+            </button>
+            <div [@speedDialStagger]="abListaExcel">
+              <button *ngIf="abListaExcel>0" mat-mini-fab class="fab-secondary" color="secondary"
+                matTooltip="Guardar Excel" (click)="guardarExcel()">
+                <i class="material-icons">save</i>
+              </button>
+              <button *ngIf="abListaExcel>0" mat-mini-fab color="warn" class="fab-secondary" matTooltip="Cancelar"
+                (click)="cancelarExcel()">
+                <i class="material-icons">exit_to_app</i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <ng-select placeholder="Presupuesto" style="padding-bottom:3.5px; bottom:0.45rem" appendTo="body"
+                  (change)="fnDarValorCliente($event)" [clearable]="false" [formControl]="nIdPresupuesto">
+                  <ng-option *ngFor="let presupuesto of ListaPresupuesto" [value]="presupuesto.nIdCentroCosto">{{
+                    presupuesto.sCodCC }} -
+                    {{ presupuesto.sDescCC }}</ng-option>
+                </ng-select>
+              </div>
+
+              <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Cliente:</mat-label>
+                  <input style="color: rgb(236, 0, 140);" [formControl]="txtCliente" type="text" readonly matInput>
+                </mat-form-field>
+              </div>
+            </div>
+            <div id="listaMobile" class="example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dsProducto" style="width: 100%">
+                <ng-container matColumnDef="Codigo">
+                  <th mat-header-cell *matHeaderCellDef>Código Producto</th>
+                  <td class="has_label_on_mobile" data-label="Código Producto: " mat-cell
+                    *matCellDef="let row; let i = index">
+                    <ng-select appendTo="body" (change)="fnDarValorRowImagen(row, $event)" [(ngModel)]="row.nCode"
+                      [clearable]="false">
+                      <ng-option *ngFor="let product of ListaProducto" [value]="product.nIdArticulo">{{ product.producto
+                        }}</ng-option>
+                    </ng-select>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="imagen">
+                  <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                  <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc" data-label='Imagen: '>
+                    <button mat-icon-button class="fab-secondary" color="accent" (click)="verImagen(row.sRutaArchivo)">
+                      <!-- <i class="material-icons" matTooltip="Salida Artículo"  matTooltipPosition="left">insert_photo</i> -->
+                      <div *ngIf="!row.sRutaArchivo" style="width: 40px;height: 40px;">
+                        <div class="box">
+                          <img width="40px" height="40px" src="/assets/img/SinImagen.jpg">
+
+                        </div>
+                      </div>
+                      <div *ngIf="row.sRutaArchivo !== ''" style="width: 40px;height: 40px;">
+                        <div class="box">
+                          <img width="40px" height="40px" [src]="row.sRutaArchivo">
+                        </div>
+                      </div>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Producto">
+                  <th mat-header-cell *matHeaderCellDef>Nombre Producto</th>
+                  <td class="has_label_on_mobile" data-label="Nombre Producto: " mat-cell *matCellDef="let row">
+                    {{ row.sNombreProducto }}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="productoColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: productoColumns"></tr>
+              </table>
+            </div>
+            <br />
+            <!-- <div class="justify-content-md-center d-flex">
+              <button mat-raised-button style="margin-right: 5px" matTooltip="Enviar" color="primary"
+                (click)="guardarExcel()">
+                Guardar
+              </button>
+              <button mat-raised-button matTooltip="Cancelar" color="warn" (click)="cancelarExcel()">
+                Cancelar
+              </button>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-xl" id="modalBoleta" style="background-color: rgba(0, 0, 0, 0.5)"
+  data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalBoleta"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-example">
+    <div class="modal-content">
+      <div class="modal-header text-center header-modal-lucky">
+        <h5 id="modalCALongTitle">
+          <Label> Añadir Nueva Boleta </Label>
+        </h5>
+        <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+          aria-label="Close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- offset-md-1 -->
+        <div class="col-md-10 offset-md-1">
+          <form [formGroup]="formArhivo">
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <div>
+                  <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    (change)="
+                      fnSeleccionarArchivo($event.target.files[0], lblName.id)
+                    " onclick="this.value= null" formControlName="fileUpload" class="custom-file-input"
+                    aria-describedby="inputGroupFileAddon04" />
+                  <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">Seleccione Archivo:
+                  </mat-label>
+                </div>
+                <mat-error *ngIf="formArhivo.get('fileUpload').hasError('required')">.Obligatorio</mat-error>
+              </div>
+              <div class="form-group col-md-2">
+                <button mat-raised-button color="primary" type="button" matTooltip="Subir Archivo"
+                  (click)="fnUploadFile()" type="button" class="center">
+                  <mat-icon>cloud_upload</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <mat-form-field style="width: 100%">
+                <mat-label>Sucursal:</mat-label>
+                <mat-select formControlName="cboSucursal">
+                  <mat-option>Seleccione</mat-option>
+                  <mat-option *ngFor="let vSucursal of sucursal" [value]="vSucursal.nIdDocumEle">{{
+                    vSucursal.sSucursal
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formArhivo.get('cboSucursal').hasError('required')">.Obligatorio</mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+
+        <div class="container-fluid">
+          <div class="form-row col-md-12 justify-content-end align-items-end"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

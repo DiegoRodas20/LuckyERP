@@ -1,0 +1,209 @@
+<div class="col-xl-10 mx-auto contenedorComponente" style="padding-top: 90px; min-height: 900px;" *ngIf="estaCargado">
+    <!-- Botones -->
+    <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+                <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                    matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                    <i class="material-icons">{{btn.icon}}</i>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">
+                    <h3>Ingreso de inventario - Simcard</h3>
+                </mat-card>
+            </div>
+        </div>
+
+        <mat-card class="mat-elevation-z8">
+            <form [formGroup]="formSimcard">
+
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="row mt-1">
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Número</mat-label>
+                                    <input type="number" matInput formControlName="numero" (keydown)="fnValidarCaracteresNumericos($event)"
+                                    (paste)="fnValidarCaracteresNumericosClipboard($event)">
+                                    <mat-error
+                                        *ngIf="this.formSimcard.get('numero').hasError('required') && formSimcard.get('numero').touched">
+                                        El número es obligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Código Simcard</mat-label>
+                                    <input matInput formControlName="codigo">
+                                    <mat-error
+                                        *ngIf="this.formSimcard.get('codigo').hasError('required') && formSimcard.get('codigo').touched">
+                                        El código es obligatorio
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field class="datePickerPointer" style="width: 100%;" (click)="fechaAltaPicker.open()" >
+                                    <mat-label>Fecha de Alta</mat-label>
+                                    <input matInput [matDatepicker]="fechaAltaPicker" formControlName="fechaAlta" readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaAltaPicker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #fechaAltaPicker></mat-datepicker>
+                                    <mat-error
+                                        *ngIf="this.formSimcard.get('fechaAlta').hasError('required') && formSimcard.get('fechaAlta').touched">
+                                        La fecha de alta es obligatoria
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <mat-form-field class="datePickerPointer" style="width: 100%;" (click)="fechaBajaPicker.open()">
+                                    <mat-label>Fecha de Baja</mat-label>
+                                    <input matInput [matDatepicker]="fechaBajaPicker" formControlName="fechaBaja" readonly>
+                                    <mat-datepicker-toggle matSuffix [for]="fechaBajaPicker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #fechaBajaPicker></mat-datepicker>
+                                    <mat-error
+                                        *ngIf="this.formSimcard.get('fechaBaja').hasError('required') && formSimcard.get('fechaBaja').touched">
+                                        La fecha de baja es obligatoria
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <ng-select [clearable]="false" placeholder="Operador" formControlName="operador"
+                                    notFoundText="No hay operadores registrados" (change)="fnLlenarComboboxPlanDatos(1)">
+                                    <ng-option *ngFor="let element of listaOperadores" [value]="element.nId">
+                                        {{element.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error class="ngSelectError"
+                                    *ngIf="this.formSimcard.get('operador').hasError('required') && formSimcard.get('operador').touched">
+                                    El operador es obligatorio
+                                </mat-error>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <ng-select [clearable]="false" placeholder="Plan de datos" formControlName="planDatos"
+                                    notFoundText="No hay planes de datos registrados"
+                                    (change)="fnLlenarChipListCaracteristicasPaquetes()">
+                                    <ng-option *ngFor="let element of listaPlanDatos" [value]="element.nId">
+                                        {{element.sDescripcion}}
+                                    </ng-option>
+                                </ng-select>
+                                <mat-error class="ngSelectError"
+                                    *ngIf="this.formSimcard.get('planDatos').hasError('required') && formSimcard.get('planDatos').touched">
+                                    El plan de datos es obligatorio
+                                </mat-error>
+                            </div>
+                            <div class="col-md-12 mt-1">
+                                <mat-form-field class="example-chip-list" style="width: 100%">
+                                    <mat-label>Características</mat-label>
+                                    <mat-chip-list #chipList style="height: 51.5px;">
+                                        <mat-chip *ngFor="let chipElement of chipElementsPlanDatos">
+                                            {{chipElement}}
+                                        </mat-chip>
+                                        <input [matChipInputFor]="chipList" readonly>
+                                    </mat-chip-list>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 contenedorAuditoria">
+                        <div class="row">
+                            <div class="col-xl-1">
+                                <div class="clsSeparador">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <!-- Campos auditoria -->
+                            <div class="col-xl-10 campoAuditoria">
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Creado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Creado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaCreacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Modificado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioModificacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1">
+                                    <mat-label>Fecha Modificado:</mat-label>
+                                    <input type="text" matInput readonly formControlName="fechaModificacion">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" *ngIf="formSimcard.get('usuarioBaja').value">
+                                    <mat-label>De Baja Por:</mat-label>
+                                    <input type="text" matInput readonly formControlName="usuarioBaja">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" matInput formControlName="estado" readonly
+                                        style="color: rgb(236, 0, 140);">
+                                </mat-form-field>
+
+                            </div>
+
+                            <mat-accordion class="campoAuditoriaAcordeon" style="width: 100%;">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <span style="vertical-align: middle;">Información de creación</span>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div>
+                                        <mat-form-field style="width: 100%;" class="mt-3">
+                                            <mat-label>Creado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Creado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaCreacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Modificado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioModificacion">
+                                        </mat-form-field>
+        
+                                        <mat-form-field style="width: 100%;" class="mt-1">
+                                            <mat-label>Fecha Modificado:</mat-label>
+                                            <input type="text" matInput readonly formControlName="fechaModificacion">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" *ngIf="formSimcard.get('usuarioBaja').value">
+                                            <mat-label>De Baja Por:</mat-label>
+                                            <input type="text" matInput readonly formControlName="usuarioBaja">
+                                        </mat-form-field>
+
+                                        <mat-form-field style="width: 100%;" class="mt-1" color="accent">
+                                            <mat-label>Estado:</mat-label>
+                                            <input type="text" matInput formControlName="estado" readonly
+                                                style="color: rgb(236, 0, 140);">
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </mat-card>
+    </div>
+</div>

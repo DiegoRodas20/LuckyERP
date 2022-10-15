@@ -1,0 +1,31 @@
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 70px;
+}
+
+:host ::ng-deep .mat-tab-label-active {
+  opacity: 1 !important;
+  background-color: #334D6E;
+}
+
+:host ::ng-deep .mat-tab-label .mat-tab-label-content {
+  font-size: 16px !important;
+  font-weight: normal !important;
+  color: #334D6E;
+}
+
+:host ::ng-deep .mat-tab-label-active .mat-tab-label-content {
+  color: white;
+}
+
+.center-text-card {
+  text-align: center;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}

@@ -1,0 +1,146 @@
+<ngx-spinner name="spi_new" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="container-fluid mt-5 pt-4">
+  <div class="card">
+    <h5 class="card-header">Control de inasistencias</h5>
+
+    <div class="fab-container">
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsMain}">add </i>
+      </button>
+      <div [@speedDialStagger]="abMain.length">
+        <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+          [disabled]="!isDevengueActual" (click)="clickFab(ibtn)">
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+      </div>
+    </div>
+
+    <div id="body-main" class="card-body">
+      <div class="icard melevation col-xl-12">
+        <div class="row">
+          <div class="col-lg">
+
+            <div class="row ml-auto">
+              <h6>Aplicar filtro por :</h6>
+            </div>
+
+            <form autocomplete="off" [formGroup]="form">
+              <div class="form-row">
+                <div class="col-lg-2">
+                  <mat-form-field appYearMonthFormat>
+                    <mat-label>Devengue</mat-label>
+                    <input matInput [matDatepicker]="dFecha_Filter" readonly formControlName="dFecha">
+                    <mat-datepicker-toggle matSuffix [for]="dFecha_Filter"> </mat-datepicker-toggle>
+                    <mat-datepicker #dFecha_Filter startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dFecha_Filter)">
+                    </mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3">
+                  <mat-form-field>
+                    <mat-label>Nombre o número de documento</mat-label>
+                    <input type="text" matInput formControlName="sNomOrDoc">
+                    <button *ngIf="sNomOrDocCtrl.value" mat-button matSuffix mat-icon-button
+                      (click)="sNomOrDocCtrl.setValue('')">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-2">
+                  <mat-form-field>
+                    <mat-label>Planilla</mat-label>
+                    <mat-select formControlName="sCodPlla">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let item of planillas" [value]="item.nId">
+                        {{item.nId}} - {{item.sDescripcion}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-2">
+                  <mat-form-field>
+                    <mat-label>Ciudad</mat-label>
+                    <mat-select formControlName="nIdSucursal">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let item of sucursales" [value]="item.nId">
+                        {{item.sDescripcion}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3">
+                  <mat-form-field>
+                    <mat-label>Responsable</mat-label>
+                    <input type="text" matInput formControlName="sResponsable">
+                    <button *ngIf="sResponsableCtrl.value" mat-button matSuffix mat-icon-button
+                      (click)="sResponsableCtrl.setValue('')">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-sm">
+          <h6>Lista de personal: </h6>
+          <hr class="my-2">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="listaMobile" class="melevation example-container">
+            <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+              <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+                <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"> {{col.header}} </th>
+                <!-- #region Formación de rows dependiendo del tipo -->
+                <td mat-cell *matCellDef="let row" class='header_mobile' id="{{col.header}}: "
+                  [style.textAlign]="col.align">
+                  <span *ngSwitchCase="null">
+                    {{row[col.field]}}
+                  </span>
+                  <span *ngSwitchCase="'fNomOrDoc'">
+                    <ngb-highlight [result]="row[col.field]" [term]="sNomOrDocCtrl.value"></ngb-highlight>
+                  </span>
+                  <span *ngSwitchCase="'fResponsable'">
+                    <ngb-highlight [result]="row[col.field]" [term]="sResponsableCtrl.value"></ngb-highlight>
+                  </span>
+                  <span *ngSwitchCase="'accion'">
+                    <button mat-stroked-button matTooltip="Visualizar" matTooltipPosition="right" color="accent"
+                      (click)="showModal(1,row)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </span>
+                </td>
+                <!-- #endregion -->
+              </ng-container>
+
+              <ng-container matColumnDef="empty">
+                <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                  No se encuentran registros.
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr mat-footer-row *matFooterRowDef="['empty']" [hidden]="hideMessageEmpty"> </tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5,10]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

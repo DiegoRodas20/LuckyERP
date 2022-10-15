@@ -1,0 +1,98 @@
+<div>
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool" matTooltipPosition="left"
+          color="secondary" (click)="clickFab(ibtn)">
+          <i class="material-icons">{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div>
+    <mat-accordion>
+      <form [formGroup]="formProrrateo">
+
+
+        <mat-expansion-panel (opened)="fnDarValorAccordeon(1)" id="expPpto" #matExpPpto class="mt-2" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title
+              style="justify-content: space-between; line-height: 40px; color:#334D6E; font-weight: bold">
+              <span style="vertical-align: middle;">Un solo presupuesto</span>
+              <button mat-icon-button>
+                <mat-icon color="accent">date_range</mat-icon>
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <div style="padding-top:15px" class="row">
+              <div class="col-md-6">
+                <ng-select appendTo="body" (change)="fnValorCliente($event)"
+                  style="padding-bottom:3.5px; bottom:0.45rem" [clearable]="false" placeholder="Presupuesto"
+                  formControlName="presupuesto" notFoundText="No hay presupuestos disponibles">
+                  <ng-option *ngFor="let element of cbPresupuestos" [value]="element.nId">
+                    {{element.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Cliente</mat-label>
+                  <input formControlName="txtCliente" type="text" matInput readonly>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="fnDarValorAccordeon(2)" id="expCliente" #matExpCliente>
+          <mat-expansion-panel-header>
+            <mat-panel-title
+              style="justify-content: space-between; line-height: 40px; color:#334D6E; font-weight: bold">
+              <span style="vertical-align: middle;">Presupuestos que terminen en</span>
+              <button mat-icon-button>
+                <mat-icon color="accent">text_snippet</mat-icon>
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" placeholder="Año" formControlName="anhoFinalizacion"
+                      notFoundText="No hay años disponibles">
+                      <ng-option *ngFor="let element of cbAnhos" [value]="element.nId">
+                        {{element.sDescripcion}}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                  <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" placeholder="Mes" formControlName="mesFinalizacion"
+                      notFoundText="No hay meses disponibles">
+                      <ng-option *ngFor="let element of cbMeses" [value]="element.nId">
+                        {{element.sDescripcion}}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <ng-select appendTo="body" [clearable]="false" placeholder="Cliente" formControlName="cliente"
+                  notFoundText="No hay clientes disponibles">
+                  <ng-option *ngFor="let element of cbClientes" [value]="element.nId">
+                    {{element.sDescripcion}}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </form>
+    </mat-accordion>
+  </div>
+</div>

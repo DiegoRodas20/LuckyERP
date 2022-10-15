@@ -1,0 +1,25 @@
+<div class="mb-3 " style="text-align: center; ">
+    <mat-card class="title-card ">Cargar Excel (Carga masiva de simcards)</mat-card>
+</div>
+
+<div mat-dialog-content>
+    <div class="row mx-auto" [formGroup]="formCargaMasiva" style="width: 100%;">
+        <div class="col-md-9 col-12 mb-3">
+            <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="fnValidarExcel($event)"
+                formControlName="fileExcel" class="custom-file-input" aria-describedby="inputGroupFileAddon04" #excelFile>
+            <mat-label class="custom-file-label" style="width: 100%">{{nombreArchivo}}</mat-label>
+        </div>
+
+        <div class="col-md-3 col-12 mx-auto">
+            <div style="display: flex; justify-content: space-between;">
+                <button mat-raised-button (click)="fnCargarRegistros()" color="primary" matTooltip="Subir Archivo" type="button" class="mx-auto" style="display: inline-block">
+                    <mat-icon>cloud_upload</mat-icon>
+                </button>
+                <button mat-raised-button (click)="fnDescargarFormato()" color="primary" matTooltip="Descargar Formato" type="button" class="mx-auto" style="display: inline-block">
+                    <mat-icon>assignment</mat-icon>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>

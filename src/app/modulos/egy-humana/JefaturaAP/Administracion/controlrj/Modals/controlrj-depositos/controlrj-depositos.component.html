@@ -1,0 +1,215 @@
+<ngx-spinner name="spi_retencion" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+
+<!-- <div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsRetencion }">add</i>
+  </button>
+  <div [@speedDialStagger]="abRetencion.length">
+    <button *ngFor="let elem of abRetencion; let index = index" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="onClickMenuRetencion(index, elem.tool)">
+      <i class="material-icons" matTooltip="{{ elem.tool }}" matTooltipPosition="left">{{ elem.icon }}</i>
+    </button>
+  </div>
+</div> -->
+
+<div class="modal-header">
+  <h4 class="modal-title">Listado de depositos</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body" style="padding-bottom: 20px">
+  <div class="row">
+    <div class="col-lg-6">
+
+      <mat-accordion multi>
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información del beneficiario </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">info</mat-icon>
+          </mat-expansion-panel-header>
+
+          <form autocomplete="off" id="fgRetencion" [formGroup]="fgRetencion">
+            <div class="form-row" style="margin-top: 20px">
+              <div class="col-lg-8">
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_nIdRetencionj" />
+                </mat-form-field>
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_nIdPersonal" />
+                </mat-form-field>
+
+                <mat-form-field hidden="true">
+                  <input matInput formControlName="T1_sFileSustento" />
+                </mat-form-field>
+
+                <mat-form-field style="width: 100%">
+                  <mat-label>Tipo documento</mat-label>
+                  <mat-select formControlName="T1_nIdTipoDoc">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstTiposDocumento" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+              </div>
+
+              <div class="col-lg-4">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Documento</mat-label>
+                  <input type="text" matInput formControlName="T1_sDocumento">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-12">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>Apellidos y nombres</mat-label>
+                  <input type="text" matInput formControlName="T1_sNombres">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-6">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Banco</mat-label>
+                  <mat-select formControlName="T1_nIdBanco">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let elem of lstBancos" [value]="elem.id">
+                      {{ elem.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Cuenta</mat-label>
+                  <input type="text" matInput formControlName="T1_sNroCuenta">
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-3">
+                <mat-form-field style="width: 100%;">
+                  <mat-label>N° Cuenta Int.</mat-label>
+                  <input type="text" matInput formControlName="T1_sNroCuentaI">
+                </mat-form-field>
+              </div>
+            </div>
+
+          </form>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Listado de depositos</mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">article</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div id="searchDiv" class="melevation" style="margin-top: 20px;">
+            <table mat-table [dataSource]="searchBS" style="width: 100%">
+
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                <td mat-cell *matCellDef="let element">
+                  <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent"
+                    (click)="viewDetail(element)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- Devengue Column -->
+              <ng-container matColumnDef="devengue">
+                <th mat-header-cell *matHeaderCellDef> Devengue </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.devengue }}
+                </td>
+              </ng-container>
+
+              <!-- Fecha Column -->
+              <ng-container matColumnDef="fechaDeposito">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.fechaDeposito }}
+                </td>
+              </ng-container>
+
+              <!-- Hora Column -->
+              <ng-container matColumnDef="horaDeposito">
+                <th mat-header-cell *matHeaderCellDef> Hora </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.horaDeposito }}
+                </td>
+              </ng-container>
+
+              <!-- Importe Column -->
+              <ng-container matColumnDef="importe">
+                <th mat-header-cell *matHeaderCellDef> Importe </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.importe }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                  No se encuentran registros.
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="searchBC"></tr>
+              <tr mat-row *matRowDef="let row; columns: searchBC"></tr>
+              <mat-footer-row *matFooterRowDef="['noData']"
+                [hidden]="searchBS && this.searchBS.filteredData.length > 0">
+              </mat-footer-row>
+            </table>
+
+            <mat-paginator #searchB style="display: contents" [hidePageSize]="false" [pageSize]="4">
+            </mat-paginator>
+          </div>
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6 divLeft">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Vista previa de deposito</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg">
+          <iframe [hidden]="!tieneDeposito" id="pdf-deposito" style="width: 100%; height: 500px"></iframe>
+
+          <div [hidden]="tieneDeposito" style="width: 100%; height: 500px; text-align: center; vertical-align: middle;">
+            <mat-icon style="font-size: 100px; color: rgb(197, 197, 197)">content_paste_off</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar *ngIf="pbRetencion" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

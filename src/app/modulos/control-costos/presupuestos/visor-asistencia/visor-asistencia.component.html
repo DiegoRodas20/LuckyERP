@@ -1,0 +1,262 @@
+<div class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Consulta de Presupuesto y Asistencia</h5>
+        <div class="row"><br /></div>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <div class="form-row col-md-12">
+            <form [formGroup]="formPresupuesto" class="col-md-6 row">
+
+                <div class="form-group col-md-3">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Código:</mat-label>
+                        <input (input)="fnListarPresupuesto()" type="text" [errorStateMatcher]="matcher" matInput
+                            placeholder="" formControlName="txtCodigo">
+                        <mat-error *ngIf="formPresupuesto.get('txtCodigo').hasError('pattern')">
+                            .Solo números
+                        </mat-error>
+                        <mat-error *ngIf="formPresupuesto.get('txtCodigo').hasError('minlength')">
+                            .6 dígitos
+                        </mat-error>
+                        <mat-error *ngIf="formPresupuesto.get('txtCodigo').hasError('maxlength')">
+                            .6 dígitos
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-9">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Descripción:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtDescripcion">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Cliente:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtCliente">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Inicio:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtFechaInicio">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fin:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtFechaFin">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Registro:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtUserRegistro">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fecha Registro:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtFechaRegistro">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Hora Registro:</mat-label>
+                        <input type="text" readonly matInput placeholder="" formControlName="txtHoraRegistro">
+                    </mat-form-field>
+                </div>
+            </form>
+
+            <mat-divider class="separator-vertical" [vertical]="true"
+                style="background-color: rgb(236, 0, 140);margin-left: 5px;margin-right: 5px;">
+            </mat-divider>
+            <div class="col-md-12 separator-horizontal">
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Sucursal:</mat-label>
+                            <mat-select [formControl]="cboSucursal">
+                                <mat-option (click)="fnLimpiarSucursal()">Seleccione</mat-option>
+                                <mat-option
+                                    (click)="fnSeleccionarSucursal(vSucursal); fnListarPartidaPersonal(vSucursal)"
+                                    *ngFor="let vSucursal of lSucursal" [value]="vSucursal">
+                                    {{vSucursal.sCodEmpS}} - {{vSucursal.sDescSucursal}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div style="padding-right: 15px;" class="form-group col-md-4">
+                        <button [disabled]="this.cboSucursal.value=='' || this.cboSucursal.value==null"
+                            (click)="fnAbrirDialog()" style="width: 100%; margin: 5px;" type="button" mat-raised-button
+                            color="accent" class="d-flex justify-content-center" matTooltip="Ver personal">
+                            <mat-icon> list_alt</mat-icon>Ver equipo
+                        </button>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Partidas de personal:</mat-label>
+                            <mat-select [formControl]="cboPartidas">
+                                <mat-option (click)="fnLimpiarPartida()">Seleccione</mat-option>
+                                <mat-option (click)="fnListarCanalPartida(vPartida)"
+                                    *ngFor="let vPartida of lPartidaPersonal" [value]="vPartida.nIdPartida">
+                                    {{vPartida.sCodPartida}} - {{vPartida.sDescPartida}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <form [formGroup]="formPartida" style="padding-right: 0px; margin-right: 0px; width: 100%;"
+                        class="col-md-12 row">
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Canal:</mat-label>
+                                <mat-select formControlName="cboCanal">
+                                    <mat-option (click)="fnLimpiarCanal()">Seleccione</mat-option>
+                                    <mat-option (click)="fnListarCategoriaCanal(vCanal)" *ngFor="let vCanal of lCanal"
+                                        [value]="vCanal.nIdCanal">
+                                        {{vCanal.sDescCanal}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Categoría:</mat-label>
+                                <mat-select formControlName="cboCategoria">
+                                    <mat-option (click)="fnLimpiarCategoria()">Seleccione</mat-option>
+                                    <mat-option *ngFor="let vCategoria of lCategoria"
+                                        (click)="fnSeleccionarCategoria(vCategoria); fnListarAsistencia(vCategoria)" [value]="vCategoria.nIdCategoria">
+                                        {{vCategoria.sDescCategoria}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Personas:</mat-label>
+                                <input type="text" matInput readonly placeholder="" formControlName="txtPersonas">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Días:</mat-label>
+                                <input type="text" matInput readonly placeholder="" formControlName="txtDias">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Total Días:</mat-label>
+                                <input type="text" matInput readonly placeholder="" formControlName="txtTotalDias">
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider style="margin-bottom: 10px; margin-top: 5px;"></mat-divider>
+
+        <div class="form-row">
+            <div class="mat-elevation-z8 example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="sAnio">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Año
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sAnio}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sMes">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">Mes
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sMes}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sPeriodo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Período
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sPeriodo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sQF">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Q o F
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sQF}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sTipo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Tipo
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sTipo}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDoc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Documento
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sDoc}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sPersonalAsistencia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Personal
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLarge"> {{row.sPersonalAsistencia}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sPlanilla">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Planilla
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sPlanilla}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sUsr">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Usuario
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sUsr}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sFechaRegistro">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> F. Registro
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.sFechaRegistro}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nTotalNeto">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Total neto
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.nTotalNeto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nTotalPers">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Total pers.
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.nTotalPers}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nTotalDias">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Total días
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="clsColumnaLib2"> {{row.nTotalDias}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator style="width:100%" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,236 @@
+<div *ngIf="this.listaCabecera!=null && this.listaDetalle!=null" id="print-prueba-oc">
+    <div style="display: grid; grid-template-columns: repeat(3, 2fr);grid-gap: 14px;">
+        <div style="grid-column: 1;grid-row: 1;">
+            <img src="../../../../../../assets/img/{{listaCabecera.nIdEmp}}.png" width="250px" height="100px"><br>
+            {{listaCabecera.sDireccionEmp}}<br>
+            {{listaCabecera.sRucEmpresa}}
+        </div>
+        <div style="grid-column: 2;grid-row: 1;">
+            <h3>ORDEN N*</h3>
+            <h3 style="color:red; font-weight: bold;">{{listaCabecera.sDocumento}}</h3>
+            FECHA DE EMISION {{listaCabecera.sFechaEmision}}
+        </div>
+        <div style="grid-column: 3;grid-row: 1;">
+            <p>PEDIDO DE {{listaCabecera.sTipoOC | uppercase}}</p>
+            <p>{{ listaCabecera.sEstado }}</p>
+        </div>
+    </div>
+    <br>
+
+    <table class="cabeceraDetalle" style="border-bottom: 0px">
+        <tr>
+            <td class="filas" style="text-align: center;"><b>DATOS DEL PROVEEDOR</b></td>
+        </tr>
+    </table>
+
+    <div class="espacio-minino"></div>
+    <table class="cabeceraDetalle">
+        <div style="font-size: small;">
+
+            <tr>
+                <td style="width: 50%;" colspan="2" class="filas"><b>RUC:</b> {{ listaCabecera.ruc }}</td>
+                <td style="width: 50%;" colspan="2" class="filas"><b>Razón Social:</b> {{listaCabecera.razon_social}}
+                </td>
+            </tr>
+            <tr>
+                <td class="filas fuente"><b>Dirección:</b> {{ listaCabecera.direccion }}</td>
+                <td class="filas fuente"><b>Distrito:</b> {{listaCabecera.distrito }}</td>
+                <td class="filas fuente"><b>Provincia:</b> {{listaCabecera.provincia }}</td>
+                <td class="filas fuente"><b>Departamento:</b> {{listaCabecera.departamento }}</td>
+            </tr>
+            <tr>
+
+                <td class="filas fuente"><b>Contacto Nombre:</b> {{ listaCabecera.contacto_nombre }}</td>
+                <td class="filas fuente"><b>Contacto Cargo:</b> {{listaCabecera.contacto_cargo }}</td>
+                <td class="filas fuente"><b>Contacto Teléfono:</b> {{listaCabecera.contacto_telefono }}</td>
+                <td class="filas fuente"><b>Contacto Email:</b> {{ listaCabecera.contacto_email }}
+                </td>
+            </tr>
+
+
+        </div>
+
+
+
+    </table>
+    <div class="espacio"></div>
+
+    <table class="cabeceraDetalle" style="border-bottom: 0px">
+        <tr>
+            <td class="filas" style="text-align: center;"><b>CONTACTO EMPRESA CONTROL INTERNO</b></td>
+        </tr>
+    </table>
+
+    <div class="espacio-minino"></div>
+
+    <table class="cabeceraDetalle">
+
+        <tr>
+            <td class="filas fuente" style="width: 50%;">
+                <b>Comprador:</b> {{ listaCabecera.comprador }}
+            </td>
+            <td class="filas fuente" style="width: 50%;"><b>Email:</b> {{
+                listaCabecera.email }}</td>
+        </tr>
+
+
+        <tr>
+            <td class="filas fuente"><b>Cliente:</b>
+                {{ listaCabecera.cliente }} &nbsp; &nbsp; <b>Ppto:</b> {{ listaCabecera.ppto }} </td>
+
+            <td class="filas fuente">
+                <b>Solicitante:</b> {{ listaCabecera.solicitante }}
+                <br/> <b>SC vinculada:</b> {{
+                listaCabecera.scVinculada }}
+            </td>
+
+        </tr>
+    </table>
+
+    <div class="espacio"></div>
+
+    <table class="cabeceraDetalle" style="border-bottom: 0px">
+        <tr>
+            <td class="filas" style="text-align: center;"><b>TERMINOS Y CONDICIONES</b></td>
+        </tr>
+    </table>
+
+    <div class="espacio-minino"></div>
+
+    <table class="cabeceraDetalle">
+
+        <tr>
+            <td class="filas fuente" style="width: 50%;"><b>Lugar de Entrega:</b></td>
+            <td class="filas fuente " style="width: 50%;">{{ listaCabecera.lugar_entrega }}</td>
+        </tr>
+
+        <tr>
+            <td class="filas fuente"><b>Plazo Pago:</b> {{ listaCabecera.plazo_pago }}</td>
+            <td class="filas fuente"><b>Moneda:</b> {{ listaCabecera.moneda }}</td>
+        </tr>
+
+        <tr>
+            <td class="filas fuente">
+                <b>Observaciones:</b> {{ listaCabecera.observaciones }}
+            </td>
+            <td class="filas fuente"><b>Fecha Entrega:</b> {{ listaCabecera.fecha_entrega }}</td>
+        </tr>
+    </table>
+    <div class="espacio fuente"></div>
+
+
+
+    <table class="cabeceraDetalle">
+        <tr>
+            <th class="detalle" style="width: 20px;">Item</th>
+            <th class="detalle" style="width: 20px;">Codigo</th>
+            <th class="detalle">Descripción
+            </th>
+
+            <th class="detalle" style="width: 30px;">U.Med</th>
+            <th class="detalle" style="width: 22px;">Cant</th>
+            <th class="detalle" style="width: 22px;">Precio</th>
+            <th class="detalle" style="width: 22px;">Total</th>
+        </tr>
+        <tr *ngFor="let lista of listaDetalle, index as i">
+            <td class="detalleItems">{{ i+1 }}</td>
+            <td class="detalleItems">{{ lista.codigo }}</td>
+            <td class="detalleItems">{{ lista.descripcion }}</td>
+
+            <td class="detalleItems">{{ lista.u_med }}</td>
+            <td class="detalleItems">{{ lista.cant }}</td>
+            <td class="detalleItems">{{ lista.precio }}</td>
+            <td class="detalleItems">{{ lista.total }}</td>
+        </tr>
+    </table>
+
+
+
+    <div class="espacio"></div>
+
+
+
+    <table class="cabeceraDetalle">
+        <tr>
+
+            <td class="filas" style="width: 50%;">SUB TOTAL OC</td>
+
+            <td class="filas" style="width: 50%;text-align: right;">
+                {{listaCabecera.sSimboloMoneda}}. {{
+                listaCabecera.subtotal }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td class="filas">SERVICIO (%){{listaCabecera.servicioPorc}}</td>
+            <td class="filas" style="text-align: right;">{{listaCabecera.sSimboloMoneda}}. {{listaCabecera.servicios }}
+            </td>
+        </tr>
+
+        <tr>
+
+            <td class="filas">IGV (%)
+                {{listaCabecera.igvPorc}}</td>
+            <td class="filas" style="text-align: right;">
+                {{listaCabecera.sSimboloMoneda}} . {{
+                listaCabecera.igv }}</td>
+
+        </tr>
+
+        <tr>
+
+            <td class="filas">TOTAL OC</td>
+            <td class="filas" style="text-align: right;">
+                {{listaCabecera.sSimboloMoneda}} . {{
+                listaCabecera.total }}</td>
+        </tr>
+    </table>
+
+
+    <div class="espacio"></div>
+    <table style="width:100%;border: 1px solid black">
+        <tr>
+            <td>
+                <div style="font-size: small;">
+                    Importante:<br>
+                    &nbsp;-El número de la presente orden debe figurar en su Facturas, Guias y Certificados.<br>
+
+                    &nbsp;-Para la aceptación de su factura debera adjuntar copia del presente documento,
+                    Guias y/o certificados correspondientes.<br> &nbsp; La Empresa no se responsabiliza por
+                    la demora en el pago por error documentario por parte del proveedor.<br>
+
+                    &nbsp;-Para entrega de su mercadería o prestación de servicios es indispensable la
+                    presentacion del presente documento.<br>
+                    &nbsp;-Recepcion de Facturas Lunes, Miercoles y Viernes de 9 am a 1pm.y de 2pm a 3 pm.<br>
+                    <div style="height: 5px;"></div>
+                    <div style="font-size: 10px;">PENALIDAD</div>
+                    &nbsp;Incumplimiento a las fechas pactadas, se
+                    descontarán todos los gastos que se incurran, siendo como mínimo un 10% de la facturación.
+
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="espacio"></div>
+
+
+
+    <table class="cabeceraDetalle">
+        <tr>
+            <td style="width: 50%;" class="filas fuente"> <b>ELABORADO
+                    POR:&nbsp;</b>{{listaCabecera.comprador}}</td>
+
+
+            <td style="width: 50%;" class="filas fuente"><b>REVISADO
+                    POR:</b></td>
+        </tr>
+    </table>
+
+
+    <br>
+    <p style="float: right; font-weight: bold;margin-right: 8px; ">Imprime: {{ listaCabecera.usuario }} - {{ horaActual
+        }}</p>
+
+</div>

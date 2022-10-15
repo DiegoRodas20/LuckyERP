@@ -1,0 +1,255 @@
+<div class="clsprincipal">
+     <div class="container-fluid">
+          <div class="card">
+               <h5 class="card-header">Mantenimiento de Usuario</h5>
+
+               <div id="body-listap" class="card-body">
+                    <div class="row" style="margin-top: -10px;">
+                         <div class="col-sm">
+                              <h6>Lista de usuarios</h6>
+                              <hr style="margin-top: 0px; margin-bottom: 10px;">
+                         </div>
+                    </div>
+
+                    <div id="listap" class="mat-elevation-z8">
+                         <div>
+                              <table mat-table [dataSource]="tPrincipalDS" style="width: 100%;">
+
+                                   <ng-container matColumnDef="pGen">
+                                        <th mat-header-cell *matHeaderCellDef> pGen </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.pGen}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="pEsp">
+                                        <th mat-header-cell *matHeaderCellDef> pEsp </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.pEsp}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="descripcion">
+                                        <th mat-header-cell *matHeaderCellDef> descripcion </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.descripcion}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="marg">
+                                        <th mat-header-cell *matHeaderCellDef> marg </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.marg}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="total">
+                                        <th mat-header-cell *matHeaderCellDef> total </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.total}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="lima">
+                                        <th mat-header-cell *matHeaderCellDef> lima </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.lima}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="piura">
+                                        <th mat-header-cell *matHeaderCellDef> piura </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.piura}}
+
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="chiclayo">
+                                        <th mat-header-cell *matHeaderCellDef> chiclayo </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.chiclayo}}
+                                        </td>
+                                   </ng-container>
+
+
+                                   <ng-container matColumnDef="action">
+                                        <!-- <ng-container matColumnDef="action" sticky> -->
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                                  matTooltipPosition="right" mat-stroked-button color="accent">
+                                                  <mat-icon>more_vert</mat-icon>
+                                             </button>
+
+                                             <mat-menu #menu="matMenu" xPosition="after">
+                                                  <button mat-menu-item (click)="btnTGestorLima(element)">
+                                                       <mat-icon color="accent">edit</mat-icon>
+                                                       <span>Lima</span>
+                                                  </button>
+                                                  <button mat-menu-item (click)="btnTGestorPiura(element)">
+                                                       <mat-icon color="accent">edit</mat-icon>
+                                                       <span>Piura</span>
+                                                  </button>
+                                                  <button mat-menu-item (click)="btnTGestorChiclayo(element)">
+                                                       <mat-icon color="accent">edit</mat-icon>
+                                                       <span>Chiclayo</span>
+                                                  </button>
+                                             </mat-menu>
+                                        </td>
+                                   </ng-container>
+
+
+                                   <tr mat-header-row *matHeaderRowDef="tPrincipalDC; sticky: true"></tr>
+                                   <tr mat-row *matRowDef="let row; columns: tPrincipalDC;"></tr>
+                              </table>
+                         </div>
+                    </div>
+                    <hr />
+
+                    <div id="listap" class="mat-elevation-z8">
+                         <div>
+                              <table mat-table [dataSource]="tGestorDS" style="width: 100%;">
+
+                                   <ng-container matColumnDef="cat">
+                                        <th mat-header-cell *matHeaderCellDef> cat </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.cat}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="catNombre">
+                                        <th mat-header-cell *matHeaderCellDef> catNombre </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             <mat-form-field>
+                                                  <mat-label>Seleccione: </mat-label>
+                                                  <mat-select matInput [(value)]="element.catNombre">
+                                                       <mat-option *ngFor="let cat of comboCat" [value]="cat.catNombre"
+                                                            (click)="filtrarCboCanal(cat)">
+                                                            {{cat.catNombre}}
+                                                       </mat-option>
+                                                  </mat-select>
+                                             </mat-form-field>
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="canal">
+                                        <th mat-header-cell *matHeaderCellDef> canal </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.canal}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="canalNombre">
+                                        <th mat-header-cell *matHeaderCellDef> canalNombre </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             <mat-form-field>
+                                                  <mat-label>Seleccione: </mat-label>
+                                                  <mat-select matInput [(value)]="element.canalNombre">
+                                                       <mat-option *ngFor="let cat of comboCanal"
+                                                            [value]="cat.canalNombre">
+                                                            {{cat.canalNombre}}
+                                                       </mat-option>
+                                                  </mat-select>
+                                             </mat-form-field>
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="nPers">
+                                        <th mat-header-cell *matHeaderCellDef> nPers </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.nPers}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="diasPla">
+                                        <th mat-header-cell *matHeaderCellDef> diasPla </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.diasPla}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="totalDias">
+                                        <th mat-header-cell *matHeaderCellDef> totalDias </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.totalDias}}
+
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="diasCotiz">
+                                        <th mat-header-cell *matHeaderCellDef> diasCotiz </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.diasCotiz}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="remunDia">
+                                        <th mat-header-cell *matHeaderCellDef> remunDia </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.remunDia}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="total">
+                                        <th mat-header-cell *matHeaderCellDef> total </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.total}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="implem">
+                                        <th mat-header-cell *matHeaderCellDef> implem </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.implem}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="planilla3">
+                                        <th mat-header-cell *matHeaderCellDef> planilla3 </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.planilla3}}
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="totalNeto">
+                                        <th mat-header-cell *matHeaderCellDef> totalNeto </th>
+                                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                                             {{element.totalNeto}}
+                                             <input (keyup.enter)="introTotalNeto(element)" [(ngModel)]="element.totalNeto"
+                                                  class="form-control" type="text" style="width: 80px;">
+                                        </td>
+                                   </ng-container>
+
+                                   <ng-container matColumnDef="action">
+                                        <!-- <ng-container matColumnDef="action" sticky> -->
+                                        <th mat-header-cell *matHeaderCellDef>
+                                             <button mat-menu-item (click)="btnNuevoTGestor()">
+                                                  <mat-icon color="accent">add</mat-icon>
+                                             </button>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+                                                  matTooltipPosition="right" mat-stroked-button color="accent">
+                                                  <mat-icon>more_vert</mat-icon>
+                                             </button>
+
+                                             <mat-menu #menu="matMenu" xPosition="after">
+                                                  <button mat-menu-item (click)="btnEliminarTGestor(element)">
+                                                       <mat-icon color="accent">delete</mat-icon>
+                                                       <span>Eliminar</span>
+                                                  </button>
+                                             </mat-menu>
+                                        </td>
+                                   </ng-container>
+
+                                   <tr mat-header-row *matHeaderRowDef="tGestorDC; sticky: true"></tr>
+                                   <tr mat-row *matRowDef="let row; columns: tGestorDC;"></tr>
+                              </table>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+
+</div>

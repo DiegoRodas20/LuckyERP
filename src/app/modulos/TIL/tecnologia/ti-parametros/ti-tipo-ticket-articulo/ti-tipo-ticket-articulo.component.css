@@ -1,0 +1,90 @@
+.clsDivRegistro {
+  background-color: white;
+  border: solid 2px #002c4b;
+  border-radius: 5px;
+}
+
+/*Opcion para poner mostrar y ocultar*/
+
+.clsShow {
+  display: block;
+}
+
+.clsHide {
+  display: none;
+}
+
+.table {
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+th {
+  font-size: 10px;
+}
+
+th label {
+  font-size: 9.5px !important;
+}
+
+.clsprincipal {
+  padding: 80px 0px 0px 0px;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.tabla-container {
+  height: 400px;
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+}
+
+.clsColumnaOpc {
+  width: 110px;
+}
+
+.clsColumnaLarge {
+  width: 200px;
+}
+
+.clsColumnaLib {
+  width: 60px;
+}
+
+.clsColumnaOpc2 {
+  width: 40px;
+}
+
+.clsColumnaLib2 {
+  width: 30px;
+}
+
+.make-gris {
+  background-color: rgb(177, 184, 185);
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background,
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: #ff4081 !important;
+}

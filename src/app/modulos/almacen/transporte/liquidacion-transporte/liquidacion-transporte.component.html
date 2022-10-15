@@ -1,0 +1,37 @@
+<div style="padding-top: 80px;" class="col-md-10 offset-md-1 transporte">
+  <h3 class="card-header center-text-card" style="text-align: center;">Liquidación de Transporte{{titleSucursal}}</h3>
+  <!-- <mat-card class="title-main"> Liquidación de transporte{{titleSucursal}} </mat-card> -->
+  <app-liquidacion-transporte-header [motivos]="motivos" [codigos]="codigos" [anios]="anios" [liquidacion]="liquidacion"
+    (sendGuias)="fnLiquidar($event)" (sendCodTransporte)="fnObtenerLiquidacion($event)"
+    (sendParameter)="fnActualizarDatos($event)" (sendAnio)="fnListarCodTransportes($event)"
+    (sendOperModal)="fnOpenDialogTerminar($event)" (sendVerModal)="fnVerProrrateos($event)"
+    (sendLiberar)="fnLiberar($event)">
+  </app-liquidacion-transporte-header>
+  <mat-accordion>
+    <!--Expasión de Puntos-->
+    <mat-expansion-panel [expanded]="step === 1" [disabled]="block" (opened)="prevStep()" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Puntos: {{titlePuntos}}
+        </mat-panel-title>
+        <mat-icon color="accent">format_list_bulleted</mat-icon>
+      </mat-expansion-panel-header>
+      <app-liquidacion-transporte-body [detalleList]="liquidacion?.detalleList" (sendPunto)="fnObtenerGuiaList($event)">
+      </app-liquidacion-transporte-body>
+    </mat-expansion-panel>
+
+    <!--Expasión de Guías-->
+    <mat-expansion-panel [expanded]="step === 2" [disabled]="step != 2" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Guías: {{titleGuias}}
+        </mat-panel-title>
+        <mat-icon color="accent">list_alt</mat-icon>
+      </mat-expansion-panel-header>
+      <app-liquidacion-transporte-body-guia [guiaList]="guiasFilter" [origenPunto]="origenPunto"
+        [destinoPunto]="destinoPunto" [isTerminado]="liquidacion?.bTerminado" (sendGuia)="fnObtenerArticuloList($event)"
+        (sendEstado)="fnChangeEstado($event)" (sendCostoCero)="fnChangeCostoCero($event)">
+      </app-liquidacion-transporte-body-guia>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

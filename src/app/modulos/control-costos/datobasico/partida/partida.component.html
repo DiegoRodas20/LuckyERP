@@ -1,0 +1,457 @@
+<div class="clsprincipal">
+    <!-- Botones Flotantes pantalla -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" data-toggle="modal" data-target="#modalParGen"
+                mat-mini-fab class="fab-secondary" color="secondary" matTooltipPosition="left" (click)="clickFab(0)">
+                <i class="material-icons" matTooltip="{{btn.tool}}">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <h3 style="text-align:center" class="col-md-8 offset-md-2 card-header">Partidas de Presupuesto</h3>
+    <div class="row"><br /></div>
+
+    <!-- Bloque de vista de las Especificas  -->
+    <div class="container-fluid" [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <!-- Inicio del contendo -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-4 col-sm-0 col-0"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-9">
+                        <mat-form-field style="width: 100%;" class="example-full-width">
+                            <mat-label>Buscar Partida</mat-label>
+                            <input matInput aria-label="Clear" [formControl]="txtFiltroGen"
+                                (keyup)="applyFilter($event)" #input placeholder="Buscar">
+
+                            <button mat-button *ngIf="txtFiltroGen.value" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="txtFiltroGen.setValue('');fnListarPartidaGen()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1">
+                        <button mat-mini-fab class="fab-toggler" matTooltip="Nueva Partida" data-toggle="modal"
+                            data-target="#modalParGen" (click)="fnNuevaParGen()">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div> -->
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-12 d-flex">
+                        <mat-radio-group [formControl]="radioFiltroEstado" (change)="cambioEstado($event.value)">
+                            <mat-radio-button value="1">Activo</mat-radio-button>
+                            <mat-radio-button value="0">Inactivo</mat-radio-button>
+                            <mat-radio-button value="2">Todos</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+
+                </div>
+
+                <div class="form-row col-sm-12">
+                    <div class="col-md-8 offset-md-2">
+                        <div id="listaMobile" class="mat-elevation-z8">
+                            <div class="example-container">
+                                <!-- TABLA PARTIDA GEN MATERIAL-->
+                                <table mat-table [dataSource]="dsPartidaGen" #msPartidaGente="matSort" matSort
+                                    style="width: 100%;">
+
+                                    <!-- ID Column -->
+                                    <ng-container matColumnDef="opcion" sticky>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Opción</th>
+
+                                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaOpc2'
+                                            data-label='Opción: '>
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu" xPosition="after">
+                                                <button *ngIf="row.nModificable==1" mat-menu-item data-toggle="modal"
+                                                    data-target="#modalParGen" (click)="fnSelecParGen(row)">
+                                                    <mat-icon color="accent">edit</mat-icon>
+                                                    <span>Modificar</span>
+                                                </button>
+                                                <button mat-menu-item (click)="fnVerDetalle(row)">
+                                                    <mat-icon color="accent">touch_app</mat-icon>
+                                                    <span>Ver Partidas</span>
+                                                </button>
+                                            </mat-menu>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sParGen">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida Genérica </th>
+                                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                            data-label='Partida Generica: '>
+                                            <ngb-highlight [result]="row.sParGen" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDescripcion">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                            data-label='Descripción: '>
+                                            <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDePersonal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Par. Gen </th>
+                                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile clsColumnaLarge'
+                                            data-label='Tipo Partida Gen: '>
+                                            <ngb-highlight [result]="row.sDePersonal" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sEstado">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                                        <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                            data-label='Estado: '>
+                                            <ngb-highlight [result]="row.sEstado" [term]="txtFiltroGen.value">
+                                            </ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="dcPartidaGen; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: dcPartidaGen;"
+                                        [ngClass]="{'make-gris': row.sEstado=='Inactivo'}">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator #paginatorPartidaGen [pageSizeOptions]="[20, 40, 80]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bloque de vista de las partidas Especificas -->
+    <div class="container-fluid" [ngClass]="vPrincipal ? 'clsHide' : 'clsShow'">
+        <div class="form-row">
+            <div class="form-group col-md-12">
+
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-0 col-0">
+
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                        <button mat-mini-fab type="button" style="margin-left: 15px;" (click)="fnVolver()">
+                            <mat-icon>keyboard_arrow_left</mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-8">
+
+                        <mat-form-field style="width: 100%;" class="example-full-width">
+                            <mat-label>Buscar Partida</mat-label>
+                            <input matInput type="text" placeholder="Buscar partida" [formControl]="txtFiltroPar"
+                                (keyup)="fnBuscarPartida()">
+                            <button mat-button *ngIf="txtFiltroPar.value" matSuffix mat-icon-button aria-label="Clear"
+                                (click)="txtFiltroPar.setValue('');fnBuscarPartida()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-2 col-2">
+                        <button mat-mini-fab type="button" *ngIf="nModificable==1" (click)="fnNuevaPartida()"
+                            data-toggle="modal" data-target="#modalPartida">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-12">
+                        <mat-radio-group [formControl]="radioFiltroEstadoEspecifica"
+                            (change)="cambioEstadoEspecifico($event.value)">
+                            <mat-radio-button value="1">Activo</mat-radio-button>
+                            <mat-radio-button value="0">Inactivo</mat-radio-button>
+                            <mat-radio-button value="2">Todos</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+
+
+                </div>
+
+                <div class="col-md-8 offset-md-2">
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="example-container">
+
+                            <!-- TABLA PARTIDA MATERIAL-->
+                            <table mat-table [dataSource]="dsPartida" #msPartida="matSort" matSort style="width: 100%;">
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="accion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar</th>
+
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Editar: '>
+                                        <button mat-stroked-button color="accent" data-toggle="modal"
+                                            data-target="#modalPartida" (click)="fnSelecPartida(row)">
+                                            <mat-icon> create</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPartida">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Partida </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Partida: '>
+                                        <ngb-highlight [result]="row.sCodPartida" [term]="txtFiltroPar.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescripcion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile'
+                                        data-label='Descripción: '>
+                                        <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltroPar.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sAbrev">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Abreviatura </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile sAbrev'
+                                        data-label='Abreviatura: '>
+                                        <ngb-highlight [result]="row.sAbrev" [term]="txtFiltroPar.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUsoComercial">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Uso comercial</th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile sAbrev'
+                                        data-label='Uso comercial: '>
+                                        <ngb-highlight [result]="row.sUsoComercial" [term]="txtFiltroPar.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                                    <td mat-cell *matCellDef="let row" class='has_label_on_mobile sAbrev'
+                                        data-label='Estado: '>
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltroPar.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="dcPartida; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: dcPartida;"
+                                    [ngClass]="{'make-gris': row.sEstado=='Inactivo'}">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #paginatorPartida [pageSizeOptions]="[20, 40, 80]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- *********************************************************************************************************************************************************************************************************** -->
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <!-- Modal para partida Generica -->
+    <div style="z-index: 1041" class="modal fade  bd-example-modal-xl" id="modalParGen" data-backdrop="static"
+        data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalParGen" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important;">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalParGenLongTitle">Registro de partidas Genéricas</h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="parGenForm">
+                            <div class="form-row">
+                                <div class="form-row col-md-12 offset-md-2">
+                                    <div class="form-group col-md-4 d-flex justify-content-start align-items-center">
+                                        <mat-form-field style="width: 100%;" class="example-full-width">
+                                            <mat-label>Partida Gen: </mat-label>
+                                            <input matInput type="text" class="" formControlName="txtPartida"
+                                                maxlength="2" (blur)="fnValidarParGen()"
+                                                [ngClass]="{'is-valid': submitted && v.txtPartida.valid, 'is-invalid': submitted && v.txtPartida.errors}" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-8">
+                                        <mat-form-field class="example-full-width" style="width: 100%;">
+                                            <mat-label>Descripción: </mat-label>
+                                            <input matInput type="text" formControlName="txtDescripcion"
+                                                [ngClass]="{'is-valid': submitted && v.txtDescripcion.valid, 'is-invalid': submitted && v.txtDescripcion.errors}"
+                                                appCaracterValidador />
+                                            <mat-error
+                                                *ngIf="parGenForm.get('txtDescripcion').errors?.caracterValidator">
+                                                .El texto no debe contener: "/", "|", "?"</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="form-row col-md-12 offset-md-2">
+
+                                    <div class="form-group col-md-4 col-sm-12">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Tipo ParGen</mat-label>
+                                            <mat-select style="max-width: 100%;" formControlName="cboPersonal"
+                                                [errorStateMatcher]="matcher">
+                                                <mat-option>Seleccione</mat-option>
+                                                <mat-option *ngFor="let vPersonal of lPersonal"
+                                                    [value]="vPersonal.codigo">
+                                                    {{vPersonal.valor}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="parGenForm.get('cboPersonal').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4 col-sm-12">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select style="max-width: 100%;" formControlName="cboEstado"
+                                                [errorStateMatcher]="matcher">
+                                                <mat-option value="">Seleccione</mat-option>
+                                                <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nIdEstado">
+                                                    {{vEstado.sDescripcion}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="parGenForm.get('cboEstado').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-1 offset-md-1">
+                                        <div class="form-row">
+                                            <div class="col-md-2 d-flex justify-content-center align-items-center"
+                                                style="margin-top: 10px;">
+                                                <button mat-mini-fab (click)="fnGuardarParGen()">
+                                                    <mat-icon>save</mat-icon>
+                                                </button>
+                                                <input class="close" data-dismiss="modal" data-toggle="modal"
+                                                    #modalParGen data-target="#modalParGen" type="hidden" name="button">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para partida Especifica  -->
+    <div style="z-index: 1041" class="modal fade  bd-example-modal-xl" id="modalPartida" data-backdrop="static"
+        data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalPartida" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-centered" style="width: 95% !important; ">
+            <div class="modal-content">
+
+                <div class="modal-header text-center header-modal-lucky">
+                    <h5 id="modalPartidaLongTitle">
+                        <Label>{{vTitulo}}</Label>
+                    </h5>
+                    <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <mat-card>
+                        <form [formGroup]="partidaForm">
+                            <div class="form-row container">
+                                <div class="form-row col-md-12">
+
+                                    <div *ngIf="vOpcion != 2" class="form-group col-md-12 col-lg-2">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Partida Generica</mat-label>
+                                            <input matInput type="text" formControlName="txtCodigoPartida" readonly />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-12 col-lg-2">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Partida</mat-label>
+                                            <input matInput type="text" formControlName="txtPartida" maxlength="2"
+                                                (blur)="fnValidarPartida()"
+                                                [ngClass]="{'is-valid': submitted2 && u.txtPartida.valid, 'is-invalid': submitted2 && u.txtPartida.errors}" />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-12 col-lg-8">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Descripción </mat-label>
+                                            <input matInput type="text" formControlName="txtDescripcion"
+                                                [ngClass]="{'is-valid': submitted2 && u.txtDescripcion.valid, 'is-invalid': submitted2 && u.txtDescripcion.errors}" />
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row col-md-12 offset-md-2 col-sm-12">
+                                    <div class="form-group col-md-12 col-lg-3">
+                                        <mat-form-field style="width:100%;">
+                                            <mat-label>Abreviado: </mat-label>
+                                            <input matInput type="text" class=" clsMin2" formControlName="txtAbreviado"
+                                                maxlength="10"
+                                                [ngClass]="{'is-valid': submitted2 && u.txtAbreviado.valid, 'is-invalid': submitted2 && u.txtAbreviado.errors}" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="form-group col-md-12 col-lg-3">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Uso Comercial: </mat-label>
+                                            <mat-select formControlName="cboComercial"
+                                                [ngClass]="{'is-valid': submitted2 && u.cboComercial.valid, 'is-invalid': submitted2 && u.cboComercial.errors}">
+                                                <mat-option value="">Seleccione</mat-option>
+                                                <mat-option *ngFor="let vListaUso of lUsoComercial"
+                                                    [value]="vListaUso.nIdUso">{{vListaUso.sDescripcion}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-12 col-lg-3">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select style="max-width: 100%;" formControlName="cboEstado"
+                                                [errorStateMatcher]="matcher">
+                                                <mat-option value="">Seleccione</mat-option>
+                                                <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nIdEstado">
+                                                    {{vEstado.sDescripcion}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="partidaForm.get('cboEstado').hasError('required')">
+                                                .Obligatorio</mat-error>
+                                        </mat-form-field>
+
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-3 d-flex justify-content-center">
+                                        <button mat-mini-fab (click)="fnGuardarPartida()">
+                                            <mat-icon>save</mat-icon>
+                                        </button>
+                                        <input class="close" data-dismiss="modal" data-toggle="modal" #modalPartida
+                                            data-target="#modalPartida" type="hidden" name="button">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

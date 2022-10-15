@@ -1,0 +1,207 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+            (click)="clickFab(ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class=" col-md-10 offset-md-1">
+    <div class="clsprincipal">
+
+        <div style="padding-top: 25px;">
+            <div class="mb-3" style="text-align: center;">
+                <mat-card class="title-card">Emisión de Notas de Crédito</mat-card>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-left: 20px;">
+        <!-- Filtros -->
+        <div class="row m-auto">
+
+            <div class="row col-md-9">
+                <div class="col-lg-3 col-md-3">
+                    <mat-form-field>
+                        <mat-label>Año</mat-label>
+                        <mat-select [formControl]="year" (selectionChange)="fnGetListCreditNotes()">
+                            <mat-option *ngFor="let item of listYear" [value]="item.year">
+                                {{ item.year }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-3">
+                    <!-- <mat-form-field>
+                        <mat-label>Tipo de Documento</mat-label>
+                        <mat-select [formControl]="nIdTipoDocumento" (selectionChange)="fnGetListCreditNotes()">
+                            <mat-option *ngFor="let item of listDocumentType" [value]="item.codigoTipoDoc">
+                                {{ item.nombreTipoDoc }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+
+                    <ng-select appendTo="body" placeholder="Tipo de Documento" (clear)="fnClearTypeDoc()"
+                    [formControl]="nIdTipoDocumento" (change)="fnGetListCreditNotes()">
+                        <ng-option *ngFor="let item of listDocumentType" [value]="item.codigoTipoDoc">
+                            {{item.nombreTipoDoc}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-3 col-md-3">
+
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fecha inicio</mat-label>
+                        <input matInput [matDatepicker]="picker"
+                            (dateChange)="fnDateChange($event,'inicio');fnGetListCreditNotes()"
+                            [formControl]="dFechaInicio">
+                        <mat-datepicker-toggle *ngIf="sFechaInicio!='' " matSuffix
+                            (click)="fnClearDate(1);fnGetListCreditNotes()">
+                            <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+
+
+
+                <div class="col-lg-3 col-md-3">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fecha fin</mat-label>
+                        <input matInput [matDatepicker]="picker1"
+                            (dateChange)="fnDateChange($event,'fin');fnGetListCreditNotes()" [formControl]="dFechaFin">
+                        <mat-datepicker-toggle *ngIf="sFechaFin!='' " matSuffix
+                            (click)="fnClearDate(2);fnGetListCreditNotes()">
+                            <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3">
+                <mat-form-field class="text-left search-form-field" style="width: 100%;">
+
+                    <input matInput (keyup)="applyFilter($event)" autocomplete="off" placeholder="Buscar..."
+                        [formControl]="txtFilter" autocomplete="off" #input>
+
+                    <button mat-button *ngIf="txtFilter.value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="fnClearFilter();">
+                        <mat-icon>close</mat-icon>
+                    </button>
+
+                </mat-form-field>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-12">
+        <div style="height: 10px;"></div>
+        <!-- Nueva tabla material -->
+        <div id="listaMobile" class="mat-elevation-z8">
+            <div class="example-container">
+                <table mat-table [dataSource]="listCreditNotes">
+
+                    <ng-container matColumnDef="codigoNotaCredito" sticky>
+                        <th mat-header-cell *matHeaderCellDef>Opción
+                        </th>
+
+                        <td *matCellDef="let element">
+
+                            <div style="margin-left: 10px;">
+                                <button matTooltip="Visualizar" matTooltipPosition="left" mat-stroked-button
+                                    color="accent" (click)="fnEditCreditNotes(element.codigoNotaCredito)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipoDocumento">
+                        <th mat-header-cell *matHeaderCellDef> T. Documento </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='T. Documento: '>
+                            <ngb-highlight [result]="element.tipoDocumento" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serie">
+                        <th mat-header-cell *matHeaderCellDef> Serie </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Serie: '>
+                            <ngb-highlight [result]="element.serie" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numero">
+                        <th mat-header-cell *matHeaderCellDef>Número</th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Número: '>
+                            <ngb-highlight [result]="element.numero" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha: '>
+                            <ngb-highlight [result]="element.fecha" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaRegistro">
+                        <th mat-header-cell *matHeaderCellDef> Fecha Registro </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile'
+                            data-label='Fecha Registro: '>
+                            <ngb-highlight [result]="element.fechaRegistro" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nombreCliente">
+                        <th mat-header-cell *matHeaderCellDef class="clsColumnClient"> Cliente </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cliente: '>
+                            <ngb-highlight [result]="element.nombreCliente" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo: '>
+                            <ngb-highlight [result]="element.tipo" [term]="txtFilter.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="total">
+                        <th mat-header-cell *matHeaderCellDef> Total </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Total: '>
+                            {{element.total | number:'3.2-2'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="estado">
+                        <th mat-header-cell *matHeaderCellDef> Estado </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado: '
+                            [style.color]="element.estado?'tomato':'blue'">
+                            {{element.estado}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
+</div>

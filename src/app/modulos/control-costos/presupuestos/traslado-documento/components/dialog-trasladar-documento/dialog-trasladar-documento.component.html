@@ -1,0 +1,134 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" (click)="trasladarDocumento()" [disabled]="disabledButton">
+            <i class="material-icons" matTooltip="Trasladar" matTooltipPosition="left">save</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="white" mat-dialog-close>
+            <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+        </button>
+    </div>
+</div>
+
+<div class=" col-md-10 offset-md-1">
+    <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">Elegir Presupuesto {{ titulo }} </mat-card>
+    </div>
+    <form autocomplete="off" [formGroup]="form">
+        <p class="title">Datos del Presupuesto de Origen: </p>
+        <hr>
+        <mat-card>
+            <div class="row">
+                <div class="container col-lg-6 col-md-6">
+                    <mat-form-field class="example-full-width">
+                        <mat-label> Presupuesto </mat-label>
+                        <input type="text" matInput placeholder="202563" formControlName="oldDocumento" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="container col-lg-6 col-md-6">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Cliente</mat-label>
+                        <input type="text" matInput placeholder="Alicorp" formControlName="oldCliente" readonly  style="color: rgb(236, 0, 140);">
+                    </mat-form-field>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="container col-lg-6 col-md-6">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Nombre Ejecutivo</mat-label>
+                        <input type="text" matInput formControlName="oldEjecutivo" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="container col-lg-6 col-md-6">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Estado</mat-label>
+                        <input type="text" matInput formControlName="oldEstado" readonly>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card>
+
+        <div class="mt-3">
+            <p class="title">Datos del Presupuesto de Destino: </p>
+            <hr>
+            <mat-card>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <!-- <mat-form-field class="example-full-width">
+                            <mat-label>Elegir Presupuesto</mat-label>
+                            <input matInput placeholder="200008" formControlName="presupuesto" (keyup)="validarPresupuesto($event)" maxlength="6">
+                        </mat-form-field> -->
+
+                        <!-- <small *ngIf="presupuesto" class="text-danger">El presupuesto no puede estar vacío</small> -->
+                        <ng-select appendTo="body" [clearable]="true" placeholder="Presupuesto" formControlName="presupuesto" (change)="validarPresupuesto($event)">
+                            <ng-option *ngFor="let item of listaPresupuestoClienteDestino" [value]="item.codigo">
+                                {{item.descripcion}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4" style="padding-top: 13px;">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Total a trasladar</mat-label>
+                            <input matInput placeholder="200" formControlName="total">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <button mat-mini-fab color="accent" (click)="buscarDocumento()" [disabled]="disabledButton">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container col-lg-6 col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Nombre</mat-label>
+                            <input type="text" matInput placeholder="Alicorp" formControlName="newNombre" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="container col-lg-6 col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Cliente</mat-label>
+                            <input type="text" matInput placeholder="Alicorp" formControlName="newCliente" readonly  style="color: rgb(236, 0, 140);">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container col-lg-6 col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Nombre Ejecutivo</mat-label>
+                            <input type="text" matInput placeholder="Alicorp" formControlName="newEjecutivo" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="container col-lg-6 col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Estado</mat-label>
+                            <input type="text" matInput formControlName="newEstado" readonly>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </form>
+
+
+    <!-- <mat-dialog-actions align="center">
+        <button mat-raised-button color="primary" (click)="trasladarDocumento()"> Trasladar </button>
+        <button mat-raised-button color="warn" mat-dialog-close> Salir </button>
+    </mat-dialog-actions> -->
+
+</div>
+
+
+<!-- <pre>
+  Estado del formulario {{form.valid}}
+<br />
+  Status: {{form.status}}
+</pre>
+
+<pre>
+{{ form.value | json }}
+</pre> -->

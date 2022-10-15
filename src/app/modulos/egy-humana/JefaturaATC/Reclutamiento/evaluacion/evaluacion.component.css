@@ -1,0 +1,139 @@
+ .example-container {
+   /*height: 450px;*/
+   width   : 100%;
+   overflow: auto;
+ }
+
+ .clstitulo {
+   background-color: #334d6e;
+   color           : #fff;
+   text-align      : center;
+   border-radius   : calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+   height          : 60px;
+ }
+
+ .example-container table {
+   width: 100%;
+ }
+
+ .clsColumnaOpc {
+   width: 120px;
+ }
+
+ .clsColumnaLarge {
+   width: 400px;
+ }
+
+ .clsColumnaLib {
+   width: 150px;
+ }
+
+ .clsRadio {
+   margin-top: 20px;
+ }
+
+ mat-radio-button {
+   margin-right: 8px;
+ }
+
+ mat-form-field {
+   width    : 100%;
+   font-size: 18px;
+ }
+
+
+ mat-label {
+   font       : 1.3em Arial, sans-serif;
+   font-weight: bold;
+ }
+
+ mat-card-title {
+   font-size: 33px !important;
+ }
+
+ .table tr th {
+   padding         : 5px !important;
+   font-size       : 10px;
+   text-align      : center;
+   vertical-align  : middle;
+   background-color: #334D6E;
+   color           : white;
+ }
+
+ .table tr td {
+   padding         : 5px !important;
+   font-size       : 10px;
+   text-align      : center;
+   vertical-align  : middle;
+   background-color: rgba(237, 235, 235, 0.8);
+ }
+
+ select {
+   font-size       : 12px;
+   background-color: #D8EBFF;
+   width           : 80px;
+   display         : inline-block;
+   /* color        : white; */
+ }
+
+ tbody tr {
+   height: 40px;
+ }
+
+ .centrado {
+   text-align: center;
+ }
+
+
+ .form-row .form-group label {
+   font-size: 12px;
+   width    : 80px;
+ }
+
+ .select2 {
+   font-size: 12px;
+   width    : 60%;
+   float    : right;
+   /* color : white; */
+ }
+
+ .select1 {
+   font-size: 12px;
+   display  : inline-block;
+   width    : 80%;
+   /* color : white; */
+ }
+
+ :host /deep/ form .ng-invalid label {
+   color: #f44336;
+ }
+
+ :host /deep/ .mat-form-field-disabled input {
+   color           : black;
+   BACKGROUND-COLOR: #d0d3d6;
+ }
+
+ :host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+   color           : black;
+   BACKGROUND-COLOR: #d0d3d6;
+ }
+
+ :host /deep/ .mat-form-field-disabled textarea {
+   BACKGROUND-COLOR: #d0d3d6;
+ }
+
+ .clsColumnaTelf {
+   width: 5%
+ }
+
+ .clsColumnaOpcion {
+   width: 7%
+ }
+
+ .clsColumnaNumDoc {
+   width: 8%
+ }
+
+ .clsColumnaNombre {
+   width: 16%
+ }

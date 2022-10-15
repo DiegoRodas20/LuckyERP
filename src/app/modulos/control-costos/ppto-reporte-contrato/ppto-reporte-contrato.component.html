@@ -1,0 +1,63 @@
+<!-- ========================== -->
+<!-- Botones Funcionalidad -->
+<!-- ========================== -->
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" [color]="btn.color" (click)="clickFab(ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+<!-- ========================== -->
+<!-- End Botones Funcionalidad -->
+<!-- ========================== -->
+
+<div class="col-md-10 offset-md-1" style="padding-top: 70px;">
+    <div class="mb-3 " style="text-align: center; ">
+        <mat-card class="title-card ">Reporte de Contratos</mat-card>
+    </div>
+
+    <mat-card class="contenedor">
+        <form autocomplete="off" [formGroup]="formReporte">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="text-align: center;">
+                    <mat-radio-group formControlName="estado">
+                        <mat-radio-button value="-1">Todos</mat-radio-button>
+                        <mat-radio-button value="0">Vencidos</mat-radio-button>
+                        <mat-radio-button value="1">Vigentes</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                    <ng-select appendTo="body" formControlName="tipoContrato" [clearable]="false" placeholder="Tipo de Contrato">
+                        <ng-option *ngFor="let item of listaTipoContrato" [value]="item.nId">
+                            {{item.sTipoContrato}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                    <ng-select appendTo="body" formControlName="year" [clearable]="false" placeholder="Año">
+                        <ng-option *ngFor="let item of listaYear" [value]="item.nId">
+                            {{item.year}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <ng-select appendTo="body" formControlName="empresa" [clearable]="true" placeholder="Empresa">
+                        <ng-option *ngFor="let item of listaEmpresa" [value]="item.nIdEmp">
+                            {{item.sRuc}} - {{ item.sRazonSocial }}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+            </div>
+        </form>
+    </mat-card>
+
+</div>

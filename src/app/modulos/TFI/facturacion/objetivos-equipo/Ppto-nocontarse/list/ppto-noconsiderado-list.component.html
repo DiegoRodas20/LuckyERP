@@ -1,0 +1,94 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+
+    <!-- Card Header Titulo-->
+    <div class="text-center mt-0 mb-2">
+        <h3 class="col-md-10 offset-md-1 card-header mb-4">
+            Presupuestos que no se deben considerar
+        </h3>
+    </div>
+
+    <!-- Botones Flotantes -->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+                (click)="clickFab(ibtn)">
+                <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Busqueda -->
+    <mat-card class="mb-4">
+        <div class="form-row d-flex justify-content-center">
+            <div class="col-lg-4">
+                <mat-form-field class="w-100">
+                    <mat-label>Buscar:</mat-label>
+                    <input matInput [formControl]="tFiltro" (keyup)="applyFilter($event)" [(ngModel)]="searchKey"
+                        #input />
+                    <button mat-button style="outline: none" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="limpiarFiltro()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Listado de Presupuestos -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- Columna Opciones -->
+                <ng-container matColumnDef="opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef class="clsColumnaLib">Opcion</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                        <button mat-icon-button color="accent" (click)="editar(row.presupuestoEmpresaID, row.anio)"
+                            matTooltip="Editar" matTooltipPosition="right">
+                            <mat-icon>create</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- Columna Empresa-->
+                <ng-container matColumnDef="empresa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Empresa</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Empresa: '>
+                        {{row.razonSocial}}</td>
+                </ng-container>
+
+                <!-- Columna Año-->
+                <ng-container matColumnDef="año">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Año</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Año: '>{{row.anio}}
+                    </td>
+                </ng-container>
+
+                <!-- Columna Cantidad Presupuestos-->
+                <ng-container matColumnDef="cantidadPpto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Cantidad Ppto</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Cantidad Ppto: '>
+                        {{row.cantidadPresupuesto}}</td>
+                </ng-container>
+
+                <!-- Columna Estado-->
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">Estado</th>
+                    <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Estado: '>
+                        {{row.estado}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <br>
+</div>

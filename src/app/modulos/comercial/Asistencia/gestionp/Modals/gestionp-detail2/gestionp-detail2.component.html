@@ -1,0 +1,453 @@
+<ngx-spinner name="spi_detail2" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button [@tada]="{value: tadaDetail}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleDetail, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsDetail}">add</i>
+  </button>
+  <div [@speedDialStagger]="abDetail.length">
+      <button *ngFor="let btn of abDetail; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleDetail, ibtn)"  [disabled]="btn.dis" >
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+      </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">Detalle del planning</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<!-- contenido -->
+<div class="modal-body">
+  <div class="row">
+
+      <div id="dLeftDetail" class="col-lg-6">
+          <mat-accordion>
+              <!-- Información Bono por Resultado -->
+              <mat-expansion-panel [expanded]="panelOpenState" (opened)="OpenState = true" (closed)="OpenState = false" >
+
+                  <mat-expansion-panel-header>
+                      <mat-panel-title>
+                          Información 
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{OpenState ? '' : fechasPanelInfo }}
+                      </mat-panel-description>
+                      <!-- <mat-panel-description style="margin-right: 0px;"></mat-panel-description> -->
+                      <mat-icon style="margin-right: 10px;">info</mat-icon>
+                  </mat-expansion-panel-header>
+
+                  <div class='row'>
+                      <div id="fgPlanning" [formGroup]="fgPlanning" class="col-lg-12">
+                          <div class="form-row">
+                              <div class="col-lg-6">
+                                  <mat-form-field style="width: 100%;">
+                                      <mat-label>Presupuesto</mat-label>
+                                      <input type="text" matInput formControlName="sPresupuesto">
+                                  </mat-form-field>
+                              </div>
+
+                              <div class="col-lg-6">
+                                  <mat-form-field style="width: 100%;">
+                                      <mat-label>Cliente</mat-label>
+                                      <input type="text" matInput formControlName="sCliente">
+                                  </mat-form-field>
+                              </div>
+
+                          </div>
+
+                          <div class="form-row">
+                              <div class="col-lg-12">
+                                  <mat-form-field style="width: 100%;">
+                                      <mat-label>Campaña</mat-label>
+                                      <input type="text" matInput formControlName="sCampania">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <div class="form-row">
+                            <div class="col-lg-12">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Responsable</mat-label>
+                                    <input type="text" matInput formControlName="sResponsable">
+                                </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-row">
+                            <div class="col-lg-6">
+                                <mat-form-field style="width: 100%" appDateFormat>
+                                  <mat-label>Fecha Inicio</mat-label>
+                                  <!-- (dateInput)="addEvent('input', $event)" -->
+                                  <input
+                                    formControlName="sFechaInicio"
+                                    matInput
+                                     (dateChange)="ValidarFechaInicio()"
+                                    [matDatepicker]="mdpNewInfo"
+                                    [errorStateMatcher]="matcher"
+                                  />
+                                  <mat-datepicker-toggle matSuffix [for]="mdpNewInfo">
+
+                                  </mat-datepicker-toggle>
+                               
+                                  <mat-datepicker #mdpNewInfo >
+
+                                  </mat-datepicker>
+                                  <mat-error
+                                    *ngIf="getfgPlanning.sFechaInicio.hasError('required')"
+                                    >. Obligatorio</mat-error
+                                  >
+                                   <!-- <mat-error
+                                  *ngIf="fgPlanning.controls.sFechaInicio.touched &&
+                                  fgPlanning.controls.sFechaInicio.invalid">
+                                  <span *ngIf="fgPlanning.controls.sFechaInicio.errors.required">Fecha inicio es <strong>requerido</strong>
+                                  </span>
+                                </mat-error> -->
+                                </mat-form-field>
+                              </div>
+                             
+                            <div class="col-lg-6">
+                              <mat-form-field style="width: 100%" appDateFormat>
+                                <mat-label>Término</mat-label>
+                                <input formControlName="sFechaTermino" 
+                                matInput 
+                                (dateChange)="ValidarFechaFin()"
+                                [matDatepicker]="sFechaTermino" 
+                                [errorStateMatcher]="matcher"  />
+                                <mat-datepicker-toggle matSuffix [for]="sFechaTermino">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #sFechaTermino >
+
+                                </mat-datepicker>
+                                <mat-error *ngIf="getfgPlanning.sFechaTermino.hasError('required')">. Obligatorio</mat-error>
+                                <!-- <mat-error *ngIf="fgPlanning.controls.sFechaTermino.touched && fgPlanning.controls.sFechaTermino.invalid" >
+                                  <span *ngIf="fgPlanning.controls.sFechaTermino.errors.required">Fecha fin es <strong>requerido</strong>
+                                  </span>
+                                </mat-error> -->
+                              </mat-form-field>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </mat-expansion-panel>
+              <!-- Información personal -->
+              <mat-expansion-panel [expanded]="panelOpenState2" [disabled]="panelDisabledSeleccion">
+
+                  <mat-expansion-panel-header>
+                      <mat-panel-title>
+                          Selección de personal :
+                      </mat-panel-title>
+                      <mat-panel-description style="margin-right: 0px;"></mat-panel-description>
+                      <mat-icon style="margin-right: 10px;">account_circle</mat-icon>
+                  </mat-expansion-panel-header>
+
+                  <div class="card__row row">
+
+                      <div id="card_inner2" class="card__inner">
+
+                          <div class="card__face card__face--front">
+
+                              <div class="row">
+
+                                  <div class="col-xl-3 divAvatar">
+                                      <a>
+                                          <span class="imgBadge">{{getInfoPerso.sCodPlla.value}}</span>
+                                          <img class="imgAvatar" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                                          <!-- (click)="clickFlipCard()"  -->
+                                      </a>
+                                  </div>
+
+                                  <div class="col-xl-9">
+
+                                      <div class="row">
+                                          <div id="fgSearch" [formGroup]="fgSearch" class="col-lg-12">
+                                              <div class="form-row">
+                                                  <div class="col-lg-12">
+                                                      <mat-form-field style="width: 100%;">
+                                                          <mat-label>Apellidos y nombres</mat-label>
+
+                                                          <input type="text" (ngModelChange)="updatedVal($event)" matInput formControlName="sNombres" [matAutocomplete]="sNombres" class="titlecase">
+
+                                                          <mat-autocomplete #sNombres="matAutocomplete" [displayWith]="displayWith" (optionSelected)="osPerso($event, 1)">
+                                                              <mat-option [ngClass]="{'hide-autocomplete': !saPersonal}" *ngFor="let option of foPersonal | async" [value]="option">
+                                                                  {{option.sNombres | titlecase}}
+                                                              </mat-option>
+                                                          </mat-autocomplete>
+
+
+                                                          <button style="outline: none;" mat-button *ngIf="getSearch.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getSearch.sNombres.patchValue('')">
+                                                              <mat-icon>close</mat-icon>
+                                                          </button>
+                                                      </mat-form-field>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                      <div class="row">
+                                          <div id="fgPerso" [formGroup]="fgPerso" class="col-lg-12">
+                                              <div class="form-row">
+                                                  <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Perfil</mat-label>
+                                                        <mat-select formControlName="sCategoria"
+                                                        [errorStateMatcher]="matcher">
+                                                          <mat-option
+                                                            *ngFor="let item of aPerfil"
+                                                            [value]="item"
+                                                          >
+                                                            {{ item.sCategoria }}
+                                                          </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="getPerso.nCategoria.hasError('noSelect')">. Obligatorio</mat-error>
+
+                                                        <!-- <mat-error
+                                                          *ngIf="fgPerso.controls.sCategoria.touched &&
+                                                          fgPerso.controls.sCategoria.invalid" >
+                                                          <span
+                                                            *ngIf="
+                                                            fgPerso.controls.sCategoria.errors.required"
+                                                            >El perfil es <strong>requerido</strong>
+                                                          </span>
+                                                        </mat-error> -->
+                                                      </mat-form-field>
+                                                      <!-- <mat-form-field style="width: 100%;">
+                                                          <mat-label>Tipo</mat-label>
+                                                          <input type="text" matInput formControlName="sDscTipo">
+                                                      </mat-form-field> -->
+                                                  </div>
+                                                  <div class="col-lg-6">
+                                                    <mat-form-field style="width: 100%">
+                                                        <mat-label>Canal</mat-label>
+                                                        <mat-select formControlName="sCanal"
+                                                        [errorStateMatcher]="matcher">
+                                                          <mat-option
+                                                            *ngFor="let item of aCanal"
+                                                            [value]="item"
+                                                          >
+                                                            {{ item.sCanal }}
+                                                          </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="getPerso.nCanal.hasError('noSelect')">. Obligatorio</mat-error>
+
+                                                        <!-- <mat-error
+                                                          *ngIf="fgPerso.controls.sCanal.touched &&
+                                                          fgPerso.controls.sCanal.invalid ">
+                                                          <span
+                                                            *ngIf="
+                                                            fgPerso.controls.sCanal.errors.required
+                                                            "
+                                                            >El canal es <strong>requerido</strong>
+                                                          </span>
+                                                        </mat-error> -->
+                                                      </mat-form-field>
+                                                      <!-- <mat-form-field style="width: 100%;">
+                                                          <mat-label>Documento</mat-label>
+                                                          <input type="text" matInput formControlName="sDocumento">
+                                                      </mat-form-field> -->
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                  </div>
+
+                              </div>
+
+                          </div>
+
+                          <div class="card__face card__face--back">
+                              <div class="row">
+
+                                  <div class="col-xl-3 divAvatar">
+                                      <a>
+                                          <img class="imgAvatar" src="../../../../../assets/img/LuckyInfo.png"  alt="">
+                                          <!-- (click)="clickFlipCard()" -->
+                                      </a>
+                                  </div>
+
+                                  <div class="col-xl-9">
+
+                                      <div class="row">
+                                          <div id="fgInfoPerso" [formGroup]="fgInfoPerso" class="col-lg-12">
+                                              <div class="form-row">
+                                                  <div class="col-lg-8">
+                                                      <mat-form-field style="width: 100%;">
+                                                          <mat-label>Tipo</mat-label>
+                                                          <input type="text" matInput formControlName="sTipo">
+                                                      </mat-form-field>
+                                                  </div>
+                                                  <div class="col-lg-4">
+                                                      <mat-form-field style="width: 100%;">
+                                                          <mat-label>N° Documento</mat-label>
+                                                          <input type="text" matInput formControlName="sDocumento">
+                                                      </mat-form-field>
+                                                  </div>
+                                              </div>
+
+                                              <div class="form-row">
+
+                                                  <div class="col-lg-4">
+                                                      <mat-form-field style="width: 100%;">
+                                                          <mat-label>Ciudad</mat-label>
+                                                          <input type="text" matInput formControlName="sCiudad">
+                                                      </mat-form-field>
+                                                  </div>
+
+                                                  <div class="col-lg-4">
+                                                      <mat-form-field style="width: 100%;" appDateFormat>
+                                                          <mat-label>Fecha ingreso</mat-label>
+                                                          <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                                          <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                                          <mat-datepicker #dFechIni></mat-datepicker>
+                                                      </mat-form-field>
+                                                  </div>
+
+                                                  <div class="col-lg-4">
+                                                      <mat-form-field style="width: 100%;" appDateFormat>
+                                                          <mat-label>Fecha término</mat-label>
+                                                          <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                                          <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                                          <mat-datepicker #dFechFin></mat-datepicker>
+                                                      </mat-form-field>
+                                                  </div>
+
+                                              </div>
+
+                                          </div>
+                                      </div>
+
+                                  </div>
+
+                              </div>
+                          </div>
+
+                      </div>
+
+                  </div>
+
+                  <!-- Fab Perso -->
+                  <div class="fab-perso">
+                      <button mat-mini-fab class="fab-toggler-perso">
+                          <i class="material-icons" [@fabToggler]="{value: tsPerso}">control_camera</i>
+                      </button>
+                      <div [@speedDialStagger]="abPerso.length">
+                          <button *ngFor="let btn of abPerso; let ibtn = index;" mat-mini-fab class="fab-secondary-perso" color="secondary" (click)="clickFab(5, ibtn)">
+                            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="below">{{btn.icon}}</i>
+                          </button>
+                      </div>
+                  </div>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  
+                    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </symbol>
+                   
+                  </svg>
+                  <div class="row" style="margin-top: 15px;" [hidden]="FooterSucursal">
+                    <div class="col-sm">
+                      <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                        <div>
+                            Sucursal fuera del centro de costo
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 15px;" [hidden]="FooterPuesto">
+                    <div class="col-sm">
+                      <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                        <div>
+                            Puesto invalido en sucursal
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </mat-expansion-panel>
+
+          </mat-accordion>
+      </div>
+
+      <div id="dRightDetail" class="col-lg-6">
+
+          <div class="row">
+              <div class="col-sm">
+                  <h6>Lista de personal :</h6>
+                  <hr style="margin-top: 0px; margin-bottom: 10px;">
+              </div>
+          </div>
+
+          <div class="row">
+              <div [formGroup]="fgFilter" class="col-lg-12">
+                  <div class="form-row">
+                      <div class="col-lg-12">
+                          <mat-form-field style="width: 100%;">
+                              <mat-label>Filtrar personal por nombres </mat-label>
+                              <input type="text" matInput formControlName="sNombres">
+                              <button style="outline: none;" mat-button *ngIf="getFilter.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getFilter.sNombres.patchValue('')">
+                              <mat-icon>close</mat-icon>
+                              </button>
+                          </mat-form-field>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div id="dTableListaPlanning">
+              <table #mtPlanning mat-table [dataSource]="PlanningRDS" style="width: 100%;">
+                  <ng-container matColumnDef="sPersoImg">
+                      <th mat-header-cell *matHeaderCellDef> Perfil </th>
+                      <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label=''>
+                          <div class="divImg">
+                              <div [@divTable]="element == editTable ? 'over' : 'out'" class="divMouse" (click)="editPerso(element)" (mouseover)="mouseOver(1, element)" (mouseout)="editTable = null">
+                                  <span [@editTable]="element == editTable ? 'over' : 'out'" class="material-icons imgMouse">edit</span>
+                              </div>
+                              <img class="imgTable" src="../../../../../assets/img/LuckyAvatar.png" alt="">
+                          </div>
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="sNombres" style="width: 80%;">
+                      <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                      <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :' style="width: 80%;" >
+                          <ngb-highlight [result]="element.sNombres | titlecase" [term]="getFilter.sNombres.value"></ngb-highlight>
+                          <br style="display:block;line-height:5px;">
+                          <label >  Perfil: {{ element.sCategoria}} </label>
+                          <br style="display:block;line-height:5px;">
+                          <label > Canal: {{ element.sCanal }} </label>
+                          <br style="display:block;line-height:5px;">
+                          <label > # Dias: {{ element.nDias }} </label>
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action"  >
+                      <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Opción </th>
+                      <td style="text-align: right;" mat-cell *matCellDef="let element" style="text-align: right;width: 15%;">
+                          <button matTooltip="Remover" style="text-align: right;" matTooltipPosition="right" mat-icon-button color="accent" 
+                          [disabled]="(mPlanning === 1) ? 'false' : 'true'" (click)="removePerso(element)">
+                              <mat-icon>remove_circle</mat-icon>
+                          </button>
+                      </td>
+                  </ng-container>
+                  <ng-container matColumnDef="noData">
+                      <mat-footer-cell *matFooterCellDef [attr.colspan]="PlanningRDC.length">
+                          No se encuentran registros.
+                      </mat-footer-cell>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="PlanningRDC; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: PlanningRDC;"></tr>
+                  <mat-footer-row *matFooterRowDef="['noData']" [hidden]="PlanningRDS && this.PlanningRDS.filteredData.length > 0"></mat-footer-row>
+
+              </table>
+          </div>
+          <mat-paginator #pagPlanning style="display: contents;" [hidePageSize]="false" [pageSize]="3"></mat-paginator>
+
+      </div>
+  </div>
+</div>
+
+
+
+

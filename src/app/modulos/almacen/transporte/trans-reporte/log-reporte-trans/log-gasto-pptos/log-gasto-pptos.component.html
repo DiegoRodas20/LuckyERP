@@ -1,0 +1,50 @@
+<div style="margin-top: 15px;">
+    <div class="col-md-12">
+        <h5 class="col-md-12 card-header" style="text-align: center">
+            Gastos cargado Presupuesto Cliente
+        </h5>
+
+        <mat-card>
+            <form class="row" [formGroup]="formGastos">
+
+                <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" formControlName="cboAnio" placeholder="Año" required>
+                        <ng-option *ngFor="let vAnio of listaYear" [value]="vAnio.year">
+                            {{vAnio.year}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" formControlName="cboCliente" placeholder="Cliente" required>
+                        <ng-option *ngFor="let vCliente of listaCliente" [value]="vCliente.id">
+                            {{vCliente.descripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+
+    <!--Zona de botones flotantes-->
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista">
+            <!--Para exportar excel -->
+            <button *ngIf="abLista>0" (click)="generarExcel()" matTooltipPosition="left" mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Descargar excel" color="secondary" t-stroked-button><i
+                    class="material-icons">cloud_download</i></button>
+
+        </div>
+    </div>
+</div>
+<!-- 
+<pre>
+    Estado del formulario {{formGastos.valid}}
+  <br />
+    Status: {{formGastos.status}}
+  </pre>
+
+<pre>
+  {{ formGastos.value | json }}
+  </pre> -->

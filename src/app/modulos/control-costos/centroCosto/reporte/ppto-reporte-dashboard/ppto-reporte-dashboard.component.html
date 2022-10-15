@@ -1,0 +1,18 @@
+<div style="padding-top: 70px;">
+    <div class="col-md-10 offset-md-1">
+        <mat-card class="title-card"> Reportes </mat-card>
+        <mat-tab-group mat-align-tabs="center" style="margin-top: 10px;">
+            <mat-tab label="Informe de saldos">
+                <!-- <p>Parametro 1</p> -->
+                <app-control-costo-reporte></app-control-costo-reporte>
+            </mat-tab>
+            <mat-tab label="Detallado de gastos">
+                <!-- El número dos significa que mostrará costo fijo -->
+                <app-dialog-informe-gasto [tipoPresupuesto]='2'></app-dialog-informe-gasto>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <!-- <div class="col-md-10 offset-md-1"> -->
+
+</div>

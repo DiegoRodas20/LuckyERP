@@ -1,0 +1,164 @@
+<div class="mb-3 col-md-10 offset-md-1" style="text-align: center;">
+  <!-- <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div> -->
+  <!-- Botones -->
+  <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+      <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+        <button *ngIf="btn.state" mat-mini-fab
+          class="fab-secondary"
+          [matTooltip]="btn.tool"
+          matTooltipPosition="left"
+          color="secondary"
+          (click)="clickFab(ibtn)">
+          <i class="material-icons" >{{btn.icon}}</i>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <mat-card class="title-card">Informe de gasto detallado</mat-card>
+  <div class="card mt-3">
+    <div class="card-body">
+      <form autocomplete="off" [formGroup]="formInforme">
+
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+            <mat-radio-group formControlName="tipoGasto">
+              <mat-radio-button value="2">Cuenta Corriente</mat-radio-button>
+              <mat-radio-button value="1">Gasto Congelado</mat-radio-button>
+              <mat-radio-button value="3">Ambos</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12" *ngIf="tipoPresupuesto === 1">
+            <ng-select appendTo="body" [clearable]="true" placeholder="Empresa" formControlName="cliente">
+              <ng-option *ngFor="let item of listaCliente" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12" *ngIf="tipoPresupuesto === 2">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Empresa" formControlName="empresa"
+              (change)="cambioEmpresa($event)">
+              <ng-option *ngFor="let item of listaEmpresa" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+            <ng-select appendTo="body" [clearable]="true" placeholder="Presupuesto" formControlName="presupuesto">
+              <ng-option *ngFor="let item of listaPresupuesto" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+            <ng-select appendTo="body" [clearable]="true" placeholder="Sucursales" formControlName="sucursal">
+              <ng-option *ngFor="let item of listaSucursal" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+            <ng-select appendTo="body" [clearable]="true" placeholder="Partida" formControlName="partida">
+              <ng-option *ngFor="let item of listaPartidas" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-8 col-md-12 col-sm-12 col-12" style="padding-top: 6px;">
+            <mat-form-field style="width: 100%">
+              <mat-label>Usuarios Creación</mat-label>
+              <mat-chip-list #chipListUsuariosCreacion style="height: 51.5px;">
+                <mat-chip *ngFor="let chipElement of chipElementsUsuarioCreacion" [selectable]="true" [removable]="true"
+                  (removed)="fnEliminarUsuarioCreacion(chipElement)">
+                  {{chipElement.descripcion}}
+                  <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Seleccionar Usuario(s)..." #usuarioInput formControlName="usuarioCreacion"
+                  [matAutocomplete]="autoUsuarioCreacion" [matChipInputFor]="chipListUsuariosCreacion"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodesUsuario"
+                  (matChipInputTokenEnd)="fnAgregarUsuarioChipList($event)">
+              </mat-chip-list>
+              <mat-autocomplete #autoUsuarioCreacion="matAutocomplete"
+                (optionSelected)="fnSeleccionarUsuarioCreacion($event)" [displayWith]="fnDisplayUsuarioCreacion">
+                <mat-option *ngFor="let usuarioCreacion of filteredUsuarioCreacion | async" [value]="usuarioCreacion">
+                  {{usuarioCreacion.descripcion}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-4 col-md-11 col-sm-11 col-11">
+            <ng-select appendTo="body" [clearable]="true" placeholder="Depositario" formControlName="depositario">
+              <ng-option *ngFor="let item of listaDepositario" [value]="item.id">
+                {{item.descripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-4 col-md-11 col-sm-11 col-11">
+            <mat-form-field style="width: 100%; padding-top: 6px;;">
+              <mat-label>Fecha Inicio</mat-label>
+              <input matInput [matDatepicker]="fechaInicioPicker" formControlName="rangoFechasFechaInicio"
+                (click)="fechaInicioPicker.open()" readonly="true">
+              <mat-datepicker-toggle matSuffix [for]="fechaInicioPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fechaInicioPicker></mat-datepicker>
+              <mat-error
+                *ngIf="formInforme.get('rangoFechasFechaInicio').hasError('dateRangeValidator') && formInforme.get('rangoFechasFechaInicio').touched">
+                La fecha de inicio no puede ser mayor a la fecha final
+              </mat-error>
+              <mat-error
+                *ngIf="formInforme.get('rangoFechasFechaInicio').hasError('required') && formInforme.get('rangoFechasFechaInicio').touched">
+                Debe haber una fecha inicial
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-4 col-md-11 col-sm-11 col-11">
+            <mat-form-field style="width: 100%; padding-top: 6px;;">
+              <mat-label>Fecha Fin</mat-label>
+              <input matInput [matDatepicker]="fechaFinPicker" formControlName="rangoFechasFechaFin"
+                (click)="fechaFinPicker.open()" readonly="true">
+              <mat-datepicker-toggle matSuffix [for]="fechaFinPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fechaFinPicker></mat-datepicker>
+              <mat-error
+                *ngIf="formInforme.get('rangoFechasFechaFin').hasError('dateRangeValidator') && formInforme.get('rangoFechasFechaFin').touched">
+                La fecha final no puede ser menor a la fecha de inicio
+              </mat-error>
+              <mat-error
+                *ngIf="formInforme.get('rangoFechasFechaFin').hasError('required') && formInforme.get('rangoFechasFechaFin').touched">
+                Debe haber una fecha final
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- <pre>
+    Estado del formulario {{formInforme.valid}}
+  <br />
+    Status: {{formInforme.status}}
+  </pre>
+
+<pre>
+  {{ formInforme.value | json }}
+  </pre> -->

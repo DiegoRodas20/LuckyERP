@@ -1,0 +1,55 @@
+<h5 mat-dialog-title style="margin-bottom: 0px!important;width: 100%;text-align: center;"
+    class="card-header center-text-card">
+    Modulos
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+        <form [formGroup]="formModulo" class="row">
+            <div class="form-group col-md-12">
+                <ng-select style="padding-bottom:3.5px; bottom:0.45rem" (change)="fnLlenarDirecciones($event)"
+                    appendTo="body" [clearable]="false" formControlName="cboPuntoRecup" placeholder="Módulo" required>
+                    <ng-option *ngFor="let vPunto of lPuntoRecup" [value]="vPunto.nId">
+                        {{vPunto.sCodigo}} - {{vPunto.sDestino}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formModulo.get('cboPuntoRecup').hasError('required')  && formModulo.get('cboPuntoRecup').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Ubicación:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtUbicación">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Dirección:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtDireccion">
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>check</mat-icon>
+        </button>
+
+        <!-- <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="this.dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button> -->
+
+    </div>
+</mat-dialog-actions>

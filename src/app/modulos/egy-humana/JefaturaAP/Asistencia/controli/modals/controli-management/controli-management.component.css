@@ -1,0 +1,47 @@
+/* #region  calendar */
+:host ::ng-deep .cal-month-view .cal-day-cell {
+  min-height: 35px;
+  outline: none;
+}
+
+:host ::ng-deep .cal-month-view .cal-cell-top {
+  min-height: 35px;
+}
+
+:host ::ng-deep .cal-month-view .cal-header {
+  background-color: #f3f0f054;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-cell.cal-today .cal-day-number {
+  font-size: 1em !important;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-number {
+  margin-bottom: 3px;
+  margin-top: 7px;
+  font-size: 1em;
+}
+
+:host ::ng-deep .cal-month-view .cal-day-badge {
+  display: none;
+}
+
+:host ::ng-deep .cal-month-view .cal-event {
+  height: 4px;
+  border-radius: 0%;
+  margin-top: 4px;
+}
+
+:host ::ng-deep .cal-month-view .cal-events {
+  margin: 0px;
+  position: absolute;
+}
+
+:host ::ng-deep .cal-days {
+  height: 210px !important;
+}
+/* #endregion */
+
+.mat-expansion-panel-body {
+  padding: 0 24px 0px !important;
+}

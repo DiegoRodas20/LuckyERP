@@ -1,0 +1,29 @@
+.contenedor_formulario {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  align-content: flex-start;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.boton_activo {
+  background-color: #334d6e;
+  color: white;
+}
+
+.boton_pasivo {
+  color: #334d6e;
+  background-color: white;
+}
+
+.label_buscar_personal {
+  font-size: 15px;
+  color: #334d6e;
+  margin: 0px;
+  font-weight: 600;
+}

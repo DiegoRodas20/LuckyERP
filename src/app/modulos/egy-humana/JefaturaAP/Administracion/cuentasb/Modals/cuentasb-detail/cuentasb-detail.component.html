@@ -1,0 +1,281 @@
+<!-- Spinner -->
+<ngx-spinner
+  name="spi_cuentasb_detail"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(3, -1)">
+    <i class="material-icons" [@fabToggler]="{ value: tsDetail }">add</i>
+  </button>
+  <div [@speedDialStagger]="abDetail.length">
+    <button
+      *ngFor="let btn of abDetail; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickFab(3, ibtn)"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+
+<h5 class="card-header">
+  Detalle de personal
+  <button
+    type="button"
+    class="close"
+    (click)="closeModal()"
+    style="color: white !important; text-shadow: none !important; outline: none"
+    data-dismiss="modal"
+    aria-label="Close"
+  >
+    <span class="material-icons">close</span>
+  </button>
+</h5>
+
+<!-- Cuerpo  -->
+<div class="modal-body">
+  <div class="row">
+    <div id="dLeftDetail" class="col-lg-6">
+      <mat-accordion #maDetail="matAccordion" multi>
+        <!-- #region Informacion Personal-->
+        <mat-expansion-panel [expanded]="true" [disabled]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Información del personal : </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div class="col-lg-3 divAvatar">
+              <a>
+                <span class="imgBadge">{{ getDetail.sCodPlla.value }}</span>
+                <img
+                  class="imgAvatar"
+                  src="../../../../../assets/img/LuckyAvatar.png"
+                  alt=""
+                />
+              </a>
+            </div>
+
+            <div id="fgDetail" [formGroup]="fgDetail" class="col-lg-9">
+              <div class="form-row">
+                <div class="col-lg-8">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo</mat-label>
+                    <input type="text" matInput formControlName="sTipo" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>N° Documento</mat-label>
+                    <input type="text" matInput formControlName="sDocumento" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-12">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Apellidos y nombres</mat-label>
+                    <input type="text" matInput formControlName="sNombres" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Ciudad</mat-label>
+                    <input type="text" matInput formControlName="sCiudad" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Fecha ingreso</mat-label>
+                    <input
+                      formControlName="dFechIni"
+                      matInput
+                      [matDatepicker]="dFechIni"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechIni"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechIni></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Fecha término</mat-label>
+                    <input
+                      formControlName="dFechFin"
+                      matInput
+                      [matDatepicker]="dFechFin"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dFechFin"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #dFechFin></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <!-- #endregion -->
+
+        <!-- #region Filtro -->
+        <mat-expansion-panel id="mep_filtro">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Filtro de cuentas : {{ getFilter.sTipoCta.value }}
+            </mat-panel-title>
+            <mat-panel-description style="margin-right: 0px">
+            </mat-panel-description>
+            <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div [formGroup]="fgFilter" class="col-lg-12">
+              <div class="form-row">
+                <div class="col-lg-12">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select
+                      formControlName="sTipoCta"
+                      (selectionChange)="filtrar()"
+                    >
+                      <mat-option
+                        *ngFor="let item of cboTipoCta"
+                        [value]="item.sDesc"
+                      >
+                        {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <!-- #endregion -->
+      </mat-accordion>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Histórico de cuentas :</h6>
+          <hr style="margin-top: 0px; margin-bottom: 10px" />
+        </div>
+      </div>
+
+      <div id="dTableDetail" class="melevation">
+        <table mat-table [dataSource]="DetailDS" style="width: 100%">
+          <!-- Action Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Detalle</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                matTooltip="Detalle"
+                matTooltipPosition="right"
+                mat-stroked-button
+                color="accent"
+                (click)="showModal(element)"
+              >
+                <mat-icon>account_balance</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sBanco">
+            <th mat-header-cell *matHeaderCellDef>Banco</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="m-card-title"
+              data-label="Banco :"
+            >
+              {{ element.sBanco }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sNroCuenta">
+            <th mat-header-cell *matHeaderCellDef>N° Cuenta</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="N° Cuenta :"
+            >
+              {{ element.sNroCuenta }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dFechIni">
+            <th mat-header-cell *matHeaderCellDef>Inicio</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Fecha inicio :"
+            >
+              {{ element.dFechIni | date: "MM/yyyy" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sTipoCta">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="has_label_on_mobile"
+              data-label="Tipo de cuenta : "
+            >
+              <ngb-highlight
+                [result]="element.sTipoCta"
+                [term]="getFilter.sTipoCta.value"
+              ></ngb-highlight>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="DetailDC.length">
+              No se encuentran registros.
+            </mat-footer-cell>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="DetailDC; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: DetailDC"></tr>
+          <mat-footer-row
+            *matFooterRowDef="['noData']"
+            [hidden]="DetailDS && this.DetailDS.filteredData.length > 0"
+          ></mat-footer-row>
+        </table>
+      </div>
+      <mat-paginator
+        #pagDetail
+        style="display: contents"
+        [hidePageSize]="false"
+        [pageSize]="4"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>

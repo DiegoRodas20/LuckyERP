@@ -1,0 +1,24 @@
+<div class="mb-3" style="text-align: center;">
+  <mat-card class="title-card">Subida de documentos</mat-card>
+</div>
+<div mat-dialog-content>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10">
+        <form [formGroup]="formArchivo">
+          <div class="">
+            <input type="file" accept="application/pdf, image/*" formControlName="fileUpload" class="custom-file-input" aria-describedby="inputGroupFileAddon04" (change)="fnSeleccionarArchivo($event)">
+            <mat-label class="custom-file-label" style="width: 100%">{{archivoDocumentoLbl}}</mat-label>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-2">
+        <button mat-raised-button color="primary" matTooltip="Subir Archivo" type="button" (click)="fnGuardarArchivo()">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,23 @@
+<div>
+  <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Lista para Notas mismo día/Cierre Automatico</mat-card>
+  </div>
+  <mat-dialog-content>
+    <mat-tab-group mat-align-tabs="center" [dynamicHeight]='true' class="mt-3">
+      <mat-tab label="Almacenes">
+        <div class="card">
+          <div class="card-body">
+            <app-almacen-parametros [data]="data"></app-almacen-parametros>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Presupuestos">
+        <div class="card">
+          <div class="card-body">
+            <app-presupuesto-parametros [data]="data"></app-presupuesto-parametros>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+</div>

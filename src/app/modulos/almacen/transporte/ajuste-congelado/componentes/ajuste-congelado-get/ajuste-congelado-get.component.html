@@ -1,0 +1,97 @@
+<div class="fab-container">
+  <button mat-mini-fab class="fab-secondary" color="white">
+    <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left" (click)="fnGuardar()">save</i>
+  </button>
+  <button mat-mini-fab class="fab-secondary" color="white">
+    <i class="material-icons" matTooltip="Salir" matTooltipPosition="left" matDialogClose>exit_to_app</i>
+  </button>
+</div>
+<div class="col-md-10 offset-md-1">
+  <mat-card class="mb-3 title-card">Modificar Precio Congelado a la Nota de Operaciones</mat-card>
+  <div mat-dialog-content>
+    <mat-card>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-12">
+          <mat-form-field>
+            <mat-label>Almacén</mat-label>
+            <input matInput [value]="data.sCodAlmacen" readonly />
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Código de Transporte</mat-label>
+            <input matInput [value]="data.sCodTransporte" readonly class="rosado-lucky"/>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-12">
+          <mat-form-field>
+            <mat-label>Nota</mat-label>
+            <input matInput [value]="data.sNota" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-9 col-md-12 col-12">
+          <mat-form-field>
+            <mat-label>Destino</mat-label>
+            <input matInput [value]="data.sSucursal +' - '+ data.sDestino" readonly />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-3 col-md-12 col-12">
+          <mat-form-field>
+            <mat-label>Ciudad</mat-label>
+            <input matInput [value]="data.sCiudad" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Tipo Móvil</mat-label>
+            <input matInput [value]="data.sTipoVehiculo" readonly />
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Zona</mat-label>
+            <input matInput [value]="data.sZona" readonly />
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Total Peso Kg.</mat-label>
+            <input matInput [value]="data.nPeso | number:'1.2-2'" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Total Volumen</mat-label>
+            <input matInput [value]="data.nVolumen | number :'1.6-6'" readonly />
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Precio Actual</mat-label>
+            <input matInput [value]="data.nPrecio | number :'1.2-2'" readonly class="rosado-lucky"/>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-12">
+          <mat-form-field>
+            <mat-label>Nuevo Precio</mat-label>
+            <input matInput [formControl]="nPrecio" autocomplete="off"
+              placeholder="Ejemplo: 31 o 4.7 o 50.68" class="rosado-lucky"/>
+            <mat-error *ngIf="nPrecioError">{{ nPrecioError }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

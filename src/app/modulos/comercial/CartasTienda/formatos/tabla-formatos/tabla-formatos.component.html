@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>FORMATOS</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <!-- ID Column -->
+      <ng-container matColumnDef="pId">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.pId }}</td>
+      </ng-container>
+
+      <!-- Nombre Column -->
+      <ng-container matColumnDef="sNombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let element">{{ element.sNombre }}</td>
+      </ng-container>
+
+      <!-- VER -->
+      <ng-container matColumnDef="Ver">
+        <th mat-header-cell *matHeaderCellDef>Ver</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- #region Ver formato-->
+          <div class="contenedor_documento">
+            <div id="{{ 'print-documento-formato' + element.pId }}">
+              <div class="container">
+                <div [innerHTML]="element.sContenido"></div>
+              </div>
+            </div>
+          </div>
+          <!-- #endregion -->
+
+          <!-- #region Boton mostrar documento-->
+          <button
+            mat-mini-fab
+            aria-label="Example icon button with a home icon"
+            (click)="pasarHtmlDocumento(element.sContenido)"
+            printSectionId="{{ 'print-documento-formato' + element.pId }}"
+            [useExistingCss]="true"
+            ngxPrint
+            class="btn_pasivo"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <!-- #endregion -->
+        </td>
+      </ng-container>
+
+      <!-- Eliminar Column -->
+      <ng-container matColumnDef="Eliminar">
+        <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+        <td mat-cell *matCellDef="let element">
+          <!-- #region Boyon eliminar documento-->
+          <button
+            [disabled]="element.utilizado"
+            mat-mini-fab
+            color="warn"
+            class="ml-3"
+            aria-label="Example icon button with a home icon"
+            (click)="eliminarFomato(element.pId)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <!-- #endregion -->
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>SALIR</button>
+</mat-dialog-actions>

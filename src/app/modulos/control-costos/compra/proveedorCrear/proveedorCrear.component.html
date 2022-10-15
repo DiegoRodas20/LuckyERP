@@ -1,0 +1,237 @@
+<br>
+<br>
+<br>
+<h5 class="col-md-10 offset-md-1 card-header" style="text-align:center">
+    Registro de Proveedor</h5>
+<br>
+<form [formGroup]="forma" (ngSubmit)="guardar()" class="container" autocomplete="off">
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <mat-form-field class="input">
+                <mat-label>Tipo Entidad</mat-label>
+                <mat-select formControlName="cliente">
+                    <mat-option *ngFor="let item of cliente" [value]="item.nId" [class.is-invalid]="clienteNoValido">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>RUC/DNI</mat-label>
+                <input type="text" matInput placeholder="ingrese el nombre del RUC" formControlName="ruc" (keydown.enter)="consultar($event)" [class.is-invalid]="rucNoValido">
+                <mat-error> el RUC o DNI es necesario</mat-error>
+            </mat-form-field>
+
+            <mat-error *ngIf="validar">El Cliente o proveedor ya esta registrado</mat-error>
+        </div>
+        <div class="form-group col-md-7">
+            <mat-form-field class="input">
+                <mat-label>Razón Social/Nombre Completos</mat-label>
+                <input matInput placeholder="ingrese el nombre del Razón social" formControlName="razonsocial" [class.is-invalid]="razonsocialNoValido">
+                <mat-error> el Razón Social o Nombre Completos es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Nombre Comercial</mat-label>
+                <input matInput placeholder="ingrese el nombre del comercial" formControlName="nombreComercial" [class.is-invalid]="nombreComercialNoValido">
+                <mat-error> el Nombre Comercial es necesario</mat-error>
+            </mat-form-field>
+
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>contribuyente</mat-label>
+                <mat-select formControlName="contribuyente">
+                    <mat-option *ngFor="let item of contribuyente" [value]="item.nId" [class.is-invalid]="contribuyenteNoValido">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Telefono 1</mat-label>
+                <input matInput placeholder="ingrese el numero el telefono" formControlName="telefono1" [class.is-invalid]="telefono1NoValido">
+                <mat-error> el Telefono1 es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Telefono 2</mat-label>
+                <input matInput placeholder="ingrese el numero de telefono" formControlName="telefono2">
+                <mat-error> el Telefono 2 es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Pagina web</mat-label>
+                <input matInput placeholder="ingrese el nombre de la pagina web" formControlName="paginaWeb" [class.is-invalid]="paginaWebNoValido">
+                <mat-error> la Pagina web es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Contacto</mat-label>
+                <input matInput placeholder="ingrese el nombre del contacto" formControlName="contacto" [class.is-invalid]="contactoNoValido">
+                <mat-error> el Contacto es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Contacto Correo</mat-label>
+                <input matInput placeholder="ingrese el nombre contato correo" formControlName="contactoCorreo" [class.is-invalid]="contactoCorreoNoValido">
+                <mat-error> el Contacto Correo es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Contacto Telefono</mat-label>
+                <input matInput placeholder="ingrese el contato telefono" formControlName="contactoTelefono" [class.is-invalid]="contactoTelefonoNoValido">
+                <mat-error> el Contacto Telefono es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Plazo Pago</mat-label>
+                <input matInput placeholder="ingrese el Plazo" formControlName="plazoPago" [class.is-invalid]="plazoPagoNoValido">
+                <mat-error> el PlazoPago es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>negocio</mat-label>
+                <mat-select formControlName="negocio">
+                    <mat-option *ngFor="let item of negocio" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-12">
+            <mat-form-field class="input">
+                <mat-label>Dirección</mat-label>
+                <input matInput placeholder="coloque la direccion" formControlName="direccion" [class.is-invalid]="direccionNoValido">
+                <mat-error> la direccion es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-12">
+            <mat-form-field class="input">
+                <mat-label>referencia</mat-label>
+                <input matInput placeholder="coloque la referencia" formControlName="referencia" [class.is-invalid]="referenciaNoValido">
+                <mat-error>la referencia es necesario</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departamento" (ngModelChange)="listaProvincia($event)" [class.is-invalid]="departamentoNoValido">
+                    <mat-option *ngFor="let item of departamento" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Provincia</mat-label>
+                <mat-select formControlName="provincia" (ngModelChange)="listaDistrito($event)" [class.is-invalid]="provinciaNoValido">
+                    <mat-option *ngFor="let item of provincia" [value]="item.nId">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-form-field class="input">
+                <mat-label>Distrito</mat-label>
+                <mat-select formControlName="distrito">
+                    <mat-option *ngFor="let item of distrito" [value]="item.nId" [class.is-invalid]="distritoNoValido">
+                        {{item.sDescripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-group col-md-3">
+            <mat-slide-toggle formControlName="estado">Estado</mat-slide-toggle>
+            <br>
+        </div>
+        <div class="form-group col-md-3">
+            <button mat-stroked-button color="primary" type="button" (click)="agregar()">    
+                <mat-icon>save</mat-icon>
+             Agregar Banco</button>
+        </div>
+        <div class="col-md-10 offset-md-1 ">
+            <div class="example-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                    <ng-container matColumnDef="opciones" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib" style="width: 20%;"> opciones </th>
+                        <td mat-cell *matCellDef="let row">
+                            <!-- <button mat-raised-button color="accent" type="button" (click)="edit(row.nId)"><mat-icon>edit</mat-icon></button>
+
+                            <button mat-raised-button color="accent" type="button" (click)="eliminar(row.nId)"><mat-icon>delete</mat-icon></button> -->
+
+                            <button type="button" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button type="button" mat-menu-item (click)="edit(row.nId)">
+                            <mat-icon color="accent">edit</mat-icon>
+                            <span>editar</span>
+                            </button>
+                                <button type="button" mat-menu-item (click)="eliminar(row.nId)">
+                            <mat-icon color="accent">delete</mat-icon>
+                            <span>elimiar</span>
+                            </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Banco </th>
+                        <td mat-cell *matCellDef="let row"> {{row.sBanco}} </td>
+                    </ng-container>
+
+                    <!-- Color Column -->
+                    <ng-container matColumnDef="cuenta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Cuenta </th>
+                        <td mat-cell *matCellDef="let row"> {{row.sCuenta}} </td>
+                    </ng-container>
+                    <!-- Color Column -->
+                    <ng-container matColumnDef="cuentaInter">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> CuentaInterbancaria </th>
+                        <td mat-cell *matCellDef="let row"> {{row.sCuentaInter}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="moneda">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Moneda </th>
+                        <td mat-cell *matCellDef="let row"> {{row.sMoneda}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 15, 25, 100]"></mat-paginator>
+        </div>
+    </div>
+</form>
+<br>
+<div class="form-row">
+    <div class="form-group col-md-12">
+        <div class="col-md-8 offset-md-4">
+            <div class="form-row">
+                <div class="col-sm-6">
+                    <button mat-stroked-button color="primary" (click)="guardar()">    <mat-icon>save</mat-icon>
+    guardar</button>
+                    <button mat-stroked-button color="primary" (click)="cerrar()">    <mat-icon>delete</mat-icon>
+    Regresar</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,110 @@
+<ngx-spinner name="spi_new" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+	<p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+<!-- Fab -->
+<div class="fab-container">
+	<button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1,-1)">
+		<i class="material-icons" [@fabToggler]="{value: tsDetail}">add</i>
+	</button>
+	<div [@speedDialStagger]="abDetail.length">
+		<button *ngFor="let btn of abDetail; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+			(click)="clickFab(ibtn)" [disabled]="disableFab(ibtn)">
+			<i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+		</button>
+	</div>
+</div>
+<div class="modal-header">
+	<h4> Inasistencia </h4>
+	<button class="close" (click)="fnCloseModal()">
+		<span class="material-icons">close</span>
+	</button>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div id="dLeftDetail" class="col-lg-6">
+			<mat-accordion #maDetail="matAccordion" multi>
+				<!-- #region Información personal -->
+				<app-gestioni-informacion-personal [personal]="data?.personal"></app-gestioni-informacion-personal>
+				<!-- #endregion -->
+				<!-- #endregion -->
+				<mat-expansion-panel [expanded]="true" [disabled]="true">
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							Calendario : {{ viewDate | date:'MMMM yyyy':'UTC':'es' }}
+						</mat-panel-title>
+						<mat-panel-description> Inasistencias: {{eventList.length}} </mat-panel-description>
+						<mat-icon>calendar_today</mat-icon>
+					</mat-expansion-panel-header>
+					<div class="form-row mr-3 mt-2">
+						<ng-container *ngFor="let item of colores; let i = index">
+							<div class="col-lg-2 col-6 center">
+								<input type="color" [value]="item.primary" disabled>
+							</div>
+							<div class="col-lg-2 col-6">
+								{{data.estados[i].sDescripcion}}
+							</div>
+						</ng-container>
+					</div>
+					<div class="form-row">
+						<div class="col-lg-12">
+							<div [ngSwitch]="view">
+								<mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="eventList"
+									[refresh]="refresh" (dayClicked)="dayClicked($event.day)" [locale]="locale"
+									[weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+								</mwl-calendar-month-view>
+							</div>
+							<div class="btn-group mt-2">
+								<div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+									Anterior
+								</div>
+								<div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+									Siguiente
+								</div>
+							</div>
+						</div>
+					</div>
+				</mat-expansion-panel>
+			</mat-accordion>
+		</div>
+
+		<div class="col-lg-6">
+			<form [formGroup]="form" class="form-row">
+				<div class="col-lg-12 mt-2">
+					<mat-label>Día seleccionado: {{ daySelected ? (daySelected | date: 'dd/MM/yyyy') : null}}</mat-label>
+					<input *ngIf="seleccionado" class="ml-2" type="color" [value]="seleccionado?.color" disabled>
+					<hr class="my-2">
+				</div>
+				<div class="col-lg-12">
+					<mat-form-field>
+						<mat-label>Motivo</mat-label>
+						<mat-select formControlName="nIdMotivo">
+							<mat-option *ngFor="let item of data.motivos" [value]="item.nId">
+								{{item.sDescripcion}}
+							</mat-option>
+						</mat-select>
+						<mat-error *ngIf="nIdMotivoError">{{ nIdMotivoError }}</mat-error>
+					</mat-form-field>
+				</div>
+				<div class="col-lg-12">
+					<mat-form-field>
+						<mat-label>Observación</mat-label>
+						<textarea matInput formControlName="sObservacion" style="overflow:auto;resize:none" rows="7"></textarea>
+						<mat-error *ngIf="sObservacionError">{{ sObservacionError }}</mat-error>
+					</mat-form-field>
+				</div>
+				<div *ngIf="seleccionado" class="col-lg-12">
+					<mat-form-field>
+						<mat-label>Registrado por:</mat-label>
+						<input matInput [value]="seleccionado.sUserReg" readonly>
+					</mat-form-field>
+				</div>
+				<div *ngIf="seleccionado?.sUserMod" class="col-lg-12">
+					<mat-form-field>
+						<mat-label>Modificado por:</mat-label>
+						<input matInput [value]="seleccionado.sUserMod" readonly>
+					</mat-form-field>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,272 @@
+<div class="form-row" style="margin-top: 15px;">
+    <div class="form-group col-md-12">
+        <!-- Inicio del contenido -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <mat-form-field style="width: 100%; padding-top: 6px;">
+                    <mat-label>Tipo de Courier:</mat-label>
+                    <mat-select [formControl]="cboTipoCourier" [errorStateMatcher]="matcher">
+                        <mat-option (click)="fnListarTarifaCourier(); fnGetTipoCourier(vTipo)"
+                            *ngFor="let vTipo of lTipoCourier" [value]="vTipo.nId">
+                            {{vTipo.sDescripcion}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <ng-select [clearable]="true" placeholder="Proveedor" [formControl]="cboProveedor"
+                    notFoundText="No hay proveedores disponibles" (change)="fnListarTarifaCourier();">
+                    <ng-option *ngFor="let element of lProveedor" [value]="element.nId">
+                        {{element.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="col-md-6 mx-auto">
+                <div class="row">
+                    <div class="col-md-10">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Buscar sucursal:</mat-label>
+                            <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                            <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                                aria-label="Clear"
+                                (click)="this.txtFiltro.setValue(''); fnListarTarifaCourier(this.cboTipoCourier.value);">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button [disabled]="cboTipoCourier.value==null" mat-mini-fab class="fab-toggler"
+                            matTooltip="Nueva tarifa courier" (click)="fnAbrirModal()">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <input data-toggle="modal" data-target="#modalCourier" #modalCourier type="hidden"
+                            name="button">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- nueva tabla material -->
+        <div id="listaMobile" class="mat-elevation-z8">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="nId" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"></th>
+                        <td mat-cell data-label='Ver detalle: ' *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaOpc">
+                            <button (click)="fnSeleccionarTarifaCourier(row)" mat-icon-button color="accent"
+                                matTooltip="Ver detalle">
+                                <mat-icon> touch_app</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sSucursal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                            Sucursal
+                        </th>
+                        <td data-label='Sucursal: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sSucursal" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sProveedor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                            Proveedor
+                        </th>
+                        <td data-label='Proveedor: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sProveedor" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nPrecioKilo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                            Precio por Kg.
+                        </th>
+                        <td data-label='Precio por Kg.: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.nPrecioKilo | number : '1.2-2'" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nPrecioAdicional">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                            Precio Adicional
+                        </th>
+                        <td data-label='Precio Adicional: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.nPrecioAdicional | number : '1.2-2'" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sEstado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                        </th>
+                        <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="row.nEstado==0 ? 'make-gris' : ''">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal para agregar y modificar-->
+<div class="modal fade  bd-example-modal-xl" id="modalCourier" style="background-color: rgba(0, 0, 0, 0.5);"
+    data-backdrop="false" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalCourier"
+    aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example">
+        <div class="modal-content">
+
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalCourierLongTitle"><Label>{{title}}</Label>
+                </h5>
+                <button (click)="fnLimpiarModal()" type="button" class="close button-modal-lucky" data-dismiss="modal"
+                    aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <!--Cuando se va a registrar-->
+                    <form *ngIf="pOpcion==1" class="row col-md-12" [formGroup]="formTarifaCourier">
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Ciudad:</mat-label>
+                                <mat-select formControlName="cboSucursal" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vSucursal of lSucursal" [value]="vSucursal.nId">
+                                        {{vSucursal.sDescripcion}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formTarifaCourier.get('cboSucursal').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-6 col-md-3">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Precio por Kg.:</mat-label>
+                                <input (input)="fnEvitarNegativos('txtPrecioKilo', formTarifaCourier)" type="number"
+                                    matInput placeholder="00" formControlName="txtPrecioKilo"
+                                    [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formTarifaCourier.get('txtPrecioKilo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-6 col-md-3">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Precio Adicional:</mat-label>
+                                <input (input)="fnEvitarNegativos('txtPrecioAdicional', formTarifaCourier)"
+                                    type="number" matInput placeholder="00" formControlName="txtPrecioAdicional"
+                                    [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formTarifaCourier.get('txtPrecioAdicional').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <ng-select placeholder="Proveedor" [clearable]="false" formControlName="cboProveedor"
+                                notFoundText="No hay proveedores disponibles">
+                                <ng-option *ngFor="let element of lProveedor" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-md-12 d-flex justify-content-end" *ngIf="pOpcion==1">
+                            <button matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAnadirTarifaCourier()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--Cuando se va a modificar-->
+
+                    <form *ngIf="pOpcion==2" class="row col-md-12" [formGroup]="formTarifaCourierAct">
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Ciudad:</mat-label>
+                                <input type="text" matInput placeholder="AA" formControlName="txtSucursal"
+                                    [errorStateMatcher]="matcher" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-6 col-md-3">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Precio por Kg.:</mat-label>
+                                <input (input)="fnEvitarNegativos('txtPrecioKilo', formTarifaCourierAct)"
+                                    [readonly]="bSoloLectura" type="number" matInput placeholder="00"
+                                    formControlName="txtPrecioKilo" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formTarifaCourierAct.get('txtPrecioKilo').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group col-6 col-md-3">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Precio Adicional:</mat-label>
+                                <input (input)="fnEvitarNegativos('txtPrecioAdicional', formTarifaCourierAct)"
+                                    [readonly]="bSoloLectura" type="number" matInput placeholder="00"
+                                    formControlName="txtPrecioAdicional" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="formTarifaCourierAct.get('txtPrecioAdicional').hasError('required')">
+                                    .Obligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <ng-select placeholder="Proveedor" [clearable]="false" formControlName="cboProveedor"
+                                notFoundText="No hay proveedores disponibles">
+                                <ng-option *ngFor="let element of lProveedor" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="form-group col-md-6 alinea-ngselect">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <mat-select formControlName="cboEstado" [errorStateMatcher]="matcher">
+                                    <mat-option *ngFor="let vEstado of lEstado" [value]="vEstado.nId">
+                                        {{vEstado.sDescripcion}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-9 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==1">
+                            <button matTooltip="Modificar" mat-mini-fab color="accent"
+                                (click)="fnModificarTarifaCourier()">
+                                <mat-icon> create</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="col-md-9 d-flex justify-content-end" *ngIf="pOpcion==2 && pTipo==2">
+                            <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardarTarifaCourier()">
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+
+            </div>
+        </div>
+    </div>
+</div>

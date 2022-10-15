@@ -1,0 +1,48 @@
+<div class="example-container mat-elevation-z8">
+  <!-- TABLA DINAMICA CON TODO EL PERSONAL REGISTRADA-->
+  <table mat-table [dataSource]="dataSource">
+    <!-- Columns -->
+    <ng-container
+      *ngFor="let column of displayColumnsDef"
+      [stickyEnd]="column === '0'"
+      [matColumnDef]="column"
+    >
+      <th mat-header-cell *matHeaderCellDef>
+        {{ obtenerNombreColumnaPorElID(+column) }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="column != '0'">
+          {{ modificandoData(element[column]) }}
+        </div>
+        <div *ngIf="column == '0'" class="text-center">
+          <button
+            mat-icon-button
+            matTooltip="Editar personal"
+            matTooltipPosition="above"
+            style="color: #334d6e"
+            (click)="editarRegistro(element)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Eliminar personal"
+            matTooltipPosition="above"
+            color="accent"
+            (click)="eliminarRegistro(element)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayColumnsDef; sticky: true"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayColumnsDef"
+      (click)="selection.toggle(row)"
+    ></tr>
+  </table>
+  <!-- fin TABLA -->
+</div>

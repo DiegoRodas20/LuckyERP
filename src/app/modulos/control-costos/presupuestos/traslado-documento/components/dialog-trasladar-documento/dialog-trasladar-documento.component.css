@@ -1,0 +1,30 @@
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+}
+
+.title {
+    color: #334D6E;
+    font-weight: bolder;
+}
+
+:host /deep/  .mat-form-field-disabled input{
+    color: black;
+  }

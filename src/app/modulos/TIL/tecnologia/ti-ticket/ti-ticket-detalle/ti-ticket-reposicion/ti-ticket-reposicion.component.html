@@ -1,0 +1,43 @@
+<div class="mb-3" style="text-align: center; position: relative;">
+    <mat-card class="title-card ">Descuento del activo</mat-card>
+    <button mat-icon-button class="closeButtonModal" (click)="fnSalir(false)">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <div class="row col-md-12 mx-auto" [formGroup]="formDescuentoEfectivo" style="width: 100%;">
+
+        <div [ngClass]="{   
+            'col-6' : bMontoEfectivo,
+            'col-12' : !bMontoEfectivo
+        }">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Monto Descuento Inicial</mat-label>
+                <input matInput type="number" formControlName="cantidadDescuentoInicial" [readonly]="descuentoReposicion.nIdDescuento">
+            </mat-form-field>
+        </div>
+
+        <div class="col-6" *ngIf="bMontoEfectivo">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Monto Descuento Efectivo</mat-label>
+                <input matInput type="number" formControlName="cantidadDescuentoEfectivo" readonly="true">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+            <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons">{{btn.icon}}</i>
+            </button>
+        </ng-container>
+    </div>
+</div>

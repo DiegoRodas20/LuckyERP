@@ -1,0 +1,107 @@
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.example-container-partida{
+    height: 300px;
+    width: 100%;
+    overflow: auto;
+  }
+
+  table  th{ 
+    color: white; 
+  } 
+
+  
+table {
+    width: 1500px;
+  }
+  td:nth-child(1) {
+    text-align: center;
+  }
+  th:nth-child(1) {
+    width: 50px;
+    text-align: center;
+  }
+  td:nth-child(2) {
+    text-align: left;
+  }
+  th:nth-child(2) {
+    width: 200px;
+    text-align: left;
+  }
+  
+  td:nth-child(3) {
+    text-align: center;
+  }
+  th:nth-child(3) {
+    width: 350px;
+    text-align: center;
+  }
+  
+  td:nth-child(4) {
+    text-align: center;
+  }
+  th:nth-child(4) {
+    width: 50px;
+    text-align: center;
+  }
+  
+  td:nth-child(5) {
+    text-align: center;
+  }
+  th:nth-child(5) {
+    width: 50px;
+    text-align: center;
+  }
+  
+  td:nth-child(6) {
+    width: 70px !important;
+    text-align: left;
+  }
+  th:nth-child(6) {
+    width: 70px !important;
+    text-align: center;
+  }
+  td:nth-child(7) {
+    width: 70px !important;
+    text-align: left;
+  }
+  th:nth-child(7) {
+    width: 70px !important; 
+    text-align: center;
+  }
+  td:nth-child(8) {
+    width: 70px !important;
+    text-align: left;
+  }
+  th:nth-child(8) {
+    width: 70px !important;
+    text-align: center;
+  }
+  
+  td {
+    font-size: 13px;
+  }
+
+  :host /deep/ table thead{ 
+    background-color: #334D6E;   
+  } 

@@ -1,0 +1,123 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">
+    Traslado masivo interno
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+
+        <form [formGroup]="formTraslado" class="row">
+            <div class="form-group col-md-4">
+                <ng-select (change)="fnListarPresupuesto($event)" appendTo="body" [clearable]="false"
+                    formControlName="cboSolicitante" placeholder="Solicitante" required>
+                    <ng-option *ngFor="let vSolicitante of lSolicitante" [value]="vSolicitante">
+                        {{vSolicitante.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formTraslado.get('cboSolicitante').hasError('required') && formTraslado.get('cboSolicitante').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-4">
+                <ng-select (change)="fnLLenarCliente($event); fnTraerSaldo($event, 'CC'); fnListarPresupuestoDestino($event)" appendTo="body"
+                    [clearable]="false" formControlName="cboPresupuesto" placeholder="Presupuesto origen" required>
+                    <ng-option *ngFor="let vPres of lPresupuesto" [value]="vPres">
+                        {{vPres.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formTraslado.get('cboPresupuesto').hasError('required')  && formTraslado.get('cboPresupuesto').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-4 alinea-ngselect">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Cliente:</mat-label>
+                    <input type="text" style="color: rgb(236, 0, 140);" readonly matInput formControlName="txtCliente">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-4">
+                <ng-select
+                    (change)="fnListarOpLogistica($event); fnLlenarAlmacenDestino($event); fnTraerSaldo($event, 'ALM')"
+                    appendTo="body" [clearable]="false" formControlName="cboAlmacen" placeholder="Almacen origen"
+                    required>
+                    <ng-option *ngFor="let vAlmacen of lAlmacen" [value]="vAlmacen">
+                        {{vAlmacen.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formTraslado.get('cboAlmacen').hasError('required')  && formTraslado.get('cboAlmacen').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-4">
+                <ng-select appendTo="body" [clearable]="false" formControlName="cboOperacionLogistica"
+                    placeholder="Operación logística" required>
+                    <ng-option *ngFor="let vOpLog of lOpLogistica" [value]="vOpLog.nId">
+                        {{vOpLog.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formTraslado.get('cboOperacionLogistica').hasError('required')  && formTraslado.get('cboOperacionLogistica').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-4 alinea-ngselect">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Fecha:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtFecha">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-4">
+                <ng-select appendTo="body" [clearable]="false" formControlName="cboPresupuestoDestino"
+                    placeholder="Presupuesto Destino" required>
+                    <ng-option *ngFor="let vPres of lPresupuestoDestino" [value]="vPres">
+                        {{vPres.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+                <mat-error
+                    *ngIf="formTraslado.get('cboPresupuestoDestino').hasError('required')  && formTraslado.get('cboPresupuestoDestino').touched ">
+                    .Obligatorio
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-4 alinea-ngselect">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Almacen Destino:</mat-label>
+                    <input type="text" readonly matInput formControlName="txtAlmacenDestino">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-4 alinea-ngselect">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>N° Operación:</mat-label>
+                    <input style="color: rgb(236, 0, 140);" type="text" readonly matInput formControlName="txtNumDoc">
+                </mat-form-field>
+            </div>
+
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button *ngIf="!bRegistrado" matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+<!-- 
+        <button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+            class="fab-secondary" matTooltip="Salir" color="warn" (click)="dialogRef.close()"><i
+                class="material-icons">exit_to_app</i></button> -->
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,227 @@
+<div class="clsprincipal">
+    <div [ngClass]="vPrincipal?'col-md-12' :'col-md-10 offset-md-1'">
+      <div class="mb-3" style="text-align: center;">
+        <mat-card class="title-card">
+          <h3>Devolver / Rechazar Orden de Compra</h3>
+        </mat-card>
+      </div>
+    </div>
+
+    <div>
+        <div [ngClass]="vPrincipal?'col-md-12' :'col-md-10 offset-md-1'">
+            <div [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <!-- Inicio del contenido -->
+
+                        <div class="col-md-6 offset-md-3">
+                            <div class="form-row">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Buscar orden de compra:</mat-label>
+                                    <input type="text" matInput [formControl]="txtFiltroGen"
+                                        (input)="fnFiltrar()">
+                                    <button style="outline: none;" mat-button *ngIf="txtFiltroGen.value"
+                                        matSuffix mat-icon-button aria-label="Clear"
+                                        (click)="this.txtFiltroGen.setValue('');fnListarConteniedo()">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+
+                        <!-- nueva tabla material -->
+                        <div id="listaMobile" class="mat-elevation-z8">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource" matSort>
+
+                                    <!-- ID Column -->
+                                    <ng-container matColumnDef="nIdOC" sticky>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">
+                                            Opción
+                                        </th>
+                                        <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaOpc">
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu" xPosition="after">
+                                                <button mat-menu-item (click)="fnVerDetalle(row.nId)">
+                                                    <mat-icon color="accent">touch_app</mat-icon>
+                                                    <span>Ver detalle</span>
+                                                </button>
+                                                <button mat-menu-item (click)="fnArchivos(row.nId,row)">
+                                                    <mat-icon color="accent">attach_file</mat-icon>
+                                                    <span>Ver Archivos</span>
+                                                </button>
+                                                <button mat-menu-item (click)="fnDevolver(row.nId)">
+                                                    <mat-icon color="accent">reply</mat-icon>
+                                                    <span>Devolver</span>
+                                                </button>
+                                                <button mat-menu-item (click)="fnRechazar(row.nId)">
+                                                    <mat-icon color="accent">block</mat-icon>
+                                                    <span>Rechazar</span>
+                                                </button>
+
+                                            </mat-menu>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="anio">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Año
+                                        </th>
+                                        <td data-label='Año: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.anio" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="centroCosto">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib3">
+                                           Presupuesto
+                                        </th>
+                                        <td data-label='Centro de costo: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib3">
+                                            <ngb-highlight [result]="row.centroCosto" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDocumento">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2">
+                                            Nro
+                                            Doc
+                                        </th>
+                                        <td data-label='Nro Doc: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib2">
+                                            <ngb-highlight [result]="row.sDocumento" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Titulo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Título
+                                        </th>
+                                        <td data-label='Título: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLarge2">
+                                            <ngb-highlight [result]="row.Titulo" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="FechaRegistro">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib4">
+                                            Fecha
+                                            OC
+                                        </th>
+                                        <td data-label='Fecha OC: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib4">
+                                            <ngb-highlight [result]="row.FechaRegistro" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="FechaEntrega">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib4">
+                                            F. Entrega
+                                        </th>
+                                        <td data-label='F. Entrega: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib4">
+                                            <ngb-highlight [result]="row.FechaEntrega" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Proveedor">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                            Proveedor
+                                        </th>
+                                        <td data-label='Proveedor: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLarge">
+                                            <ngb-highlight [result]="row.Proveedor" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="cantidad">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Total unidades
+                                        </th>
+                                        <td data-label='Total unidades: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.cantidad" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sTotal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Total precio
+                                        </th>
+                                        <td data-label='Total precio: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib4">
+                                            <ngb-highlight [result]="row.sTotal | number: '1.4-4'" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sMoneda">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Moneda
+                                        </th>
+                                        <td data-label='Moneda: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sMoneda" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="TipoDOC">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Tipo Documento
+                                        </th>
+                                        <td data-label='Tipo Documento: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.TipoDOC" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Estado">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            Estado
+                                        </th>
+                                        <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.Estado" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sVB">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            VB
+                                        </th>
+                                        <td data-label='VB: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sVB" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sPDF">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                            PDF
+                                        </th>
+                                        <td data-label='PDF: ' mat-cell *matCellDef="let row"
+                                            class="has_label_on_mobile clsColumnaLib">
+                                            <ngb-highlight [result]="row.sPDF" [term]="txtFiltroGen.value"></ngb-highlight>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-oc-devolver-detalle (pMostrar)="fnCerrarDetalle($event)" [idGastoCosto]="this.idGastoCosto"
+    *ngIf="vSecundario">
+    </app-oc-devolver-detalle>
+</div>

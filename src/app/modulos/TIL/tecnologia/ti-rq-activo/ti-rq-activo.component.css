@@ -1,0 +1,94 @@
+/* Header de componente */
+.title-card {
+    background-color: #334d6e;
+    color: white;
+    font-size: 20px;
+}
+/* radio-button */
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+
+/* Area de botones */
+.fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+.fab-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+  
+.fab-container > div > button {
+    margin-top: 10px;
+    outline: none;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+  }
+  .example-container {
+    height: 537px;
+    width: 120%;
+  }
+  
+  .scroll-table {
+    position: relative;
+    overflow-x: scroll;
+  }
+  
+  .paginator-fixed {
+    position: sticky;
+    left: 0;
+    width: 100%;
+  }
+  
+  td,
+  th {
+    font-size: 14px;
+  }
+  
+  @media screen and (max-width: 1500px) {
+    /* Tabla */
+    .example-container {
+      width: 150%;
+    }
+  }
+  
+  @media screen and (max-width: 1200px) {
+    /* Tabla */
+    .example-container {
+      width: 170%;
+    }
+  }
+  
+  @media screen and (max-width: 990px) {
+    /* Checkbox */
+    .checkbox-container {
+      display: block;
+      line-height: 20px;
+    }
+  }
+  
+  @media screen and (max-width: 960px) {
+    /* Checkbox */
+    .example-container {
+      width: 100%;
+    }
+  }
+  
+  @media screen and (max-width: 550px) {
+    :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+      font-size: 18px !important;
+    }
+  }
+  

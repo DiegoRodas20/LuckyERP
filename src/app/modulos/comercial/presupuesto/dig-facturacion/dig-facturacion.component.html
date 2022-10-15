@@ -1,0 +1,72 @@
+<h1 mat-dialog-title class="clstituloCrtl">Lista de todas las facturas de este presupuesto</h1>
+<div mat-dialog-content > 
+    <div class="col-sm-12" style="text-align: right;"> 
+        Total según registro del PPTO: <label> {{Total}}</label> 
+    </div> 
+    <div> 
+        <div class="example-container mat-elevation-z8  table-striped">
+            <table mat-table [dataSource]="dataSource"  matSort 
+                #TableSort="matSort"  > 
+                <ng-container matColumnDef="sTipo" >
+                    <th mat-header-cell *matHeaderCellDef > Doc </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.sTipo}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="sSerie" >
+                    <th mat-header-cell *matHeaderCellDef > Serie </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.sSerie}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="sDoc" >
+                    <th mat-header-cell *matHeaderCellDef > Nro Factura </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.sDoc}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="sFecha" >
+                    <th mat-header-cell *matHeaderCellDef > Fecha </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.sFecha}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="nTotalFinal" >
+                    <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total Facturado </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link"
+                    style="text-align: right;"
+                    >   
+                        {{element.nTotalFinal}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="porcentaje" >
+                    <th mat-header-cell *matHeaderCellDef > Porcentaje </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.porcentaje}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="estado" >
+                    <th mat-header-cell *matHeaderCellDef > Estado </th> 
+                    <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                        {{element.estado}}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            
+            </table>
+        </div>
+    </div> 
+    <div class="row" style="padding: 3px;"> </div>
+    <div class="row"> 
+        <div class="col-sm-4">
+            &nbsp;Total de doc.: <label> {{cant}}</label> 
+        </div> 
+        <div class="col-sm-8" style="text-align: right;">
+            Total % Fac.: <label> {{TotalFacPor}}&nbsp;</label>&nbsp;  Total Fac.:  <label> {{TotalFac}} </label> 
+        </div>
+    </div> 
+</div>
+<ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>

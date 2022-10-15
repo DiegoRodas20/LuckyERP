@@ -1,0 +1,82 @@
+ mat-form-field {
+  width: 100%;
+} 
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 28px;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+}
+
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+
+::ng-deep .ng-select.ng-select-disabled span.ng-star-inserted {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+.ng-select .ng-select-container {
+  min-height: 44.7px !important;
+}
+
+.ng-select .ng-select-container .ng-value-container {
+  padding-bottom: 0%;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-value {
+  line-height: 1.125;
+}
+
+.error-select {
+  top: calc(100% - 1.6666666667em);
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  font-size: 75%;
+}

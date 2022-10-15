@@ -1,0 +1,414 @@
+<ngx-spinner
+  name="spi_modal_gem_citas"
+  [fullScreen]="false"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+    <i class="material-icons" [@fabToggler]="{ value: fbButton.fbAnimacion }"
+      >add</i
+    >
+  </button>
+  <div [@speedDialStagger]="fbButton.fbOpcionesActivas.length">
+    <button
+      *ngFor="let btn of fbButton.fbOpcionesActivas; let ibtn = index"
+      mat-mini-fab
+      class="fab-secondary"
+      color="secondary"
+      (click)="clickFab(ibtn)"
+      [disabled]="!btn.active"
+    >
+      <i
+        class="material-icons"
+        matTooltip="{{ btn.tool }}"
+        matTooltipPosition="left"
+        >{{ btn.icon }}</i
+      >
+    </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Citas de Examen Medico</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div>
+    <div class="row">
+      <div id="dLeftDetail" class="col-lg-6">
+        <mat-accordion>
+          <!-- #region CALENDARIO-->
+          <mat-expansion-panel
+            [expanded]="!controlPanelExpanded"
+            [disabled]="true"
+            style="margin-bottom: 16px"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span *ngIf="estadoModal === 3"> Calendario : </span>
+                <h6 *ngIf="fechaSeleccionada !== null && estadoModal !== 3">
+                  Dia seleccionado : {{ fechaSeleccionada }}
+                </h6>
+              </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+              </mat-panel-description>
+              <mat-icon style="margin-right: 10px">event</mat-icon>
+            </mat-expansion-panel-header>
+
+            <!-- #region CALENDAR-->
+            <mwl-calendar-month-view
+              [viewDate]="calendar.viewDate"
+              [events]="calendar.eventMain"
+              [locale]="calendar.locale"
+              [refresh]="calendar.refresh"
+              [weekStartsOn]="calendar.weekStartsOn"
+              [weekendDays]="calendar.weekendDays"
+              (dayClicked)="diaSeleccionadoCalendario($event.day)"
+            >
+            </mwl-calendar-month-view>
+            <!-- #endregion -->
+          </mat-expansion-panel>
+          <!-- #endregion -->
+
+          <!-- #region USUARIO-->
+          <mat-expansion-panel
+            [expanded]="controlPanelExpanded"
+            [disabled]="true"
+            style="margin-bottom: 16px"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title> Informacion : </mat-panel-title>
+              <mat-panel-description style="margin-right: 0px">
+              </mat-panel-description>
+              <mat-icon style="margin-right: 10px">account_circle</mat-icon>
+            </mat-expansion-panel-header>
+
+            <div class="card__row row">
+              <div class="col-xl-3 divAvatar">
+                <a>
+                  <span class="imgBadge">{{
+                    personaSeleccionadaForm.controls.sCodPlla.value
+                  }}</span>
+                  <img
+                    class="imgAvatar"
+                    src="../../../../../assets/img/LuckyAvatar.png"
+                    alt=""
+                  />
+                </a>
+              </div>
+
+              <div id="buscarPersonaForm" class="col-xl-9">
+                <!-- #region AUTOCOMPLETABLE-->
+                <mat-form-field style="width: 100%">
+                  <mat-label>Buscar por nombres o apellidos</mat-label>
+                  <input
+                    type="text"
+                    aria-label="Number"
+                    matInput
+                    [formControl]="buscarPersonaFormControl"
+                    [matAutocomplete]="auto"
+                  />
+                  <mat-autocomplete
+                    autoActiveFirstOption
+                    #auto="matAutocomplete"
+                    (optionSelected)="_personaSeleccionadaBuscador($event)"
+                    [displayWith]="getOptionText"
+                  >
+                    <mat-option
+                      *ngFor="let option of valoresFiltradosBuscador | async"
+                      [value]="option"
+                    >
+                      {{ option.sNombres }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <!-- #endregion -->
+
+                <!-- #region INFORMACION DE PERSONA SELECCIONADA-->
+                <div
+                  id="infoPersonalForm"
+                  [formGroup]="personaSeleccionadaForm"
+                >
+                  <div class="form-row">
+                    <div class="col-lg-8">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Tipo</mat-label>
+                        <input type="text" matInput formControlName="sTipo" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>N° Documento</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="sDocumento"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="col-lg-4">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Ciudad</mat-label>
+                        <input type="text" matInput formControlName="sCiudad" />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-8">
+                      <mat-form-field style="width: 100%">
+                        <mat-label>Estado</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="cEleNamEstado"
+                        />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <!-- #endregion -->
+              </div>
+            </div>
+
+            <!-- Fab Resp -->
+            <div class="fab-resp">
+              <button mat-mini-fab class="fab-toggler-resp">
+                <i
+                  class="material-icons"
+                  [@fabToggler]="fabButtonBuscadorConfig.fbAnimacion"
+                  >control_camera</i
+                >
+              </button>
+              <div
+                *ngIf="fabButtonBuscadorConfig.fbAnimacion === 'active'"
+                [@speedDialStagger]="
+                  fabButtonBuscadorConfig.fbOpcionesActivas.length
+                "
+              >
+                <button
+                  *ngFor="
+                    let btn of fabButtonBuscadorConfig.fbOpcionesActivas;
+                    let ibtn = index
+                  "
+                  mat-mini-fab
+                  class="fab-secondary-resp"
+                  color="secondary"
+                  (click)="clickResp(ibtn)"
+                >
+                  <i
+                    class="material-icons"
+                    matTooltip="{{ btn.tool }}"
+                    matTooltipPosition="below"
+                    >{{ btn.icon }}</i
+                  >
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+          <!-- #endregion -->
+        </mat-accordion>
+      </div>
+      <div id="dRightDetail" class="col-lg-6">
+        <div class="row">
+          <div class="col-sm">
+            <h6>
+              Lista de personas asignadas :
+              <span *ngIf="fechaSeleccionada !== null && estadoModal === 3">{{
+                fechaSeleccionada
+              }}</span>
+            </h6>
+            <hr style="margin-top: 0px; margin-bottom: 10px" />
+          </div>
+        </div>
+
+        <!-- #region FILTRO DE PERSONAS ASIGNADAS-->
+        <div class="row">
+          <div
+            [formGroup]="filtroPersonasAsignadas.filtroForm"
+            class="col-lg-12"
+          >
+            <div class="form-row">
+              <!-- Nombres o documento -->
+              <div class="col-lg-12">
+                <mat-form-field style="width: 100%">
+                  <mat-label
+                    >Filtrar personal por nombres o documento de
+                    identidad</mat-label
+                  >
+                  <input
+                    (input)="filtroPersonasAsignadas.filtrar()"
+                    type="text"
+                    matInput
+                    formControlName="sNombreDoc"
+                    autocomplete="off"
+                  />
+                  <button
+                    style="outline: none"
+                    mat-button
+                    *ngIf="
+                      filtroPersonasAsignadas.filtroForm.controls.sNombreDoc
+                        .value
+                    "
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="filtroPersonasAsignadas.limpiarFiltro()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region LISTA DE PERSONAS-->
+        <div id="dTableDetail">
+          <table
+            mat-table
+            [dataSource]="historialExamenMedicoDataSource"
+            style="width: 100%"
+          >
+            <!-- Foto Column -->
+            <ng-container matColumnDef="foto">
+              <th mat-header-cell *matHeaderCellDef>Foto</th>
+              <td mat-cell *matCellDef="let element">
+                <a>
+                  <img
+                    class="imgAvatarPersonaAsignada"
+                    src="../../../../../assets/img/LuckyAvatar.png"
+                    alt=""
+                  />
+                </a>
+              </td>
+            </ng-container>
+
+            <!-- sNombres Column -->
+            <ng-container matColumnDef="sNombres">
+              <th mat-header-cell *matHeaderCellDef>Apellidos y Nombre</th>
+              <td mat-cell *matCellDef="let element">
+                <ngb-highlight
+                  [result]="element.sNombres | titlecase"
+                  [term]="
+                    filtroPersonasAsignadas.filtroForm.controls.sNombreDoc.value
+                  "
+                ></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <!-- sCodPlla Column -->
+            <ng-container matColumnDef="sCodPlla">
+              <th mat-header-cell *matHeaderCellDef>Plla</th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                class="has_label_on_mobile"
+                data-label="Plla : "
+              >
+                {{ element.sCodPlla }}
+              </td>
+            </ng-container>
+
+            <!-- sAbrev Column -->
+            <ng-container matColumnDef="sAbrev">
+              <th mat-header-cell *matHeaderCellDef>Tipo</th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                class="has_label_on_mobile"
+                data-label="Tipo : "
+              >
+                {{ element.sAbrev }}
+              </td>
+            </ng-container>
+
+            <!-- sDocumento Column -->
+            <ng-container matColumnDef="sDocumento">
+              <th mat-header-cell *matHeaderCellDef>Documento</th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                class="has_label_on_mobile"
+                data-label="N° Doc. : "
+              >
+                <ngb-highlight
+                  [result]="element.sDocumento"
+                  [term]="
+                    filtroPersonasAsignadas.filtroForm.controls.sNombreDoc.value
+                  "
+                ></ngb-highlight>
+              </td>
+            </ng-container>
+
+            <!-- Eliminar Column -->
+            <ng-container matColumnDef="eliminar">
+              <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  matTooltip="Eliminar"
+                  mat-icon-button
+                  color="accent"
+                  aria-label="Example icon button with a heart icon"
+                  (click)="eliminarPersonaTabla(element)"
+                  [disabled]="deshabilitarBtnEliminar"
+                >
+                  <mat-icon>remove_circle</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell
+                *matFooterCellDef
+                [attr.colspan]="historialExamenMedicoColumnas.length"
+              >
+                No se encuentran registros.
+              </mat-footer-cell>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="historialExamenMedicoColumnas; sticky: true"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: historialExamenMedicoColumnas"
+            ></tr>
+            <mat-footer-row
+              *matFooterRowDef="['noData']"
+              [hidden]="
+                historialExamenMedicoDataSource &&
+                this.historialExamenMedicoDataSource.filteredData.length > 0
+              "
+            ></mat-footer-row>
+          </table>
+        </div>
+        <mat-paginator
+          #pagHistorialExamenMedico
+          style="display: contents"
+          [hidePageSize]="false"
+          [pageSize]="2"
+        ></mat-paginator>
+        <!-- #endregion -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar
+    *ngIf="pbDetail"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

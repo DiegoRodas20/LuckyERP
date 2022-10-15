@@ -1,0 +1,303 @@
+<ngx-spinner name="spi_retencion" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="fab-container">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(-1)">
+    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+  </button>
+  <div [@speedDialStagger]="abMain.length">
+    <button *ngFor="let elem of abMain; let index = index;" mat-mini-fab class="fab-secondary" color="secondary"
+      (click)="onClickMenu(elem.tool)">
+      <i class="material-icons" matTooltip="{{elem.tool}}" matTooltipPosition="left">{{elem.icon}}</i>
+    </button>
+  </div>
+</div>
+
+<div class="modal-header">
+  <h4 class="modal-title">Depositos</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<div class="modal-body" style="padding-bottom: 20px">
+
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Aplicar filtro por </mat-panel-title>
+        <mat-panel-description style="margin-right: 0px">
+        </mat-panel-description>
+        <mat-icon style="margin-right: 10px">filter_alt</mat-icon>
+      </mat-expansion-panel-header>
+
+      <div class="row">
+        <form autocomplete="off" id="fgFilter" [formGroup]="fgFilter" class="col-lg-12">
+
+          <div class="form-row">
+            <div class="col-lg-6">
+              <mat-form-field style="width: 100%;">
+                <mat-label>Nombres del trabajador o documento de identidad</mat-label>
+                <input type="text" matInput formControlName="trabajador">
+                <button style="outline: none;" mat-button *ngIf="getFilter.trabajador.value" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="getFilter.trabajador.patchValue('')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-6">
+              <mat-form-field style="width: 100%;">
+                <mat-label>Nombres del beneficiario o documento de identidad</mat-label>
+                <input type="text" matInput formControlName="beneficiario">
+                <button style="outline: none;" mat-button *ngIf="getFilter.beneficiario.value" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="getFilter.beneficiario.patchValue('')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- <div class="col-lg-4">
+              <mat-form-field style="width: 100%">
+                <mat-label>Año</mat-label>
+                <mat-select formControlName="anio" (selectionChange)="onChangeAnio($event.value)">
+                  <mat-option *ngFor="let elem of lstAnios" [value]="elem.id">
+                    {{ elem.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-4">
+              <mat-form-field style="width: 100%">
+                <mat-label>Mes</mat-label>
+                <input type="text" matInput formControlName="mes" />
+                <button style="outline: none" mat-button *ngIf="getFilter.mes.value" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="getFilter.mes.patchValue('')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div> -->
+
+            <div class="col-lg-3">
+              <mat-form-field style="width: 100%;" appYearMonthFormat>
+                <mat-label>Fecha Devengue</mat-label>
+                <input matInput [matDatepicker]="fechaDevengue" formControlName="fechaDevengue">
+                <mat-datepicker-toggle matSuffix [for]="fechaDevengue"></mat-datepicker-toggle>
+                <mat-datepicker #fechaDevengue startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+                  (monthSelected)="chosenMonthHandler($event, fechaDevengue)">
+                </mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-3">
+              <mat-form-field style="width: 100%">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="estado" (selectionChange)="onChangeEstado($event.value)">
+                  <mat-option *ngFor="let elem of lstEstados" [value]="elem.id">
+                    {{ elem.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-lg-2"></div>
+          </div>
+        </form>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-lg-7">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Listado de depositos</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px" />
+        </div>
+      </div>
+
+      <div id="searchDiv">
+        <table mat-table [dataSource]=" searchBS" style="width: 100%;" class="melevation" multiTemplateDataRows>
+
+          <!-- Action Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent"
+                (click)="onVisualizarDeposito(element)" *ngIf="element.estado === 'Realizado'">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Devengue Column -->
+          <ng-container matColumnDef="devengue">
+            <th mat-header-cell *matHeaderCellDef> Devengue </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.devengue }}
+            </td>
+          </ng-container>
+
+          <!-- Fecha Column -->
+          <ng-container matColumnDef="fechaDeposito">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.fechaDeposito }}
+            </td>
+          </ng-container>
+
+          <!-- Importe Column -->
+          <ng-container matColumnDef="importe">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.importe }}
+            </td>
+          </ng-container>
+
+          <!-- Cancel Column -->
+          <ng-container matColumnDef="cancel">
+            <th mat-header-cell *matHeaderCellDef> Cancelar </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="Cancelar" matTooltipPosition="right" mat-stroked-button color="warn"
+                (click)="cancelar(element)">
+                <mat-icon>free_cancellation</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- More Column -->
+          <ng-container matColumnDef="more">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let row">
+              <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons"
+                style="cursor: pointer;" (click)="onClickExpanded(row)">expand_more</span>
+            </td>
+          </ng-container>
+
+          <!-- More Expanded -->
+          <ng-container matColumnDef="expanded_More">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="searchBC.length">
+              <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                <div class="row div_expanded" style="padding: 10px">
+
+                  <div class="col-lg-12">
+
+                    <div id="dTableExpanded" class="melevation">
+                      <table mat-table [dataSource]="ExpandedDS" style="width: 100%">
+
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                          <td mat-cell *matCellDef="let element">
+                            <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent"
+                              (click)="onVisualizarRetencion(element)">
+                              <mat-icon>visibility</mat-icon>
+                            </button>
+                          </td>
+                        </ng-container>
+
+                        <!-- Trabajador Column -->
+                        <ng-container matColumnDef="trabajador">
+                          <th mat-header-cell *matHeaderCellDef> Trabajador </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.trabajador }}
+                          </td>
+                        </ng-container>
+
+                        <!-- Tipo Column -->
+                        <ng-container matColumnDef="tipoRetencion">
+                          <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.tipoRetencion }}
+                          </td>
+                        </ng-container>
+
+                        <!-- Beneficiario Column -->
+                        <ng-container matColumnDef="beneficiario">
+                          <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.beneficiario }}
+                          </td>
+                        </ng-container>
+
+                        <!-- Importe Column -->
+                        <ng-container matColumnDef="importe">
+                          <th mat-header-cell *matHeaderCellDef> Importe </th>
+                          <td mat-cell *matCellDef="let element">
+                            {{ element.importe }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noData">
+                          <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+                            No se encuentran registros.
+                          </mat-footer-cell>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="ExpandedDC; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let element; columns: ExpandedDC"></tr>
+                        <mat-footer-row *matFooterRowDef="['noData']"
+                          [hidden]="ExpandedDS && this.ExpandedDS.filteredData.length > 0">
+                        </mat-footer-row>
+                      </table>
+                    </div>
+
+                  </div>
+
+
+
+
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef [attr.colspan]="searchBC.length">
+              No se encuentran registros.
+            </mat-footer-cell>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="searchBC; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: searchBC"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expanded_More']"
+            [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+
+          <mat-footer-row *matFooterRowDef="['noData']" [hidden]="searchBS && this.searchBS.filteredData.length > 0">
+          </mat-footer-row>
+        </table>
+
+        <mat-paginator #searchB style="display: contents" [hidePageSize]="false" [pageSize]="4">
+        </mat-paginator>
+      </div>
+    </div>
+
+    <div class="col-lg-5 divLeft">
+      <div class="row">
+        <div class="col-sm">
+          <h6>Vista previa de deposito: {{ devengue }}</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg">
+          <iframe [hidden]="!tieneDeposito" id="pdf-deposito" style="width: 100%; height: 500px"></iframe>
+
+          <div [hidden]="tieneDeposito" style="width: 100%; height: 500px; text-align: center; vertical-align: middle;">
+            <mat-icon style="font-size: 100px; color: rgb(197, 197, 197)">content_paste_off</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <mat-progress-bar *ngIf="pbRetencion" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

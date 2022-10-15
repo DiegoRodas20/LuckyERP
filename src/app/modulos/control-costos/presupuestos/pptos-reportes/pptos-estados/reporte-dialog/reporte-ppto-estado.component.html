@@ -1,0 +1,48 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <div class="form-row">
+            <div class="col-md-4" style="align-self: center; font-size: x-small">
+                <p style="margin-bottom: 0rem;"><strong>ERP GRUPO LUCKY</strong></p>
+                <p>{{this.nEmpresa}}</p>
+            </div>
+            <div class="col-md-4" style="align-self: center;">
+                <h4 style="text-align: center;">Listado de PPTOS y ESTADOS</h4>
+            </div>
+            <div class="col-md-4" style="align-self: center; font-size: x-small; text-align:end">
+                <p>Fecha: {{this.fechaActual}}</p>
+            </div>
+        </div>
+
+        <br>
+
+        <div mat-dialog-content>
+            <div class="form-group col-md-12">
+                <div id="listaMobile" class="mat-elevation-z8">
+                    <div class="example-container">
+                        <table class="tableResponsive table">
+                            <tr class="nombreColumna header-row table-header-row">
+                                <th>PRESUPUESTOS</th>
+                                <th>SERVICIO</th>
+                                <th>CLIENTE</th>
+                                <th>EJECUTIVO</th>
+                                <th>FECHA INICIO</th>
+                                <th>FECHA FIN</th>
+                                <th>ESTADO</th>
+                            </tr>
+                            <tr class="table-row" *ngFor="let lista of lPresupuestoEstado">
+                                <td class="has_label_on_mobile table-cell" data-label='Presupuestos: '>{{lista.codCC}} - {{lista.descCC}}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Servicio: '>{{lista.serv}}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Cliente: '>{{lista.cliente}} - {{lista.clienteDesc}}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Ejecutivo: '>{{ lista.ejecutivo }}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Fecha Inicio: '>{{ lista.fecIni | date: "dd/MM/yyyy"}}</td>
+                                <td class="has_label_on_mobile table-cell" data-label='Fecha Fin: '>{{ lista.fecFin | date: "dd/MM/yyyy"}} </td>
+                                <td class="has_label_on_mobile table-cell" data-label='Estado: '>{{ lista.estadoppto }} </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,658 @@
+<div class="clsprincipal">
+  <div class="col-md-10 offset-md-1">
+    <h4 class="card-header" style="text-align:center">Detalle del Artículo/Servicio</h4>
+  </div>
+</div>
+
+<div class="container-fluid card-body">
+  <div class="form-row col-12">
+    <div class="col-md-10 offset-md-1 content-esp">
+      <form [formGroup]="form">
+        <div class="form-row">
+          <!-- datos principales -->
+          <div class="form-group col-md-12">
+            <mat-card>
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <ng-select placeholder="Familia" formControlName="categoria" [clearable]="false" style="width: 100%;"
+                    (change)="listaSubCategoria($event)">
+                    <ng-option *ngFor="let cat of categoria" [(value)]="cat.nId">{{cat.sDescripcion}}</ng-option>
+                  </ng-select>
+                  <mat-error *ngIf="form.controls.categoria.touched && form.controls.categoria.invalid">
+                    <span *ngIf="form.controls.categoria.errors.required">Familia es <strong>obligatorio</strong></span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <ng-select placeholder="Sub-Familia" formControlName="subCategoria" [clearable]="false"
+                    style="width: 100%;">
+                    <ng-option *ngFor="let item of subCategoria" [(value)]="item.nId">{{item.sDescripcion}}</ng-option>
+                  </ng-select>
+
+                  <mat-error *ngIf="form.controls.subCategoria.touched && form.controls.subCategoria.invalid">
+                    <span *ngIf="form.controls.subCategoria.errors.required">Sub Familia es
+                      <strong>obligatorio</strong></span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-4">
+
+                  <ng-select placeholder="Marca" formControlName="marca" [clearable]="false" style="width: 100%;"
+                    (change)="Dmarca($event)">
+                    <ng-option *ngFor="let item of marca" [(value)]="item.nId">
+                      {{item.sDescripcion}}
+                    </ng-option>
+                  </ng-select>
+
+                  <mat-error *ngIf="form.controls.marca.touched && form.controls.marca.invalid">
+                    <span *ngIf="form.controls.marca.errors.required">Marca es <strong>obligatorio</strong></span>
+                  </mat-error>
+
+                </div>
+
+                <div class="form-group col-md-4 alinear-input">
+                  <mat-form-field class="input" style="width: 100%;">
+                    <mat-label>Nombre Producto</mat-label>
+                    <input matInput placeholder="ingrese el nombre del producto" formControlName="producto"
+                      (ngModelChange)="Dproducto($event)" [readonly]="disabled">
+                    <mat-error *ngIf="form.controls.producto.touched && form.controls.producto.invalid">
+                      <span *ngIf="form.controls.producto.errors.required">Producto es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                    <mat-error *ngIf="form.get('producto').errors?.caracterValidator">
+                      .El texto no debe contener: "|", "?"
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 alinear-input">
+                  <mat-form-field class="input" style="width: 100%;">
+                    <mat-label>Característica</mat-label>
+                    <input matInput placeholder="ingrese la caracteristica" formControlName="caracteristica"
+                      (ngModelChange)="Dcarac($event)" [readonly]="disabled">
+                    <mat-error *ngIf="form.controls.caracteristica.touched && form.controls.caracteristica.invalid">
+                      <span *ngIf="form.controls.caracteristica.errors.required">Caracteristicas es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                    <mat-error *ngIf="form.get('caracteristica').errors?.caracterValidator">
+                      .El texto no debe contener: "|", "?"</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 alinear-input">
+                  <mat-form-field class="input" style="width: 100%;">
+                    <mat-label>Presentación</mat-label>
+                    <input matInput placeholder="ingrese la presentacion" formControlName="presentacion"
+                      (ngModelChange)="Dpresentacion($event)" [readonly]="disabled">
+                    <mat-error *ngIf="form.controls.presentacion.touched && form.controls.presentacion.invalid">
+                      <span *ngIf="form.controls.presentacion.errors.required">Presentacion es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                    <mat-error *ngIf="form.get('presentacion').errors?.caracterValidator">
+                      .El texto no debe contener: "|", "?"</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-2">
+                  <ng-select placeholder="Unidad de Presentación" formControlName="unidadPresenta" [clearable]="false"
+                    (change)="Dunidad($event)">
+                    <ng-option *ngFor="let item of unidadDes" [(value)]="item.nId">{{item.sDescripcion}}</ng-option>
+                  </ng-select>
+                  <mat-error *ngIf="form.controls.unidadPresenta.touched && form.controls.unidadPresenta.invalid">
+                    <span *ngIf="form.controls.unidadPresenta.errors.required">Unidad Presentacion es
+                      <strong>obligatorio</strong></span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-2">
+                  <mat-form-field class="input">
+                    <mat-label>Código</mat-label>
+                    <input matInput formControlName="sCodArticulo" readonly style="color: rgb(236, 0, 140);">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-9">
+                  <mat-form-field class="input">
+                    <mat-label>Descripción</mat-label>
+                    <input matInput placeholder="ingrese la descripcion" multiline formControlName="descripcion"
+                      readonly>
+                    <mat-error *ngIf="form.controls.descripcion.touched && form.controls.descripcion.invalid">
+                      <span *ngIf="form.controls.descripcion.errors.required">Descripción es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-md-1">
+                  <button *ngIf="estado != 1 && articuloRepetido > 0" type="button"
+                    (click)="verListaArticulosExistente()" mat-raised-button color="secondary" mat-mini-fab
+                    class="fab-toggler" matTooltip="Nombre semejante" [matBadge]="articuloRepetido"
+                    matBadgePosition="before" matBadgeColor="warn">
+                    <i class="material-icons">report_problem</i>
+                  </button>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <ng-select placeholder="Rubro" formControlName="rubro" [clearable]="false" style="width: 100%;">
+                    <ng-option *ngFor="let item of rubro" [value]="item.nId">{{item.sDescripcion}}</ng-option>
+                  </ng-select>
+                  <mat-error *ngIf="form.controls.rubro.touched && form.controls.rubro.invalid">
+                    <span *ngIf="form.controls.rubro.errors.required">Rubro es <strong>obligatorio</strong></span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <ng-select placeholder="Unidad Medida" formControlName="UnidadMedida" [clearable]="false"
+                    style="width: 100%;">
+                    <ng-option *ngFor="let item of unidad" [value]="item.nId">{{item.sDescripcion}}</ng-option>
+                  </ng-select>
+                  <mat-error *ngIf="form.controls.UnidadMedida.touched && form.controls.UnidadMedida.invalid">
+                    <span *ngIf="form.controls.UnidadMedida.errors.required">Unidad de Medida es
+                      <strong>obligatorio</strong></span>
+                  </mat-error>
+                </div>
+
+                <div class="form-group col-md-3 alinear-input">
+                  <mat-form-field class="input">
+                    <mat-label>Tipo de Lote</mat-label>
+                    <mat-select formControlName="tipoControl">
+                      <mat-option *ngFor="let item of TipoComtrol" [value]="item.nId">
+                        {{item.sDescripcion}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.controls.tipoControl.touched && form.controls.tipoControl.invalid">
+                      <span *ngIf="form.controls.tipoControl.errors.required">tipo Control es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-3 alinear-input">
+                  <mat-form-field class="input">
+                    <mat-label>Tipo Artículo</mat-label>
+                    <mat-select formControlName="tipo">
+                      <mat-option *ngFor="let item of tipoVolumen" [value]="item.nElecod">
+                        {{item.cElenam}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.controls.tipo.touched && form.controls.tipo.invalid">
+                      <span *ngIf="form.controls.tipo.errors.required">Tipo Artículo es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <mat-form-field class="input">
+                    <mat-label>Creado Por </mat-label>
+                    <input matInput formControlName="creado" readonly>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <mat-form-field class="input">
+                    <mat-label>Modificado Por</mat-label>
+                    <input matInput formControlName="modificado" readonly>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <mat-form-field class="input">
+                    <mat-label>Estado</mat-label>
+                    <input matInput formControlName="estado" readonly style="color: rgb(236, 0, 140);">
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </mat-card>
+          </div>
+
+          <!-- Volumen del Articulo -->
+          <div *ngIf="!esServicio" class="form-group col-md-12">
+            <!-- <mat-card> -->
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="acordeonMedida" (closed)="acordeonMedida = false" style="width: 100%;">
+                <mat-expansion-panel-header>
+                  <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    Medida Unidad
+                  </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <button type="button" mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">filter_b_and_w</mat-icon>
+                  </button>
+                </mat-expansion-panel-header>
+
+                <div class="row esp-top">
+
+                  <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                      <mat-label>Peso en Kg</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(1)" min="0" matInput placeholder="ingrese el peso"
+                        formControlName="pesokgr" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.pesokgr.touched && form.controls.pesokgr.invalid && estado != 1">
+                        <span *ngIf="form.controls.pesokgr.errors.required">El peso es
+                          <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.pesokgr.errors.mayor0 && !form.controls.pesokgr.errors.required">Peso
+                          kgr es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Largo mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(2)" min="0" matInput placeholder="ingrese el Largo"
+                        formControlName="Largo" (ngModelChange)="largoVolumen($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Largo.touched && form.controls.Largo.invalid && estado != 1">
+                        <span *ngIf="form.controls.Largo.errors.required">Largo es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Largo.errors.mayor0 && !form.controls.Largo.errors.required">Largo es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Ancho mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(3)" min="0" matInput placeholder="ingrese el ancho"
+                        formControlName="Ancho" (ngModelChange)="anchoVolumen($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Ancho.touched && form.controls.Ancho.invalid && estado != 1">
+                        <span *ngIf="form.controls.Ancho.errors.required">Ancho es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Ancho.errors.mayor0 && !form.controls.Ancho.errors.required">Ancho es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Alto mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(4)" min="0" matInput placeholder="ingrese el Alto"
+                        formControlName="Alto" (ngModelChange)="altoVolumen($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Alto.touched && form.controls.Alto.invalid && estado != 1">
+                        <span *ngIf="form.controls.Alto.errors.required">Alto es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Alto.errors.mayor0 && !form.controls.Alto.errors.required">Alto es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <mat-form-field class="input">
+                      <mat-label>Volumen m3</mat-label>
+                      <input type="text" matInput placeholder="0000" formControlName="Volumen" readonly
+                        [value]="form.get('Volumen').value | number:'1.6-6'">
+                      <mat-error *ngIf="form.controls.Volumen.touched && form.controls.Volumen.invalid && estado != 1">
+                        <span *ngIf="form.controls.Volumen.errors.required">Volumen es
+                          <strong>obligatorio</strong></span>
+
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <!-- </mat-card> -->
+          </div>
+          <!-- Empaques del Articulo -->
+          <div *ngIf="!esServicio" class="form-group col-md-12">
+            <mat-accordion>
+              <!-- Indica empaque secundario -->
+              <mat-expansion-panel [expanded]="acordeonSecundario" style="width: 100%;">
+                <mat-expansion-panel-header>
+                  <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    Empaque Secundario
+                  </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <button type="button" mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">nfc</mat-icon>
+                  </button>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="checksecundario"
+                        (change)="OnChangeOne($event)">Habilitado</mat-checkbox>
+                    </section>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <ng-select appendTo="body" placeholder="Unidad Despacho" formControlName="unidad2"
+                      [clearable]="false" style="width: 100%; padding-bottom:3.5px; bottom:0.8rem;">
+                      <ng-option *ngFor="let item of unidad" [value]="item.nId">
+                        {{item.sDescripcion}}
+                      </ng-option>
+                    </ng-select>
+
+                    <mat-error *ngIf="form.controls.unidad2.touched && form.controls.unidad2.invalid">
+                      <span *ngIf="form.controls.unidad2.errors.required">Unidad es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+
+                    <!-- <mat-form-field class="input">
+                      <mat-label>Unidad Despacho</mat-label>
+                      <mat-select formControlName="unidad2">
+                        <mat-option *ngFor="let item of unidad" [value]="item.nId">
+                          {{item.sDescripcion}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form.controls.unidad2.touched && form.controls.unidad2.invalid">
+                        <span *ngIf="form.controls.unidad2.errors.required">Unidad es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field> -->
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Cantidad</mat-label>
+                      <input type="number" (keyup)="EvitarNegativo(5)" min="0" matInput
+                        placeholder="ingrese el cantidad" formControlName="cantidad" [readonly]="disabled">
+                      <mat-error
+                        *ngIf="form.controls.cantidad.touched && form.controls.cantidad.invalid && estado != 1">
+                        <span *ngIf="form.controls.cantidad.errors.required">Cantidad es
+                          <strong>obligatorio</strong></span>
+                        <span
+                          *ngIf="form.controls.cantidad.errors.mayor0 && !form.controls.cantidad.errors.required">Debe
+                          ser mayor a <strong>0</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Peso Kg</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(6)" min="0" matInput placeholder="ingrese el Peso"
+                        formControlName="peso2" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.peso2.touched && form.controls.peso2.invalid && estado != 1">
+                        <span *ngIf="form.controls.peso2.errors.required">Peso es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.peso2.errors.mayor0 && !form.controls.peso2.errors.required">Peso es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Largo mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(7)" min="0" matInput placeholder="ingrese el Largo"
+                        formControlName="Largo2" (ngModelChange)="calLargo2($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Largo2.touched && form.controls.Largo2.invalid && estado != 1">
+                        <span *ngIf="form.controls.Largo2.errors.required">Largo es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Largo2.errors.mayor0 && !form.controls.Largo2.errors.required">Largo
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Ancho mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(8)" min="0" matInput placeholder="ingrese el Ancho"
+                        formControlName="Ancho2" (ngModelChange)="calancho2($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Ancho2.touched && form.controls.Ancho2.invalid && estado != 1">
+                        <span *ngIf="form.controls.Ancho2.errors.required">Ancho es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Ancho2.errors.mayor0 && !form.controls.Ancho2.errors.required">Ancho
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Alto mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(9)" min="0" matInput
+                        placeholder="ingrese el nombre Alto" formControlName="Alto2" (ngModelChange)="calalto2($event)"
+                        [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Alto2.touched && form.controls.Alto2.invalid && estado != 1">
+                        <span *ngIf="form.controls.Alto2.errors.required">Alto es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Alto2.errors.mayor0 && !form.controls.Alto2.errors.required">Alto es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Base m2</mat-label>
+                      <input type="text" matInput placeholder="ingrese el Base" formControlName="base" readonly
+                        [value]="form.get('base').value | number:'1.6-6'">
+                      <mat-error *ngIf="form.controls.base.touched && form.controls.base.invalid && estado != 1">
+                        <span *ngIf="form.controls.base.errors.required">Base es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.base.errors.mayor0 && !form.controls.base.errors.required">Base es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Volumen m3</mat-label>
+                      <input type="text" matInput formControlName="Volumen2" readonly
+                        [value]="form.get('Volumen2').value | number:'1.6-6'">
+                      <mat-error
+                        *ngIf="form.controls.Volumen2.touched && form.controls.Volumen2.invalid && estado != 1">
+                        <span *ngIf="form.controls.Volumen2.errors.required">Volumen es
+                          <strong>obligatorio</strong></span>
+                        <span
+                          *ngIf="form.controls.Volumen2.errors.mayor0 && !form.controls.Volumen2.errors.required">Volumen
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <!-- Indica empaque terciario -->
+              <mat-expansion-panel [expanded]="acordeonTerciario" style="width: 100%;">
+                <mat-expansion-panel-header>
+                  <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    Empaque Terciario
+                  </mat-panel-title>
+                  <mat-panel-description style="margin-right: 0px">
+                  </mat-panel-description>
+                  <button type="button" mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">nfc</mat-icon>
+                  </button>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <section class="example-section">
+                      <mat-checkbox formControlName="checkterciario" class="example-margin"
+                        (change)="OnChangetwo($event)"> Habilitado</mat-checkbox>
+                    </section>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <ng-select appendTo="body" placeholder="Unidad Despacho" formControlName="unidad3"
+                      [clearable]="false" style="width: 100%; padding-bottom:3.5px; bottom:0.8rem;">
+                      <ng-option *ngFor="let item of unidad" [value]="item.nId">
+                        {{item.sDescripcion}}
+                      </ng-option>
+                    </ng-select>
+
+                    <mat-error *ngIf="form.controls.unidad3.touched && form.controls.unidad3.invalid">
+                      <span *ngIf="form.controls.unidad3.errors.required">Unidad es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+
+                    <!-- <mat-form-field class="input">
+                      <mat-label>Unidad Despacho</mat-label>
+                      <mat-select formControlName="unidad3">
+                        <mat-option *ngFor="let item of unidad" [value]="item.nId">
+                          {{item.sDescripcion}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form.controls.unidad3.touched && form.controls.unidad3.invalid">
+                        <span *ngIf="form.controls.unidad3.errors.required">Unidad es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field> -->
+                  </div>
+
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Cantidad</mat-label>
+                      <input type="number" (keyup)="EvitarNegativo(10)" min="0" matInput
+                        placeholder="ingrese la Cantidad" formControlName="cantidad3" [readonly]="disabled">
+                      <mat-error
+                        *ngIf="form.controls.cantidad3.touched && form.controls.cantidad3.invalid && estado != 1">
+                        <span *ngIf="form.controls.cantidad3.errors.required">Cantidad es
+                          <strong>obligatorio</strong></span>
+                        <span
+                          *ngIf="form.controls.cantidad3.errors.mayor0 && !form.controls.cantidad3.errors.required">Debe
+                          ser mayor a <strong>0</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Peso Kg</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(11)" min="0" matInput placeholder="ingrese el Peso"
+                        formControlName="peso3" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.peso3.touched && form.controls.peso3.invalid && estado != 1">
+                        <span *ngIf="form.controls.peso3.errors.required">Peso es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.peso3.errors.mayor0 && !form.controls.peso3.errors.required">Peso es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-12">
+                    <mat-form-field class="input">
+                      <mat-label>Largo mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(12)" min="0" matInput placeholder="ingrese el Largo"
+                        formControlName="Largo3" (ngModelChange)="calLargo3($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Largo3.touched && form.controls.Largo3.invalid && estado != 1">
+                        <span *ngIf="form.controls.Largo3.errors.required">Largo es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Largo3.errors.mayor0 && !form.controls.Largo3.errors.required">Largo
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Ancho mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(13)" min="0" matInput placeholder="ingrese el Ancho"
+                        formControlName="Ancho3" (ngModelChange)="calancho3($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Ancho3.touched && form.controls.Ancho3.invalid && estado != 1">
+                        <span *ngIf="form.controls.Ancho3.errors.required">Ancho es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Ancho3.errors.mayor0 && !form.controls.Ancho3.errors.required">Ancho
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Alto mts</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(14)" min="0" matInput placeholder="ingrese el Alto"
+                        formControlName="Alto3" (ngModelChange)="calalto3($event)" [readonly]="disabled">
+                      <mat-error *ngIf="form.controls.Alto3.touched && form.controls.Alto3.invalid && estado != 1">
+                        <span *ngIf="form.controls.Alto3.errors.required">Alto es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.Alto3.errors.mayor0 && !form.controls.Alto3.errors.required">Alto es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Base m2</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(15)" min="0" matInput placeholder="ingrese la Base"
+                        formControlName="base3" readonly>
+                      <mat-error *ngIf="form.controls.base3.touched && form.controls.base3.invalid && estado != 1">
+                        <span *ngIf="form.controls.base3.errors.required">Base es <strong>obligatorio</strong></span>
+                        <span *ngIf="form.controls.base3.errors.mayor0 && !form.controls.base3.errors.required">Base es
+                          <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <mat-form-field class="input">
+                      <mat-label>Volumen m3</mat-label>
+                      <input type="number" (blur)="EvitarNegativo(16)" min="0" matInput placeholder="ingrese el Volumen"
+                        formControlName="Volumen3" readonly>
+                      <mat-error
+                        *ngIf="form.controls.Volumen3.touched && form.controls.Volumen3.invalid && estado != 1">
+                        <span *ngIf="form.controls.Volumen3.errors.required">Volumen es
+                          <strong>obligatorio</strong></span>
+                        <span
+                          *ngIf="form.controls.Volumen3.errors.mayor0 && !form.controls.Volumen3.errors.required">Volumen
+                          es <strong>obligatorio</strong></span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <!-- Codigo barra e imagen -->
+          <div *ngIf="!esServicio" class="form-group col-md-12">
+            <mat-card>
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <mat-form-field class="input">
+                    <mat-label>Parte Original</mat-label>
+                    <input type="number" matInput placeholder="ingrese el ParteOrginal" formControlName="ParteOrginal"
+                      [readonly]="disabled">
+                    <mat-error>el Factor es necesario</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-md-4">
+                  <mat-form-field class="input">
+                    <mat-label>Código Barra</mat-label>
+                    <input type="text" matInput placeholder="0000" formControlName="codigoBarra" [readonly]="disabled">
+                    <mat-error *ngIf="form.controls.codigoBarra.touched && form.controls.codigoBarra.invalid">
+                      <span *ngIf="form.controls.codigoBarra.errors.required">Código de barra es
+                        <strong>obligatorio</strong></span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-md-3" *ngIf="mostrarSubir">
+                  <form [formGroup]="formArhivo">
+                    <input type="file" accept="image/x-png,image/jpeg"
+                      (change)="fnSeleccionarArchivo($event,lblName.id)" formControlName="fileUpload"
+                      class="custom-file-input" aria-describedby="inputGroupFileAddon04">
+                    <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">Seleccione Foto:
+                    </mat-label>
+                  </form>
+                </div>
+                <div class="form-group col-md-1" *ngIf="mostrarSubir">
+                  <button mat-raised-button color="primary" type="button" matTooltip="Subir Archivo"
+                    (click)="fnUploadFile()" type="button">
+                    <mat-icon>cloud_upload</mat-icon>
+                  </button>
+                </div>
+                <div class="col-md-10 offset-md-1">
+                  <div *ngIf="vArchivoSeleccioado.length == 0 && mostrarSubir" class="col-md-12 alert alert-info">
+                    ¡No selecciono niguna Foto!
+                  </div>
+                  <img *ngIf="estado != 0 && sImagen" src="{{sImagen}}" class="md-card-image" alt="Card Image"
+                    width="100%" style="max-width: 400px;">
+                  <p *ngIf="estado == 1 && !sImagen" style="color: #002c4b; font-weight: bold;">No contiene una Foto</p>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+        <br>
+        <!-- Botones -->
+        <div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+          <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+          </button>
+          <div [@speedDialStagger]="abLista.length">
+            <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+              <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                matTooltipPosition="left" [color]="btn.color" (click)="clickFab(ibtn)">
+                <i class="material-icons">{{btn.icon}}</i>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div style="display:none">
+  <div id="print-rq">
+    <div style="display: grid; grid-template-columns: repeat(3, 2fr);grid-gap: 15px;">
+      <div style="grid-column: 1;grid-row: 1; text-align: center;">
+        <!-- <img [src]="scodigoQR" alt=""> -->
+        <img src="{{scodigoQR}}">
+        <h1>{{ form.controls['sCodArticulo'].value }} {{ form.controls['producto'].value }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<iframe id="pdf-frame" style="display:none"></iframe>

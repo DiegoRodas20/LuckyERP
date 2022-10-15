@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>
+    <h5 class="card-header">Usuario </h5>
+</h2>
+<!-- Cuerpo  -->
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="ModuloFG">
+        <span *ngIf="diferenteProyecto(); then thenBlock"></span>
+        <ng-template #thenBlock>
+            <div class="form-row" style="margin-bottom: 10px;">
+                <div class="col-lg-4 d-flex align-items-center">
+                    <label>Modulo Padre: ({{data["dadMod"]}})</label>
+                </div>
+                <div class="col-lg-8">
+                    <mat-form-field>
+                        <mat-label>Seleccione: </mat-label>
+                        <mat-select formControlName="dadMod" matInput [(value)]="data['dadMod']">
+                            <mat-option style="width: 100%;" *ngFor="let modulo of comboModulo" [value]="modulo.idMod">
+                                {{modulo.nameMod}} - ({{modulo.idMod}})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-template>
+        <div class="form-row" style="margin-bottom: 10px;">
+            <div class="col-lg-4 d-flex align-items-center">
+                <label>Nombre:</label>
+            </div>
+            <div class="col-lg-8">
+                <input formControlName="nameMod" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-row" style="margin-bottom: 10px;">
+            <div class="col-lg-4 d-flex align-items-center">
+                <label>Url:</label>
+            </div>
+            <div class="col-lg-8">
+                <input formControlName="url_mod" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button (click)="btnGuardar()" class="btn btn-success float-right">Guardar</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-secondary float-right" (click)="btnCerrar()">Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,269 @@
+<div class="col-md-10 offset-md-1 clsprincipal">
+  <div class="text-center mt-0 mb-2">
+    <h3
+      class="col-md-10 offset-md-1 card-header mb-4"
+      style="
+        background-color: #334d6e;
+        color: white;
+        text-align: center;
+        min-width: 100%;
+        margin: 0px;
+      "
+    >
+      NUEVO FORMATO
+    </h3>
+
+    <div class="mb-4 text-left">
+      <!-- #region Sugerencias-->
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> PASOS PARA CREAR UN FORMATO</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <div class="recomendaciones">
+                <p>
+                  1. Ingresar el nombre del formato y la cadena a la que
+                  pertenece
+                </p>
+                <p>2. Buscar y añadir campos a utilizar.</p>
+                <p>
+                  3. Añadir los campos en el formato: <b>//nombre_campo//</b>
+                </p>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <p>4. El sistema debe reconocer los campos <b>Verificar</b>.</p>
+              <p>
+                5. Para una nueva pagina agregar en una linea
+                <b>&lt;&lt;NUEVO&gt;&gt;</b>
+              </p>
+              <p>6. Finalmente <b>Guardar</b></p>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <!-- #endregion -->
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="row mt-4">
+      <!-- #region CAMPOS PARA EL FORMATO-->
+      <div class="col-12 col-md-4">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Nombre del formato</mat-label>
+            <input matInput type="text" [(ngModel)]="nombreFormato" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <mat-form-field class="full-width">
+          <mat-label>Escoge la cadena</mat-label>
+          <mat-select [(ngModel)]="cadenaSeleccionada">
+            <mat-option
+              *ngFor="let cadena of listaCadenas"
+              [value]="cadena.pId"
+            >
+              {{ cadena.pNombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region BUSCADOR DE CAMPOS -->
+      <div class="col-12 col-md-4">
+        <form class="example-form">
+          <mat-form-field class="full-width">
+            <input
+              type="text"
+              placeholder="Busca los campos que necesitas"
+              aria-label="Number"
+              matInput
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
+              (keyup.enter)="enterEventBuscadorCampos()"
+            />
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let campo of filtroBusquedaCampos | async"
+                [value]="campo.pNombre"
+                (click)="agregarCampoSeleccionadoAlFormato(campo)"
+              >
+                {{ campo.pNombre }}
+                <button
+                  mat-icon-button
+                  color="primary"
+                  aria-label="Example icon button with a heart icon"
+                  class="float-right"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+
+  <!-- #region LISTA DE BOTONES-->
+  <div class="text-center mb-3">
+    <!-- #region BOTON REGRESAR -->
+    <button
+      class="mb-2 mr-2 btn_activo"
+      mat-flat-button
+      (click)="regresarPaginaAnterior()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      REGRESAR
+    </button>
+    <!-- #endregion -->
+    <!-- #region BOTON AGREGAR UN NUEVO CAMPO -->
+    <button
+      class="mr-2 mb-2 btn_pasivo"
+      mat-stroked-button
+      (click)="dialogAgregarNuevoCampo()"
+    >
+      <mat-icon>add</mat-icon>
+      CREAR NUEVO CAMPO
+    </button>
+    <!-- #endregion -->
+
+    <!-- #region BOTON ABRIR MODAL VER TODOS LOS CAMPOS -->
+    <button
+      class="mb-2 btn_activo"
+      mat-flat-button
+      (click)="dialogVerTodosLosCampos()"
+    >
+      VER CAMPOS
+      <mat-icon>visibility</mat-icon>
+    </button>
+    <!-- #endregion -->
+
+    <!-- #region BOTON ABRIR MODAL VER TODOS LOS FORMATOS -->
+    <button
+      class="mb-2 ml-2 mr-2 btn_activo"
+      mat-flat-button
+      [disabled]="cadenaSeleccionada === null"
+      (click)="dialogVerTodosLosFormatos()"
+    >
+      VER FORMATOS
+      <mat-icon>visibility</mat-icon>
+    </button>
+    <!-- #endregion -->
+
+    <!-- #region PREVISUALIZAR -->
+    <button
+      class="mb-2 btn_activo"
+      mat-flat-button
+      printSectionId="previsualizar-formato"
+      [useExistingCss]="false"
+      ngxPrint
+    >
+      PREVISUALIZAR
+      <mat-icon>search</mat-icon>
+    </button>
+    <!-- #endregion -->
+
+    <!-- #region BOTON DE VERIFICACION -->
+    <button
+      class="mb-2 ml-2 mr-2 btn_activo"
+      mat-flat-button
+      (click)="btnVerificarContenido()"
+    >
+      VERIFICAR
+      <mat-icon>check</mat-icon>
+    </button>
+    <!-- #endregion -->
+
+    <!-- #region BOTON GUARDAR -->
+    <button
+      class="mb-2 btn_activo"
+      [disabled]="validacionCampos()"
+      mat-flat-button
+      (click)="guardarFormato()"
+    >
+      GUARDAR
+      <mat-icon>save</mat-icon>
+    </button>
+    <!-- #endregion -->
+  </div>
+  <!-- #endregion -->
+
+  <div class="row">
+    <!-- #region EDITOR DE FORMATO -->
+    <div class="col-12 col-md-10 order-md-1 order-2 mb-2">
+      <angular-editor
+        [placeholder]="'Digite su formato aca...'"
+        [(ngModel)]="contenido"
+        [config]="editorConfig"
+        (input)="verificar = true"
+      ></angular-editor>
+      <!-- <p>{{ contenido }}</p> -->
+    </div>
+    <!-- #endregion -->
+    <!-- #region LISTA DE TODOS LOS CAMPOS AGREGADOS AL FORMATO -->
+    <div class="col-12 col-md-2 order-md-2 order-1 mb-2">
+      <mat-divider></mat-divider>
+      <div>
+        <div class="text-center mt-3">
+          <h5 class="color_titulos">LISTA DE CAMPOS</h5>
+        </div>
+        <mat-chip-list
+          class="example-chip"
+          cdkDropList
+          cdkDropListOrientation="horizontal"
+        >
+          <mat-chip
+            class="example-box"
+            cdkDrag
+            *ngFor="let campo of listaCampos"
+          >
+            {{ campo.pNombre }}
+            <mat-icon matChipRemove (click)="eliminarCampoLista(campo)">
+              cancel
+            </mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+
+        <div *ngIf="listaCampos.length === 0" class="mt-3 text-center">
+          <mat-card>Sin campos</mat-card>
+        </div>
+      </div>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region LIMPIA TODOS LOS VALORES -->
+    <div class="btn_clear mr-3 mb-3">
+      <button
+        mat-fab
+        matTooltip="Limpiar informacion"
+        matTooltipPosition="left"
+        color="accent"
+        aria-label="Example icon button with a delete icon"
+        (click)="limpiarTodosLosCampos()"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <!-- #endregion -->
+  </div>
+
+  <!-- #region  RENDERIZAR PARA PREVISUALIZAR -->
+  <div style="display: none">
+    <div id="previsualizar-formato">
+      <div class="container">
+        <div [innerHTML]="renderizarHTMLPrevisualizar()"></div>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+</div>

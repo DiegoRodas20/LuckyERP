@@ -1,0 +1,60 @@
+<div class="transporte">
+  <mat-card class="title-card">Reporte de Guías</mat-card>
+  <div mat-dialog-content>
+    <mat-card>
+      <form [formGroup]="form" autocomplete="off">
+        <div class="row">
+          <div class="col-lg-6 col-md-6">
+            <mat-form-field>
+              <mat-label>Desde</mat-label>
+              <input matInput formControlName="dFechaIni" [matDatepicker]="desde">
+              <mat-datepicker-toggle matSuffix [for]="desde"></mat-datepicker-toggle>
+              <mat-datepicker #desde disabled="false"></mat-datepicker>
+              <mat-error *ngIf="dFechaIniError">{{ dFechaIniError }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-6 col-md-6">
+            <mat-form-field>
+              <mat-label>Hasta</mat-label>
+              <input matInput formControlName="dFechaFin" [matDatepicker]="hasta">
+              <mat-datepicker-toggle matSuffix [for]="hasta"></mat-datepicker-toggle>
+              <mat-datepicker #hasta disabled="false"></mat-datepicker>
+              <mat-error *ngIf="dFechaFinError">{{ dFechaFinError }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-10 col-md-10">
+            <div>
+              <ng-select appendTo="body" [clearable]="false" placeholder="Cliente" formControlName="nIdCliente">
+                <ng-option *ngFor="let cliente of data.clientes" [value]="cliente.nId">
+                  {{cliente.sDescripcion}}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <button mat-mini-fab (click)="fnGenerar()" matTooltip="Generar" color="secondary" >
+              <mat-icon>text_snippet</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-10 col-md-10">
+            <ng-select appendTo="body" [clearable]="false" placeholder="Proveedor" formControlName="nIdProveedor">
+              <ng-option *ngFor="let proveedor of data.proveedores" [value]="proveedor.nId">
+                {{proveedor.sDescripcion}}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <button mat-mini-fab color="warn" matTooltip="Salir" matDialogClose>
+              <mat-icon>exit_to_app</mat-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

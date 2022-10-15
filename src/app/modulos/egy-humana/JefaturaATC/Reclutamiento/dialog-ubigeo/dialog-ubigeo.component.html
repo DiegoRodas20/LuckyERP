@@ -1,0 +1,47 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <h5 mat-dialog-title class="w-100 card-header text-center">
+            Ubigeo
+        </h5>
+
+        <div class="col-md-12">
+            <form [formGroup]="UbigeoForm">
+                <div class="form-row">
+
+                    <!-- Departamento -->
+                    <div class="form-group col-md-12">
+                        <ng-select placeholder="Departamento" appendTo="body" (change)="getControl(1)" name="Pri"
+                            formControlName="Pri">
+                            <ng-option *ngFor="let car of lblDepartamento" [(value)]="car.pCod">{{car.cDesc}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Provincia -->
+                    <div class="form-group col-md-12">
+                        <ng-select placeholder="Provincia" appendTo="body" (change)="getControl(2)" name="Seg"
+                            formControlName="Seg">
+                            <ng-option *ngFor="let car of lblProvincia" [(value)]="car.pCod">{{car.cDesc}}</ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Distrito -->
+                    <div class="form-group col-md-12">
+                        <ng-select placeholder="Distrito" appendTo="body" name="Ter" formControlName="Ter">
+                            <ng-option *ngFor="let car of lblDistrito" [(value)]="car.pCod">{{car.cDesc}}</ng-option>
+                        </ng-select>
+                    </div>
+
+                    <!-- Opciones -->
+                    <div class="col-md-12 text-right">
+                        <button mat-raised-button class="mr-2" (click)="onNoClick()">Salir</button>
+                        <button mat-raised-button class="mr-2" color="accent" (click)="fnSeleccionar()">Ok</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

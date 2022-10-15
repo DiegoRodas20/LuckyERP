@@ -1,0 +1,107 @@
+<div style="margin-top: 15px;">
+    <div class="col-md-12">
+        <h5 class="col-md-12 card-header" style="text-align: center">
+            Gasto de Distribución y Courier
+        </h5>
+
+        <mat-card>
+            <form class="row" [formGroup]="formGastos">
+                <div class="col-md-5">
+                    <ng-select appendTo="body" [clearable]="false" formControlName="cboEmpresa" placeholder="Empresa" (change)="cambioEmpresa($event)" required>
+                        <ng-option *ngFor="let vEmpresa of listaEmpresa" [value]="vEmpresa.nIdEmpresa">
+                            {{vEmpresa.nombre}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-md-7 d-flex  align-items-center">
+                    <mat-label style="padding-bottom: 7px;">Tipo Traslado: </mat-label>
+                    <mat-radio-group style="margin-left: 5px;" formControlName="rgTipoTraslado">
+                        <!-- <label>Tipo Traslado</label> -->
+
+                        <mat-radio-button style="margin-left: 5px;" [value]="0">
+                            Distribución partida
+                        </mat-radio-button>
+
+                        <mat-radio-button [value]="1">
+                            Courier partida
+                        </mat-radio-button>
+
+                        <mat-radio-button [value]="2">
+                            Ambas
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+
+                <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" formControlName="cboCliente" placeholder="Cliente" required>
+                        <ng-option *ngFor="let vCliente of listaCliente" [value]="vCliente.id">
+                            {{vCliente.descripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-md-6">
+                    <ng-select appendTo="body" [clearable]="false" formControlName="cboPresupuesto" placeholder="Presupuesto" required>
+                        <ng-option *ngFor="let vPres of listaPresupuesto" [value]="vPres.nId">
+                            {{vPres.sDescripcion}}
+                        </ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fecha Inicio:</mat-label>
+                        <input (click)="pickerFechaInicio.open()" readonly formControlName="cboFechaInicio" matInput [matDatepicker]="pickerFechaInicio">
+                        <mat-datepicker-toggle matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerFechaInicio></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Fecha Fin:</mat-label>
+                        <input (click)="pickerFechaFin.open()" readonly formControlName="cboFechaFin" matInput [matDatepicker]="pickerFechaFin">
+                        <mat-datepicker-toggle matSuffix [for]="pickerFechaFin"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerFechaFin></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <!-- Formatos -->
+                <div class="col-md-12">
+                    <label for="">Mostrar reporte de envíos de Ppto con móvil de Lucky
+                        <button mat-icon-button (click)="generarExcelReportePresupuestoMovil()">
+                            <mat-icon class="button-opcion" color="accent">receipt</mat-icon>
+                        </button>
+                    </label>
+
+                    <br>
+                    <label for="">Mostrar reporte de transporte por Factura, partida de Presupuestos
+                        y partida de Centro de Costos internos:
+                        <button mat-icon-button (click)="generarReporteTrasnporteFactura()">
+                            <mat-icon class="button-opcion" color="accent">receipt</mat-icon>
+                        </button>
+                    </label>
+
+                    <br>
+                    <label for="">Mostrar reporte de transporte Liquidaciones/Pendientes:
+                        <button mat-icon-button (click)="generarExcelReporteLiquidacion()">
+                            <mat-icon class="button-opcion" color="accent">receipt</mat-icon>
+                        </button>
+                    </label>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>
+
+<!-- <pre>
+    Estado del formulario {{formGastos.valid}}
+  <br />
+    Status: {{formGastos.status}}
+  </pre>
+
+<pre>
+  {{ formGastos.value | json }}
+  </pre> -->

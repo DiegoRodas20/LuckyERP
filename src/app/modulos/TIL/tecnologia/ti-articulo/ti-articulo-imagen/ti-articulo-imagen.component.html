@@ -1,0 +1,29 @@
+<div class="transporte">
+  <mat-card class="mb-1 title-card">
+    Carga de imagen
+    <button class="close button-modal-lucky" matDialogClose>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card>
+  <mat-dialog-content>
+    <mat-card>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-10">
+          <input type="file" accept="image/x-png,image/jpeg" (change)="selectFile($event.target.files[0],lblName)"
+            class="custom-file-input" aria-describedby="inputGroupFileAddon04">
+          <mat-label class="custom-file-label" id="lblName" #lblName>Seleccione Imagen: </mat-label>
+        </div>
+        <div class="col-lg-2 col-md-2 col-2">
+          <button mat-mini-fab class="fab-toggler" matTooltip="Agregar" (click)="aceptar()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </mat-dialog-content>
+  <!-- <div mat-dialog-content>
+    <mat-card>
+     
+    </mat-card>
+  </div> -->
+</div>

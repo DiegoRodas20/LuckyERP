@@ -1,0 +1,17 @@
+.title-card {
+  background-color: #334d6e;
+  color: white;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.closeButtonModal{
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  color: gray;
+}
+
+mat-form-field {
+  width: 100%;
+}

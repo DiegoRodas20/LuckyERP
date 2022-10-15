@@ -1,0 +1,666 @@
+<div class="row">
+
+    <div class="col-md-12">
+        <mat-expansion-panel #matCentroCosto class="row" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    {{pCentrodeCosto.sCodCC}} - {{pCentrodeCosto.sDescCC}}
+                </mat-panel-title>
+                <mat-panel-description style="margin-right: 0px">
+                </mat-panel-description>
+                <button mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                </button>
+            </mat-expansion-panel-header>
+            <div class="row">
+                <div class="col-md-12">
+                    <!---->
+                    <!-- offset-md-3 -->
+                    <form [formGroup]="centroCostoForm">
+                        <div class="form-row">
+
+                            <div class="col-md-10">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Dirección:</mat-label>
+                                            <input type="text" matInput placeholder="" formControlName="txtDireccion"
+                                                readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Área:</mat-label>
+                                            <input type="text" matInput placeholder="" formControlName="txtArea"
+                                                readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Cargo:</mat-label>
+                                            <input type="text" matInput placeholder="" formControlName="txtCargo"
+                                                readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row">
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Subcargo:</mat-label>
+                                            <input type="text" matInput placeholder="Subcargo"
+                                                formControlName="txtSubcargo" readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Moneda:</mat-label>
+                                            <input type="text" matInput placeholder="Moneda" formControlName="txtMoneda"
+                                                readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha Inicio:</mat-label>
+                                            <input matInput formControlName="txtFechaIni" readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Fecha fin:</mat-label>
+                                            <input matInput formControlName="txtFechaFin" readonly>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-row">
+                                    <div class="col-md-1">
+                                        <div class="clsSeparador">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
+                                    <!-- Campos auditoria -->
+                                    <div class="col-md-11">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Creado:</mat-label>
+                                            <input type="text" matInput formControlName="txtCreado" readonly>
+                                        </mat-form-field>
+
+                                        <div class="form-group">
+                                            <mat-form-field style="width: 100%;">
+                                                <mat-label>Estado:</mat-label>
+                                                <input type="text" matInput style="color: rgb(236, 0, 140);"
+                                                    formControlName="txtEstado" readonly>
+                                            </mat-form-field>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </mat-expansion-panel>
+        <!-- Cabecera Centro costo -->
+    </div>
+
+    <div class="col-md-12">
+        <mat-expansion-panel #matSucursales class="row" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    Sucursales del costo fijo
+                </mat-panel-title>
+                <mat-panel-description style="margin-right: 0px">
+                </mat-panel-description>
+                <button mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">place</mat-icon>
+                </button>
+            </mat-expansion-panel-header>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Buscar sucursal:</mat-label>
+                        <input type="text" matInput [formControl]="txtFiltroSucursal" (input)="fnFiltrarSucursal()">
+                        <button style="outline: none;" mat-button *ngIf="txtFiltroSucursal.value" matSuffix
+                            mat-icon-button aria-label="Clear"
+                            (click)="this.txtFiltroSucursal.setValue(''); this.fnFiltrarSucursal();">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Año:</mat-label>
+                        <mat-select (ngModelChange)="fnListarSucursalesCC($event, this.pCentrodeCosto.nIdCC, 0)"
+                            [formControl]="cboAnio">
+                            <mat-option *ngFor="let vAnio of lAnio" [value]="vAnio.sAnio">
+                                {{vAnio.sAnio}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <!--Mat Table Sucursales-->
+                    <div id="listaMobile" class="mat-elevation-z8 ">
+                        <div class="example-container">
+                            <table mat-table [dataSource]="dataSource" #sortSucursales="matSort" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Ver partida: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile  clsColumnaOpc2">
+                                        <button mat-stroked-button color="accent" matTooltip="Ver partida"
+                                            (click)="fnListarPresupuestoMensual(row);">
+                                            <mat-icon>settings</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sSucursal">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Sucursal
+                                    </th>
+                                    <td data-label='Sucursal: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sCodSucursal + ' - ' + row.sSucursal"
+                                            [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nPresupuesto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Presupuestado
+                                    </th>
+                                    <td data-label='Presupuestado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.nPresupuesto" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUsrCreado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Creado
+                                    </th>
+                                    <td data-label='Creado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sUsrCreado" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaCreado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Fecha
+                                        Creación
+                                    </th>
+                                    <td data-label='Fecha Creación: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sFechaCreado" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sUsrModifico">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Modificado
+                                    </th>
+                                    <td data-label='Modificado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sUsrModifico" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaModificado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Fecha
+                                        Modificación
+                                    </th>
+                                    <td data-label='Fecha Modificación: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sFechaModificado" [term]="txtFiltroSucursal.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="row.nId==this.vSucursalCC?.nId ?'make-green':''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #paginatorSucursales [pageSizeOptions]="[3]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </div>
+
+
+    <div class="col-md-12">
+        <mat-expansion-panel [disabled]="vSucursalCC==null" #matPartida class="row" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                    Partidas de la sucursal{{this.vSucursalCC==null?'': ': ' + this.vSucursalCC.sCodSucursal + ' - ' +
+                    this.vSucursalCC.sSucursal + ' Año: ' + this.cboAnio.value}}
+                </mat-panel-title>
+                <mat-panel-description style="margin-right: 0px">
+                </mat-panel-description>
+                <button mat-icon-button>
+                    <mat-icon style="margin-right: 10px;" color="accent">money</mat-icon>
+                </button>
+            </mat-expansion-panel-header>
+            <div class="row  justify-content-center">
+
+                <div class="col-md-5 col-10">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Buscar partida:</mat-label>
+                        <input type="text" matInput [formControl]="txtFiltroPartida" (input)="fnFiltrarPartidas()">
+                        <button style="outline: none;" mat-button *ngIf="txtFiltroPartida.value" matSuffix
+                            mat-icon-button aria-label="Clear"
+                            (click)="this.txtFiltroPartida.setValue(''); this.fnFiltrarPartidas()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-1 col-sm-2 col-2">
+                    <button *ngIf="this.vSucursalCC!=null" mat-mini-fab class="fab-toggler" matTooltip='Agregar partida'
+                        (click)="fnAbrirModal()">
+                        <i class="material-icons">add</i>
+                    </button>
+                    <input data-toggle="modal" data-target="#modalAnadirPartida" #modalDetalleCC type="hidden"
+                        name="button">
+                </div>
+
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Total presupuestado:</mat-label>
+                        <input type="text" [value]="getTotalPresupuestado | number:'1.2-2'" matInput
+                            [formControl]="txtTotalPresupuestado" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12">
+                    <div style="padding: 5px 5px 5px 5px;">
+                        <span class="text-only">Enero: </span>
+                        <span class="text-numbers">{{presupuestoEnero | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Febr.: </span>
+                        <span class="text-numbers"> {{presupuestoFebrero | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Marzo: </span>
+                        <span class="text-numbers"> {{presupuestoMarzo | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Abril: </span>
+                        <span class="text-numbers"> {{presupuestoAbril | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Mayo: </span>
+                        <span class="text-numbers"> {{presupuestoMayo | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Junio: </span>
+                        <span class="text-numbers"> {{presupuestoJunio | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Julio: </span>
+                        <span class="text-numbers"> {{presupuestoJulio | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Agosto: </span>
+                        <span class="text-numbers"> {{presupuestoAgosto | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Sep.: </span>
+                        <span class="text-numbers"> {{presupuestoSeptiembre | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Oct.: </span>
+                        <span class="text-numbers"> {{presupuestoOctubre | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Nov.: </span>
+                        <span class="text-numbers"> {{presupuestoNoviembre | number:'1.2-2'}}</span>
+                        <span class="text-only"> || Dic.: </span>
+                        <span class="text-numbers"> {{presupuestoDiciembre | number:'1.2-2'}}</span>
+
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button matTooltipPosition="left" matTooltip="Mostrar" mat-icon-button mat-stroked-button
+                        class="boton-MatTable" color="accent" (click)="fnBotonEliminarPartida()">
+                        <i class="material-icons">{{this.vVerBotonEliminarPartida?'unfold_less':'unfold_more'}}</i>
+                    </button>
+
+                    <!--Mat Table Partidas-->
+                    <div id="listaMobile" class="mat-elevation-z8 ">
+
+                        <div class="example-container2">
+                            <table mat-table [dataSource]="dataSourcePartidas" #sortPartidas="matSort" matSort>
+
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Eliminar partida: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile  clsColumnaOpc2">
+                                        <button mat-stroked-button color="accent" matTooltip="Ver partida"
+                                            (click)="fnInactivarPartida(row);">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodPartida">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Código
+                                    </th>
+                                    <td data-label='Codigo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.sCodPartida" [term]="txtFiltroPartida.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sPartida">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Partida
+                                    </th>
+                                    <td data-label='Partida: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sPartida" [term]="txtFiltroPartida.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nResguardo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Resguardo
+                                    </th>
+                                    <td data-label='Resguardo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input min="0" (blur)="fnValidarSobreGiro(row, 13)" matInput type="number"
+                                                [(ngModel)]="row.nResguardo">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nRepartir">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Repartir
+                                    </th>
+                                    <td data-label='Repartir: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input min="0" matInput type="number" [(ngModel)]="row.nRepartir">
+                                            <button style="outline: none;" mat-button *ngIf="row.nRepartir" matSuffix
+                                                mat-icon-button aria-label="Clear"
+                                                (click)="this.fnRepartirTabla(row); ">
+                                                <mat-icon>repeat</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nEnero">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Enero
+                                    </th>
+                                    <td data-label='Enero: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'+ 1 }}"
+                                                (blur)="fnValidarSobreGiro(row, 1)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nEnero">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nFebrero">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Febrero
+                                    </th>
+                                    <td data-label='Febrero: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'+ 2 }}"
+                                                (blur)="fnValidarSobreGiro(row, 2)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nFebrero">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nMarzo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Marzo
+                                    </th>
+                                    <td data-label='Marzo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-' + 3 }}"
+                                                (focusout)="fnValidarSobreGiro(row, 3)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nMarzo">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nAbril">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Abril
+                                    </th>
+                                    <td data-label='Abril: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-' + 4}}"
+                                                (blur)="fnValidarSobreGiro(row,4)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nAbril">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nMayo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Mayo
+                                    </th>
+                                    <td data-label='Mayo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 5 }}"
+                                                (blur)="fnValidarSobreGiro(row, 5)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nMayo">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nJunio">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Junio
+                                    </th>
+                                    <td data-label='Junio: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 6}}"
+                                                (blur)="fnValidarSobreGiro(row, 6)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nJunio">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nJulio">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Julio
+                                    </th>
+                                    <td data-label='Julio: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 7 }}"
+                                                (blur)="fnValidarSobreGiro(row, 7)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nJulio">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nAgosto">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Agosto
+                                    </th>
+                                    <td data-label='Agosto: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 8 }}"
+                                                (blur)="fnValidarSobreGiro(row, 8)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nAgosto">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nSetiembre">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Septiembre
+                                    </th>
+                                    <td data-label='Septiembre: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 9 }}"
+                                                (blur)="fnValidarSobreGiro(row, 9)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nSetiembre">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nOctubre">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Octubre
+                                    </th>
+                                    <td data-label='Octubre: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 10 }}"
+                                                (blur)="fnValidarSobreGiro(row, 10)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nOctubre">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nNoviembre">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Noviembre
+                                    </th>
+                                    <td data-label='Noviembre: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 11 }}"
+                                                (blur)="fnValidarSobreGiro(row, 11)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nNoviembre">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nDiciembre">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                        Diciembre
+                                    </th>
+                                    <td data-label='Diciembre: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <mat-form-field style="width: 100px;">
+                                            <input id="{{OPCION_ACTUAL + '-'+ row.nId + '-'  + 12 }}"
+                                                (blur)="fnValidarSobreGiro(row, 12)" min="0" matInput type="number"
+                                                [(ngModel)]="row.nDiciembre">
+                                        </mat-form-field>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsPartidas; sticky: true"></tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: this.vVerBotonEliminarPartida?displayedColumnsPartidasConOpcion:displayedColumnsPartidas;">
+                                </tr>
+                            </table>
+                        </div>
+                        <!-- <mat-paginator #paginatorPartidas="" [pageSizeOptions]="[4]"></mat-paginator> -->
+                    </div>
+
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </div>
+
+</div>
+
+<!--Modal para asignar tarifa-->
+<div class="modal fade  bd-example-modal-xl" id="modalAnadirPartida" data-backdrop="static" data-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="modalAnadirPartida" aria-hidden="true">
+
+    <div class="modal-dialog  modal-lg modal-dialog-centered modal-example-1">
+        <div class="modal-content">
+
+            <div class="modal-header text-center header-modal-lucky">
+                <h5 id="modalAnadirPartidaLongTitle"><Label>Agregar partida
+                        al costo fijo</Label>
+                </h5>
+                <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- offset-md-1 -->
+                <mat-card>
+                    <form [formGroup]="anadirPartidaForm">
+                        <div class="form-row col-md-12">
+                            <div class="form-group col-md-6">
+                                <ng-select appendTo="body" (change)="fnListarPartida($event)" [clearable]="false"
+                                    formControlName="cboTipoPartida" placeholder="Partida general" required>
+                                    <ng-option *ngFor="let vTipoPartida of lTipoPartida"
+                                        [value]="vTipoPartida.nIdPartida">
+                                        {{vTipoPartida.sCodPartida}} - {{vTipoPartida.sDescPartida}}</ng-option>
+                                </ng-select>
+                                <small class="text-danger"
+                                    *ngIf="anadirPartidaForm.get('cboTipoPartida').hasError('required')  && anadirPartidaForm.get('cboTipoPartida').touched">.Obligatorio</small>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <ng-select appendTo="body" [clearable]="false" formControlName="cboPartida"
+                                    placeholder="Partida específica" required>
+                                    <ng-option *ngFor="let vPartida of lPartida" [value]="vPartida.nIdPartida">
+                                        {{vPartida.sCodPartida}} - {{vPartida.sDescPartida}}</ng-option>
+                                </ng-select>
+                                <small class="text-danger"
+                                    *ngIf="anadirPartidaForm.get('cboPartida').hasError('required')  && anadirPartidaForm.get('cboPartida').touched">.Obligatorio</small>
+                                <!-- <mat-error *ngIf="anadirPartidaForm.get('cboPartida').hasError('required')">
+                                    .Obligatorio
+                                </mat-error> -->
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                        </div>
+                    </form>
+
+
+                    <div class="container-fluid">
+                        <div class="form-row col-md-12 justify-content-end align-items-end">
+                            <div class="col-md-3">
+                                <button mat-mini-fab color="accent" (click)="fnAnadirPartida()">
+                                    <mat-icon>save</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

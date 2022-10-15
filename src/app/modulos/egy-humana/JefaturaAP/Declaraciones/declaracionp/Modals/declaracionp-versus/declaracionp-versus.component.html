@@ -1,0 +1,516 @@
+<ngx-spinner name="spi_comparativa" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title">Lista de reportes</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+    <form autocomplete="false" [formGroup]="fgReportes">
+        <div class="row">
+            <mat-accordion style="padding-left: 10px; padding-right: 10px; width: 100%;">
+                <mat-expansion-panel (afterExpand)="onToggleFab(1, 1)" (afterCollapse)="onToggleFab(0, 1)">
+                    <mat-expansion-panel-header (afterExpand)="onToggleFab(1, 1)">
+                        <mat-panel-title>
+                            1. Reporte de regimen pensionario (.txt)
+                        </mat-panel-title>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div style="padding-top: 10px; border-bottom-style: inset; margin-bottom: -2px;">
+                        <table mat-table [dataSource]="dataSource1" class="mat-elevation-z8">
+                            <!-- Nombres Column -->
+                            <ng-container matColumnDef="nombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                            </ng-container>
+
+                            <!-- Codigo Planilla Column -->
+                            <ng-container matColumnDef="codigoPlanilla">
+                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                <td mat-cell *matCellDef="let element"> {{element.codigoPlanilla}} </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Numero Documento Column -->
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Ingreso Column -->
+                            <ng-container matColumnDef="fechaIngreso">
+                                <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaIngreso}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Cese Column -->
+                            <ng-container matColumnDef="fechaCese">
+                                <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCese}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario ERP Column -->
+                            <ng-container matColumnDef="regimenPensionarioERP">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. ERP </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioERP}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario TXT Column -->
+                            <ng-container matColumnDef="regimenPensionarioTXT">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. TXT </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioTXT}} </td>
+                            </ng-container>
+
+                            <!-- Observación Column -->
+                            <ng-container matColumnDef="observacion">
+                                <th mat-header-cell *matHeaderCellDef> Observación </th>
+                                <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns1.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                                [hidden]="dataSource1 && this.dataSource1.filteredData.length > 0"></mat-footer-row>
+                        </table>
+
+                        <mat-paginator style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <mat-progress-bar style="height: 1px !important;" *ngIf="pbaReporte1" color="primary"
+                        mode="indeterminate"></mat-progress-bar>
+
+                    <!-- Fab Report -->
+                    <div class="fab-report">
+                        <button mat-mini-fab class="fab-toggler-report">
+                            <i class="material-icons" [@fabToggler]="{value: tsReport1}">control_camera</i>
+                        </button>
+                        <div [@speedDialStagger]="abReport1.length">
+                            <button *ngFor="let btn of abReport1; let ibtn = index;" mat-mini-fab
+                                class="fab-secondary-report" color="{{btn.color}}" [disabled]="btn.dis"
+                                (click)="clickFab(1, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}"
+                                    matTooltipPosition="below">{{btn.icon}}</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (afterExpand)="onToggleFab(1, 2)" (afterCollapse)="onToggleFab(0, 2)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            2. Reporte de datos laborales del trabajador (.txt)
+                        </mat-panel-title>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div style="padding-top: 10px">
+                        <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
+                            <!-- Nombres Column -->
+                            <ng-container matColumnDef="nombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                            </ng-container>
+
+                            <!-- Codigo Planilla Column -->
+                            <ng-container matColumnDef="codigoPlanilla">
+                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                <td mat-cell *matCellDef="let element"> {{element.codigoPlanilla}} </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Numero Documento Column -->
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Ingreso Column -->
+                            <ng-container matColumnDef="fechaIngreso">
+                                <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaIngreso}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Cese Column -->
+                            <ng-container matColumnDef="fechaCese">
+                                <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCese}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns2.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                                [hidden]="dataSource2 && this.dataSource2.filteredData.length > 0">
+                            </mat-footer-row>
+                        </table>
+
+                        <mat-paginator style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <mat-progress-bar style="height: 1px !important;" *ngIf="pbaReporte2" color="primary"
+                        mode="indeterminate">
+                    </mat-progress-bar>
+
+                    <!-- Fab Report -->
+                    <div class="fab-report">
+                        <button mat-mini-fab class="fab-toggler-report">
+                            <i class="material-icons" [@fabToggler]="{value: tsReport2}">control_camera</i>
+                        </button>
+                        <div [@speedDialStagger]="abReport2.length">
+                            <button *ngFor="let btn of abReport2; let ibtn = index;" mat-mini-fab
+                                class="fab-secondary-report" color="secondary" [disabled]="btn.dis"
+                                (click)="clickFab(2, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}"
+                                    matTooltipPosition="below">{{btn.icon}}</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (afterExpand)="onToggleFab(1, 3)" (afterCollapse)="onToggleFab(0, 3)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            3. Reporte de personal en formación laboral (.txt)
+                        </mat-panel-title>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div style="padding-top: 10px">
+                        <table mat-table [dataSource]="dataSource3" class="mat-elevation-z8">
+                            <!-- Nombres Column -->
+                            <ng-container matColumnDef="nombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                            </ng-container>
+
+                            <!-- Codigo Planilla Column -->
+                            <ng-container matColumnDef="codigoPlanilla">
+                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                <td mat-cell *matCellDef="let element"> {{element.codigoPlanilla}} </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Numero Documento Column -->
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Ingreso Column -->
+                            <ng-container matColumnDef="fechaIngreso">
+                                <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaIngreso}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Cese Column -->
+                            <ng-container matColumnDef="fechaCese">
+                                <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCese}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario ERP Column -->
+                            <ng-container matColumnDef="regimenPensionarioERP">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. ERP </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioERP}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario TXT Column -->
+                            <ng-container matColumnDef="regimenPensionarioTXT">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. TXT </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioTXT}} </td>
+                            </ng-container>
+
+                            <!-- Observación Column -->
+                            <ng-container matColumnDef="observacion">
+                                <th mat-header-cell *matHeaderCellDef> Observación </th>
+                                <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns4.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                                [hidden]="dataSource3 && this.dataSource3.filteredData.length > 0">
+                            </mat-footer-row>
+                        </table>
+
+                        <mat-paginator style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <mat-progress-bar style="height: 1px !important;" *ngIf="pbaReporte3" color="primary"
+                        mode="indeterminate">
+                    </mat-progress-bar>
+
+                    <!-- Fab Report -->
+                    <div class="fab-report">
+                        <button mat-mini-fab class="fab-toggler-report">
+                            <i class="material-icons" [@fabToggler]="{value: tsReport3}">control_camera</i>
+                        </button>
+                        <div [@speedDialStagger]="abReport3.length">
+                            <button *ngFor="let btn of abReport3; let ibtn = index;" mat-mini-fab
+                                class="fab-secondary-report" color="secondary" [disabled]="btn.dis"
+                                (click)="clickFab(3, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}"
+                                    matTooltipPosition="below">{{btn.icon}}</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (afterExpand)="onToggleFab(1, 4)" (afterCollapse)="onToggleFab(0, 4)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            4. Reporte de jornada laboral (.xml)
+                        </mat-panel-title>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div style="padding-top: 10px">
+                        <table mat-table [dataSource]="dataSource4" class="mat-elevation-z8">
+                            <!-- Nombres Column -->
+                            <ng-container matColumnDef="nombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                            </ng-container>
+
+                            <!-- Codigo Planilla Column -->
+                            <ng-container matColumnDef="codigoPlanilla">
+                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                <td mat-cell *matCellDef="let element"> {{element.codigoPlanilla}} </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Numero Documento Column -->
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Ingreso Column -->
+                            <ng-container matColumnDef="fechaIngreso">
+                                <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaIngreso}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Cese Column -->
+                            <ng-container matColumnDef="fechaCese">
+                                <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCese}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario ERP Column -->
+                            <ng-container matColumnDef="regimenPensionarioERP">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. ERP </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioERP}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario TXT Column -->
+                            <ng-container matColumnDef="regimenPensionarioTXT">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. TXT </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioTXT}} </td>
+                            </ng-container>
+
+                            <!-- Observación Column -->
+                            <ng-container matColumnDef="observacion">
+                                <th mat-header-cell *matHeaderCellDef> Observación </th>
+                                <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns4.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns4;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                                [hidden]="dataSource4 && this.dataSource4.filteredData.length > 0">
+                            </mat-footer-row>
+                        </table>
+
+                        <mat-paginator style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <mat-progress-bar style="height: 1px !important;" *ngIf="pbaReporte4" color="primary"
+                        mode="indeterminate">
+                    </mat-progress-bar>
+
+                    <!-- Fab Report -->
+                    <div class="fab-report">
+                        <button mat-mini-fab class="fab-toggler-report">
+                            <i class="material-icons" [@fabToggler]="{value: tsReport4}">control_camera</i>
+                        </button>
+                        <div [@speedDialStagger]="abReport4.length">
+                            <button *ngFor="let btn of abReport4; let ibtn = index;" mat-mini-fab
+                                class="fab-secondary-report" color="secondary" [disabled]="btn.dis"
+                                (click)="clickFab(4, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}"
+                                    matTooltipPosition="below">{{btn.icon}}</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (afterExpand)="onToggleFab(1, 5)" (afterCollapse)="onToggleFab(0, 5)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            5. Reporte de Essalud (.xml)
+                        </mat-panel-title>
+                        <mat-panel-description></mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div style="padding-top: 10px">
+                        <table mat-table [dataSource]="dataSource5" class="mat-elevation-z8">
+                            <!-- Nombres Column -->
+                            <ng-container matColumnDef="nombres">
+                                <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                <td mat-cell *matCellDef="let element"> {{element.nombres}} </td>
+                            </ng-container>
+
+                            <!-- Codigo Planilla Column -->
+                            <ng-container matColumnDef="codigoPlanilla">
+                                <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                <td mat-cell *matCellDef="let element"> {{element.codigoPlanilla}} </td>
+                            </ng-container>
+
+                            <!-- Tipo Documento Column -->
+                            <ng-container matColumnDef="tipoDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tipoDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Numero Documento Column -->
+                            <ng-container matColumnDef="numeroDocumento">
+                                <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                <td mat-cell *matCellDef="let element"> {{element.numeroDocumento}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Ingreso Column -->
+                            <ng-container matColumnDef="fechaIngreso">
+                                <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaIngreso}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Cese Column -->
+                            <ng-container matColumnDef="fechaCese">
+                                <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                <td mat-cell *matCellDef="let element"> {{element.fechaCese}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario ERP Column -->
+                            <ng-container matColumnDef="regimenPensionarioERP">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. ERP </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioERP}} </td>
+                            </ng-container>
+
+                            <!-- Regimen Pensionario TXT Column -->
+                            <ng-container matColumnDef="regimenPensionarioTXT">
+                                <th mat-header-cell *matHeaderCellDef> R.Pens. TXT </th>
+                                <td mat-cell *matCellDef="let element"> {{element.regimenPensionarioTXT}} </td>
+                            </ng-container>
+
+                            <!-- Observación Column -->
+                            <ng-container matColumnDef="observacion">
+                                <th mat-header-cell *matHeaderCellDef> Observación </th>
+                                <td mat-cell *matCellDef="let element"> {{element.observacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns5.length">
+                                    No se encuentran registros.
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns5"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns5;"></tr>
+                            <mat-footer-row *matFooterRowDef="['noData']"
+                                [hidden]="dataSource5 && this.dataSource5.filteredData.length > 0">
+                            </mat-footer-row>
+                        </table>
+
+                        <mat-paginator style="display: contents" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+
+                    <mat-progress-bar style="height: 1px !important;" *ngIf="pbaReporte5" color="primary"
+                        mode="indeterminate">
+                    </mat-progress-bar>
+
+                    <!-- Fab Report -->
+                    <div class="fab-report">
+                        <button mat-mini-fab class="fab-toggler-report">
+                            <i class="material-icons" [@fabToggler]="{value: tsReport5}">control_camera</i>
+                        </button>
+                        <div [@speedDialStagger]="abReport5.length">
+                            <button *ngFor="let btn of abReport5; let ibtn = index;" mat-mini-fab
+                                class="fab-secondary-report" color="secondary" [disabled]="btn.dis"
+                                (click)="clickFab(5, ibtn)">
+                                <i class="material-icons" matTooltip="{{btn.tool}}"
+                                    matTooltipPosition="below">{{btn.icon}}</i>
+                            </button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <input id="uploadFileTxt1" type="file" accept=".txt" formControlName="fileUploadTxt1"
+                (change)="onChangeFileTxt1($event)" style="display: none;">
+
+            <input id="uploadFileTxt2" type="file" accept=".txt" formControlName="fileUploadTxt2"
+                (change)="onChangeFileTxt2($event)" style="display: none;">
+
+            <input id="uploadFileTxt3" type="file" accept=".txt" formControlName="fileUploadTxt3"
+                (change)="onChangeFileTxt3($event)" style="display: none;">
+
+            <input id="uploadFileXml4" type="file" accept=".xml" formControlName="fileUploadXml4"
+                (change)="onChangeFileXml4($event)" style="display: none;">
+
+            <input id="uploadFileXml5" type="file" accept=".xml" formControlName="fileUploadXml5"
+                (change)="onChangeFileXml5($event)" style="display: none;">
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer"></div>

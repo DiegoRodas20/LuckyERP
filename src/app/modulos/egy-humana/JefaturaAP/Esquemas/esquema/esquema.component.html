@@ -1,0 +1,71 @@
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">Esquemas</h5>
+
+      <div id="body-main" class="card-body">
+        <div class="row">
+          <div class="col-xl-2" *ngFor="let item of cards; let i=index">
+            <mat-card class="list-card">
+              <mat-card-header>
+                <mat-card-title>{{item.title}}</mat-card-title>
+              </mat-card-header>
+              <hr class="mt-auto" />
+              <mat-card-content>
+                <p>{{item.description}}</p>
+              </mat-card-content>
+              <mat-divider></mat-divider>
+              <mat-card-actions>
+                <div class="form-row">
+                  <div class="col-12 text-center">
+                    <button mat-stroked-button color="accent" (click)="clickAfp(i)">Siguiente</button>
+                  </div>
+                </div>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <div  class="row">
+        <div class="col-lg-12">
+          <div id="listaMobile" class="melevation example-container" #container>
+
+            <table mat-table [dataSource]="dataSource" [hidden]="!hideMessageEmpty" [style.width]="widthResponsive">
+
+              <ng-container *ngFor="let col of cols;" matColumnDef="{{col.field}}" [ngSwitch]="col.type">
+                <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width"
+                  [attr.colspan]="col.columns ? col.columns.length : 1" [attr.rowspan]="col.columns ? 1 : 2">
+                  {{col.header}}
+                </th>
+                <td mat-cell *matCellDef="let row" class='header_mobile' [hidden]="col.columns" id="{{col.header}}: "
+                  [style.textAlign]="col.align">
+                  {{row[col.field]}}
+                </td>
+              </ng-container>
+
+              <ng-container *ngFor="let sub of subcols;" matColumnDef="{{sub.field}}" [ngSwitch]="sub.type">
+                <th mat-header-cell *matHeaderCellDef [style.width.px]="sub.width"> {{sub.header}} </th>
+                <td mat-cell *matCellDef="let row" class='header_mobile' id="{{sub.header}}: "
+                  [style.textAlign]="sub.align">
+                  {{row[sub.field]}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="empty">
+                <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns?.length">
+                  No se encuentran registros.
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsHeader"></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsSubHeader"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr mat-footer-row *matFooterRowDef="['empty']" [hidden]="hideMessageEmpty"> </tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5,10]" [hidden]="!hideMessageEmpty" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

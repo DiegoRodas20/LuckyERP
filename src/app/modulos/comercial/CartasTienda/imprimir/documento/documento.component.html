@@ -1,0 +1,3 @@
+<div class="documento" *ngFor="let documento of listaDocumentosEstatica">
+  <div [innerHTML]="renderizarHTMLPrevisualizar(documento.contenido)"></div>
+</div>

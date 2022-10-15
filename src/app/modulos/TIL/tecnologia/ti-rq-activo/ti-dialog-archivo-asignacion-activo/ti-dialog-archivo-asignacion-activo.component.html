@@ -1,0 +1,34 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">
+    Seleccionar archivo
+    <button class="close button-modal-lucky" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<div mat-dialog-content>
+    <div class="form-row">
+        <div class="col-md-10">
+            <div class="form-group col-md-12">
+                <form [formGroup]="formArchivo">
+                    <input type="file" #archivoFile accept="image/png, image/gif, image/jpeg"
+                        (change)="fnSeleccionarArchivo($event,lblName.id)" formControlName="fileUpload"
+                        class="custom-file-input" aria-describedby="inputGroupFile">
+                    <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">
+                        Seleccione Archivo:</mat-label>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-group col-md-2">
+            <button mat-raised-button color="primary" matTooltip="Subir Archivo"
+                (click)="fnAgregarImagen()" type="button">
+                <mat-icon>cloud_upload</mat-icon>
+            </button>
+        </div>
+        <div class="d-flex justify-content-center col-md-12">
+            <div *ngIf="vArchivoSeleccioado.length == 0 && formArchivo.controls.fileUpload.touched" class="col-md-12 alert alert-info">
+                ¡No selecciono nigun archivo!
+            </div>
+        </div>
+    </div>
+</div>

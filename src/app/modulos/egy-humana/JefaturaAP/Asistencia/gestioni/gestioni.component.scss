@@ -1,0 +1,117 @@
+@media screen and (max-width: 1200px) {
+    .mat-elevation-z8 {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .mat-header-row {
+        display: none;
+    }
+    .mat-table {
+        background: transparent;
+        * {
+            box-sizing: border-box;
+        }
+        .mat-row:not(.example-expanded-row) {
+            display: block;
+            overflow: hidden;
+            height: auto;
+            position: relative;
+            clear: both;
+            box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+                0 1px 3px 0 rgba(0, 0, 0, 0.12);
+            border-top-style: solid;
+            border-top-color: rgb(255, 64, 129);
+            border-top-width: 2px;
+            + .mat-row {
+                margin-top: 20px;
+            }
+        }
+        .mat-cell {
+            display: block;
+            width: 100%;
+            padding: 0 16px;
+            margin: 16px 0;
+            border: 0 none;
+            &:first-child {
+                a {
+                    font-size: 20px;
+                    color: inherit;
+                }
+                &:before {
+                    display: none;
+                }
+            }
+            &.m-card-sub-title {
+                margin-top: -8px;
+                padding: 0 48px 0 16px;
+                color: rgba(0, 0, 0, 0.54);
+            }
+        }
+        .has_label_on_mobile {
+            &:before {
+                content: attr(data-label);
+                display: inline;
+                font-weight: normal;
+            }
+        }
+        .mat-column-action {
+            width: auto;
+            padding: 8px 10px 0px 0px !important;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
+            &:before {
+                display: none;
+            }
+        }
+        .mat-column-sNombres {
+            width: 70%;
+            font-size: 20px;
+        }
+        .mat-column-noData {
+            padding-left: 10px;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #dLeftMain,
+    #dLeftDetail,
+    #dLeftVac {
+        margin-bottom: 20px;
+    }
+    #dTableMain,
+    #dTableDetail,
+    #dTableVac {
+        box-shadow: none;
+    }
+}
+
+/* #region  table */
+.example-container {
+    position: relative;
+    max-width: 100%;
+    overflow: auto;
+    border-radius: 4px;
+  }
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  table .mat-form-field-infix {
+    width: 100% !important;
+  }
+  th.mat-header-cell,
+  td.mat-cell,
+  td.mat-footer-cell,
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-cell:last-of-type,
+  th.mat-header-cell:last-of-type {
+    padding: 0 0.25em 0 0.25em !important;
+  }
+  th.mat-header-cell {
+    text-align: center !important;
+  }
+  /* #endregion */

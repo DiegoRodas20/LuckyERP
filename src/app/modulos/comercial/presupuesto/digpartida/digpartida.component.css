@@ -1,0 +1,37 @@
+table ng-select{
+    width: 80%;
+  }
+
+  :host /deep/ table thead{ 
+    background-color: #334D6E;   
+  } 
+
+  table  th{ 
+    color: white; 
+  } 
+
+  .example-container-partida{
+    height: 300px;
+    width: 100%;
+    overflow: auto;
+  }
+
+
+  .clspartida{
+    width: 1468px;
+  }
+
+  .clsColumnapartida{
+    width: 250px;
+  }
+
+
+  :host /deep/  .mat-form-field-disabled input{
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  } 
+  :host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+    color: black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+  

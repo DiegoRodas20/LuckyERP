@@ -1,0 +1,49 @@
+<form [formGroup]="form">
+  <mat-card>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-12">
+        <mat-form-field>
+          <mat-label>Empresa Grupo</mat-label>
+          <mat-select formControlName="nIdEmpresa">
+            <mat-option *ngFor="let empresa of empresas" [value]="empresa.nId">
+              {{ empresa.sDescripcion }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <mat-form-field>
+          <mat-label>Nro. Transporte</mat-label>
+          <input matInput formControlName="sNroTransporte" />
+          <button style="outline: none;" *ngIf="txtCodTransporte.value" mat-button matSuffix mat-icon-button
+            aria-label="Clear" (click)="fnCleanCodTransporte()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <ng-select [clearable]="true" placeholder="Presupuesto" formControlName="nIdPresupuesto"
+          notFoundText="No hay proveedores registrados">
+          <ng-option *ngFor="let presupuesto of presupuestos" [value]="presupuesto.nId">
+            {{presupuesto.sDescripcion}}
+          </ng-option>
+        </ng-select>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <mat-form-field>
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dtFecha" readonly>
+          <button style="outline: none;" *ngIf="txtFecha.value" mat-button matSuffix mat-icon-button
+            aria-label="Clear" (click)="fnCleanFecha()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card>
+</form>

@@ -1,0 +1,187 @@
+<!-- col-md-10 offset-md-1 -->
+<h3 class="col-md-12 card-header" style="text-align: center;">
+    Direcciones de: {{this.nombreEmpresa}}
+    <button class="close button-modal-lucky" matDialogClose>
+        <mat-icon>close</mat-icon>
+    </button>
+</h3>
+
+<br>
+<div mat-dialog-content>
+    <div class="col-md-12">
+        <form [formGroup]="forma" autocomplete="off">
+            <div class="form-row">
+                <div class="form-row col-md-12">
+
+                    <div class="form-group col-md-4">
+                        <ng-select appendTo="body" placeholder="Departamento" formControlName="departamento"
+                            (change)="listaProvincia($event)">
+                            <ng-option *ngFor="let item of departamento" [value]="item.sId">
+                                {{item.sDescripcion}}
+                            </ng-option>
+                        </ng-select>
+                        <mat-error *ngIf="departamentoNoValido"> El departamento es necesario</mat-error>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <ng-select appendTo="body" placeholder="Provincia" formControlName="provincia"
+                            (change)="listaDistrito($event)">
+                            <ng-option *ngFor="let item of provincia" [value]="item.sId">
+                                {{item.sDescripcion}}
+                            </ng-option>
+                        </ng-select>
+                        <mat-error *ngIf="provinciaNoValido"> La provincia es necesaria</mat-error>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <ng-select appendTo="body" placeholder="Distrito" formControlName="distrito">
+                            <ng-option *ngFor="let item of distrito" [value]="item.sId">
+                                {{item.sDescripcion}}
+                            </ng-option>
+                        </ng-select>
+                        <mat-error *ngIf="distritoNoValido"> El distrito es necesario</mat-error>
+                    </div>
+
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group col-md-7">
+                        <mat-form-field class="input" style="width: 100%;">
+                            <mat-label>Dirección</mat-label>
+                            <input matInput placeholder="Coloque la dirección" formControlName="direccion"
+                                [class.is-invalid]="direccionNoValido">
+                            <mat-error> La dirección es necesaria</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <mat-form-field class="input" style="width: 100%;">
+                            <mat-label>Referencia</mat-label>
+                            <input matInput placeholder="Coloque la referencia" formControlName="referencia"
+                                [class.is-invalid]="referenciaNoValido">
+                            <mat-error> La referencia es necesaria</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <div class="form-row col-md-12">
+                    <div class="form-group col-md-3">
+                        <mat-slide-toggle
+                            [disabled]="(this.forma.controls.estado.value==1 &&  this.detalleSeleccionado?.estado==1) || this.forma.value.nEstado==0 "
+                            formControlName="nPrincipal">¿Dirección principal?</mat-slide-toggle>
+                        <br>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <button mat-stroked-button color="primary" (click)="guardar()">
+                            <mat-icon>add_location</mat-icon> Guardar Dirección
+                        </button>
+                    </div>
+
+                    <div class="col-sm-6 col-10">
+                        <mat-form-field style="width: 100%">
+                            <mat-label>Buscar direccion: </mat-label>
+                            <input matInput formControlName="filtro" (input)="fnFiltrar()" />
+                            <button *ngIf="this.forma.controls.filtro.value" style="outline: none" mat-button matSuffix
+                                mat-icon-button aria-label="Clear" (click)="this.forma.controls.filtro.setValue('')">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-12">
+        <hr style="margin-top: 0px; margin-bottom: 10px;">
+    </div>
+
+    <div class="col-md-12">
+        <div id="listaMobile" class="mat-elevation-z8">
+            <div class="example-container3">
+                <table mat-table [dataSource]="dataSource" matSort style="width: 100%;">
+
+                    <ng-container matColumnDef="opciones" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Opción </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2"
+                            data-label='Opción: '>
+                            <button type="button" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                matTooltipPosition="right" mat-stroked-button color="accent">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button type="button" mat-menu-item (click)="edit(row.nIdDireccion)">
+                                    <mat-icon color="accent">edit</mat-icon>
+                                    <span>Editar</span>
+                                </button>
+                                <button *ngIf="row.sEstado!='Inactivo'" [disabled]="row.nPrincipal==1" type="button"
+                                    mat-menu-item (click)="activar(row.nIdDireccion,0)">
+                                    <mat-icon color="accent">block</mat-icon>
+                                    <span>Inactivar</span>
+                                </button>
+                                <button *ngIf="row.sEstado=='Inactivo'" type="button" mat-menu-item
+                                    (click)="activar(row.nIdDireccion,1)">
+                                    <mat-icon color="accent">done</mat-icon>
+                                    <span>Activar</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="sDireccion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Dirección </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Dirección: '>
+                            <ngb-highlight [result]="row.sDireccion" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDepartamento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Departamento </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Departamento: '>
+                            <ngb-highlight [result]="row.sDepartamento" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sProvincia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Provincia </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Provincia: '>
+                            <ngb-highlight [result]="row.sProvincia" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDistrito">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Distrito </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Distrito: '>
+                            <ngb-highlight [result]="row.sDistrito" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sPrincipal">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Principal </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Es Principal: '>
+                            <ngb-highlight [result]="row.sPrincipal" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sEstado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Estado </th>
+                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile" data-label='Estado: '>
+                            <ngb-highlight [result]="row.sEstado" [term]="this.forma.controls.filtro.value">
+                            </ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[3, 5]"></mat-paginator>
+        </div>
+    </div>
+</div>

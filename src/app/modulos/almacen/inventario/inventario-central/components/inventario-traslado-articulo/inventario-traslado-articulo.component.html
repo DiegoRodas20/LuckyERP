@@ -1,0 +1,208 @@
+<!-- ========================== -->
+<!-- Botones Funcionalidad -->
+<!-- ========================== -->
+
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <!-- Ingreso de Articulos -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="trasladarArticulos()">
+            <i class="material-icons" matTooltip="Trasladar Articulo" matTooltipPosition="left">done</i>
+        </button>
+        <!-- Salir -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+
+<!-- ========================== -->
+<!-- End Botones Funcionalidad -->
+<!-- ========================== -->
+
+<!-- <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Trasladar Ubicación de la Mercadería</mat-card>
+</div> -->
+
+<h3 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">Trasladar Ubicación de
+    la Mercadería
+</h3>
+
+<div mat-dialog-content>
+    <!-- ========================== -->
+    <!-- Formulario de Ubicaciones  -->
+    <!-- ========================== -->
+    <div>
+        <div>
+            <mat-label class="titulo-sub">Ubicación Actual: <span class="subtitulo">{{ ubicacionActual }}</span>
+            </mat-label>
+        </div>
+        <br>
+        <div>
+            <form autocomplete="off" [formGroup]="formUbicacion">
+                <!-- <mat-form-field>
+                    <input type="text" matInput placeholder="Código Ubicación" formControlName="codigo" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filterUbicacion | async" [value]="option.nombre">
+                            {{ option.nombre }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    
+                </mat-form-field> -->
+                <ng-select appendTo="body" [clearable]="false" placeholder="Código Ubicación" formControlName="codigo">
+                    <ng-option *ngFor="let item of listaUbicacionesCompletas" [value]="item.nombre">
+                        {{item.nombre}}
+                    </ng-option>
+                </ng-select>
+                <small *ngIf="validarUbicacionNueva" class="text-danger"> La ubicación no existe</small>
+            </form>
+        </div>
+    </div>
+    <!-- ============================== -->
+    <!-- End Formulario de Ubicaciones  -->
+    <!-- ============================== -->
+
+
+    <!-- ========================== -->
+    <!-- Tabla Articulos por Pallet -->
+    <!-- ========================== -->
+    <div id="listaMobile" class="mat-elevation-z8">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- <ng-container matColumnDef="opciones" sticky>
+                        <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                        <td mat-cell *matCellDef="let element" data-label='Opciones: ' class="has_label_on_mobile">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar" matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                            <mat-menu #menu="matMenu" xPosition="after">
+                                <button mat-menu-item (click)="anadirCantidadTraslado(element)">
+                                <mat-icon color="accent">add</mat-icon>
+                                <span>Añadir Cantidad a Trasladar</span>
+                            </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container> -->
+
+                <ng-container matColumnDef="sRazonSocial">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Empresa: '> {{element.sRazonSocial}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Cliente: '> {{element.cliente}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codigoPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Presupuesto: ' class="has_label_on_mobile" data-label='Presupuesto: '>
+                        {{element.codigoPresupuesto}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodAlmacen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacen </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Almacen: '> {{element.sCodAlmacen}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="codigoArticulo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Artículo </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Artículo: '> {{element.codigoArticulo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombreArticulo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge"
+                        data-label='Descripción: '> {{element.nombreArticulo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sLote">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge"
+                        data-label='Lote: '> {{element.sLote}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaIngreso">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Ingreso </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Fecha Ingreso: '> {{element.fechaIngreso | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaVencimiento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Vencimiento </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib"
+                        data-label='Fecha Vencimiento: '> {{ (element.fechaVencimiento | date: 'yyyy') === "0001" ||
+                        (element.fechaVencimiento | date: 'yyyy') === "1900" ? "" : (element.fechaVencimiento |
+                        date:'dd/MM/yyyy') }} </td>
+                    <!-- <td mat-cell *matCellDef="let element"> {{ (element.fechaVencimiento | date: 'yyyy') === "0001" }} </td> -->
+                </ng-container>
+
+                <ng-container matColumnDef="sObservacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Observación </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge"
+                        data-label='Observación: '> {{element.sObservacion}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nMerma">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Merma </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                        data-label='Merma: '> {{element.nMerma === 0 ? '' : 'Si'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nMarcado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Marcado </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                        data-label='Marcado: '> {{element.nMarcado === 0 ? '' : 'Si'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="saldo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                        data-label='Cantidad: '> {{(element.saldo)}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="trasladar" sticky>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Trasladar </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc"
+                        data-label='Trasladar: '>
+                        <mat-form-field style="width: 100px;margin-right: 15px;">
+                            <!-- <mat-label>Buscar</mat-label> -->
+                            <input matInput type="number" (blur)="cambioTraslado($event.target.value,element)">
+                        </mat-form-field>
+                        <!-- {{ element.cantidadTraslado}} -->
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[20, 30, 40]"></mat-paginator>
+    </div>
+
+
+    <!-- ============================== -->
+    <!-- End Tabla Articulos por Pallet -->
+    <!-- ============================== -->
+</div>
+
+
+<!-- <pre>
+    Estado del formulario {{formUbicacion.valid}}
+  <br />
+    Status: {{formUbicacion.status}}
+  </pre>
+
+<pre>
+  {{ formUbicacion.value | json }}
+  </pre> -->

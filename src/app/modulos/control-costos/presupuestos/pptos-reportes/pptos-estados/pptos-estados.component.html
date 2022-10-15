@@ -1,0 +1,47 @@
+<div class="mb-3 col-md-12">
+
+    <mat-card class="title-card" style="text-align: center;">Reporte de Presupuestos y Estados</mat-card>
+
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <!-- Botones Flotantes -->
+            <div class="fab-container">
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+                </button>
+                <div [@speedDialStagger]="abLista.length">
+                    <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary"
+                        color="secondary" (click)="clickFab(ibtn)">
+                        <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vista pptos partidas y saldos -->
+            <div>
+                <div class="col-md-12">
+                    <form autocomplete="off" [formGroup]="formPptosEstados">
+                        <div class="row">
+
+                            <div class="col-md-6" style="align-self: center; text-align: center; font-weight: 500;">
+                                Se obtendra un listado en XLS de todos los pptos que terminan en el año
+                            </div>
+
+                            <div class="col-md-6" style="text-align: -webkit-center">
+                                <div class="col-md-10">
+                                    <ng-select appendTo="body" [clearable]="true" placeholder="Seleccionar Año"
+                                        formControlName="anio" notFoundText="No hay años registrados">
+                                        <ng-option *ngFor="let item of lAnio" [value]="item.anio">
+                                            {{item.anio}}</ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

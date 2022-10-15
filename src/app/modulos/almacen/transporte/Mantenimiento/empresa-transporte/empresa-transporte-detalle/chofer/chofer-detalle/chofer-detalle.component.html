@@ -1,0 +1,157 @@
+<h5 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">{{title}}
+</h5>
+<mat-dialog-content>
+	<form [formGroup]="formChofer" class="form-row">
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Tipo de Documento:</mat-label>
+				<mat-select formControlName="cboTipoDoc" [errorStateMatcher]="matcher">
+					<mat-option *ngFor="let vTipo of lTipoDoc" [value]="vTipo.nId">
+						{{vTipo.sDescripcion}}</mat-option>
+				</mat-select>
+				<mat-error *ngIf="formChofer.get('cboTipoDoc').hasError('required')">
+					.Obligatorio</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Nro. Documento:</mat-label>
+				<input
+					[readonly]="this.formChofer.controls.cboTipoDoc.value==''|| (bSoloLectura==true && pChoferEmpresa.vChofer!=null)"
+					(input)="fnEvitarEspaciosAmbosLados('txtNumDoc')" type="text" matInput #inputDoc
+					(blur)="fnVerificarDocumento()" [value]="inputDoc.value.toUpperCase()" placeholder="Numero doc."
+					formControlName="txtNumDoc">
+				<mat-error *ngIf="formChofer.get('txtNumDoc').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtNumDoc').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Brevete:</mat-label>
+				<input [readonly]="bSoloLectura" (input)="fnEvitarEspaciosAmbosLados('txtBrevete')" type="text" matInput
+					#inputBrevete [value]="inputBrevete.value.toUpperCase()" placeholder="Brevete"
+					formControlName="txtBrevete">
+				<mat-error *ngIf="formChofer.get('txtBrevete').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtBrevete').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Vencimiento Brevete:</mat-label>
+				<input (click)="pickerVence.open()" readonly formControlName="cboFechaVence" matInput
+					[matDatepicker]="pickerVence">
+				<mat-datepicker-toggle matSuffix [for]="pickerVence"></mat-datepicker-toggle>
+				<mat-datepicker #pickerVence></mat-datepicker>
+				<mat-error *ngIf="formChofer.get('cboFechaVence').hasError('required')">
+					.Obligatorio</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Primer Nombre:</mat-label>
+				<input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtPrimerNom')" type="text" matInput
+					placeholder="Primer nombre" formControlName="txtPrimerNom">
+				<mat-error *ngIf="formChofer.get('txtPrimerNom').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtPrimerNom').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Segundo Nombre:</mat-label>
+				<input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtSegNombre')" type="text" matInput
+					placeholder="Seg. Nombre" formControlName="txtSegNombre">
+				<mat-error *ngIf="formChofer.get('txtSegNombre').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtSegNombre').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Apellido Paterno:</mat-label>
+				<input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtApePaterno')" type="text" matInput
+					placeholder="Ape. Paterno" formControlName="txtApePaterno">
+				<mat-error *ngIf="formChofer.get('txtApePaterno').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtApePaterno').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Apellido Materno:</mat-label>
+				<input [readonly]="bSoloLectura" (input)="fnEvitarEspacios('txtApeMaterno')" type="text" matInput
+					placeholder="Ape. Materno" formControlName="txtApeMaterno">
+				<mat-error *ngIf="formChofer.get('txtApeMaterno').hasError('required')">
+					.Obligatorio</mat-error>
+				<mat-error *ngIf="formChofer.get('txtApeMaterno').hasError('caracterValidator')">
+					.El texto no debe contener: "/", "|", "?"</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div *ngIf="pChoferEmpresa.vChofer!=null" class="form-group col-md-4">
+			<mat-form-field style="width: 100%;">
+				<mat-label>Estado:</mat-label>
+				<input style="color: rgb(236, 0, 140);" readonly type="text" matInput placeholder="Estado"
+					formControlName="txtEstado">
+			</mat-form-field>
+		</div>
+
+	</form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<!--Para guardar-->
+	<div *ngIf="pChoferEmpresa.vChofer==null" class="col-md-12 d-flex justify-content-end">
+		<button matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAnadirChofer()">
+			<mat-icon>save</mat-icon>
+		</button>
+	</div>
+
+	<div class="col-md-12 d-flex justify-content-end">
+		<!--Para modificar-->
+		<button matTooltipPosition="left" *ngIf="pChoferEmpresa.vChofer!=null && bModificando==false" mat-raised-button
+			mat-mini-fab class="fab-secondary" matTooltip="Modificar" color="secondary" (click)="fnModificar()"><i
+				class="material-icons">create</i></button>
+
+		<!--Para guardar lo modificado-->
+		<button matTooltipPosition="left" *ngIf="pChoferEmpresa.vChofer!=null && bModificando==true" mat-mini-fab
+			type="button" color="primary" (click)="fnGuardarChofer()" matTooltip="Guardar">
+			<i class="material-icons">save</i>
+		</button>
+
+		<!--Para activar-->
+		<button
+			*ngIf="pChoferEmpresa.vChofer!=null && this.pChoferEmpresa.vChofer?.nIdEstado!=589 && bModificando==false"
+			style="margin-right: 5px;" type="button" mat-mini-fab matTooltip="Activar" color="accent"
+			(click)="fnActivar()">
+			<i class="material-icons">check</i>
+		</button>
+
+		<!--Para inactivar-->
+		<button
+			*ngIf="pChoferEmpresa.vChofer!=null && this.pChoferEmpresa.vChofer?.nIdEstado!=591 && bModificando==false"
+			style="margin-right: 5px;" type="button" mat-mini-fab matTooltip="Inactivar" color="secondary"
+			(click)="fnInactivar()">
+			<i class="material-icons">block</i>
+		</button>
+
+
+		<button style="margin-right: 5px;" mat-raised-button mat-mini-fab matTooltipPosition="left"
+			class="fab-secondary" matTooltip="Salir" color="warn" (click)="this.dialogRef.close()"><i
+				class="material-icons">exit_to_app</i></button>
+	</div>
+</mat-dialog-actions>

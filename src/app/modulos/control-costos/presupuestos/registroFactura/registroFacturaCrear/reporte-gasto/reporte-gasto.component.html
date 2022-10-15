@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html id="print-reporte-gasto">
+  <head>
+  </head>
+  <body>
+    <div class="print-element-container" style="font: 400 13.3333px Arial;">
+      <div style="display: grid; grid-template-columns: repeat(3, 2fr);grid-gap: 15px;">
+          <div style="grid-column: 1;grid-row: 1;font-size:x-small;">
+              <img src="../../../../../../../../assets/img/{{this.idEmp}}.png" width="150px" height="50px"><br>
+              {{ listaCabecera.empresa }}<br>
+              {{ listaCabecera.empDireccion }}<br>
+              {{ listaCabecera.empRuc }}
+          </div>
+          <div style="grid-column: 2;grid-row: 1;font-size: small;">
+              <h3 style="font-size: 18px; font-weight: bold;">GASTO DISTRIBUIDO</h3>
+              <h3 style="color:red; font-weight: bold; font-size: 18px;" >{{ listaCabecera.nroRqNew }} </h3>
+              <p style="color:red;">{{ listaCabecera.estadoRq }}</p>
+              <p style="color:red;" *ngIf="variablesImpresion.nIdTipoDocumento == 0">1. Gasto normal</p>
+              <p style="color:red;" *ngIf="variablesImpresion.nIdTipoDocumento == 2340">2. Incentivos</p>
+              <p style="color:red;" *ngIf="variablesImpresion.nIdTipoDocumento == 2339">3. Recibo por honorarios</p>
+          </div>
+          <div style="grid-column: 3;grid-row: 1;font-size: small;">
+              <!-- <p>TESORERIA: PROVINCIA</p> -->
+              <p>TESORERIA</p>
+              <p *ngIf="listaCabecera.fechaEnvio != ''">Enviado el: {{ listaCabecera.fechaEnvio }}</p>
+              <!-- <p>Doc ref: {{ listaCabecera.tipoDoc }} - {{ listaCabecera.campana }} - {{ listaCabecera.numero }}</p> -->
+              <p>Imprime: {{ listaCabecera.usuario }} - {{ listaCabecera.imprime }}</p>
+          </div>
+      </div>
+
+      <br>
+      <table style="border: 1px solid black; width:100%; border-collapse: collapse; font-size: 12px" *ngIf="variablesImpresion.nIdCentroCosto != 0">
+          <tr style="background-color: rgb(190, 190, 190);">
+              <th colspan="4" style="text-align: center; font-size: small;" >DATOS DEL PRESUPUESTO</th>
+          </tr>
+          <tr>
+              <td colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Presupuesto:</strong> {{ listaCabecera.campana }}</td>
+              <td colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Nombre presupuesto:</strong> {{ listaCabecera.nombre_campana }} </td>
+          </tr>
+          <tr>
+              <td colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Inicio:</strong> {{ listaCabecera.inicio }} <strong>Fin:</strong>  {{ listaCabecera.fin }} </td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Cliente:</strong>  {{ listaCabecera.cliente }}</td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Estado presupuesto:</strong>  {{ listaCabecera.estado_campana }}</td>
+          </tr>
+          <tr>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Directora General:</strong> {{ listaCabecera.directora_general }} </td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Director de Cuentas:</strong>  {{ listaCabecera.director_cuentas }}</td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Ejecutivo:</strong>  {{ listaCabecera.ejecutivo }}</td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Marca:</strong>  {{ listaCabecera.marca }}</td>
+          </tr>
+      </table>
+      <br *ngIf="variablesImpresion.nIdCentroCosto != 0">
+
+      <table style="border: 1px solid black; width:100%; border-collapse: collapse; font-size: 12px">
+          <tr style="background-color: rgb(190, 190, 190);">
+              <th colspan="2" style="font-size: small;text-align: center;" >DATOS DEL SOLICITANTE</th>
+          </tr>
+          <tr>
+              <td colspan="1" style="border: 1px solid black;padding: 5px;font-weight: normal;width: 30%;" ><strong>DNI:</strong> {{ listaCabecera.dni }}</td>
+              <td colspan="1" style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Apellidos y Nombre:</strong> {{ listaCabecera.apellidos_nombres }} </td>
+          </tr>
+          <tr>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Banco:</strong> {{ listaCabecera.banco }} </td>
+              <td style="border: 1px solid black;padding: 5px;font-weight: normal;" ><strong>Cuenta Nro:</strong>  {{ listaCabecera.cuenta }}</td>
+          </tr>
+          <tr>
+              <th colspan="2" style="font-size: small;text-align: center; background-color: rgb(190, 190, 190);">DETALLE DOCUMENTO</th>
+          </tr>
+          <tr>
+              <td colspan="2" style="border: 1px solid black;padding: 5px;font-weight: normal;" >
+                Solicito el monto de {{ listaCabecera.totalLetras }} {{ listaCabecera.moneda }}*******************************
+              </td>
+          </tr>
+      </table>
+      <br>
+
+      <table style="border: 1px solid black;width:100%; border-collapse: collapse; font-size: 12px">
+          <tr>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Nro</strong></th>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Presupuesto:</strong></th>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Ciudad:</strong></th>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Partida</strong></th>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Descripcion del gasto:</strong></th>
+              <th style="padding: 5px;font-weight: normal;background-color: rgb(190, 190, 190);" ><strong>Total:</strong></th>
+          </tr>
+          <tr *ngFor="let lista of listaDetalle">
+              <th style="padding: 5px;font-weight: normal;">{{ lista.nNro }}</th>
+              <th style="padding: 5px;font-weight: normal;">{{ lista.sCodCentroCosto }}</th>
+              <th style="padding: 5px;font-weight: normal;">{{ lista.sCiudad }}</th>
+              <th style="padding: 5px;font-weight: normal;">{{ lista.sCodPartida }} - {{ lista.sPartida }}</th>
+              <th style="padding: 5px;font-weight: normal;">{{ lista.sDescripcionGasto }}</th>
+              <th style="padding: 5px;font-weight: normal;">{{ lista.nTotal | number : '1.2-2'}}</th>
+          </tr>
+      </table>
+      <table style="border: 1px solid black; border-top: none; width: 30%; float: right; ; border-collapse: collapse; font-size: 12px">
+          <tr>
+              <th style="padding: 5px;font-size: small;font-weight: normal;" ><strong>TOTAL REQUERIMIENTO</strong></th>
+              <th style="padding: 5px;font-weight: normal;" >{{ listaCabecera.total | number : '1.2-2'}}</th>
+          </tr>
+      </table>
+      <br><br>
+      <table style="border: 1px solid black;width: 100%; font-size= 12px">
+          <tr>
+              <th colspan="3" style="padding: 5px;font-size: small; font-weight: bold;text-align: center;">APROBACION OPERACIONES/COMERCIAL</th>
+          </tr>
+          <tr>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoEje }} <br>
+                  {{ listaCabecera.nombreEje }}<br>
+                  {{ listaCabecera.fechaEje }} <br>
+                  ----------------------------------------
+                  <p style="font-weight: bold;">EJECUTIVO(A)</p>
+              </td>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoCtas }} <br>
+                  {{ listaCabecera.nombreCtas }}<br>
+                  {{ listaCabecera.fechaCtas }} <br>
+                  --------------------------------------
+                  <p style="font-weight: bold;">GERENTE DE CTAS</p>
+              </td>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoDir }} <br>
+                  {{ listaCabecera.nombreDir }}<br>
+                  {{ listaCabecera.fechaDir }} <br>
+                  ----------------------------------
+                  <p style="font-size: small;font-weight: bold;">DIRECTO(A) COMERCIAL <br></p>
+              </td>
+          </tr>
+      </table>
+      <table style="border: 1px solid black;width: 100%; font-size: 12px">
+          <tr>
+              <th colspan="4" style="padding: 5px;font-size: small;font-weight: bold;text-align: center;">APROBACION ADMINISTRACION</th>
+          </tr>
+          <tr>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoPpto }} <br>
+                  {{ listaCabecera.nombrePpto }}<br>
+                  {{ listaCabecera.fechaPpto }} <br>
+                  -----------------------------
+                  <p style="font-weight: bold;">PRESUPUESTOS</p>
+              </td>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoJefe }} <br>
+                  {{ listaCabecera.nombreJefe }}<br>
+                  {{ listaCabecera.fechaJefe }} <br>
+                  ---------------------------
+                  <p style="font-weight: bold;"> JEFE PRESUPUESTOS
+                  </p>
+              </td>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoAdm }} <br>
+                  {{ listaCabecera.nombreAdm }}<br>
+                  {{ listaCabecera.fechaAmd }} <br>
+                  ---------------------------
+                  <p style="font-size: small;font-weight: bold;">ADMINISTRACION
+                  </p>
+              </td>
+              <td style="padding: 5px;font-size: small;font-weight: normal;text-align: center;">
+                  {{ listaCabecera.aprobadoConta }} <br>
+                  {{ listaCabecera.nombreConta }}<br>
+                  {{ listaCabecera.fechaConta }} <br>
+                  ------------------------
+                  <p style="font-size: small;font-weight: bold;">CONTABILIDAD
+                  </p>
+              </td>
+          </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(toggleScanner, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsScanner}">add</i>
+    </button>
+    <div [@speedDialStagger]="abScanner.length">
+        <button *ngFor="let btn of abScanner; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(toggleScanner, ibtn)" 
+        [disabled]="btn.dis" matBadgeHidden="{{btn.badge === 0}}" matBadge="{{btn.badge}}" matBadgePosition="after"
+            matBadgeColor="accent">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_scanner" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Digitalización</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span class="material-icons">close</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <mat-accordion #maMain="matAccordion" multi>
+
+                <!-- Información scanner -->
+                <mat-expansion-panel [expanded]="true">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información del dispositivo :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+                            <a>{{getDeviceName}}</a>
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">info</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div [formGroup]="fgInfoScan" class="col-lg-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Dispositivos : </mat-label>
+                                <mat-select formControlName="sDispositivo" (valueChange)="handleDevice($event)">
+                                    <mat-option>--</mat-option>
+                                    <mat-option *ngFor="let item of cboDevice; let i = index" [value]="i">
+                                        {{item}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+                <!-- Información documento -->
+                <mat-expansion-panel #mep_documento [disabled]="disabled_Documento">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Información de documento :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+                            <a>{{getInfoDoc.sPag.value}}</a>
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">description</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div id="fgInfoDoc" [formGroup]="fgInfoDoc" class="col-lg-12">
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Solicitante</mat-label>
+                                        <input type="text" matInput formControlName="sSolicitante">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-lg-12">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Responsable</mat-label>
+                                        <input type="text" matInput formControlName="sResponsable">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+
+                                <div class="form-group col-lg-6" style="margin-bottom: 0px !important;">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha inicio</mat-label>
+                                        <input formControlName="dFechIni" matInput [matDatepicker]="dFechIni">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechIni"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechIni></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group col-lg-6" style="margin-bottom: 0px !important;">
+                                    <mat-form-field style="width: 100%;" appDateFormat>
+                                        <mat-label>Fecha término</mat-label>
+                                        <input formControlName="dFechFin" matInput [matDatepicker]="dFechFin">
+                                        <mat-datepicker-toggle matSuffix [for]="dFechFin"></mat-datepicker-toggle>
+                                        <mat-datepicker #dFechFin></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+                            <div *ngIf="getInfoDoc.bValid.value === false" class="alert alert-warning row" role="alert" style="padding: 0.75rem 0px 0px 0px;">
+
+                                <div class="col-lg-7" style="align-self: center;">El documento presenta inconsistencias.</div>
+
+                                <div class="col-lg-5">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Acción : </mat-label>
+                                        <mat-select formControlName="nOption" (valueChange)="changeAccion($event)">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of filterAccion(cboAccion);" [value]="item.nEleCod">
+                                                {{item.cEleNam}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+            </mat-accordion>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="row">
+                <div class="col-sm">
+                    <h6>Vista previa del documento : </h6>
+                    <hr style="margin-top: 0px; margin-bottom: 20px;">
+                </div>
+            </div>
+
+            <div class="form-group col-lg">
+                <!-- <ngx-doc-viewer [url]="urlDocumento" viewer="google" style="width:100%;height:755px;border-style: groove;" [googleCheckContentLoaded]=true [googleCheckInterval]=3000></ngx-doc-viewer> -->
+                <div id="dwtcontrolContainer"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbScanner" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

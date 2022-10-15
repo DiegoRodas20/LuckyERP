@@ -1,0 +1,136 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="clsprincipal">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Articulo Característica</h5>
+    </div>
+
+    <div>
+        <div class="col-md-10 offset-md-1">
+
+            <div class="form-row" style="margin-top: 15px;">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-9 offset-md-1">
+                            <div class="form-row">
+                                <div class="col-md-8 col-sm-12 col-12">
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Buscar:</mat-label>
+                                        <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                        <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                            mat-icon-button aria-label="Clear"
+                                            (click)="this.txtFiltro.setValue(''); GetAllSubFamilias();">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8">
+                        <div class="tabla-container">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <ng-container matColumnDef="opcion" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Ver características: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+
+                                            <button (click)="fnSeleccionarCaracteristicas(row)" mat-menu-item>
+                                                <mat-icon color="accent"> touch_app</mat-icon>
+                                                <span>Ver Características</span>
+                                            </button>
+
+                                            <button mat-menu-item (click)="fnSeleccionarTipos(row)">
+                                                <mat-icon color="accent">touch_app</mat-icon>
+                                                <span>Ver Tipos Dispositivo</span>
+                                            </button>
+
+                                        </mat-menu>
+
+                                        <!-- <button (click)="fnSeleccionarRegistro(row)" mat-icon-button color="accent"
+                                            matTooltip="Ver características">
+                                            <mat-icon> touch_app</mat-icon>
+                                        </button> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="codigo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Código
+                                    </th>
+                                    <td data-label='Código: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.codigo" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="descripcion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Sub
+                                        Familia
+                                    </th>
+                                    <td data-label='Sub Familia: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.descripcion" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="countCaracteristica">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib-count">
+                                        Cant. Característica
+                                    </th>
+                                    <td data-label='Cant. Característica: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib-count">
+                                        <ngb-highlight [result]="row.countCaracteristica" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="countTipoDisp">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib-count">
+                                        Cant. Tipo Dispositivo
+                                    </th>
+                                    <td data-label='Cant. Tipo Dispositivo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib-count">
+                                        <ngb-highlight [result]="row.countTipoDisp" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib2">
+                                        <ngb-highlight [result]="row.sEstado" [term]="txtFiltro.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                    [ngClass]="!row.bEstado ? 'make-gris' : ''">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-ti-caracteristica [subFamilia]="subFamiliaSeleccionada" (pMostrar)="fnOcultar($event)" *ngIf="pMostrar==1">
+</app-ti-caracteristica>
+
+<app-ti-tipo-dispositivo [subFamilia]="subFamiliaSeleccionada" (pMostrar)="fnOcultar($event)" *ngIf="pMostrar==2">
+</app-ti-tipo-dispositivo>

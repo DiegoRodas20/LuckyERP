@@ -1,0 +1,92 @@
+<div id="print-reporte-movilidad">
+  <div class="row">
+    <div class="col-md-12 center">
+      <h2> <u>REPORTE DE CARGA DE MOVILIDAD</u> </h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <span>{{ cabecera?.sDato }}</span>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12"> <strong>Proveedor&nbsp;{{ cabecera?.sProveedor }}</strong> </div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"> <strong>Vehículo&nbsp;&nbsp;{{ cabecera?.sVehiculo }}</strong> </div>
+    <div class="col-md-3"> <strong>Placa:&nbsp;{{ cabecera?.sPLaca }}</strong> </div>
+    <div class="col-md-4"> <strong>Tipo&nbsp;&nbsp;{{ cabecera?.sTipoVehiculo }}</strong> </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8"> <strong>Capacidad&nbsp;</strong> </div>
+    <div class="col-md-4"> <strong>Cantidad Puntos&nbsp;&nbsp;{{ cabecera?.nCantPunto }}</strong> </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-12 justify">
+      <table class="table1">
+        <tr>
+          <td> Peso </td>
+          <td class="right"> {{ cabecera?.nPeso | number :'1.2-2'}} </td>
+          <td> Peso Cargado </td>
+          <td class="right"> {{ cabecera?.nPesoCargado | number :'1.2-2'}} </td>
+          <td> Peso Restante </td>
+          <td class="right"> {{ cabecera?.nPesoRestante | number :'1.2-2'}} </td>
+        </tr>
+        <tr>
+          <td> Volumen </td>
+          <td class="right"> {{ cabecera?.nVolumen | number :'1.6-6'}} </td>
+          <td> Volumen Cargado </td>
+          <td class="right"> {{ cabecera?.nVolumenCargado | number :'1.6-6'}} </td>
+          <td> Volumen Restante </td>
+          <td class="right"> {{ cabecera?.nVolumenRestante | number :'1.6-6'}} </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-8">
+      <strong>Chofer&nbsp;&nbsp;&nbsp;{{ cabecera?.sChofer }}</strong>
+    </div>
+  </div>
+  <hr>
+  <div *ngFor="let punto of detaPunto">
+    <div class="row">
+      <div class="col-md-1"> <strong>Origen</strong> </div>
+      <div class="col-md-6"> {{ punto.sOrigen }} </div>
+      <div class="col-md-1"> </div>
+      <div class="col-md-3 center"> <span>{{ punto.sZona }}</span> </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1"> <strong>Destino</strong> </div>
+      <div class="col-md-6"> {{ punto.sDestinatario }} </div>
+      <div class="col-md-1"> <strong>Peso</strong> </div>
+      <div class="col-md-2 right"> {{ punto.nPeso | number :'1.2-2'}} </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7"> </div>
+      <div class="col-md-1"> <strong>Volumen</strong> </div>
+      <div class="col-md-2 right"> {{ punto.nVolumen | number :'1.6-6'}} </div>
+    </div>
+    <div class="row">
+      <div class="col-md-1"> </div>
+      <div class="col-md-11">
+        <table>
+          <tr class="border">
+            <th *ngFor="let col of cols">
+              {{col.header}}
+            </th>
+          </tr>
+          <tr *ngFor="let nota of punto.lNotas">
+            <td *ngFor="let col of cols" [style.textAlign]="col.align" [style.width]="col.porc+'%'">
+              {{nota[col.field]}}
+            </td>
+          </tr>
+        </table>
+        <hr class="border_dashed">
+      </div>
+    </div>
+  </div>
+</div>

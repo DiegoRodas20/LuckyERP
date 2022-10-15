@@ -1,0 +1,113 @@
+<h5 mat-dialog-title class="card-header">
+    Herramientas TI
+    <button class="close button-modal-lucky" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+
+<mat-dialog-content>
+    <mat-card>
+
+        <form [formGroup]="formDetalleRQ" class="row">
+            <div class="form-group col-md-7">
+                <ng-select appendTo="body" class="alinea-ng-select" (change)="fnSeleccionarPersonal($event)"
+                    [clearable]="false" placeholder="Asignado" formControlName="personal"
+                    notFoundText="No hay solicitantes disponibles">
+                    <ng-option *ngFor="let element of listaSolicitantes" [value]="element.nIdPersonal">
+                        {{element.sNombreCompleto | titlecase}}
+                    </ng-option>
+                </ng-select>
+                <mat-error class="ngSelectError"
+                    *ngIf="this.formDetalleRQ.get('personal').hasError('required') && formDetalleRQ.get('personal').touched">
+                    Debe seleccionar un solicitante
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-5">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Cargo:</mat-label>
+                    <input type="text" matInput readonly formControlName="cargo">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Sucursal:</mat-label>
+                    <input type="text" matInput readonly formControlName="sucursal">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-8">
+                <ng-select appendTo="body" class="alinea-ng-select" (change)="fnSeleccionarArticulo($event)"
+                    [clearable]="false" placeholder="Herramienta" formControlName="articulo"
+                    notFoundText="No hay articulos disponibles">
+                    <ng-option *ngFor="let element of listaArticulo" [value]="element.nIdArticulo">
+                        {{element.sHerramienta}}
+                    </ng-option>
+                </ng-select>
+                <mat-error class="ngSelectError"
+                    *ngIf="this.formDetalleRQ.get('articulo').hasError('required') && formDetalleRQ.get('articulo').touched">
+                    Debe seleccionar un artículo
+                </mat-error>
+            </div>
+
+            <div class="form-group col-lg-6">
+                <ng-select (change)="fnSeleccionarPartida($event)" appendTo="body" class="alinea-ng-select"
+                    [clearable]="false" placeholder="Partida" formControlName="partida"
+                    notFoundText="No hay partidas disponibles">
+                    <ng-option *ngFor="let element of listaPartida" [value]="element.nIdPartida">
+                        {{element.sCodPartida}} - {{element.sPartida}}
+                    </ng-option>
+                </ng-select>
+                <mat-error class="ngSelectError"
+                    *ngIf="this.formDetalleRQ.get('partida').hasError('required') && formDetalleRQ.get('partida').touched">
+                    Debe seleccionar una partida
+                </mat-error>
+            </div>
+
+            <div class="form-group col-lg-2 col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Unidades:</mat-label>
+                    <input type="number" [readonly]="!bPlanDatosMinutos" 
+                        matInput formControlName="unidades" 
+                        (keydown)="fnValidarCaracteresNumericos($event);"
+                        (keyup)="fnActualizarPrecioTotal()"
+                        (paste)="fnValidarCaracteresNumericosClipboard($event)">
+                    <mat-error
+                        *ngIf="this.formDetalleRQ.get('unidades').hasError('required') && formDetalleRQ.get('unidades').touched">
+                        Debe ingresar la cantidad de unidades
+                    </mat-error>
+                    <mat-error
+                        *ngIf="this.formDetalleRQ.get('unidades').hasError('min') && formDetalleRQ.get('unidades').touched && bPlanDatosMinutos">
+                        Ingrese una cantidad valida
+                    </mat-error>
+                </mat-form-field>
+                
+            </div>
+
+            <div class="form-group col-lg-2 col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Precio Unidad:</mat-label>
+                    <input type="text" readonly matInput formControlName="precioUnidad">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-lg-2 col-md-4">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Precio Total:</mat-label>
+                    <input type="text" readonly matInput formControlName="precio">
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Añadir" mat-mini-fab color="accent" (click)="fnAgregarHerramienta()">
+            <mat-icon>check</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

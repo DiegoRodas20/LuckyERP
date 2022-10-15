@@ -1,0 +1,184 @@
+<h1 mat-dialog-title class="clstituloCrtl"> {{sPartida}} </h1>
+<div mat-dialog-content class="clsCuerpo">
+    <div class="example-container mat-elevation-z8 clsvertical" *ngIf=vVertical>
+      <table mat-table [dataSource]="dataSource" matSort> 
+        <!-- ID Column --> 
+        
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header >
+            <button mat-icon-button color="accent" type="button" 
+            title="new item" (click)="openPartida()" [disabled]=validacion> 
+              <mat-icon>add</mat-icon>
+            </button>   
+          </th>
+          <td mat-cell *matCellDef="let row;let i = index;">  
+            <button mat-menu-item (click)="fnEliminarTPartida(row,i)" [disabled]=validacion>
+                 <mat-icon color="accent">delete</mat-icon>
+            </button>    
+          </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="ciudad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Ciudad </th>
+          <td mat-cell *matCellDef="let row;let i = index;" > 
+            <ng-select  appendTo="body"   [(ngModel)]="row.ciudad" (change)=fnCiudad(i) 
+            [clearable]="false" [disabled]=validacion> 
+              <ng-option *ngFor="let car of lcboCiudad" [(value)]="car.pId">{{car.pNombre}}</ng-option>
+            </ng-select>  
+          </td>
+        </ng-container> 
+  
+        <!-- Progress Column -->
+        <ng-container matColumnDef="articulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Articulo </th>
+          <td mat-cell *matCellDef="let row;let i = index;" > 
+            <ng-select  appendTo="body"   [(ngModel)]="row.articulo" 
+            (change)=fnUlt(row.articulo,i) [clearable]="false" [disabled]=validacion> 
+              <ng-option *ngFor="let car of arrayArticulo[row.ciudad]" 
+              [disabled]="car.nPermiso==0? true:(car.pEstado==0? true:false)"
+              [(value)]="car.pId">{{car.pCod}} - {{car.pNombre}}</ng-option>
+            </ng-select>  
+          </td> 
+        </ng-container> 
+  
+        <ng-container matColumnDef="precio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+          <td mat-cell *matCellDef="let row;let i = index;"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" min="0" [disabled]=validacion (change)="fnCalPersona(row,i)"  [(ngModel)]="row.precio" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+        
+  
+        <ng-container matColumnDef="cantidad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+          <td mat-cell *matCellDef="let row;let i = index;"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" min="1" [disabled]=validacion (change)="fnCalPersona(row,i)"  [(ngModel)]="row.cantidad" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+
+        
+  
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+          <td mat-cell *matCellDef="let row"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="text" [disabled]=true  [(ngModel)]="row.stotal" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+
+        <ng-container matColumnDef="preciocompra">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Ult Compra </th>
+          <td mat-cell *matCellDef="let row"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" [disabled]=true  [(ngModel)]="row.preciocompra" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+
+        <ng-container matColumnDef="cantidadcompra">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad Ult Compra </th>
+          <td mat-cell *matCellDef="let row"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" [disabled]=true  [(ngModel)]="row.cantidadcompra" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table> 
+
+    </div>  
+    <div class="example-container mat-elevation-z8 clshorizontal" *ngIf=vHorizontal>
+      <table id=tablaPartida mat-table [dataSource]="dataSourceHor" matSort>
+        <ng-container matColumnDef="articulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header > Articulo </th>
+          <td mat-cell *matCellDef="let row;let i = index;" > 
+            <ng-select  appendTo="body"   [(ngModel)]="row.articulo" (change)=fnUlt(row.articulo,i)  [disabled]=validacion [clearable]="false"> 
+              <ng-option *ngFor="let car of lcboArticulo"   
+              [disabled]="car.nPermiso==0? true:(car.pEstado==0? true:false)"
+              [(value)]="car.pId">{{car.pCod}} - {{car.pNombre}}</ng-option>
+            </ng-select>  
+          </td> 
+        </ng-container> 
+        <ng-container matColumnDef="precio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+          <td mat-cell *matCellDef="let row;let i = index;"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" min="0" [disabled]=validacion (change)="fnCalPersonaHor(row,i)"  [(ngModel)]="row.precio" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+        <ng-container matColumnDef="preciocompra">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Ult Compra </th>
+          <td mat-cell *matCellDef="let row"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" [disabled]=true  [(ngModel)]="row.preciocompra" > 
+            </mat-form-field> 
+          </td>
+        </ng-container>  
+
+        <ng-container matColumnDef="cantidadcompra">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad Ult Compra </th>
+          <td mat-cell *matCellDef="let row"  > 
+            <mat-form-field style="width: 100px;" >
+              <input matInput type="number" [disabled]=true  [(ngModel)]="row.cantidadcompra" > 
+            </mat-form-field> 
+          </td>
+        </ng-container> 
+        <ng-container *ngFor="let cc of clsColumnaOpc;index as i" matColumnDef="{{cc.col}}"  >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header >   
+              {{cc.col}}
+              <mat-form-field style="width: 100px;text-align: center;" >
+                <input matInput type="text" [disabled]=validacion [(ngModel)]="cc.cant" (change)="fnCalTotal(cc)">
+              </mat-form-field>  
+          </th>
+          <td mat-cell *matCellDef="let row;index as ii" > 
+              <mat-form-field style="width: 100px;" >
+              <input matInput type="text" [disabled]=true [(ngModel)]="row.lsucursal[cc.id]">
+              </mat-form-field>
+          </td>
+        </ng-container> 
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <button mat-icon-button color="accent" type="button" title="new item" [disabled]=divValidacion (click)="openDetalle()"> 
+                  <mat-icon>add</mat-icon>
+                </button> 
+          </th>
+          <td mat-cell *matCellDef="let row;let i = index;" class="action-link">    
+              <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Operar"
+              matTooltipPosition="right" mat-stroked-button color="accent">
+              <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="after" >
+                  <button mat-menu-item (click)="fnEliminarDetalleHor(row,i)" [disabled]="divValidacion">
+                       <mat-icon color="accent">delete</mat-icon> Eliminar
+                  </button>      
+             </mat-menu> 
+            </td>
+      </ng-container> 
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsHor; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsHor;">
+        </tr>
+      </table> 
+    </div>  
+    <div class="text-right" style="padding: 5px 0px 0px 0px;">
+      <span class="informacion_tipo_personal">Total articulos </span> 
+      <span class="numero_personas_registradas">{{Cantidad()}}</span> 
+      <span class="informacion_tipo_personal"> || Total Final </span> 
+      <span class="numero_personas_registradas"> {{Precio()}}</span>  
+    </div>
+  </div>
+  <div mat-dialog-actions> 
+    <button mat-button color="warn" (click)="onNoClick()">Salir</button>
+    <button mat-button color="primary" (click)="ValidarGuardar()"  [disabled]=validacion>Guardar</button>
+  </div>
+  <ngx-spinner name="spi_lista" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+  </ngx-spinner>

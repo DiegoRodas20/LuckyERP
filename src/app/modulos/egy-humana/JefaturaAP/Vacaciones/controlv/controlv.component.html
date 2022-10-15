@@ -1,0 +1,317 @@
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+    <div class="container-fluid">
+        <div class="card">
+            <!-- Cabecerea -->
+            <h5 class="card-header">Control de vacaciones</h5>
+
+            <!-- Fab -->
+            <div class="fab-container">
+                <!-- boton del mas  -->
+                <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+          <i class="material-icons" [@fabToggler]="{value: tsMain}">add </i>
+        </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <!-- boton que abre el scaner -->
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(1, ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+          </button>
+                </div>
+            </div>
+
+
+
+            <!-- Body -->
+            <div id="body-main" class="card-body" style="padding-bottom: 0px;">
+                <div class="icard melevation col-xl-12">
+                    <div class="row">
+                        <!-- Filtro -->
+                        <div class="col-lg">
+
+                            <div class="row" style="margin-left: 0px;">
+                                <h6>Aplicar filtro por :</h6>
+                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                            </div>
+
+                            <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+                                <div class="form-row">
+                                    <!-- Nombre del Solicitante-->
+                                    <div class="col-lg-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Solicitante</mat-label>
+                                            <input type="text" matInput formControlName="sSolicitante">
+                                            <button style="outline: none;" mat-button *ngIf="getMain.sSolicitante.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sSolicitante.patchValue('')">
+                                              <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Nombres del Supervisor-->
+                                    <div class="col-lg-3">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Responsable</mat-label>
+                                            <input type="text" matInput formControlName="sSupervisor">
+                                            <button style="outline: none;" mat-button *ngIf="getMain.sSupervisor.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sSupervisor.patchValue('')">
+                                              <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Estado -->
+                                    <div class="col-lg-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Estado</mat-label>
+                                            <mat-select formControlName="nIdEstado">
+                                                <mat-option>--</mat-option>
+                                                <mat-option value="2152">
+                                                    Confirmado
+                                                </mat-option>
+                                                <mat-option value="2150">
+                                                    Aprobado
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Planilla -->
+                                    <div class="col-lg-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Planilla</mat-label>
+                                            <mat-select formControlName="sCodPlla">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of cboPlanilla" [value]="item.sCodPlla">
+                                                    {{item.sCodPlla}} - {{item.sDesc}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Ciudad -->
+                                    <div class="col-lg-2">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Ciudad</mat-label>
+                                            <mat-select formControlName="sCiudad">
+                                                <mat-option>--</mat-option>
+                                                <mat-option *ngFor="let item of cboCiudad" [value]="item.sDesc">
+                                                    {{item.sDesc}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Lista de vacaciones: {{ sHeaderDevengue }}</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+                    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+                </ngx-spinner>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="MainDS" style="width: 100%;" multiTemplateDataRows>
+
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="openModal('detail', element)">
+                                        <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Solicitante Column -->
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef> Solicitante </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Solicitante :'>
+                                        <ngb-highlight [result]="element.sSolicitante | titlecase" [term]="getMain.sSolicitante.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Planilla Column -->
+                                <ng-container matColumnDef="Plla">
+                                    <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Planilla :' >
+                                        <ngb-highlight [result]="element.sCodPlla"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Tipo Documento Column -->
+                                <ng-container matColumnDef="sTipoDoc">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo de Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de Documento :'>
+                                        {{ element.sDscTipo }} </td>
+                                </ng-container>
+
+                                <!-- # Documento Column -->
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Documento :'>
+                                        {{element.sDocumento}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaIngreso">
+                                    <th mat-header-cell *matHeaderCellDef> Fec. Ingreso </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Ingreso :'>
+                                        {{element.sFechaIngreso}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sFechaCese">
+                                    <th mat-header-cell *matHeaderCellDef> Fec. Cese </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha Cese :'>
+                                        {{element.sFechaCese}} </td>
+                                </ng-container>
+
+                                <!-- # Ciudad Column -->
+                                <ng-container matColumnDef="sCiudad">
+                                    <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Ciudad :'>
+                                        {{element.sCiudad}} </td>
+                                </ng-container>
+
+                                <!-- # Cantidad de Vacaciones Column -->
+                                <ng-container matColumnDef="nCantVac">
+                                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> # Total </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='# Total :'>
+                                        {{element.sDias}} </td>
+                                </ng-container>
+
+                                <!-- More Column -->
+                                <ng-container matColumnDef="more">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let row" (click)="clickExpanded(row)">
+                                        <span [@fabToggler]="element == expandedMore ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                                    </td>
+                                </ng-container>
+
+                                <!-- More Expanded -->
+                                <ng-container matColumnDef="expanded_More">
+                                    <td mat-cell *matCellDef="let element" [attr.colspan]="MainDC.length">
+                                        <div style="overflow: hidden;" [@detailExpand]="element == expandedMore ? 'expanded' : 'collapsed'">
+                                            <div class="row" style="padding: 10px;">
+                                                <div class="col-lg-7">
+                                                    <!-- Lista de trabajadores -->
+                                                    <div class="row" style="padding-left: 15px;">
+                                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                            <h6>Lista de vacaciones del mes:</h6>
+                                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="dTableExpanded" class="melevation">
+                                                        <table #mtExpanded mat-table [dataSource]="ExpandedDS" style="width: 100%;">
+
+                                                            <!-- Position Column -->
+                                                            <!-- <ng-container matColumnDef="position">
+                                                                <th mat-header-cell *matHeaderCellDef> N° </th>
+                                                                <td mat-cell *matCellDef="let element; let i = index;" matTooltipPosition="right" >
+                                                                    {{i + 1}}</td>
+                                                            </ng-container> -->
+
+                                                            <!-- Supervisor Column -->
+                                                            <ng-container matColumnDef="sSupervisor" >
+                                                                <th mat-header-cell *matHeaderCellDef> Responsable </th>
+                                                                <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Supervisor :' >
+                                                                    <ngb-highlight [result]="element.sSupervisor | titlecase" [term]="getMain.sSupervisor.value">
+                                                                    </ngb-highlight>
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <!-- Inicio Vacaciones Column -->
+                                                            <ng-container matColumnDef="dFechIni">
+                                                                <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fec. Inicio :'>
+                                                                    {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                                            </ng-container>
+
+                                                            <!-- Fin Vacaciones Column -->
+                                                            <ng-container matColumnDef="dFechFin">
+                                                                <th mat-header-cell *matHeaderCellDef> Termino </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fec. Termino :'>
+                                                                    {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                                            </ng-container>
+
+                                                            <!-- Cantidad de Dia de vacaciones Column -->
+                                                            <ng-container matColumnDef="sDias">
+                                                                <th mat-header-cell *matHeaderCellDef > # Dias </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='# Dias :' >
+                                                                    {{element.sDias}} </td>
+                                                            </ng-container>
+
+                                                            <!-- sDigitalizado Column -->
+                                                            <ng-container matColumnDef="sEstado" >
+                                                                <th mat-header-cell *matHeaderCellDef > Status
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Status : '>
+                                                                    <ngb-highlight [result]="element.sEstado">
+                                                                    </ngb-highlight>
+                                                                </td>
+                                                            </ng-container>
+
+                                                            <tr mat-header-row *matHeaderRowDef="ExpandedDC; sticky: true"></tr>
+                                                            <tr mat-row *matRowDef="let element; columns: ExpandedDC;">
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <mat-paginator #pagExpanded style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                                                    </mat-paginator>
+                                                </div>
+
+                                                <div class="col-lg-5">
+                                                    <!-- Días en calendario -->
+                                                    <div class="row" style="padding-left: 15px;">
+                                                        <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                            <h6>Días en calendario:</h6>
+                                                            <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <mwl-calendar-month-view [viewDate]="viewDate" [events]="eventMain" [locale]="locale" [refresh]="refresh" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays">
+                                                    </mwl-calendar-month-view>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['expanded_More']" 
+                                [class.example-expanded-row]="expandedMore === row" style="height: 0px; border-top-style: none;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.filteredData.length > 0">
+                                </mat-footer-row>
+                            </table>
+
+                        </div>
+                        <mat-paginator #pagMain style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                        </mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

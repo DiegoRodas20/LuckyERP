@@ -1,0 +1,94 @@
+<div class="form-row ">
+    <div class="form-group col-md-12">
+
+        <!-- Card Header Titulo-->
+        <div class="container">
+            <h5 *ngIf="this.estado" class="col-md-12 card-header">
+                Agregar Padre General.SYSTEM_ELEMENTS
+            </h5>
+
+            <h5 *ngIf="this.estado == false" class="col-md-12 card-header">
+                Padre nEleCod: {{this.dialogConfigData}} General.SYSTEM_ELEMENTS
+            </h5>
+        </div>
+
+        <br>
+
+        <!-- Inputs -->
+        <div mat-dialog-content>
+            <div class="col-md-12">
+                <form [formGroup]="formSystElements">
+                    <div class="form-row">
+
+                        <!-- Columna cEleCod -->
+                        <div class="form-group col-md-4">
+                            <mat-form-field>
+                                <mat-label>cEleCod</mat-label>
+                                <input matInput formControlName="cEleCod">
+                                <mat-error>Máximo 8 caracteres</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Columna cEleIni -->
+                        <div class="form-group col-md-4">
+                            <mat-form-field>
+                                <mat-label>cEleIni</mat-label>
+                                <input matInput formControlName="cEleIni">
+                                <mat-error>Máximo 5 caracteres</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Columna bStatus -->
+                        <div class="form-group col-md-4">
+                            <ng-select class="ngselect" appendTo="body" [clearable]="false" [readonly]="isReadOnly"
+                                placeholder="bStatus" formControlName="bStatusB">
+                                <ng-option *ngFor="let item of lEstado" [value]="item.nId">
+                                    {{item.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- Columna cEleNam -->
+                        <div class="form-group col-md-12">
+                            <mat-form-field>
+                                <mat-label>cEleNam</mat-label>
+                                <input matInput formControlName="cEleNam">
+                                <mat-error *ngIf="formSystElements.get('cEleNam').hasError('required')">Debe ingresar el
+                                    dato</mat-error>
+                                <mat-error *ngIf="formSystElements.get('cEleNam').hasError('maxlength')">Ingresar 170
+                                    caracteres como máximo</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Columna cEleDes -->
+                        <div class="form-group col-md-12">
+                            <mat-form-field>
+                                <mat-label>cEleDes</mat-label>
+                                <input matInput formControlName="cEleDes">
+                                <mat-error *ngIf="formSystElements.get('cEleDes').hasError('required')">Debe ingresar el
+                                    dato</mat-error>
+                                <mat-error *ngIf="formSystElements.get('cEleDes').hasError('maxlength')">Ingresar 250
+                                    caracteres como máximo</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Opciones -->
+                        <div class="form-group col-md-11 text-right">
+                            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                                matTooltip="Grabar" color="accent" (click)="registrarSystElements()">
+                                <i class="material-icons"> save </i>
+                            </button>
+                        </div>
+
+                        <div class="form-group col-md-1 text-right">
+                            <button mat-raised-button mat-mini-fab class="fab-secondary" matTooltipPosition="left"
+                                matTooltip="Salir" color="secondary" (click)="salir()">
+                                <i class="material-icons">exit_to_app</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<div [ngClass]="pMostrar==0 ? 'clsShow' : 'clsHide'" class="form-row" style="margin-top: 15px;">
+    <div class="form-group col-md-12">
+        <!-- Inicio del contenido -->
+        <div class="row justify-content-center">
+            <div class="col-md-9 offset-md-1">
+                <div class="form-row">
+                    <div class="col-md-8 col-sm-8 col-10">
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Buscar planilla:</mat-label>
+                            <input type="text" matInput [formControl]="txtFiltro" (keyup)="fnFiltrar()">
+                            <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix mat-icon-button
+                                aria-label="Clear" (click)="this.txtFiltro.setValue(''); fnListarPlanilla();">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- nueva tabla material -->
+        <div id="listaMobile" class="mat-elevation-z8 ">
+            <div class="example-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="nId" sticky>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"></th>
+                        <td data-label='Ver partidas: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaOpc">
+                            <button mat-stroked-button (click)="fnSeleccionarPlanilla(row)" color="accent"
+                                matTooltip="Ver partidas">
+                                <mat-icon> touch_app</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sCodigo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Código
+                        </th>
+                        <td data-label='Código: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib">
+                            <ngb-highlight [result]="row.sCodigo" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="sDescripcion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Planilla
+                        </th>
+                        <td data-label='Planilla: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLarge">
+                            <ngb-highlight [result]="row.sDescripcion" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nCantidad">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Cant. Partidas
+                        </th>
+                        <td data-label='Cant. Partidas: ' mat-cell *matCellDef="let row"
+                            class="has_label_on_mobile clsColumnaLib2">
+                            <ngb-highlight [result]="row.nCantidad" [term]="txtFiltro.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<app-planilla-partida-detalle *ngIf="pMostrar==1" (pMostrar)="fnOcultar($event)" [pPlanilla]="vPlanillaSeleccionada">
+</app-planilla-partida-detalle>

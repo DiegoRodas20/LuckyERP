@@ -1,0 +1,161 @@
+<div class="">
+    <div style="padding-top: 18px;">
+        <div class="mb-3 p-3" style="text-align: center;">
+            <mat-card class="title-card">Parámetros de Presupuestos</mat-card>
+        </div>
+    </div>
+    <div class="fab-container">
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length">
+            <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)">
+                <i class="material-icons" [matTooltip]="btn.tool" matTooltipPosition="left">{{btn.icon}}</i>
+            </button>
+        </div>
+    </div>
+    <mat-accordion class="example-headers-align">
+        <form autocomplete="off" [formGroup]="form" (ngSubmit)="save()">
+
+            <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+                        Precio y Cantidades
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px">
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div>
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Precio por Fotocheck</mat-label>
+                                <input type="number" matInput formControlName="item2" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form1Item2" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Monto Máximo Solicitud Efectivo</mat-label>
+                                <input type="number" matInput formControlName="item3" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form1Item3" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Cantidad máxima Efectivo Pendiente Central</mat-label>
+                                <input type="number" matInput formControlName="item4" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form1Item4" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Cantidad máxima Efectivo Pendiente Sucursal</mat-label>
+                                <input type="number" matInput formControlName="item8" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form2Item4" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Monto Reembolso automático</mat-label>
+                                <input type="number" matInput formControlName="item7" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form2Item3" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Días de vigencia RR</mat-label>
+                                <input type="number" matInput formControlName="item9" min="1">
+                            </mat-form-field>
+                            <small *ngIf="validacionItem9" class="text-danger">Debe ser mayor a 0</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <ng-select appendTo="body" placeholder="Centro de costo útiles" formControlName="item10" notFoundText="No hay presupuestos disponibles">
+                                <ng-option *ngFor="let element of listaCostoFijo" [value]="element.nId">
+                                    {{element.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <small *ngIf="validacionItem10" class="text-danger">El campo es obligatorio</small>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 12px;">
+                        Porcentajes
+                    </mat-panel-title>
+                    <mat-panel-description style="margin-right: 0px">
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje de Resguardo General Presupuesto</mat-label>
+                                <input type="number" matInput formControlName="item1" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form1Item1" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje de Reguardo por Partida Presupuesto</mat-label>
+                                <input type="number" matInput formControlName="item5" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form2Item1" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje de Gasto Reparado</mat-label>
+                                <input type="number" matInput formControlName="item6" min="1">
+                            </mat-form-field>
+                            <small *ngIf="form2Item2" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+
+
+
+
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje de implemento tarifario</mat-label>
+                                <input type="number" matInput formControlName="item11" min="1">
+                            </mat-form-field>
+                            <small *ngIf="validacionItem11" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje de implemento tarifario detal</mat-label>
+                                <input type="number" matInput formControlName="item12" min="1">
+                            </mat-form-field>
+                            <small *ngIf="validacionItem12" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Porcentaje Facturado</mat-label>
+                                <input type="number" matInput formControlName="item13" min="1">
+                            </mat-form-field>
+                            <small *ngIf="validacionItem13" class="text-danger">Debe ser mayor a 0 y máximo 100</small>
+                        </div>
+
+                    </div>
+
+                </div>
+            </mat-expansion-panel>
+
+
+
+
+        </form>
+    </mat-accordion>
+
+    <!-- <div class="mx-3 button-center py-2">
+        <button mat-raised-button class="mr-2" color="primary" (click)="modificarDatos()"> Grabar Datos</button>
+    </div> -->
+</div>

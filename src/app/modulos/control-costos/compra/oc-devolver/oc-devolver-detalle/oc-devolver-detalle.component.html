@@ -1,0 +1,490 @@
+<!--Zona de botones flotantes-->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+  <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+    <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+  </button>
+  <div [@speedDialStagger]="abLista.length">
+    <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+      <button *ngIf="btn.state" mat-mini-fab
+        class="fab-secondary"
+        [matTooltip]="btn.tool"
+        matTooltipPosition="left"
+        [color]="btn.color"
+        (click)="clickFab(ibtn)">
+        <i class="material-icons" >{{btn.icon}}</i>
+      </button>
+    </ng-container>
+  </div>
+</div>
+
+<div class="col-md-10 offset-md-1">
+    <mat-card>
+        <form class="row" [formGroup]="formOrdenCompra">
+
+            <div class="col-md-10">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Solicitante:</mat-label>
+                            <input readonly type="text" matInput placeholder="Solicitante" formControlName="txtSolicitante"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Presupuesto:</mat-label>
+                            <input readonly type="text" matInput placeholder="Campaña" formControlName="txtCampana"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Orden de:</mat-label>
+                            <input readonly type="text" matInput placeholder="Tipo" formControlName="cboTipoOrden"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Cliente:</mat-label>
+                            <input readonly type="text" matInput placeholder="Cliente" formControlName="txtCliente" style="color: rgb(236, 0, 140);"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Título:</mat-label>
+                            <input readonly type="text" matInput placeholder="Título" formControlName="txtTitulo"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Fecha Solicitud:</mat-label>
+                                <input matInput readonly [matDatepicker]="fecha"
+                                    formControlName="cbFechaSolicitud">
+                                <mat-datepicker-toggle matSuffix  [for]="fecha" [disabled]="true" ></mat-datepicker-toggle>
+                                <mat-datepicker #fecha ></mat-datepicker>
+                                <mat-error *ngIf="formOrdenCompra.get('cbFechaSolicitud').hasError('required')">
+                                    .Obligatorio
+                                </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Proveedor:</mat-label>
+                            <input readonly type="text" matInput placeholder="Proveedor" formControlName="nId_Proveedor"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Banco:</mat-label>
+                            <input readonly type="text" matInput placeholder="Banco" formControlName="cboBanco"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Moneda:</mat-label>
+                            <input readonly type="text" matInput placeholder="Moneda" formControlName="cboMoneda"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-5">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Contacto:</mat-label>
+                            <input readonly type="text" matInput placeholder="Contacto" formControlName="txtContacto"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Credito:</mat-label>
+                            <input readonly type="text" matInput placeholder="Contacto" formControlName="txtCredito"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>N° Rq:</mat-label>
+                            <input readonly type="text" matInput placeholder="N° Req" formControlName="txtNumReq"
+                                [errorStateMatcher]="matcher">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <mat-accordion style="width: 100%; margin-top: 7px; margin-bottom: 7px;">
+                        <mat-expansion-panel style="width: 100%;">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title style="color: #002c4b; font-weight: bold;">
+                                    Detracciones
+                                </mat-panel-title>
+                                <mat-panel-description style="margin-right: 0px">
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <form [formGroup]="formDetracciones" class="row esp-top">
+
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Porcentaje %</mat-label>
+                                        <input type="number" readonly matInput placeholder="0.00" formControlName="txtPorcentaje"
+                                            (input)="fnCalcularDetracciones()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Soles:</mat-label>
+                                        <input type="number" readonly matInput placeholder="0" formControlName="txtSoles">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Dólares:</mat-label>
+                                        <input type="number" readonly matInput placeholder="0" formControlName="txtDolares">
+                                    </mat-form-field>
+                                </div>
+                            </form>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+            <div class="col-md-2 ocultar-mobile">
+                <div class="form-row">
+                    <div class="col-md-1">
+                        <div class="clsSeparador">
+                            &nbsp;
+                        </div>
+                    </div>
+
+                    <!-- Campos auditoria -->
+                    <div class="col-md-11">
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Año:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtAnio">
+                        </mat-form-field>
+
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Orden de compra:</mat-label>
+                            <input type="text" readonly matInput formControlName="txtCodigo">
+                        </mat-form-field>
+
+                        <div>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Comprador:</mat-label>
+                                <input type="text" readonly matInput formControlName="txtComprador">
+                            </mat-form-field>
+
+                        </div>
+                        <div>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Fecha de Creación:</mat-label>
+                                <input type="text" readonly matInput formControlName="FechaCreacion">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Tipo cambio:</mat-label>
+                                <input type="text" readonly matInput placeholder="Tipo cambio" formControlName="txtTipoCambio"
+                                    [errorStateMatcher]="matcher">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Estado:</mat-label>
+                                <input type="text" readonly matInput style="color: rgb(236, 0, 140);" placeholder="Estado" formControlName="txtEstado"
+                                    [errorStateMatcher]="matcher">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Informacion en celular-->
+            <div class="col-md-12 mostrar-mobile">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+                            Información
+                        </mat-panel-title>
+                        <button mat-icon-button>
+                            <mat-icon style="margin-right: 10px;" color="accent">info</mat-icon>
+                        </button>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Año:</mat-label>
+                                <input type="text" readonly matInput formControlName="txtAnio">
+                            </mat-form-field>
+
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Orden de compra:</mat-label>
+                                <input type="text" readonly matInput formControlName="txtCodigo">
+                            </mat-form-field>
+
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Comprador:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtComprador">
+                                </mat-form-field>
+
+                            </div>
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha de Creacion:</mat-label>
+                                    <input type="text" readonly matInput formControlName="FechaCreacion">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo cambio:</mat-label>
+                                    <input type="text" readonly matInput placeholder="Tipo cambio" formControlName="txtTipoCambio"
+                                        [errorStateMatcher]="matcher">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Estado:</mat-label>
+                                    <input type="text" readonly matInput style="color: rgb(236, 0, 140);" placeholder="Estado" formControlName="txtEstado"
+                                        [errorStateMatcher]="matcher">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </div>
+
+            <div class="col-md-12 mostrar-mobile">
+                <br>
+            </div>
+        </form>
+    </mat-card>
+</div>
+
+<br>
+
+<div class="col-md-10 fix-col offset-md-1 ">
+    <mat-horizontal-stepper [linear]="false" #stepper style="height: 500px; overflow-y: auto;" id="stepper">
+
+        <!-- Pestaña para detalle de la Compra -->
+        <mat-step [stepControl] errorMessage="Datos incompletos">
+            <ng-template  matStepLabel>Detalle de la Compra</ng-template>
+            <div class="col-md-12">
+                <div class="row">
+                    <!--Table para detalle de orden compra -->
+
+                    <div class="form-row col-md-8">
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Subtotal Compra:</mat-label>
+                                <input type="text" matInput [formControl] ="txtTotalCompra" readonly >
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Total Final Compra:</mat-label>
+                                <input type="text" matInput [formControl] ="txtTotalFinalCompra" readonly >
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div id="listaMobile" class="mat-elevation-z8">
+                            <div class="example-container">
+                                <table mat-table [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="sSucursal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Sucursal
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Sucursal: '> {{row.sSucursal}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sDescPartida">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge"> Partida
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge" data-label='Partida: '> {{row.sPartida}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="sArticulo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge2"> Artículo
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLarge2" data-label='Artículo: '> {{row.sArtiruclo}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nCantidad">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Cantidad
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaOpc2" data-label='Cantidad: '> {{row.cantidad}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nPrecio">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Precio
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Precio: '> {{ row.precio | number:'1.5-5' }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="nTotal">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Total
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Total: '> {{ row.nTotal | number:'1.5-5' }} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-step>
+
+        <!-- Pestaña para los datos finales como totales -->
+        <mat-step [stepControl] errorMessage="Datos incompletos">
+            <ng-template matStepLabel>Datos de la Compra</ng-template>
+            <mat-card>
+                <div class="col-md-12" style="margin-top: 10px;">
+                    <form [formGroup]="formInformacion">
+                        <div class="row">
+                            <!--Informacion-->
+                            <div class="col-md-4">
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Fecha de entrega:</mat-label>
+                                    <input type="text" readonly matInput formControlName="cbFechaEntrega">
+                                </mat-form-field>
+
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Lugar de entrega:</mat-label>
+                                    <input type="text" readonly matInput formControlName="cboLugarEntrega">
+
+                                </mat-form-field>
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Dirección:</mat-label>
+                                    <input type="text" readonly matInput formControlName="txtDireccion">
+                                </mat-form-field>
+                            </div>
+                            <!--Pagos-->
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div class="col-md-4 spaces">
+                                        <br />
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Subtotal:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtSoles" [value]="formInformacion.get('txtSoles').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Subtotal Convertido:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDolares" [value]="formInformacion.get('txtDolares').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="d-flex align-items-center col-md-4 col-12">
+                                        <section style="width: 100%;">
+                                            <mat-checkbox formControlName="cbServicio">Servicio %
+                                            </mat-checkbox>
+                                        </section>
+                                        <mat-form-field style="width: 50%;">
+                                            <mat-label>Servicio:</mat-label>
+                                            <input type="number" readonly matInput
+                                                formControlName="txtSerivicio">
+                                            <mat-error
+                                                *ngIf="formInformacion.get('txtSerivicio').hasError('min') || formInformacion.get('txtSerivicio').hasError('max')">
+                                                .Debe estar entre 0 y 1</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Servicio:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtSolesServicio" [value]="formInformacion.get('txtSolesServicio').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Servicio Convertido:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDolaresServicio" [value]="formInformacion.get('txtDolaresServicio').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="d-flex align-items-center col-md-4 col-12">
+                                        <section style="width: 100%;">
+                                            <mat-checkbox formControlName="cbIGV">
+                                                IGV %</mat-checkbox>
+                                        </section>
+                                        <mat-form-field style="width: 50%;">
+                                            <mat-label>IGV:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtIGV">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>IGV:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtSolesIGV" [value]="formInformacion.get('txtSolesIGV').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>IGV Convertido:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtDolaresIGV" [value]="formInformacion.get('txtDolaresIGV').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4 spaces">
+                                        <br />
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Total:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtTotalSoles" [value]="formInformacion.get('txtTotalSoles').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-label>Total Convertido:</mat-label>
+                                            <input type="text" readonly matInput formControlName="txtTotalDolares" [value]="formInformacion.get('txtTotalDolares').value | number:'1.4-4' ">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>
+
+

@@ -1,0 +1,227 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+      <i class="material-icons" [@fabToggler]="{value: tsCalcular}">add</i>
+  </button>
+    <div [@speedDialStagger]="abCalcular.length">
+        <button *ngFor="let btn of abCalcular; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" matBadgeHidden="{{ btn.badge === 0 }}" matBadge="{{ btn.badge }}" matBadgePosition="after" matBadgeColor="accent" [disabled]="btn.dis">
+          <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+      </button>
+    </div>
+</div>
+
+<ngx-spinner name="spi_calcular" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: rgb(204, 203, 203); padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<!-- CABECERA -->
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Calcular Asientos (Planilla)</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span class="material-icons">close</span>
+  </button>
+</div>
+
+<!-- CUERPO -->
+<div class="modal-body" style="padding-bottom: 0px;">
+    <div class="row">
+
+        <div id="dLeftDetail" class="col-lg-12">
+            <mat-accordion #maDetail="matAccordion" multi>
+                <!-- Filtro -->
+                <mat-expansion-panel [expanded]="false" id="mep_filtro">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Aplicar filtro por :
+                        </mat-panel-title>
+                        <mat-panel-description style="margin-right: 0px;">
+
+                        </mat-panel-description>
+                        <mat-icon style="margin-right: 10px;">filter_alt</mat-icon>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div [formGroup]="fgCalcular" class="col-lg-12">
+                            <div class="form-row">
+                                <!-- Planilla -->
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Planilla</mat-label>
+                                        <mat-select formControlName="planilla">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboPlanilla" [value]="item.descripcion">
+                                                {{item.numero}} - {{item.descripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Cta. Contable</mat-label>
+                                        <input type="text" matInput formControlName="cuentaContable">
+                                        <button style="outline: none;" mat-button *ngIf="getCalcular.cuentaContable.value" matSuffix mat-icon-button aria-label="Clear" (click)="getCalcular.cuentaContable.patchValue('')">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Tipo</mat-label>
+                                        <mat-select formControlName="sTipo" (valueChange)="cboGetCentroCostoCalcular($event)">
+                                            <mat-option>--</mat-option>
+                                            <mat-option *ngFor="let item of cboTipos" [value]="item.codigo">
+                                                {{item.descripcion}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Centro de costo</mat-label>
+                                        <input type="text" matInput formControlName="centroCosto" [matAutocomplete]="centroCosto" class="titlecase">
+
+                                        <mat-autocomplete #centroCosto="matAutocomplete">
+                                            <mat-option *ngFor="let option of foCentroCosto | async" [value]="option.descripcion">
+                                                {{option.descripcion | titlecase}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+
+                                        <button style="outline: none;" mat-button *ngIf="getCalcular.centroCosto.value" matSuffix mat-icon-button aria-label="Clear" (click)="getCalcular.centroCosto.patchValue('')">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+
+            </mat-accordion>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-sm">
+            <h6>Resultado de Calculo: {{ sHeaderDevengue }}</h6>
+            <hr style="margin-top: 0px; margin-bottom: 20px;">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="dTableMain" class="melevation">
+                <table mat-table [dataSource]="CalcDS" style="width: 100%;" multiTemplateDataRows>
+
+                    <!-- Planilla Column -->
+                    <ng-container matColumnDef="planilla">
+                        <th mat-header-cell *matHeaderCellDef> Planilla </th>
+                        <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Planilla :'>
+                            <ngb-highlight [result]="element.planilla | titlecase" [term]="getCalcular.planilla.value"></ngb-highlight>
+                        </td>
+                    </ng-container>
+
+                    <!-- Tipo Documento Column -->
+                    <ng-container matColumnDef="glosa">
+                        <th mat-header-cell *matHeaderCellDef> Glosa </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Glosa :'>
+                            {{ element.glosa }} </td>
+                    </ng-container>
+
+                    <!-- # Documento Column -->
+                    <ng-container matColumnDef="totalDebe">
+                        <th mat-header-cell *matHeaderCellDef> Total Debe </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Total Debe :'>
+                            {{element.totalDebe}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalHaber">
+                        <th mat-header-cell *matHeaderCellDef> Total Haber </th>
+                        <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Total Haber :'>
+                            {{element.totalHaber}} </td>
+                    </ng-container>
+
+                    <!-- More Column -->
+                    <ng-container matColumnDef="more">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element; let row" (click)="clickExpandedCalcular(row)">
+                            <span [@fabToggler]="element == expandedMoreCalc ? 'active3' : 'inactive'" class="material-icons" style="cursor: pointer;">expand_more</span>
+                        </td>
+                    </ng-container>
+
+                    <!-- More Expanded -->
+                    <ng-container matColumnDef="expanded_More">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="CalcDC.length">
+                            <div style="overflow: hidden;" [@detailExpand]="element == expandedMoreCalc ? 'expanded' : 'collapsed'">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12">
+                                        <div class="row" style="padding-left: 15px;">
+                                            <div class="col-sm" style="padding: 10px 0px 0px 0px;">
+                                                <h6>Lista de centro de costo por cuenta contable:</h6>
+                                                <hr style="margin-top: 0px; margin-bottom: 10px;">
+                                            </div>
+                                        </div>
+
+                                        <div id="dTableExpanded" class="melevation">
+                                            <table #mtExpandedCalc mat-table [dataSource]="ExpandedCalcDS" style="width: 100%;">
+
+                                                <ng-container matColumnDef="centroCosto">
+                                                    <th mat-header-cell *matHeaderCellDef> Centro de Costo </th>
+                                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Centro de Costo :'>
+                                                        <ngb-highlight [result]="element.centroCosto | titlecase" [term]="getCalcular.centroCosto.value">
+                                                        </ngb-highlight>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="cuentaContable">
+                                                    <th mat-header-cell *matHeaderCellDef> Cuenta </th>
+                                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Cuenta :'>
+                                                        <ngb-highlight [result]="element.cuentaContable | titlecase" [term]="getCalcular.cuentaContable.value">
+                                                        </ngb-highlight>
+                                                    </td>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="importe">
+                                                    <th mat-header-cell *matHeaderCellDef> Importe </th>
+                                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Importe :'>
+                                                        {{element.importe}} </td>
+                                                </ng-container>
+
+                                                <tr mat-header-row *matHeaderRowDef="ExpandedCalcDC; sticky: true"></tr>
+                                                <tr mat-row *matRowDef="let element; columns: ExpandedCalcDC;">
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <mat-paginator #pagExpandedCalc style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="noData">
+                        <mat-footer-cell *matFooterCellDef [attr.colspan]="CalcDC.length">
+                            No se encuentran registros.
+                        </mat-footer-cell>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="CalcDC;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: CalcDC;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expanded_More']" [class.example-expanded-row]="expandedMoreCalc === row" style="height: 0px; border-top-style: none;"></tr>
+                    <mat-footer-row *matFooterRowDef="['noData']" [hidden]="CalcDS && this.CalcDS.filteredData.length > 0">
+                    </mat-footer-row>
+                </table>
+
+            </div>
+            <mat-paginator #pagCalc style="display: contents;" [hidePageSize]="false" [pageSize]="4">
+            </mat-paginator>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <mat-progress-bar *ngIf="pbCal" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>

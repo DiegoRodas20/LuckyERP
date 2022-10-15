@@ -1,0 +1,175 @@
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container > div > button {
+  margin-top: 10px;
+  outline: none;
+}
+
+.form-row .form-group label {
+  font-size: 12.5px;
+}
+
+.table {
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  font-size: 10px;
+}
+
+th label {
+  font-size: 9.5px !important;
+}
+
+.clsprincipal {
+  padding: 80px 0px 0px 0px;
+}
+
+td,
+th {
+  font-size: 14px;
+}
+
+.mat-header-row {
+  background-color: rgb(51, 77, 110);
+}
+
+.table-container-1 {
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-header-row .mat-header-cell {
+  color: white;
+}
+
+.card-header {
+  background-color: rgb(51, 77, 110);
+  color: white;
+  text-align: center;
+  font-size: 25px;
+}
+
+select {
+  width: 70%;
+  float: right;
+  font-size: 10.5px;
+  background-color: #d8ebff;
+}
+
+@media only screen and (min-width: 960px) {
+  .clsSeparador {
+    height: 100%;
+    border-right: 2px solid rgb(236, 0, 140);
+  }
+
+  .mostrar-mobile {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .clsSeparador {
+    height: 100%;
+    border-top: 2px solid rgb(236, 0, 140);
+  }
+
+  .ocultar-mobile {
+    display: none;
+  }
+}
+/*Para darle color a los disables*/
+::ng-deep .mat-select-content {
+  width: 100%;
+}
+
+.alinea-ng-select {
+  padding-bottom: 3.5px !important;
+  bottom: 0.4rem !important;
+}
+
+:host /deep/ .mat-form-field-disabled input {
+  color: black;
+}
+
+::ng-deep .mat-select-value {
+  color: black !important;
+}
+
+:host /deep/.mat-checkbox-checked.mat-accent.mat-checkbox-disabled {
+  color: black !important;
+}
+
+ng-select-value {
+  color: black !important;
+}
+
+::ng-deep
+  .ng-select.ng-invalid.ng-touched
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+  color: #f44336;
+}
+
+::ng-deep .ng-select.ng-invalid.ng-touched .ng-select-container:after {
+  border-bottom: thin solid #f44336 !important;
+}
+
+::ng-deep .ng-select.ng-select-disabled span.ng-star-inserted {
+  color: black !important;
+}
+
+ng-select ~ mat-error {
+  font-size: 12px;
+  margin-top: -8px;
+}
+
+.clsColumnaOpc {
+  width: 120px;
+}
+
+.clsColumnaLarge {
+  width: 280px;
+}
+
+.clsColumnaLib {
+  width: 150px;
+}
+
+.clsColumnaOpc2 {
+  width: 90px;
+}
+
+.clsColumnaLib2 {
+  width: 50px;
+}
+
+.clsColumnaCantidad {
+  width: 82px;
+}

@@ -1,0 +1,130 @@
+<div class="form-row">
+    <div class="form-group col-md-12">
+
+        <!-- Card Header Titulo -->
+        <div class="container">
+            <h4 class="col-md-12 card-header">
+                Vista Previa de la publicación en el portal
+            </h4>
+        </div>
+
+        <!-- Titulo Portal -->
+        <div class="col-md-12">
+            <div class="my-4 clsTituloPuesto">
+                <h3 style="margin:1px">{{sPuesto}}</h3>
+            </div>
+        </div>
+
+        <!-- Datos Portal -->
+        <div class="form-row">
+
+            <div class="form-group col-md-10 offset-md-1">
+                <span class="clsInformacion">Lugar de Trabajo : </span>
+                <span>{{sLugarTrabajo}}</span>
+            </div>
+
+            <div class="form-group col-md-10 offset-md-1">
+                <span class="clsInformacion">Fecha de publicación : </span>
+                <span>{{sFechaPub}}</span>
+            </div>
+
+            <div class="form-group col-md-10 offset-md-1">
+                <span class="clsInformacion">Tipo de puesto : </span>
+                <span> {{sTipoPuesto}}</span>
+            </div>
+
+            <div class="col-md-10 offset-md-1">
+                <span class="clsInformacion">Area : </span>
+                <span> {{sArea}}</span>
+            </div>
+
+            <div class="col-md-2 offset-md-1 align-self-center">
+                <span class="clsInformacion">Tiempo Laboral : </span>
+            </div>
+
+            <div class="col-md-8 offset-ml-2">
+                <ng-select [formControl]="nTiempoLaboral" class="ngselect" appendTo="body" [clearable]="true"
+                    placeholder="Seleccionar Tiempo Laboral">
+                    <ng-option *ngFor="let item of listaTiempoLaboral" [value]="item.nTiempoLaboral">
+                        {{item.sTiempoLaboral}}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <div class="marginbottom col-md-3 offset-md-1 align-self-center">
+                <span class="clsInformacion">Fecha de Fin de publicación : </span>
+            </div>
+
+            <div class="marginbottom col-md-7 offset-ml-2">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Seleccionar Fecha</mat-label>
+                    <input matInput [matDatepicker]="frIni" [formControl]="fFechaPicker"
+                        (dateChange)="fnCambiarFechaPicker($event)" [min]="dFechaFinMin" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="frIni">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker touchUi #frIni></mat-datepicker>
+                    <mat-error>Necesita seleccionar la fecha</mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <!-- Renglon -->
+        <div class="col-md-12">
+            <div class="col-md-12 clsReglon"></div>
+        </div>
+
+        <!-- Requisitos, Funciones, Beneficios -->
+        <div class="form-row">
+
+            <div class="col-md-12 mt-2 text-center">
+                <span>Nos encontramos en busqueda del mejor talento para la posicion de
+                    <b>{{sPuesto}}</b>
+                </span>
+            </div>
+
+            <div class="col-md-12 mb-3 text-center">
+                <i class="clsIrBoton" (click)="fnIrReqBenFun()">Ir a Matriz</i>
+            </div>
+
+            <div class="col-md-10 mb-4 offset-md-1">
+                <label class="clsSubtitulo">Requisitos </label>
+                <div class="col-md-12" *ngFor="let item of listaRequisitos">
+                    <label>
+                        <span class="fa fa-circle clsCircle"></span>
+                        {{item.sNombreRequisito}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-10 mb-4 offset-md-1">
+                <label class="clsSubtitulo">Funciones </label>
+                <div class="col-md-12" *ngFor="let item of listaFunciones">
+                    <label>
+                        <span class="fa fa-circle clsCircle"></span>
+                        {{item.sNombreFuncion}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-10 mb-4 offset-md-1">
+                <label class="clsSubtitulo">Beneficios </label>
+                <div class="col-md-12" *ngFor="let item of listaBeneficios">
+                    <label>
+                        <span class="fa fa-circle clsCircle"></span>
+                        {{item.sNombreBeneficio}}
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <button type="button" color="primary" mat-raised-button class="clsBoton" (click)="fnPublicar()">
+                Publicar en el Portal
+            </button>
+        </div>
+
+    </div>
+</div>

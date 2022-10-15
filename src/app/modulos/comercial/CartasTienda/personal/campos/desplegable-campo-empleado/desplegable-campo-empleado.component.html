@@ -1,0 +1,48 @@
+<div class="m-3">
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input
+        type="text"
+        [placeholder]="label"
+        aria-label="Number"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+        (keyup.enter)="enviarEventoData()"
+      />
+      <mat-autocomplete
+        [panelWidth]="auto"
+        autoActiveFirstOption
+        #auto="matAutocomplete"
+        class="autocompletable"
+      >
+        <mat-option (click)="abrirModalAgregarData()">
+          Agregar Nuevo
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Example icon button with a heart icon"
+            class="float-right"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-option>
+        <mat-option
+          *ngFor="let item of dataFiltradaEstatica"
+          [value]="item.pValor"
+          (click)="enviarEventoData()"
+        >
+          {{ item.pValor }}
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Example icon button with a heart icon"
+            class="float-right ml-2"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>

@@ -1,0 +1,68 @@
+<mat-dialog-content>
+
+    <div id="listaMobile" class="example-container2 mat-elevation-z8">
+        <table mat-table [dataSource]="dsBoletaDetalle" matSort style="width: 100%;">
+
+
+            <ng-container matColumnDef="nIdBoleta">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nro. Boleta </th>
+                <td data-label='Nro. Boleta: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib">
+                    {{row.nIdBoleta}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sCodArticulo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Código Árticulo </th>
+                <td data-label='Código Árticulo: ' mat-cell *matCellDef="let row"
+                    class="has_label_on_mobile clsColumnaLib">
+                    {{row.sCodArticulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sNombreProducto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Árticulo </th>
+                <td data-label='Árticulo: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib">
+                    {{row.sNombreProducto}} </td>
+            </ng-container>
+
+            <!-- Progress Column -->
+            <ng-container matColumnDef="nCantidad">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Cantidad </th>
+                <td data-label='Cantidad: ' mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib">
+                    {{row.nCantidad}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nPrecioUnidad">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Precio Unidad </th>
+                <td data-label=' Precio Unidad: ' mat-cell *matCellDef="let row"
+                    class="has_label_on_mobile clsColumnaLib">
+                    {{row.nPrecioUnidad | number:'1.2-2'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sRutaArchivo">
+                <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label='Imagen: '>
+                    <button mat-icon-button class="fab-secondary" color="accent">
+                        <div *ngIf="row.sRutaArchivo == '' || row.sRutaArchivo == null">
+                            <div class="box">
+                                <img width="40px" height="40px" src="/assets/img/SinImagen.jpg"
+                                    (click)="fnVerImagen(null, '')">
+
+                            </div>
+                        </div>
+                        <div *ngIf="row.sRutaArchivo != '' && row.sRutaArchivo != null">
+                            <div class="box">
+                                <img width="40px" height="40px" [src]="row.sRutaArchivo"
+                                    (click)="fnVerImagen(row.sCodArticulo, row.sRutaArchivo)">
+
+                            </div>
+                        </div>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsDetalle; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsDetalle;">
+            </tr>
+        </table>
+
+    </div>
+</mat-dialog-content>

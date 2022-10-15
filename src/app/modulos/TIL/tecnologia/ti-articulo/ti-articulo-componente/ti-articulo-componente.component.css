@@ -1,0 +1,6 @@
+mat-chip {
+  min-height: auto !important;
+  height: 25px !important;
+  margin: 0 4px !important;
+}
+

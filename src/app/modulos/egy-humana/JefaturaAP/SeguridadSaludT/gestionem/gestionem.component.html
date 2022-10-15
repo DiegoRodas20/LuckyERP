@@ -1,0 +1,313 @@
+<!-- Spinner -->
+<ngx-spinner
+  name="spi_main_gestion_em"
+  [fullScreen]="true"
+  type="ball-clip-rotate-multiple"
+  size="medium"
+>
+  <p style="color: white; padding-top: 50px">Cargando información...</p>
+</ngx-spinner>
+
+<div style="padding-top: 80px; min-height: calc(100% - 123px)">
+  <div class="container-fluid">
+    <div class="card">
+      <h5 class="card-header">Gestión de Examenes Medicos</h5>
+    </div>
+
+    <!-- #region FB -->
+    <div class="fab-container">
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab()">
+        <i
+          class="material-icons"
+          [@fabToggler]="{ value: this.fabButton.fbAnimacion }"
+          >add</i
+        >
+      </button>
+      <div [@speedDialStagger]="this.fabButton.fbOpcionesActivas.length">
+        <button
+          *ngFor="let btn of this.fabButton.fbOpcionesActivas; let ibtn = index"
+          mat-mini-fab
+          class="fab-secondary"
+          color="secondary"
+          (click)="clickFab(ibtn)"
+        >
+          <i
+            class="material-icons"
+            matTooltip="{{ btn.tool }}"
+            matTooltipPosition="left"
+            >{{ btn.icon }}</i
+          >
+        </button>
+      </div>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region BODY-->
+    <div id="body-main" class="card-body" style="padding-bottom: 0px">
+      <div class="icard melevation col-xl-12">
+        <div class="row">
+          <!-- Imagen -->
+          <div class="col-lg-2" style="text-align: center">
+            <img
+              class="imgAvatar"
+              src="../../../../../../assets/img/LuckyAvatar.png"
+              alt=""
+            />
+          </div>
+
+          <!-- Información del personal -->
+          <div class="col-lg-4" style="padding-top: 25px; padding-bottom: 20px">
+            <h4 style="font-size: 20px">
+              {{ this.infoPersonaForm.controls.sNombres.value }}
+            </h4>
+            <h6 style="font-size: 14px; color: rgba(0, 0, 0, 0.54)">
+              {{ this.infoPersonaForm.controls["sTipo"].value }} :
+              {{ this.infoPersonaForm.controls["sDocumento"].value }}
+            </h6>
+          </div>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <!-- Filtro -->
+          <div class="col-lg">
+            <div class="row" style="margin-left: 0px">
+              <h6>Aplicar filtro por :</h6>
+              <hr style="margin-top: 0px; margin-bottom: 10px" />
+            </div>
+
+            <form
+              autocomplete="off"
+              id="fgMain"
+              [formGroup]="filtroPrincipalForm"
+            >
+              <div class="form-row">
+                <!-- Nombres o documento -->
+                <div class="col-lg-6">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Nombres o documento de identidad</mat-label>
+                    <input
+                      type="text"
+                      autocomplete="off"
+                      matInput
+                      formControlName="sNombreDoc"
+                      (input)="filtrarEquipoTrabajoData()"
+                    />
+                    <button
+                      style="outline: none"
+                      mat-button
+                      *ngIf="filtroPrincipalForm.controls['sNombreDoc'].value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="Clear"
+                      (click)="
+                        filtroPrincipalForm.controls['sNombreDoc'].patchValue(
+                          ''
+                        )
+                      "
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+
+                <!-- Planilla -->
+                <div class="col-lg-3">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Planilla</mat-label>
+                    <mat-select
+                      formControlName="sCodPlla"
+                      (selectionChange)="filtrarEquipoTrabajoData()"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option
+                        *ngFor="let item of planillaDataCombo"
+                        [value]="item.sCodPlla"
+                      >
+                        {{ item.sCodPlla }} - {{ item.sDesc }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <!-- Estado -->
+                <div class="col-lg-3">
+                  <mat-form-field style="width: 100%">
+                    <mat-label>Estado</mat-label>
+                    <mat-select
+                      formControlName="nEstado"
+                      (selectionChange)="filtrarEquipoTrabajoData()"
+                    >
+                      <mat-option>--</mat-option>
+                      <mat-option
+                        *ngFor="let item of estadoDataCombo"
+                        [value]="item.nEleCod"
+                      >
+                        {{ item.cEleNam }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- #region Titulo de la tabla -->
+      <div class="row" style="margin-top: 20px">
+        <div class="col-sm">
+          <h6>Equipo de trabajo actual :</h6>
+          <hr style="margin-top: 0px; margin-bottom: 20px" />
+        </div>
+      </div>
+      <!-- #endregion -->
+
+      <!-- #region Tabla Equipo de Trabajo-->
+      <div class="row">
+        <div class="col-lg-7">
+          <div id="dTableMain" class="melevation">
+            <table
+              mat-table
+              [dataSource]="equipoTrabajoDataSource"
+              style="width: 100%"
+            >
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Visualizar</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    matTooltip="Visualizar"
+                    matTooltipPosition="right"
+                    mat-stroked-button
+                    color="accent"
+                    (click)="verDetalle(element)"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- Apellidos y nombres Column -->
+              <ng-container matColumnDef="sNombres">
+                <th mat-header-cell *matHeaderCellDef>Apellidos y nombres</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="m-card-title"
+                  data-label="Apellidos y nombres :"
+                >
+                  <ngb-highlight
+                    [result]="element.sNombres | titlecase"
+                    [term]="filtroPrincipalForm.controls.sNombreDoc.value"
+                  ></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <!-- Planilla Column -->
+              <ng-container matColumnDef="sCodPlla">
+                <th mat-header-cell *matHeaderCellDef>Plla</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Tipo de planilla :"
+                >
+                  {{ element.sCodPlla }}
+                </td>
+              </ng-container>
+
+              <!-- Tipo documento Column -->
+              <ng-container matColumnDef="sTipo">
+                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Tipo de documento :"
+                >
+                  {{ element.sTipo }}
+                </td>
+              </ng-container>
+
+              <!-- Documento Column -->
+              <ng-container matColumnDef="sDocumento">
+                <th mat-header-cell *matHeaderCellDef>Documento</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="N° Documento : "
+                >
+                  <ngb-highlight
+                    [result]="element.sDocumento"
+                    [term]="filtroPrincipalForm.controls.sNombreDoc.value"
+                  ></ngb-highlight>
+                </td>
+              </ng-container>
+
+              <!-- Estado Column  -->
+              <ng-container matColumnDef="cEleNamEstado">
+                <th mat-header-cell *matHeaderCellDef>Estado</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="has_label_on_mobile"
+                  data-label="Estado :"
+                >
+                  {{ element.cEleNamEstado }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell
+                  *matFooterCellDef
+                  [attr.colspan]="equipoTrabajoColumnas.length"
+                >
+                  No se encuentran registros.
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="equipoTrabajoColumnas; sticky: true"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: equipoTrabajoColumnas"
+              ></tr>
+              <mat-footer-row
+                *matFooterRowDef="['noData']"
+                [hidden]="
+                  equipoTrabajoDataSource &&
+                  this.equipoTrabajoDataSource.filteredData.length > 0
+                "
+              ></mat-footer-row>
+            </table>
+          </div>
+          <mat-paginator
+            #pagEquipoTrabajo
+            style="display: contents"
+            [hidePageSize]="false"
+            [pageSize]="4"
+          ></mat-paginator>
+        </div>
+        <div class="col-lg-5 mb-4">
+          <!-- #region CALENDAR-->
+          <mwl-calendar-month-view
+            [viewDate]="calendar.viewDate"
+            [events]="calendar.eventMain"
+            [locale]="calendar.locale"
+            [refresh]="calendar.refresh"
+            [weekStartsOn]="calendar.weekStartsOn"
+            [weekendDays]="calendar.weekendDays"
+            (dayClicked)="dayClicked($event.day)"
+          >
+          </mwl-calendar-month-view>
+          <!-- #endregion -->
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+    <!-- #endregion -->
+  </div>
+</div>

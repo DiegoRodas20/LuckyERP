@@ -1,0 +1,134 @@
+<h1 mat-dialog-title class="clstituloCrtl">{{ciudad}}</h1>
+<div mat-dialog-content style="height: 300px;"> 
+    
+  <div id="listap" class="mat-elevation-z8 example-container-partida"> 
+         <table mat-table [dataSource]="tGestorDS" class="clspartida"> 
+
+              <ng-container matColumnDef="categoria" sticky>
+                   <th mat-header-cell *matHeaderCellDef class="clsColumnapartida"> Categoria </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                    <ng-select  appendTo="body"   [(ngModel)]="element.categoria" [clearable]="false" [disabled]=validacion> 
+                      <ng-option *ngFor="let car of lcboCategoria" [(value)]="car.pId">{{car.pDesc}}</ng-option>
+                    </ng-select> 
+                   </td>
+              </ng-container> 
+
+              <ng-container matColumnDef="canal" sticky>
+                   <th mat-header-cell *matHeaderCellDef class="clsColumnapartida"> Canal </th>
+                   <td mat-cell *matCellDef="let element;index as ii" class='has_label_on_mobile'>
+                    <ng-select  appendTo="body"  [(ngModel)]="element.canal" (change)="fnCanal(arrayCategoria[element.categoria],ii)"
+                    [clearable]="false" [disabled]=validacion >
+                      <ng-option *ngFor="let car of arrayCategoria[element.categoria]" [(value)]="car.pId"
+                      [disabled]="car.estado==1? true:false"
+                      >
+                      {{car.pDesc}}
+                         </ng-option>
+                    </ng-select> 
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="NPer" >
+                   <th mat-header-cell *matHeaderCellDef> N° Persona </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;" >
+                          <input matInput type="number" [disabled]=validacion (keyup)="fnCalPersona(element)"  [(ngModel)]="element.NPer" > 
+                        </mat-form-field> 
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="diasPla">
+                   <th mat-header-cell *matHeaderCellDef>Días Pla </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                    <mat-form-field style="width: 100px;" >
+                      <input matInput type="number" [disabled]=validacion (keyup)="fnCalPersona(element)"  [(ngModel)]="element.diasPla" > 
+                    </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalDias">
+                   <th mat-header-cell *matHeaderCellDef> total días </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;" >
+                          <input matInput type="number"   [disabled]="true" [(ngModel)]="element.totalDias" > 
+                        </mat-form-field>  
+
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="diasCotiz">
+                   <th mat-header-cell *matHeaderCellDef> días cotizados </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;">
+                          <input matInput type="number" [disabled]=validacion (keyup)="fnCalPersona(element)" [(ngModel)]="element.diasCotiz" > 
+                        </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="remunDia">
+                   <th mat-header-cell *matHeaderCellDef> Remun. x Día </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;">
+                          <input matInput type="number"  [disabled]="true" [(ngModel)]="element.remunDia" > 
+                        </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="total">
+                   <th mat-header-cell *matHeaderCellDef> total </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;">
+                          <input matInput type="number" [disabled]="true"  [(ngModel)]="element.total" > 
+                        </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="implem">
+                   <th mat-header-cell *matHeaderCellDef> % implem </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;">
+                          <input matInput type="number" [disabled]=validacion (keyup)="fnCalPersona(element)" [(ngModel)]="element.implem" > 
+                        </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="planilla3">
+                   <th mat-header-cell *matHeaderCellDef> planilla 3 </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                        <mat-form-field style="width: 100px;">
+                          <input matInput type="number"  [disabled]=validacion  [(ngModel)]="element.planilla3" > 
+                        </mat-form-field>  
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalNeto">
+                   <th mat-header-cell *matHeaderCellDef> total Neto </th>
+                   <td mat-cell *matCellDef="let element" class='has_label_on_mobile'> 
+                    <mat-form-field style="width: 100px;">
+                      <input matInput type="number"  [disabled]="true" [(ngModel)]="element.totalNeto" > 
+                    </mat-form-field>   
+                   </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action" sticky>
+                   <!-- <ng-container matColumnDef="action" sticky> -->
+                   <th mat-header-cell *matHeaderCellDef>
+                        <button mat-menu-item (click)="btnNuevoTGestor()" [disabled]=validacion>
+                             <mat-icon color="accent">add</mat-icon>
+                        </button>
+                   </th>
+                   <td mat-cell *matCellDef="let element">  
+                      <button mat-menu-item [disabled]=validacion >
+                        <mat-icon color="accent" (click)="btnElimnarTGestor(element)">delete</mat-icon> 
+                      </button> 
+                   </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="tGestorDC; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: tGestorDC;"></tr>
+         </table> 
+</div>
+</div>
+<div mat-dialog-actions> 
+     <button mat-button color="warn" (click)="onNoClick()">Salir</button>
+     <button mat-button color="primary"  (click)="fnSeleccionar()" [disabled]=validacion>Ok</button>
+</div>

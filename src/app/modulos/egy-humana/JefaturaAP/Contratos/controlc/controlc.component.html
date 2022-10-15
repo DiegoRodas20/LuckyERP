@@ -1,0 +1,266 @@
+<!-- Spinner -->
+<ngx-spinner name="spi_main" [fullScreen]="true" type="ball-clip-rotate-multiple" size="medium">
+    <p style="color: white; padding-top: 50px;">Cargando información...</p>
+</ngx-spinner>
+
+<!-- Div Principal -->
+<div style="padding-top: 80px; min-height: calc(100% - 123px);">
+    <div class="container-fluid">
+        <div class="card">
+            <h5 class="card-header">Control de contratos</h5>
+
+            <!-- Fab -->
+            <div class="fab-container">
+                <button [@tada]="{value: tadaMain}" mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                    <i class="material-icons" [@fabToggler]="{value: tsMain}">add</i>
+                </button>
+                <div [@speedDialStagger]="abMain.length">
+                    <button *ngFor="let btn of abMain; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="clickFab(ibtn)" [disabled]="btn.dis">
+                      <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div id="body-main" class="card-body" style="padding-bottom: 0px;">
+
+                <div class="icard melevation col-xl-12">
+
+                    <div class="row" style="margin-left: 0px;">
+                        <h6>Aplicar filtro por :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 10px;">
+                    </div>
+
+                    <form autocomplete="off" id="fgMain" [formGroup]="fgMain">
+
+                        <div class="form-row">
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Nombres o documento de identidad</mat-label>
+                                    <input type="text" matInput formControlName="sNombres">
+                                    <button style="outline: none;" mat-button *ngIf="getMain.sNombres.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sNombres.patchValue('')">
+                                    <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Planilla</mat-label>
+                                    <mat-select formControlName="sCodPlla">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboPlanilla" [value]="item.sCodPlla">
+                                            {{item.sCodPlla}} - {{item.sDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Ciudad</mat-label>
+                                    <mat-select formControlName="sCiudad">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboCiudad" [value]="item.sDesc">
+                                            {{item.sDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Responsable</mat-label>
+                                    <input type="text" (ngModelChange)="updatedVal($event, 1)" matInput formControlName="sResponsable" [matAutocomplete]="sResponsable" class="titlecase">
+
+                                    <mat-autocomplete #sResponsable="matAutocomplete" [displayWith]="displayResponsable" (optionSelected)="osResponsable($event)">
+                                        <mat-option [ngClass]="{'hide-autocomplete': !saResponsable}" *ngFor="let option of foResponsable | async" [value]="option">
+                                            {{option.sResp | titlecase}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+
+                                    <button style="outline: none;" mat-button *ngIf="getMain.sResponsable.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sResponsable.patchValue('')">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+
+                            <div class="form-group col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Tipo</mat-label>
+                                    <mat-select formControlName="nTipoCC" (valueChange)="ChangeTipoCC($event)">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboTipoCC" [value]="item.nEleCod">
+                                            {{item.cEleNam}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Direccion / Cliente</mat-label>
+                                    <input type="text" (ngModelChange)="updatedVal($event, 2)" matInput formControlName="sOrganizacion" [matAutocomplete]="sOrganizacion" class="titlecase">
+
+                                    <mat-autocomplete #sOrganizacion="matAutocomplete" [displayWith]="displayOrganizacion" (optionSelected)="osOrganizacion($event)">
+                                        <mat-option [ngClass]="{'hide-autocomplete': !saOrganizacion}" *ngFor="let option of foOrganizacion | async" [value]="option">
+                                            {{option.sOrganizacion | titlecase}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+
+                                    <button style="outline: none;" mat-button *ngIf="getMain.sOrganizacion.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sOrganizacion.patchValue('')">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Área / Campaña</mat-label>
+                                    <input type="text" (ngModelChange)="updatedVal($event, 3)" matInput formControlName="sCentroCosto" [matAutocomplete]="sCentroCosto" class="titlecase">
+
+                                    <mat-autocomplete #sCentroCosto="matAutocomplete" [displayWith]="displayCentroCosto" (optionSelected)="osCentroCosto($event)">
+                                        <mat-option [ngClass]="{'hide-autocomplete': !saCentroCosto}" *ngFor="let option of foCentroCosto | async" [value]="option">
+                                            {{option.sCentroCosto | titlecase}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+
+                                    <button style="outline: none;" mat-button *ngIf="getMain.sCentroCosto.value" matSuffix mat-icon-button aria-label="Clear" (click)="getMain.sCentroCosto.patchValue('')">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Estado</mat-label>
+                                    <mat-select formControlName="nEstado">
+                                        <mat-option>--</mat-option>
+                                        <mat-option *ngFor="let item of cboEstado" [value]="item.nEleCod">
+                                            {{item.cEleNam}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm">
+                        <h6>Lista de personal :</h6>
+                        <hr style="margin-top: 0px; margin-bottom: 20px;">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="dTableMain" class="melevation">
+                            <table mat-table [dataSource]="MainDS" style="width: 100%;">
+
+                                <!-- Action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Visualizar </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button matTooltip="Visualizar" matTooltipPosition="right" mat-stroked-button color="accent" (click)="viewDetail(element)">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Apellidos y nombres Column -->
+                                <ng-container matColumnDef="sNombres">
+                                    <th mat-header-cell *matHeaderCellDef> Apellidos y nombres </th>
+                                    <td mat-cell *matCellDef="let element" class='m-card-title' data-label='Apellidos y nombres :'>
+                                        <ngb-highlight [result]="element.sNombres | titlecase" [term]="getMain.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Planilla Column -->
+                                <ng-container matColumnDef="sCodPlla">
+                                    <th mat-header-cell *matHeaderCellDef> Plla </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de planilla :'> {{element.sCodPlla}} </td>
+                                </ng-container>
+
+                                <!-- Tipo documento Column -->
+                                <ng-container matColumnDef="sTipo">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Tipo de documento :'> {{element.sTipo}} </td>
+                                </ng-container>
+
+                                <!-- Documento Column -->
+                                <ng-container matColumnDef="sDocumento">
+                                    <th mat-header-cell *matHeaderCellDef> Documento </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='N° Documento : '>
+                                        <ngb-highlight [result]="element.sDocumento" [term]="getMain.sNombres.value"></ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Fecha ingreso Column -->
+                                <ng-container matColumnDef="dFechIni">
+                                    <th mat-header-cell *matHeaderCellDef> F. Ingreso </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha ingreso :'> {{element.dFechIni | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Fecha cese Column -->
+                                <ng-container matColumnDef="dFechFin">
+                                    <th mat-header-cell *matHeaderCellDef> F. Cese </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Fecha cese :'> {{element.dFechFin | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Inicio Contrato Column -->
+                                <ng-container matColumnDef="dIniCont">
+                                    <th mat-header-cell *matHeaderCellDef> Inicio Contrato </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Inicio contrato :'> {{element.dIniCont | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Término Contrato Column -->
+                                <ng-container matColumnDef="dFinCont">
+                                    <th mat-header-cell *matHeaderCellDef> Término Contrato </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Término contrato :'> {{element.dFinCont | date:"dd/MM/yyyy"}} </td>
+                                </ng-container>
+
+                                <!-- Estado Column -->
+                                <ng-container matColumnDef="sEstado">
+                                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Estado :'> {{ getDescEstado(element.nEstado) }} </td>
+                                </ng-container>
+
+                                <!-- Observacion Column -->
+                                <ng-container matColumnDef="sObservacion">
+                                    <th mat-header-cell *matHeaderCellDef> Observación </th>
+                                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile' data-label='Observación :'> {{ element.sObservacion }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="noData">
+                                    <mat-footer-cell *matFooterCellDef [attr.colspan]="MainDC.length">
+                                        No se encuentran registros.
+                                    </mat-footer-cell>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="MainDC; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: MainDC;"></tr>
+                                <mat-footer-row *matFooterRowDef="['noData']" [hidden]="MainDS && this.MainDS.filteredData.length > 0"></mat-footer-row>
+                            </table>
+                        </div>
+                        <mat-paginator #pagMain style="display: contents;" [hidePageSize]="false" [pageSize]="4"></mat-paginator>
+                    </div>
+                </div>
+
+            </div>
+
+            <mat-progress-bar *ngIf="pbMain" color="accent" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </div>
+</div>

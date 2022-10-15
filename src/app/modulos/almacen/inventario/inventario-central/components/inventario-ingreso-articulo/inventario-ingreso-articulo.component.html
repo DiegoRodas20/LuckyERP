@@ -1,0 +1,210 @@
+<!-- ========================== -->
+<!-- Botones Funcionalidad -->
+<!-- ========================== -->
+
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <!-- Ingreso de Articulos -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="agregarArticulo()">
+            <i class="material-icons" matTooltip="Ingresar Artículo" matTooltipPosition="left">save</i>
+        </button>
+        <!-- Salir -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+
+<!-- ========================== -->
+<!-- End Botones Funcionalidad -->
+<!-- ========================== -->
+
+
+<!-- <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Agregar Artículo a Ubicación</mat-card>
+</div> -->
+
+<h3 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">Agregar Artículo a
+    Ubicación
+</h3>
+
+
+
+<div mat-dialog-content>
+    <div>
+        <mat-label class="titulo-sub">Ubicación Actual: <span class="subtitulo">{{ ubicacionActual }}</span></mat-label>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- ========================== -->
+            <!-- Formulario -->
+            <!-- ========================== -->
+            <form autocomplete="off" [formGroup]="formularioIngreso">
+                <!-- <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <mat-form-field>
+                        <mat-label>Ubicación Actual</mat-label>
+                        <input matInput formControlName="ubicacionActual" readonly>
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <mat-form-field>
+                            <mat-label>Empresa</mat-label>
+                            <mat-select formControlName="empresa" (selectionChange)="cambioEmpresa($event.value)">
+                                <mat-option *ngFor="let item of listaEmpresa" [value]="item.nIdEmpresa"> {{
+                                    item.sDescripcion }} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <small *ngIf="empresaNoValido" class="text-danger"> El artículo no existe</small>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <mat-form-field>
+                            <mat-label>Almacén</mat-label>
+                            <mat-select formControlName="almacen" (selectionChange)="cambioAlmacen($event.value)">
+                                <mat-option *ngFor="let item of listaAlmacen" [value]="item.nIdAlmacen"> {{
+                                    item.sDescripcion }} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <small *ngIf="almacenNoValido" class="text-danger"> El almacén no existe</small>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <ng-select appendTo="body" [clearable]="false" placeholder="Presupuesto"
+                            formControlName="presupuesto">
+                            <ng-option *ngFor="let item of listaPresupuesto" [value]="item.nIdPresupuesto">
+                                {{item.sDescripcion}}
+                            </ng-option>
+                        </ng-select>
+                        <small *ngIf="validarPresupuesto" class="text-danger"> El presupuesto no existe</small>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12" style="padding-top: 13px;">
+                        <mat-form-field>
+                            <mat-label>Cliente</mat-label>
+                            <input matInput formControlName="cliente" readonly style="color: rgb(236, 0, 140);">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div>
+                            <ng-select appendTo="body" [clearable]="false" placeholder="Artículo"
+                                formControlName="codigoArticulo">
+                                <ng-option *ngFor="let item of listaArticulo" [value]="item.nIdArticulo">
+                                    {{item.sCodArticulo}} - {{item.sDescripcion}}
+                                </ng-option>
+                            </ng-select>
+                            <small *ngIf="validarArticulo" class="text-danger"> El artículo no existe</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <mat-form-field>
+                                    <mat-label>Fecha Ingreso</mat-label>
+                                    <input matInput [matDatepicker]="dp" formControlName="fechaIngreso"
+                                        (dateChange)="changeIngreso('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp disabled="false"></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <mat-form-field>
+                                    <mat-label>Fecha Vencimiento</mat-label>
+                                    <input matInput [matDatepicker]="dp2" formControlName="fechaVencimiento"
+                                        (dateChange)="changeVencimiento('change',$event)">
+                                    <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp2></mat-datepicker>
+                                </mat-form-field>
+                                <small *ngIf="fechaVencimientoNoValido" class="text-danger"> La fecha no puede estar
+                                    vacía</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <mat-form-field>
+                                    <mat-label>Lote</mat-label>
+                                    <input matInput formControlName="sLoteArticulo" readonly>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                <mat-form-field>
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput formControlName="cantidad" type="number">
+                                </mat-form-field>
+                                <small *ngIf="cantidadNoValido" class="text-danger"> La cantidad tiene que ser mayor a
+                                    0</small>
+                            </div>
+
+                        </div>
+                        <div class="row ">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 ">
+                                <mat-form-field>
+                                    <mat-label>Observacion</mat-label>
+                                    <input matInput formControlName="observacion">
+                                </mat-form-field>
+                                <mat-error *ngIf="observacionError">{{ observacionError }}</mat-error>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12 center-image">
+                        <div *ngIf="imagen === ''" class="caja">
+                            <div class="box">
+                                <img src="../../../../../assets/img/SinImagen.jpg">
+                            </div>
+                        </div>
+                        <div *ngIf="imagen !== ''" class="caja">
+                            <div class="box">
+                                <img [src]="imagen">
+                            </div>
+                        </div>
+
+                        <!-- <div style="background-color: brown;width: 200px;height: 200px;">
+
+                    </div> -->
+                        <p>Código de Barras: {{codigoBarra}}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+
+
+
+
+                </div>
+
+                <div class="row">
+
+
+                </div>
+            </form>
+            <!-- ========================== -->
+            <!-- End Formulario -->
+            <!-- ========================== -->
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <pre>
+    Estado del formulario {{formularioIngreso.valid}}
+  <br />
+    Status: {{formularioIngreso.status}}
+  </pre>
+
+<pre>
+  {{ formularioIngreso.value | json }}
+  </pre> -->

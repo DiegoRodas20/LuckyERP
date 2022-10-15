@@ -1,0 +1,149 @@
+.container_tabla{
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}  
+  
+  .example-container {
+    height: 450px;
+    width: 100%;
+    overflow: auto;
+  }
+  .example-container table {
+    width: 1000px;
+  } 
+
+  table th{ 
+    background-color: #334D6E;  
+    color: white; 
+  } 
+  .botonTraerCampania{
+    background-color: #334D6E;  
+    color: white; 
+  }
+  .example-container-sub {
+    height: 150px;
+    width: 100%;
+    overflow: auto;
+  }
+  mat-form-field{ 
+    width: 100%; 
+  } 
+
+  :host /deep/  form .ng-invalid label{
+    color: #f44336; 
+  }
+  :host /deep/  .mat-form-field-disabled input {
+    color: black;
+     BACKGROUND-COLOR: #d0d3d6; 
+  } 
+  :host /deep/  .mat-form-field-disabled .mat-select-disabled .mat-select-value{ 
+    color: black;
+     BACKGROUND-COLOR: #d0d3d6; 
+  }
+  
+  :host /deep/  .mat-form-field-disabled textarea{  
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+
+/* .titulo {
+  background-color: #334d6e;
+  color: white;
+  text-align: center;
+  min-width: 100%;
+  margin: 0px;
+} */
+
+.titulo {
+  background-color: #334d6e;
+  color: white;
+  text-align: center;  
+  margin-top: 10px;
+  min-width: 100%;
+  margin: 0px;
+}
+
+.cuadroTotales{
+  margin-left:378px;  
+  margin-top: 10px;
+}
+.textoDeTotales{
+  color: red; 
+  font-style: italic;
+  font-weight: bold;
+  font-size: small;
+  padding: 10px
+}
+
+.botonesFinales{  
+  float: right;
+  margin-top: 9px;
+}
+.textoCenterNumeros{
+  text-align: center;
+}
+
+
+
+
+mat-form-field{ 
+  width: 100%; 
+} 
+.fab-container {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-container>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fab-container>div>button {
+  margin-top: 10px;
+  outline: none;
+}
+
+
+
+:host /deep/ table thead{ 
+  background-color: #334D6E;   
+} 
+
+
+
+.example-container-partida{
+  height: 300px;
+  width: 100%;
+  overflow: auto;
+}
+
+
+/* Control autoComplete */
+.hide-autocomplete {
+  display: none;
+}
+
+.clsprincipal {
+  padding: 60px 5px 0px 5px;
+}
+
+mat-header-row {
+  background-color: rgb(51, 77, 110); 
+  height: 36px;
+  
+  }
+  
+  .mat-header-row .mat-header-cell {
+  color: white;
+  height: 36px;
+  }

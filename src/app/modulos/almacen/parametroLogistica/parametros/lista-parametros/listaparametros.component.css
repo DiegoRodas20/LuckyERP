@@ -1,0 +1,40 @@
+
+.title-card {
+  background-color: #334D6E;
+  color: white;
+  font-size: 25px;
+}
+
+/* Estilos del texto tabs*/
+:host ::ng-deep .mat-tab-label-active {
+  opacity: 1 !important;
+  background-color: #334d6e;
+}
+
+:host ::ng-deep .mat-tab-label .mat-tab-label-content {
+  font-size: 18px !important;
+  font-weight:normal !important;
+  color: #334d6e;
+}
+
+:host ::ng-deep .mat-tab-label-active .mat-tab-label-content {
+  color: white;
+}
+
+:host ::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}
+
+.mat-tab-label-container {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  z-index: 1;
+  overflow-x: scroll !important;
+}
+
+@media screen and (max-width: 450px) {
+  :host ::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: 15px !important;
+  }
+}

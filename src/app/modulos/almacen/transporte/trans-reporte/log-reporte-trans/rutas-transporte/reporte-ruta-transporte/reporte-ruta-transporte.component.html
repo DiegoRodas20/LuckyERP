@@ -1,0 +1,84 @@
+<div id="print-reporte-ruta">
+  <!-- <div style="display: grid; grid-template-columns: repeat(3, 2fr); grid-gap: 15px">
+    <div style="grid-column: 1; grid-row: 1; font-size: x-small">
+      <img src="../../../../../../../../assets/img/{{ this.idEmp }}.png" width="160px" height="70px" />
+    </div>
+    <div style="grid-column: 2; grid-row: 1; font-size: small">
+      <h1 style="font-weight: bold">
+        <u>REPORTE DE RUTAS POR TRANSPORTISTA</u>
+      </h1>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-md-12 center">
+      <h2> <u>REPORTE DE RUTAS POR TRANSPORTISTA</u> </h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 alto_mid">
+      <strong>NRO TRANSP:&nbsp;</strong> <span>{{ cabecera?.sCodTransporte }}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row boder_black alto_mid">
+        <div class="col-md-2 align_center"> <strong>AÑO:&nbsp;</strong> {{ cabecera?.sAnio }} </div>
+        <div class="col-md-3 align_center"> <strong>MES:&nbsp;</strong> {{ cabecera?.sMes }} </div>
+        <div class="col-md-3 align_center"> <strong>NRO RUTA:&nbsp;</strong> {{ cabecera?.sNroRuta }} </div>
+        <div class="col-md-4 align_center"> <strong>FECHA RUTA:&nbsp;</strong> {{ cabecera?.dFechaRuta }} </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 alto_min"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12"> <strong>TRANSPORTISTA:&nbsp;</strong> {{ cabecera?.sTransportista }} </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12"> <strong>TRANSPORTE:&nbsp;</strong> {{ cabecera?.sTransporte }} </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="row alto_mid">
+        <div class="col-md-1"></div>
+        <div class="col-md-6 align_center"> <strong>NUM PTOS:</strong> </div>
+        <div class="col-md-4 right"> {{ cabecera?.nCantNotas }} </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6"> <strong>TOTAL UNIDADES:</strong> </div>
+        <div class="col-md-4 right"> {{ cabecera?.nTotalUnidades }} </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6"> <strong>TOTAL VOLUMEN:</strong> </div>
+        <div class="col-md-4 right"> {{ cabecera?.nTotalVolumen | number :'1.6-6'}} </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6"> <strong>TOTAL PESO:</strong> </div>
+        <div class="col-md-4 right"> {{ cabecera?.nTotalPeso | number :'1.2-2'}} </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <table>
+    <tr>
+      <th *ngFor="let col of cols">
+        {{col.header}}
+      </th>
+    </tr>
+    <tr *ngFor="let row of detalle">
+      <td *ngFor="let col of cols" [style.textAlign]="col.align" [ngSwitch]="col.type" [style.width]="col.porc+'%'">
+        <p *ngSwitchCase="'decimal2'">
+          {{row[col.field] | number :'1.2-2'}}
+        </p>
+        <p *ngSwitchCase="'decimal6'">
+          {{row[col.field] | number :'1.6-6'}}
+        </p>
+        <p *ngSwitchDefault>
+          {{row[col.field]}}
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,21 @@
+<div class="fab-container">
+	<button mat-mini-fab class="fab-secondary" color="white" (click)="fnBuscar()">
+		<i class="material-icons" matTooltip="Buscar" matTooltipPosition="left">search</i>
+	</button>
+	<button mat-mini-fab class="fab-secondary" color="white" (click)="fnClean()">
+		<i class="material-icons" matTooltip="Limpiar" matTooltipPosition="left">autorenew</i>
+	</button>
+</div>
+<div style="padding-top: 80px;" class="col-md-10 offset-md-1">
+	<h3 class="card-header center-text-card" style="text-align: center;">Actualización de los Gastos Congelados</h3>
+	<div class="row"><br /></div>
+	<!-- <mat-card class="mb-3 title-card">Actualización de los Gastos Congelados</mat-card> -->
+	<app-ajuste-congelado-filters 
+		[empresas]="empresas" 
+		[presupuestos]="presupuestos">
+	</app-ajuste-congelado-filters>
+	<app-ajuste-congelado-table
+		[listado]="listado"
+		(sendIdGasto)="fnObtener($event)">
+	</app-ajuste-congelado-table>
+</div>

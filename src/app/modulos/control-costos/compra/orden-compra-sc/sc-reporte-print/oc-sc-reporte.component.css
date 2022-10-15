@@ -1,0 +1,40 @@
+.filas{
+font-size: 10px;
+font-weight: normal;
+border: 1px solid black;
+padding: 4px;
+}
+
+.detalle{
+font-size: 12px;
+font-weight: bold;    
+padding: 4px;
+background-color: lightslategray;
+}
+
+.detalleItems{
+font-size: 12px;                
+padding: 1px;
+text-align: center;
+border-bottom: 1px;
+}
+
+.cabeceraDetalle {
+border-collapse: collapse;
+width: 100%;
+}
+
+ .cabeceraDetalle td, th {    
+    border: 1px solid #566573;
+  }
+      
+.espacio{
+    height: 6px;
+}
+  .espacio-minino{
+    height: 1px;
+  }
+  .fuente{
+    font-size: small;
+  }
+  

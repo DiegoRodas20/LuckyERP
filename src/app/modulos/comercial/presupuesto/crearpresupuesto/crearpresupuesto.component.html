@@ -1,0 +1,430 @@
+<div class="clspantallaAjuste">
+    <div style="margin-bottom: 20px;" class="clstituloCrtl"> 
+        <h3>{{titulo}} {{nomPresupuesto}}</h3>
+      </div>
+    <form [formGroup]="PrimeraFormGroup">
+        <div class="row">
+            <div class="col-sm-3"> 
+                <mat-form-field [hidden]=true>
+                    <mat-label>Nro Presupuesto</mat-label>
+                    <input matInput type="text" formControlName="IdPre"> 
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Nro Presupuesto</mat-label>
+                    <input matInput type="text" formControlName="NumPresupuesto"> 
+                </mat-form-field>
+            </div> 
+            <div class="col-sm-6"> 
+                <mat-form-field>
+                    <mat-label>Descripción Presupuesto</mat-label>
+                    <input matInput type="text" formControlName="DescPresupuesto"> 
+                </mat-form-field>
+            </div> 
+            <div class="col-sm-3"> 
+                <mat-form-field>
+                    <mat-label>Estado de Presupuesto</mat-label>
+                    <input matInput type="text" formControlName="EstPresupuesto"> 
+                </mat-form-field>
+            </div> 
+        </div>
+    </form>
+    <div class="fab-container" *ngIf=divCrePre>
+        <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+            <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+        </button>
+        <div [@speedDialStagger]="abLista.length"> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnSalir()">
+                <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+            </button> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnDescargar()">
+                <i class="material-icons" matTooltip="Descarga" matTooltipPosition="left">grid_on</i>
+            </button> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAction(0,4)" *ngIf=BtnNuevo>
+                <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+            </button>  
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnArmarPre()" [disabled]="BtnArmar">
+                <i class="material-icons" matTooltip="Armado {{nomPresupuesto}}" matTooltipPosition="left">article</i>
+            </button> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAction(1,4)" *ngIf=BtnModificar>
+                <i class="material-icons" matTooltip="Actualizar" matTooltipPosition="left">save</i>
+            </button> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnChange(2)" *ngIf=BtnCreacion>
+                <i class="material-icons" matTooltip="Atrás" matTooltipPosition="left">cancel</i> 
+            </button>   
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnAprobacion(13)" *ngIf=BtnCreacion >
+                <i class="material-icons" matTooltip="Comentario Devolución" matTooltipPosition="left">comment</i> 
+            </button>  
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnVerEstado()" >
+                <i class="material-icons" matTooltip="Histórico de Estado" matTooltipPosition="left">notes
+                </i> 
+            </button>
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnCambioEstado()" *ngIf=BtnMarca  >
+                <i class="material-icons" matTooltip="Marcar" matTooltipPosition="left">traffic
+                </i> 
+            </button> 
+            <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="fnVerfactura()" *ngIf=BtnFactura>
+                <i class="material-icons" matTooltip="Ver Factura" matTooltipPosition="left">trending_up
+                </i> 
+            </button>  
+             
+        </div>
+      </div>
+    <form [formGroup]="PresupuestoFormGroup">
+        <div class="row">
+            <div class="col-sm-2">
+                <mat-form-field>
+                  <mat-label>Fecha Inicio</mat-label>
+                  <input matInput [matDatepicker]="frIni" (dateInput)="fnfecha(0,$event.value)" readonly formControlName="FechaInicio"  >
+                  <mat-datepicker-toggle matSuffix [for]="frIni"></mat-datepicker-toggle>
+                  <mat-datepicker #frIni></mat-datepicker>
+                </mat-form-field> 
+            </div>
+            <div class="col-sm-2">
+                <mat-form-field>
+                  <mat-label>Fecha Fin</mat-label>
+                  <input matInput [matDatepicker]="frFin" (dateInput)="fnfecha(1,$event.value)" readonly formControlName="FechaFin"  >
+                  <mat-datepicker-toggle matSuffix [for]="frFin"></mat-datepicker-toggle>
+                  <mat-datepicker #frFin></mat-datepicker>
+                </mat-form-field> 
+            </div>
+            <div class="col-sm-4"> 
+                <mat-form-field>
+                    <mat-label>Nuevo/Continuación</mat-label>
+                    <input matInput type="text" formControlName="continuacion"> 
+                </mat-form-field>
+            </div>
+            <div class="col-sm-4"> 
+                <mat-form-field [hidden]=true>
+                    <mat-label>Nro Presupuesto</mat-label>
+                    <input matInput type="text" formControlName="idStatusPre"> 
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Cotización - Presupuesto</mat-label>
+                    <mat-select formControlName="StatusPre">
+                        <mat-option *ngFor="let vMatOpcion of lCboTipo"  [disabled]="vMatOpcion.bEstado"  [value]="vMatOpcion.nIdEle" >  
+                            {{vMatOpcion.sNombre}} 
+                        </mat-option>  
+                    </mat-select>
+                </mat-form-field> 
+            </div>
+        </div>
+        <div class="row"> 
+            <div class="col-sm-4">     
+                <ng-select placeholder="Cliente" (change)="getPosts(1,1)"  formControlName="NroCliente" [clearable]="false" > 
+                    <ng-option *ngFor="let car of lCboCliente" [disabled]="car.pEstado==0? true:false"  [(value)]="car.pId">{{car.pNombre}}</ng-option>
+                </ng-select> 
+            </div> 
+            <div class="col-sm-4" >  
+                <mat-form-field>
+                    <mat-label>Estado de Cotización</mat-label>
+                    <mat-select formControlName="StatusCoti">
+                        <mat-option *ngFor="let vMatOpcion of lCboCotizacion"   [disabled]="vMatOpcion.bEstado"  [value]="vMatOpcion.nIdEle" >  
+                            {{vMatOpcion.sNombre}} 
+                        </mat-option>  
+                    </mat-select>
+                </mat-form-field>  
+            </div> 
+            <div class="col-sm-2" >  
+                <mat-form-field>
+                    <mat-label>Aprob. Pptos</mat-label>
+                    <input matInput type="text" formControlName="Aprobacion"> 
+                </mat-form-field> 
+            </div>  
+            <div class="col-sm-2" >  
+                <mat-form-field>
+                    <mat-label>Presupuesto easywin</mat-label>
+                    <input matInput type="text" formControlName="nroeasywin" (change)="getEasywin()" autocomplete="off">  
+                </mat-form-field> 
+            </div>  
+        </div>
+    </form> 
+    <mat-card [ngClass]="divCrePre ? 'clsShow' : 'clsHide'">  
+        <mat-card-header style="height: 20px;" class="clstituloCrtl">
+        </mat-card-header> 
+        <mat-card-content>
+            <mat-horizontal-stepper linear #stepper>
+                <mat-step [stepControl]="DetalleFormGroup">  
+                    <form [formGroup]="DetalleFormGroup">
+                        <ng-template matStepLabel>Detalle</ng-template> 
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                <mat-label>Canal</mat-label>
+                                <mat-select formControlName="Canal" #Icanal (selectionChange)="fnGetSubCanal(Icanal.value)">
+                                    <mat-option *ngFor="let vMatOpcion of lCboCanal"   [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                        {{vMatOpcion.sNombre}} 
+                                    </mat-option> 
+                                </mat-select>
+                                </mat-form-field> 
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                <mat-label>Sub Canal</mat-label>
+                                <mat-select formControlName="SubCanal">
+                                    <mat-option *ngFor="let vMatOpcion of lCboSubCanal"   [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                        {{vMatOpcion.sNombre}} 
+                                    </mat-option> 
+                                </mat-select>
+                                </mat-form-field> 
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                <mat-label>Ordenante</mat-label>
+                                <mat-select formControlName="Ordenante">
+                                    <mat-option *ngFor="let vMatOpcion of lCboOrdenante"   [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                        {{vMatOpcion.sNombre}} 
+                                    </mat-option> 
+                                </mat-select>
+                                </mat-form-field> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                <mat-label>Servicio</mat-label>
+                                <mat-select formControlName="Servicio">
+                                    <mat-option *ngFor="let vMatOpcion of lCboServicio"   [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                        {{vMatOpcion.sNombre}} 
+                                    </mat-option> 
+                                </mat-select>
+                                </mat-form-field> 
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                    <mat-label>Canal Cliente</mat-label>
+                                    <mat-select formControlName="CanalCli">
+                                        <mat-option *ngFor="let vMatOpcion of lCboCanalCliente"  [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                        {{vMatOpcion.sNombre}} 
+                                        </mat-option> 
+                                    </mat-select>
+                                </mat-form-field>  
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                    <mat-label>Moneda</mat-label>
+                                    <mat-select formControlName="Modena">
+                                        <mat-option *ngFor="let vMatOpcion of lCboModena"  [disabled]="vMatOpcion.bEstado" [value]="vMatOpcion.nIdEle" >  
+                                            {{vMatOpcion.sNombre}} 
+                                        </mat-option> 
+                                    </mat-select>
+                                </mat-form-field> 
+                            </div>
+                            <div class="col-sm-4"> 
+                                <ng-select placeholder="Marca"  appendTo="body" formControlName="Marca" [clearable]="false" > 
+                                    <ng-option *ngFor="let car of lCboMarca" [disabled]="car.bEstado" [(value)]="car.nIdEle" >  
+                                        {{car.sNombre}} 
+                                    </ng-option>
+                                </ng-select>  
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field>
+                                    <mat-label>Contacto</mat-label>
+                                    <input matInput type="text" formControlName="Contacto"> 
+                                </mat-form-field>
+                            </div>
+                        </div> 
+                    </form>
+                </mat-step>  
+                <mat-step [stepControl]="DirectorFormGroup"> 
+                    <form [formGroup]="DirectorFormGroup">
+                        <ng-template matStepLabel>Asignación de Directores, Ejecutivos y Gerente</ng-template>
+                        <div class="row">
+                            <div class="col-sm-4"> 
+                                <div class="col-sm-12" style="height: 55px;">  
+                                    <ng-select placeholder="Dir. General" appendTo="body"  formControlName="NroDirGeneral" [clearable]="false" > 
+                                        <ng-option *ngFor="let car of lCboPersonaDirGen" [(value)]="car.pId">{{car.pNombre}}</ng-option>
+                                    </ng-select>  
+                                </div>
+                                <div class="col-sm-12" style="height: 55px;">  
+                                    <ng-select placeholder="Dir. Cuentas"  appendTo="body"  formControlName="NroDirCuentas" [clearable]="false" >  
+                                        <ng-option *ngFor="let car of lCboPersonaDirCue" [(value)]="car.pId">{{car.pNombre}}</ng-option>
+                                    </ng-select>  
+                                </div>
+                                <div class="col-sm-12" style="height: 55px;">  
+                                    <ng-select placeholder="Ger. Cuentas"  appendTo="body"  formControlName="NroGerCuentas" [clearable]="false" > 
+                                        <ng-option *ngFor="let car of lCboPersonaGerCue" [(value)]="car.pId">{{car.pNombre}}</ng-option>
+                                    </ng-select>   
+                                </div>
+                            </div>    
+                            <div class="col-sm-8">   
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <section class="example-section" >
+                                            <mat-checkbox class="example-margin" [disabled]="true" [checked]="true" >Ejecutivo 1</mat-checkbox>
+                                        </section> 
+                                    </div>
+                                    <div class="col-sm-7">  
+                                        <ng-select placeholder="Ejecutivo 1" appendTo="body" formControlName="NroEjecUno" [clearable]="false" (change)=fnDisableEjecutivo()> 
+                                            <ng-option *ngFor="let car of lCboPersonaEje" [(value)]="car.pId"
+                                            [disabled]="car.pEstado==0? true:false" 
+                                            >{{car.pNombre}}</ng-option>
+                                        </ng-select>    
+                                    </div>
+                                    <div class="col-sm-2" > 
+                                        <mat-form-field >
+                                            <mat-label>%</mat-label>
+                                            <input matInput type="number" min="0" max="100"  formControlName="ProEjecUno"> 
+                                        </mat-form-field>
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <section class="example-section" >
+                                            <mat-checkbox class="example-margin" [disabled]=divValidacion [checked]="chkSeg" (change)="setAll($event.checked,0)">Ejecutivo 2</mat-checkbox>
+                                        </section> 
+                                    </div>
+                                    <div class="col-sm-7"> 
+                                        <ng-select placeholder="Ejecutivo 2" appendTo="body"  formControlName="NroEjecdos" [clearable]="false" (change)=fnDisableEjecutivo()>  
+                                            <ng-option *ngFor="let car of lCboPersonaEje" [(value)]="car.pId"
+                                            [disabled]="car.pEstado==0? true:false"
+                                            >{{car.pNombre}}</ng-option>
+                                        </ng-select>    
+                                    </div>
+                                    <div class="col-sm-2"> 
+                                        <mat-form-field>
+                                            <mat-label>%</mat-label>
+                                            <input matInput type="number" min="0" max="100"  formControlName="ProEjecdos"> 
+                                        </mat-form-field>
+                                    </div> 
+                                </div>  
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <section class="example-section" >
+                                            <mat-checkbox class="example-margin" [disabled]=divValidacion [checked]="chkTer" (change)="setAll($event.checked,1)">Ejecutivo 3</mat-checkbox>
+                                        </section> 
+                                    </div>
+                                    <div class="col-sm-7"> 
+                                        <ng-select placeholder="Ejecutivo 3"  appendTo="body"  formControlName="NroEjecTres" [clearable]="false" (change)=fnDisableEjecutivo()> 
+                                            <ng-option *ngFor="let car of lCboPersonaEje" [(value)]="car.pId"
+                                            [disabled]="car.pEstado==0? true:false"
+                                            >{{car.pNombre}}</ng-option>
+                                        </ng-select>      
+                                    </div>
+                                    <div class="col-sm-2"> 
+                                        <mat-form-field>
+                                            <mat-label>%</mat-label>
+                                            <input matInput type="number" min="0" max="100"  formControlName="ProEjecTres"> 
+                                        </mat-form-field>
+                                    </div> 
+                                </div> 
+                            </div>  
+                        </div> 
+                        
+                    </form>
+                </mat-step>   
+                <mat-step [stepControl]="GestionFormGroup" >
+                    <ng-template matStepLabel>Ciudades y Equipos</ng-template> 
+                    <div class="row">
+                        <div class="col-sm-5"> 
+                            <div class="example-container-sub-min mat-elevation-z8  table-striped"> 
+                                <table mat-table [dataSource]="dataSourceSuc"  matSort 
+                                    #TableSucSort="matSort"  > 
+                                    <ng-container matColumnDef="ojo" >
+                                        <th mat-header-cell *matHeaderCellDef >  </th> 
+                                        <td mat-cell *matCellDef="let element;let i = index;" class="action-link">   
+                                            <button mat-menu-item (click)="btnEliminarTSucursal(i,element)" [disabled]=divValidacion>
+                                                 <mat-icon color="accent">delete</mat-icon> 
+                                            </button> 
+                                      </td>
+                                      </ng-container>
+
+                                    <ng-container matColumnDef="pNombre" >
+                                        <th mat-header-cell *matHeaderCellDef class="clsNombre"> Sucursal </th> 
+                                        <td mat-cell *matCellDef="let element;let i = index;"> 
+                                            <ng-select  appendTo="body" appendTo="body" [clearable]="false"  [disabled]=divValidacion 
+                                             [(ngModel)]="element.pId" (change)="changeEliminarTSucursal(i,element)">
+                                                <ng-option *ngFor="let car of lCboSucursal" [(value)]="car.pId"
+                                                [disabled]="car.pEstado==0? true:false"
+                                                >
+                                                    {{car.pCod}} - {{car.pNombre}}
+                                                </ng-option>
+                                            </ng-select> 
+                                        </td>
+                                      </ng-container>
+
+                                    <!-- Action Column -->
+                                    <ng-container matColumnDef="pEstado" >
+                                        <th mat-header-cell *matHeaderCellDef  > 
+                                          <button mat-icon-button color="accent" type="button" title="new item" [disabled]=divValidacion (click)="btnAgregarTSucursal()"> 
+                                            <mat-icon>add</mat-icon>
+                                          </button> 
+                                        </th>
+                                        <td mat-cell *matCellDef="let element;let i = index;" class="action-link">  
+                                            <button mat-menu-item (click)="fnController(1,element.pId)">
+                                                 <mat-icon color="accent">touch_app</mat-icon>  
+                                            </button>  
+                                        </td>
+                                      
+                                    </ng-container>
+                                
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsSuc; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsSuc;">
+                                </table>
+                            </div>   
+                        </div>
+                        <div class="col-sm-7"> 
+                            <div class="example-container-sub-min mat-elevation-z8  table-striped"> 
+                                <table mat-table [dataSource]="dataSourceEquipo"  matSort 
+                                    #TableEquipoSort="matSort"  >
+
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="pSucursal" >
+                                        <th mat-header-cell *matHeaderCellDef  class="clsCodigoP"> Sucursal </th>
+                                        <td mat-cell *matCellDef="let element" > {{element.pSucursal}} </td>
+                                      </ng-container> 
+                                      
+                                    <ng-container matColumnDef="pNombre" >
+                                        <th mat-header-cell *matHeaderCellDef class="clsNombrep"> Personal </th>
+                                        <td mat-cell *matCellDef="let element;let i = index;"> 
+                                            <ng-select  appendTo="body" appendTo="body" [clearable]="false" [disabled]=divValidacion 
+                                             [(ngModel)]="element.pId" (change)="fnDisableSucursal()">
+                                                <ng-option *ngFor="let car of lCboPersona" [(value)]="car.pId"  [disabled]="car.pEstado==0? true:false"
+                                                >
+                                                    {{car.pNombre}}
+                                                </ng-option>
+                                            </ng-select>  
+                                        </td>
+                                      </ng-container> 
+                                      
+                                    <ng-container matColumnDef="pEstado" >
+                                        <th mat-header-cell *matHeaderCellDef  class="clsCodigoP"> Sueldo </th>
+                                        <td mat-cell *matCellDef="let element" > 
+                                            <mat-checkbox
+                                            required
+                                            [disabled]=divValidacion
+                                            [checked]="true" 
+                                            [(ngModel)]="element.pEstado"
+                                            aria-label="First checkbox">  
+                                            </mat-checkbox>
+                                        </td>
+
+                                    </ng-container >
+                                    <!-- Action Column -->
+                                    <ng-container matColumnDef="pCod" >
+                                      <th mat-header-cell *matHeaderCellDef  > 
+                                          <button mat-icon-button color="accent"    (click)="openPersonal()" [disabled]=divValidacion> 
+                                            <mat-icon>add</mat-icon>
+                                          </button> 
+                                          </th>
+                                      <td mat-cell *matCellDef="let element;let i = index;" class="action-link">  
+                                        <button mat-icon-button color="accent"  [disabled]=divValidacion (click)="deleteRowDataPer(i,element)"> 
+                                            <mat-icon>delete</mat-icon>
+                                        </button>  
+                                      </td>
+                                    </ng-container>
+                                
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsEquipo; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsEquipo;">
+                                </table>
+                            </div>   
+                        </div>
+                    </div>
+                </mat-step> 
+            </mat-horizontal-stepper> 
+        </mat-card-content> 
+    </mat-card> 
+    <app-detpartidapre (enviar)="recibirMensaje($event)" [pDetPartida]="vDetPartida" *ngIf=divCrePrePartida></app-detpartidapre> 
+     
+</div> 

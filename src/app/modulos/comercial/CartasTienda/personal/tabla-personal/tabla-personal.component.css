@@ -1,0 +1,42 @@
+.example-full-width {
+  width: 100%;
+}
+
+.example-container {
+  height: 300px;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 120%;
+}
+
+th,
+td {
+  padding-left: 8px;
+  text-align: center;
+}
+
+.mat-table-sticky:first-child {
+  border-right: 1px solid #e0e0e0;
+  text-align: center;
+  padding: 0px;
+}
+
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+th.mat-header-cell {
+  text-align: center;
+}
+
+td:last-child {
+  text-align: center;
+}
+th:last-child {
+  width: 125px;
+  text-align: center;
+}

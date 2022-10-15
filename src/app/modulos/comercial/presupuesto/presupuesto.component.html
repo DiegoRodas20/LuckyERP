@@ -1,0 +1,94 @@
+<div class="clsprincipal">  
+    <div class="clspantallaAjuste" [ngClass]="divList ? 'clsShow' : 'clsHide'"> 
+        <div class="clstituloCrtl"> 
+          <h3>Presupuesto</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+              <mat-form-field>
+                <mat-label>Filtro</mat-label>
+                <input matInput (keyup)="applyFilter($event.target.value)"  [formControl]="txtControl" >
+              </mat-form-field>
+            </div> 
+            <div class="fab-container" *ngIf=BtnCreacion>
+              <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                  <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+              </button>
+              <div [@speedDialStagger]="abLista.length">
+                  <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" (click)="fnActionButton(btn)">
+                    <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+                  </button>
+              </div>
+            </div> 
+        </div> 
+        <div class="example-container mat-elevation-z8 clsTablePri">
+            <table mat-table [dataSource]="dataSourcePre" matSort 
+            #TablePreSort="matSort"
+            >
+      
+            <ng-container matColumnDef="pnIdCC" sticky>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Opción</th>
+                <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> 
+                  <button mat-stroked-button color="accent" (click)="fnDatos(row.pnIdCC)"><mat-icon> create</mat-icon></button> </td>
+              </ng-container>
+              
+              <ng-container matColumnDef="pCodCC">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header  class="clsColumnaLib"> Nro. de Ppto</th>
+                <td mat-cell *matCellDef="let row"  class="clsColumnaLib"> {{row.pCodCC}} </td>
+              </ng-container> 
+      
+              <!-- Progress Column -->
+              <ng-container matColumnDef="pDescCC">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Nombre del Ppto</th>
+                <td mat-cell *matCellDef="let row"> {{row.pDescCC}} </td>
+              </ng-container> 
+      
+              <ng-container matColumnDef="pdFecIni">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F.Inicio </th>
+                <td mat-cell *matCellDef="let row"  class="clsColumnaLarge"> {{row.pdFecIni}} </td>
+              </ng-container> 
+
+              <ng-container matColumnDef="pdFecFin">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> F.Fin </th>
+                <td mat-cell *matCellDef="let row"  class="clsColumnaLarge"> {{row.pdFecFin}} </td>
+              </ng-container> 
+      
+              <ng-container matColumnDef="pNomCom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib"> Cliente </th>
+                <td mat-cell *matCellDef="let row"> {{row.pNomCom}} </td>
+              </ng-container> 
+      
+              <ng-container matColumnDef="pestPpto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del Ppto </th>
+                <td mat-cell *matCellDef="let row"> {{row.pestPpto}} </td>
+              </ng-container> 
+      
+              <ng-container matColumnDef="pestFactura">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado factura </th>
+                <td mat-cell *matCellDef="let row"> {{row.pestFactura}} </td>
+              </ng-container> 
+      
+              <ng-container matColumnDef="ptipo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Tipo  </th>
+                <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.ptipo}} </td>
+              </ng-container> 
+
+              <ng-container matColumnDef="pApro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc"> Aprobación Pptos </th>
+                <td mat-cell *matCellDef="let row" class="clsColumnaOpc"> {{row.pApro}} </td>
+              </ng-container> 
+       
+      
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsPre; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsPre;">
+              </tr>
+            </table>
+      
+        </div>
+        <mat-paginator
+            #TablePrePaginator="matPaginator"
+            [pageSize]="10" 
+        ></mat-paginator> 
+    </div> 
+    <app-crearpresupuesto (enviar)="recibirMensaje($event)" [pPresupuesto]="vPresupuesto" *ngIf="divCreate" ></app-crearpresupuesto>  
+</div>

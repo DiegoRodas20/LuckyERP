@@ -1,0 +1,290 @@
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+
+        <!-- Guardar -->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="white" (click)="guardarMerma()">
+            <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+        </button>
+        <!-- Salida-->
+        <button *ngIf="abLista.length>0" mat-mini-fab class="fab-secondary" color="warn" (click)="salir()">
+            <i class="material-icons" matTooltip="Salir" matTooltipPosition="left">exit_to_app</i>
+        </button>
+    </div>
+</div>
+
+
+<!-- <div class="mb-3" style="text-align: center;">
+    <mat-card class="title-card">Busqueda de artículo</mat-card>
+</div> -->
+
+<h3 mat-dialog-title style="width: 100%;text-align: center;" class="card-header center-text-card">Busqueda de artículo
+</h3>
+
+
+<div mat-dialog-content>
+    <!-- ========================== -->
+    <!-- Formulario -->
+    <!-- ========================== -->
+    <form autocomplete="off" [formGroup]="formArticulo">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12' col-12" style="padding-top: 13px;">
+                <mat-form-field>
+                    <mat-label>Empresa</mat-label>
+                    <mat-select formControlName="idEmpresa" (selectionChange)="cambioEmpresa()">
+                        <mat-option *ngFor="let item of listaEmpresa" [value]="item.nIdEmpresa"> {{ item.sDescripcion }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-2 col-2" style="padding-top: 15px;">
+                <button mat-mini-fab class="fab-secondary" color="white" (click)="activarCamara()">
+                    <i class="material-icons" matTooltip="Leer cod. Barra"
+                        matTooltipPosition="left">center_focus_weak</i>
+                </button>
+            </div>
+
+            <div class="col-lg-8 col-md-8 col-sm-10 col-10">
+                <ng-select formControlName="idArticulo" appendTo="body" [clearable]="false" placeholder="Artículo"
+                    (change)="busquedaArticuloUbicacion()">
+                    <ng-option *ngFor="let item of listaArticulo" [value]="item.nIdArticulo">
+                        {{item.sCodArticulo}} - {{item.sDescripcion}}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+
+        </div>
+        <div class="row" *ngIf="!mobile">
+            <div class="col-lg-4 col-md-4 col-12">
+                <mat-form-field class="style-form-field">
+                    <mat-label>Buscar</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                    <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button
+                        aria-label="Clear" (click)="clean()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                <mat-form-field>
+                    <mat-label>Total Ubicación</mat-label>
+                    <input formControlName="totalArticulo" matInput readonly>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12" style="align-self: center;">
+                <mat-slide-toggle formControlName="vistaPresupuesto" (change)="cambioSlider($event)">Vista con
+                    presupuesto(con merma)</mat-slide-toggle>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                <div class="caja" *ngIf="articulo === ''">
+                    <div class="box">
+                        <img src="../../../../../../../assets/img/SinImagen.jpg">
+                    </div>
+                </div>
+                <div class="caja" *ngIf="articulo !== ''">
+                    <div class="box">
+                        <button mat-icon-button (click)="abrirImagen()">
+                            <img [src]="articulo" class="fab-secondary">
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row mb-2" *ngIf="mobile">
+
+            <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                <mat-form-field>
+                    <mat-label>Total Ubicación</mat-label>
+                    <input formControlName="totalArticulo" matInput readonly>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <mat-form-field class="style-form-field">
+                    <mat-label>Buscar</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" [formControl]="txtFiltro" #input>
+                    <button style="outline: none;" *ngIf="txtFiltro.value" mat-button matSuffix mat-icon-button
+                        aria-label="Clear" (click)="clean()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-5 col-md-5 col-9" style="align-self: center;">
+                <mat-slide-toggle formControlName="vistaPresupuesto" (change)="cambioSlider($event)">Vista con
+                    presupuesto(para merma)</mat-slide-toggle>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                <div class="caja" *ngIf="articulo === ''">
+                    <div class="box">
+                        <img src="../../../../../../../assets/img/SinImagen.jpg">
+                    </div>
+                </div>
+                <div class="caja" *ngIf="articulo !== ''">
+                    <div class="box">
+                        <button mat-icon-button (click)="abrirImagen()">
+                            <img [src]="articulo" class="fab-secondary">
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+    <!-- ========================== -->
+    <!-- End Formulario -->
+    <!-- ========================== -->
+
+    <!-- ========================== -->
+    <!-- Tabla artículos -->
+    <!-- ========================== -->
+    <div id="listaMobile" class="mat-elevation-z8">
+
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="opciones" sticky>
+                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                            matTooltipPosition="right" mat-stroked-button color="accent">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="irUbicacion(element)">
+                                <mat-icon color="accent">touch_app</mat-icon>
+                                <span>Ir a ubicación</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="marcarMerma">
+                    <th mat-header-cell *matHeaderCellDef> Merma </th>
+                    <td mat-cell *matCellDef="let element" class="has_label_on_mobile" data-label='Cantidad: '
+                        class="has_label_on_mobile" data-label='Cantidad a Salir: '>
+                        <mat-form-field style="width: 100px;margin-right: 15px;" *ngIf="element.nMerma === 0">
+                            <!-- <mat-label>Buscar</mat-label> -->
+                            <input matInput type="number" (blur)="agregarMerma($event.target.value,element)">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodUbicacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ubicación </th>
+                    <td mat-cell *matCellDef="let element" data-label='Ubicación: ' class="has_label_on_mobile">
+                        <!-- {{element.sCodUbicacion}}  -->
+                        <ngb-highlight [result]="element.sCodUbicacion" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodPresupuesto"
+                    *ngIf="this.formArticulo.get('vistaPresupuesto').value === true">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Presupuesto </th>
+                    <td mat-cell *matCellDef="let element" data-label='Presupuesto: ' class="has_label_on_mobile">
+                        <!-- {{element.sCodPresupuesto}} -->
+                        <ngb-highlight [result]="element.sCodPresupuesto" [term]="txtFiltro.value"></ngb-highlight>
+
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sCodAlmacen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Almacen </th>
+                    <td mat-cell *matCellDef="let element" data-label='Almacen: ' class="has_label_on_mobile">
+                        <!-- {{element.sCodAlmacen}}  -->
+                        <ngb-highlight [result]="element.sCodAlmacen" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+                    <td mat-cell *matCellDef="let element" data-label='Cliente: ' class="has_label_on_mobile">
+                        <!-- {{element.cliente}}  -->
+                        <ngb-highlight [result]="element.cliente" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sLote">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
+                    <td mat-cell *matCellDef="let element" data-label='Lote: ' class="has_label_on_mobile">
+                        <!-- {{element.sLote}}  -->
+                        <ngb-highlight [result]="element.sLote" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaIngreso">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingreso </th>
+                    <td mat-cell *matCellDef="let element" data-label='Ingreso: ' class="has_label_on_mobile">
+                        <!-- {{element.fechaIngreso | date:'dd/MM/yyyy'}}  -->
+                        <ngb-highlight [result]="element.fechaIngreso | date:'dd/MM/yyyy'" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaVencimiento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Vence </th>
+                    <td mat-cell *matCellDef="let element" data-label='Vence: ' class="has_label_on_mobile">
+                        <!-- {{ (element.fechaVencimiento | date: 'yyyy') === "0001" || (element.fechaVencimiento | date: 'yyyy') === "1900" ? "" : (element.fechaVencimiento | date:'dd/MM/yyyy') }}  -->
+                        <ngb-highlight [result]="element.fechaVencimiento | date:'dd/MM/yyyy'" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nMarcado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Marcado </th>
+                    <td mat-cell *matCellDef="let element" data-label='Marcado: ' class="has_label_on_mobile">
+                        <!-- {{element.nMarcado === 0 ? '' : 'Si'}}  -->
+                        <ngb-highlight [result]="element.nMarcado === 0 ? '' : 'Si'" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nMerma">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Merma </th>
+                    <td mat-cell *matCellDef="let element" data-label='Merma: ' class="has_label_on_mobile">
+                        <!-- {{element.nMerma === 0 ? '' : 'Si'}}  -->
+                        <ngb-highlight [result]="element.nMerma === 0 ? '' : 'Si'" [term]="txtFiltro.value">
+                        </ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="saldo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+                    <td mat-cell *matCellDef="let element" data-label='Cantidad: ' class="has_label_on_mobile">
+                        <!-- {{element.saldo}}  -->
+                        <ngb-highlight [result]="element.saldo" [term]="txtFiltro.value"></ngb-highlight>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="{isMerma: row.nMerma === 1, isMarcado: row.nMarcado === 1}"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[12, 20, 40]"></mat-paginator>
+    </div>
+
+
+    <!-- ========================== -->
+    <!-- End Tabla artículos -->
+    <!-- ========================== -->
+</div>
+
+
+
+
+
+<!-- <pre>
+    Estado del formulario {{formArticulo.valid}}
+  <br />
+    Status: {{formArticulo.status}}
+  </pre>
+
+<pre>
+  {{ formArticulo.value | json }}
+  </pre> -->

@@ -1,0 +1,7 @@
+.clsprincipal {
+  padding: 80px 15px 0px 15px;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

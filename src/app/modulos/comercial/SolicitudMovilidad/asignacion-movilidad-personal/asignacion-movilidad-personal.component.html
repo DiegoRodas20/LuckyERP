@@ -1,0 +1,240 @@
+<div class="col-md-10 offset-md-1 mt-4 clsprincipal">
+  <!-- #region CABECERA-->
+  <div>
+    <div class="text-center">
+      <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+        Asignación de Movilidad
+      </h3>
+
+    </div>
+    <div class="fab-container">
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+      </button>
+      <div [@speedDialStagger]="abLista.length">
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary" (click)="cancelar()">
+          <i class="material-icons" matTooltip="Cancelar" matTooltipPosition="left">close</i>
+        </button>
+        <button mat-raised-button mat-mini-fab class="fab-secondary" color="secondary"
+          (click)="registrarNuevaAsignacion()" [disabled]="!cabeceraCompletada()">
+          <i class="material-icons" matTooltip="Guardar" matTooltipPosition="left">save</i>
+        </button>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-12">
+        <mat-card>
+          <form [formGroup]="PPTOFormGroup">
+            <div class="row m-auto">
+              <div class="col-md-8">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Solicitante</mat-label>
+                  <input matInput formControlName="solicitante" />
+                </mat-form-field>
+
+                <div class="row">
+                  <div class="col-md-4 col-12">
+                    <mat-form-field class="example-full-width">
+                      <mat-label> Nro. Presupuesto </mat-label>
+                      <input matInput formControlName="NroPPTO" type="text" (change)="buscarCampania()" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-8 col-12">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Descripción Presupuesto</mat-label>
+                      <input matInput formControlName="PPTO" type="text" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 col-12">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Partida </mat-label>
+                      <mat-select formControlName="partida" (selectionChange)="partidaSeleccionada($event)">
+                        <mat-option *ngFor="let partida of listaPartidas" [value]="partida.id">{{ partida.codigo + " - "
+                          + partida.nombre }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Puesto </mat-label>
+                      <mat-select formControlName="cargo" (selectionChange)="CargoSeleccionada($event)">
+                        <mat-option *ngFor="let vMatOpcion of listaCargos" [value]="vMatOpcion.id">
+                          {{vMatOpcion.codigo}} - {{vMatOpcion.nombre_cargo}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Año</mat-label>
+                  <input matInput formControlName="anio" />
+                </mat-form-field>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field color="primary" class="example-full-width">
+                      <mat-label>Del</mat-label>
+                      <input matInput [matDatepicker]="picker2" [readonly]="true"
+                        (dateInput)="fechaSeleccionada($event.value)" formControlName="del"
+                        [matDatepickerFilter]="bloquearFechaNoValidas" />
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2 color="red"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Al</mat-label>
+                      <input matInput formControlName="al" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <mat-form-field class="example-full-width">
+                  <mat-label> De donde son: </mat-label>
+                  <mat-select formControlName="zona" (selectionChange)="fncontrol($event)">
+                    <mat-option [value]="1"> Central</mat-option>
+                    <mat-option [value]="0"> Provincia</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-card>
+      </div>
+
+      <div class="col-md-2 col-12 m-auto">
+        <ul>
+          <li>
+            <mat-checkbox class="example-margin" [formControl]="bTodosDias" (change)="setDays($event.checked)">Todos los Días</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Lunes</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Martes</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Miercoles</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Jueves</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Viernes</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Sabado</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox class="example-margin" [(ngModel)]="valorDias" [disabled]="true">Domingo</mat-checkbox>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- #endregion -->
+
+  <!-- #region TABLA AGREGAR PERSONAL-->
+  <div class="mt-4 mb-4">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <span class="informacion_tipo_personal">{{
+          textoPlanillasPermitidasPorCargo()
+          }}</span>
+      </div>
+      <div class="col-md-6 text-right">
+        <span class="numero_personas_registradas">
+          {{ dataSource.data.length }}:
+          NUMERO DE PERSONAS</span>
+      </div>
+    </div>
+
+    <div class="example-container-partida mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="">
+        <ng-container matColumnDef="id" sticky>
+          <th mat-header-cell *matHeaderCellDef>
+            <button mat-menu-item (click)="AgregarPersonalDeLaTabla(element)" [disabled]="!cabeceraCompletada()">
+              <mat-icon color="warn">add</mat-icon>
+            </button>
+          </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <button mat-menu-item (click)="eliminarUnPersonalDeLaTabla(element)" [disabled]="!cabeceraCompletada()">
+              <mat-icon color="warn">delete_outline</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="ciudad">
+          <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <ng-select appendTo="body" [(ngModel)]="element.ciudad" [clearable]="false" (change)="fnCiudadChange(i)"
+              [disabled]="!cabeceraCompletada()">
+              <ng-option *ngFor="let car of listaCiudades" [(value)]="car.id">{{car.codigo}} -
+                {{car.nombre_ciudad}}</ng-option>
+            </ng-select>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="personal_id">
+          <th mat-header-cell *matHeaderCellDef> Apellidos y Nombres </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <ng-select appendTo="body" [(ngModel)]="element.personal_id" [clearable]="false"
+              (change)="fnChangeBanco(i,element)" [disabled]="!cabeceraCompletada()">
+              <ng-option *ngFor="let car of arrayPersonal[element.ciudad]" [(value)]="car.personal_id">{{car.dni}} -
+                {{car.nombre}}</ng-option>
+            </ng-select>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="cargo_id">
+          <th mat-header-cell *matHeaderCellDef>Puesto</th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <mat-form-field class="style-form-field p-1 text-center">
+              <input matInput type="text" disabled="true" [(ngModel)]="element.cargo" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="banco_id">
+          <th mat-header-cell *matHeaderCellDef> Banco </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <mat-form-field class="style-form-field p-1 text-center">
+              <input matInput type="text" disabled="true" [(ngModel)]="element.banco" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="f_inicio">
+          <th mat-header-cell *matHeaderCellDef> F. Inicio </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <mat-form-field class="style-form-field p-1 text-center">
+              <input matInput type="text" disabled="true" [(ngModel)]="element.f_inicio" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="f_fin">
+          <th mat-header-cell *matHeaderCellDef> F. Fin </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <mat-form-field class="style-form-field p-1 text-center">
+              <input matInput type="text" disabled="true" [(ngModel)]="element.f_fin" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="pasaje_por_dia">
+          <th mat-header-cell *matHeaderCellDef> Pasaje por dia </th>
+          <td mat-cell *matCellDef="let element;index as i">
+            <mat-form-field class="style-form-field p-1 full-width text-right">
+              <input matInput autocomplete="off" type="number" [(ngModel)]="element.pasaje_por_dia"
+                (onChange)="agregarPersonal(i,element)" [disabled]="!cabeceraCompletada()" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- #endregion -->
+
+</div>

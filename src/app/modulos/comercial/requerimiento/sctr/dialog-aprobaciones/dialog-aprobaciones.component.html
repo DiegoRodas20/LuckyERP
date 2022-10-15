@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>
+    <h5 class="card-header">Aprobaciones</h5>
+</h2>
+<!-- Cuerpo  -->
+<mat-dialog-content class="mat-typography">
+    <div id="listap" class="mat-elevation-z8 example-container">
+            <table mat-table [dataSource]="aproDS" style="width: 100%;">
+
+                <ng-container matColumnDef="cargo">
+                    <th mat-header-cell *matHeaderCellDef> Cargo </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                        {{element.cargo}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sFullNom">
+                    <th mat-header-cell *matHeaderCellDef> Nombres </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                        {{element.sFullNom}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> Estado </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                        {{element.estado}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dFecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let element" class='has_label_on_mobile'>
+                        {{element.dFecha}}
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="aproDC; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: aproDC;" [mat-dialog-close]="row"></tr>
+            </table>
+            <mat-paginator #TablePrePaginator="matPaginator" style="display: contents;" [hidePageSize]="false" [pageSize]="5"></mat-paginator>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-accent" (click)="btnCerrar()" >Cancelar</button>
+</mat-dialog-actions>

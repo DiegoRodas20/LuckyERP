@@ -1,0 +1,63 @@
+  /* Botones Flotantes */
+
+  .fab-container {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fab-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .fab-container>div>button {
+    margin-top: 10px;
+    outline: none;
+  }
+  
+  /* Titulo Card  */
+  
+  .card-header {
+    background-color: #334d6e;
+    color: white;
+    min-width: 100%;
+    margin: 0px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  /* Tamaño de Ng Select igual a inputs  */
+  .ngselect{
+   padding-bottom:3.5px; 
+   bottom:0.35rem
+  }
+
+  /* Controles Disableados  */
+
+  :host /deep/ .mat-form-field-disabled input {
+    color           : black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+
+  :host /deep/ .mat-form-field-disabled .mat-select-disabled .mat-select-value {
+    color           : black;
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+
+  :host /deep/ .mat-form-field-disabled textarea {
+    BACKGROUND-COLOR: #d0d3d6;
+  }
+
+  :host /deep/.ng-select.ng-select-disabled .ng-select-container .ng-value-container .ng-value {
+    color: black !important;
+    BACKGROUND-COLOR: #d0d3d6;
+  }

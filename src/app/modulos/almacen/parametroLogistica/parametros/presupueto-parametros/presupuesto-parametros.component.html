@@ -1,0 +1,113 @@
+<div style="margin-top: 15px;">
+  <div>
+    <!-- Botones -->
+    <div class="fab-container" *ngIf="isAddAlmacenModalOpen == false">
+      <div>
+        <button mat-mini-fab class="fab-secondary" color="white" (click)="openModal(content)">
+          <i class="material-icons fab-toggler" matTooltip="Ingreso de Parametros" matTooltipPosition="left">add</i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div id="listaMobile" class="mat-elevation-z8">
+      <div class="example-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Opcion Column -->
+          <ng-container matColumnDef="nId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc">Opcion</th>
+            <td mat-cell data-label='Ver detalle: ' *matCellDef="let element" class="has_label_on_mobile clsColumnaOpc">
+              <button mat-icon-button color="accent" matTooltip="Ver detalle" [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="fnActualizarPresupuesto(element.nIdDetParamCentroAlmacen)">
+                  <mat-icon color="accent">touch_app</mat-icon>
+                  <span>Actualizar</span>
+                </button>
+                <button mat-menu-item (click)="fnEliminarPresupuesto(element.nIdDetParamCentroAlmacen)">
+                  <mat-icon color="accent">delete</mat-icon>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+          <!-- Codigo Column -->
+          <ng-container matColumnDef="sPresupuesto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">Codigo
+            </th>
+            <td data-label='Codigo: ' mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLarge">
+              {{element.sCodigo}}
+            </td>
+          </ng-container>
+          <!-- Descripcion Column -->
+          <ng-container matColumnDef="sDescripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Descripcion
+            </th>
+            <td data-label='Descripcion: ' mat-cell *matCellDef="let element"
+              class="has_label_on_mobile clsColumnaLib2">
+              {{element.sDescripcion}}
+            </td>
+          </ng-container>
+          <!-- Cliente Column -->
+          <ng-container matColumnDef="sCliente">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Cliente
+            </th>
+            <td data-label='Cliente: ' mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib2">
+              {{element.sNombreComercial}}
+            </td>
+          </ng-container>
+          <!-- Estado Column -->
+          <ng-container matColumnDef="sEstado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib2"> Estado
+            </th>
+            <td data-label='Estado: ' mat-cell *matCellDef="let element" class="has_label_on_mobile clsColumnaLib2">
+              {{element.sEstado}}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayedColumns;"> </tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+    </div>
+    <!-- Modal para agregar presupuestos -->
+    <div class="combobox-modal-container">
+      <ng-template #content let-modal>
+        <div class="modal-header header-modal-lucky">
+          <h5 class="modal-title" id="exampleModalLabel">Añadir Presupuesto</h5>
+          <button type="button" class="close button-modal-lucky" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <mat-card>
+            <form [formGroup]="combobox" autocomplete="off" (submit)="agregarPresupuesto()">
+              <div class="row">
+                <div class="col-10">
+                  <ng-select [clearable]="true" placeholder="Presupuestos" formControlName="cbPresupuesto"
+                    notFoundText="No hay presupuestos disponibles">
+                    <ng-option *ngFor="let element of listaPresupuestosCombobox" [value]="element.nId">
+                      {{element.sDescripcion}}
+                    </ng-option>
+                  </ng-select>
+                  <mat-error
+                    *ngIf="combobox.get('cbPresupuesto').hasError('required') && combobox.get('cbPresupuesto').touched">
+                    Seleccione un presupuesto
+                  </mat-error>
+                </div>
+                <div class="col-2 buttonAlmacenAdd">
+                  <button mat-mini-fab class="fab-toggler">
+                    <i class="material-icons" matTooltip="Agregar almacén" matTooltipPosition="left">save</i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </mat-card>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

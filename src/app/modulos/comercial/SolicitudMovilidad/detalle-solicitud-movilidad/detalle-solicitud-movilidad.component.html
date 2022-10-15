@@ -1,0 +1,563 @@
+<div class="col-md-10 offset-md-1 mt-4 clsprincipal" *ngIf="flagGeneral">
+  <!-- #region CABECERA-->
+  <div>
+    <div class="text-center">
+      <h3 class="col-md-10 offset-md-1 card-header mb-4 titulo">
+        Detalle de Movilidad
+      </h3>
+    </div>
+    <div class="fab-container" *ngIf=agregar>
+      <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+          <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+      </button>
+      <div [@speedDialStagger]="abLista.length">
+          <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary" [hidden]="btn.status" (click)="onChangeButton(btn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+          </button>
+          <button mat-mini-fab class="fab-secondary" [useExistingCss]="true" printSectionId="print-solicitud-detalle" 
+          ngxPrint color="secondary"  [hidden]="btnImprimir" >
+            <i class="material-icons" matTooltip="Imprimir" matTooltipPosition="left">print</i>
+          </button>
+      </div>
+    </div>
+
+    <mat-card>
+      <div class="row" *ngIf="cabecera !== null">
+        <div class="col-md-6 col-12">
+          <mat-form-field class="style-form-field">
+            <mat-label>Solicitante</mat-label>
+            <input
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="cabecera.solicitante"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="style-form-field">
+            <mat-label>Presupuesto {{ cabecera.codigo_presupuesto }}</mat-label>
+            <input
+              matInput
+              type="text"
+              disabled="true"
+              [(ngModel)]="cabecera.campania"
+            />
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col-md-4 col-12">
+              <mat-form-field class="style-form-field">
+                <mat-label>Año</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.anio"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-md-8 col-12">
+              <mat-form-field class="style-form-field">
+                <mat-label>Puesto</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.cargo"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!--<mat-form-field class="style-form-field">
+            <mat-label>Origen</mat-label>
+            <input matInput type="text" disabled="true" />
+          </mat-form-field>-->
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="row">
+            <div class="col-md-6 mt-2">
+              <b><span>Nro Movilidad: </span></b>
+              <span style="color: blue">SM - {{ cabecera.correlativo }}</span>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field class="style-form-field">
+                <mat-label>De donde son:</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.zona"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="style-form-field">
+                <mat-label>Del</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.fecha_del"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field class="style-form-field">
+                <mat-label>Al</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.fecha_al"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <mat-form-field class="style-form-field">
+                <mat-label>Partida</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  disabled="true"
+                  [(ngModel)]="cabecera.partida"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <b
+                ><span>Estado</span>
+                <span style="color: rgb(255, 0, 157)" class="ml-2">{{
+                  cabecera.estado
+                }}</span></b
+              >
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-6 col-12"></div>
+            <div class="col-md-6 col-12">
+              <!--<b><span>Rq de Efecto</span></b>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card> 
+     
+  </div>
+
+  <!-- #endregion -->
+  <!-- #region TABLA PERSONAL-->
+  
+  <app-detalle-add-personal (enviar)="recibirMensaje($event)" [pMovilidad]="vMovilidad" *ngIf="divAdd"></app-detalle-add-personal>
+  <div
+    [ngClass]="divList ? 'clsShow' : 'clsHide'"
+    class="mt-5"
+    class="contenedor-tabla mat-elevation-z5"
+    *ngIf="cabecera !== null"
+  >
+    <table mat-table [dataSource]="dataSource">
+      <ng-container
+        *ngFor="let column of displayedColumns"
+        [matColumnDef]="column"
+      >
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="background-color: #334d6e; color: white; font-weight: bold"
+          class="pl-2 pr-2"
+        >
+          {{ nombreColumnas(column) }}
+        </th>
+        <td mat-cell *matCellDef="let element" class="pl-2 pr-2">
+          <div *ngIf="column === 'ciudad'">
+            {{ element[column] }}
+          </div>
+          <div *ngIf="column === 'nombres_apellidos'">
+            {{ element[column] }}
+          </div>
+          <div *ngIf="column === 'total'">
+            {{ redondearDinero(element["pasaje_por_dia"] * element["dias"]) }}
+          </div>
+          
+          <div *ngIf="column === 'pasaje_por_dia'">
+            <div *ngIf="!element.editar" (click)="element.editar = true">
+              {{ element[column] }}
+            </div>
+            <div *ngIf="element.editar">
+              <mat-form-field class="full-width" style="width: 100px;">
+                <input
+                  matInput
+                  type="number"
+                  [(ngModel)]="element[column]"
+                  (onChange)="enviandoDataEditada(element)"
+                  [disabled]=btnModificar
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="column === 'dias'">
+            {{ calcularNumeroDias(element) }}
+          </div>
+          <div *ngIf="column === 'todosDias'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarTodosDias(element.personal_id,element.gasto_detalle_id,element.todosDias,element)"
+              [(ngModel)]="element.todosDias"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia1'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia1,'dia1',element)"
+              [(ngModel)]="element.dia1"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia2'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia2,'dia2',element)"
+              [(ngModel)]="element.dia2"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia3'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia3,'dia3',element)"
+              [(ngModel)]="element.dia3"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia4'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia4,'dia4',element)"
+              [(ngModel)]="element.dia4"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia5'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia5,'dia5',element)"
+              [(ngModel)]="element.dia5"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia6'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia6,'dia6',element)"
+              [(ngModel)]="element.dia6"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia7'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia7,'dia7',element)"
+              [(ngModel)]="element.dia7"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia8'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia8,'dia8',element)"
+              [(ngModel)]="element.dia8"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia9'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia9,'dia9',element)"
+              [(ngModel)]="element.dia9"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia10'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia10,'dia10',element)"
+              [(ngModel)]="element.dia10"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia11'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia11,'dia11',element)"
+              [(ngModel)]="element.dia11"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia12'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia12,'dia12',element)"
+              [(ngModel)]="element.dia12"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia13'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia13,'dia13',element)"
+              [(ngModel)]="element.dia13"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia14'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia14,'dia14',element)"
+              [(ngModel)]="element.dia14"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia15'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia15,'dia15',element)"
+              [(ngModel)]="element.dia15"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+          <div *ngIf="column === 'dia16'">
+            <mat-checkbox
+              class="example-margin"
+              (click)="ValidarDia(element.personal_id,element.gasto_detalle_id,element.dia16,'dia16',element)"
+              [(ngModel)]="element.dia16"
+              [disabled]=btnModificar
+            ></mat-checkbox>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <!-- #endregion -->
+  <!-- #region ACCIONES-->
+  <div *ngIf="cabecera !== null" class="mb-4">
+    <div class="row">
+      <div class="col-md-8">
+        <div>
+          <button
+            mat-raised-button
+            [ngClass]="{ btn_activo: linealFlag, btn_pasivo: !linealFlag }"
+            (click)="linealFlag = !linealFlag"
+          >
+            Lineal
+          </button>
+          <span class="ml-4 mr-1"><b>Total SM</b></span>
+          <span class="estilos_datos_inferiores">{{ totalPasaje() }}</span>
+          <span class="ml-4 mr-1"><b>Total Días</b></span>
+          <span class="estilos_datos_inferiores">{{ totalDias() }}</span>
+          <span class="ml-4 mr-1"><b>Personas</b></span>
+          <span class="estilos_datos_inferiores">{{ numeroPersonas() }}</span>
+        </div>
+
+        <div *ngIf="linealFlag" class="mt-4 mb-2">
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(1) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(2) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(3) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(4) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(5) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(6) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(7) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(8) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(9) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(11) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(12) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(13) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(14) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(15) }}</span>
+          <span class="bloque_lineal">{{ cantidadPersonasPorDia(16) }}</span>
+        </div>  
+ 
+      </div>
+      <div class="col-md-4">
+        <mat-form-field
+          class="full-width"
+          *ngIf="cabecera.observacion !== null && cabecera.observacion !== ''"
+        >
+          <textarea
+            [disabled]="true"
+            [(ngModel)]="cabecera.observacion"
+            matInput
+            rows="5"
+            placeholder="Observacion de presupuestos"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+
+  <!-- #region IMPRIMIR-->
+  <div style="display: none">
+    <div id="print-solicitud-detalle">
+      <!-- #region CABECERA-->
+      <div>
+        <h3 style="text-align: center; margin-bottom: 50px">
+          REPORTE DE SOLICITUD MOVILIDAD
+        </h3>
+        <table *ngIf="cabecera !== null" style="text-align: left">
+          <tr>
+            <td style="text-align: left">
+              <b>Solicitante:</b> {{ cabecera.solicitante }}
+            </td>
+            <td style="text-align: left">
+              <b>Ciudad:</b> {{ cabecera.ciudad }}
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">
+              <b>Presupuesto:</b> {{ cabecera.campania }}
+            </td>
+            <td style="text-align: left">
+              <b>Fechas:</b> {{ cabecera.fecha_del }} - {{ cabecera.fecha_al }}
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left"><b>Puesto:</b> {{ cabecera.cargo }}</td>
+            <td style="text-align: left">
+              <b>Partida:</b> {{ cabecera.partida }}
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: left">
+              <b>Estado:</b> {{ cabecera.estado }}
+            </td>
+            <td style="text-align: left"><b>Rq de Efectivo</b></td>
+          </tr>
+        </table>
+      </div>
+      <!-- #endregion -->
+      <!-- #region TABLA-->
+      <div
+        class="mt-5"
+        class="contenedor-tabla mat-elevation-z5"
+        *ngIf="cabecera !== null"
+      >
+        <table mat-table [dataSource]="dataSource">
+          <ng-container
+            *ngFor="let column of displayedColumns"
+            [matColumnDef]="column"
+          >
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              style="background-color: #334d6e; color: white; font-weight: bold"
+              class="pl-2 pr-2"
+            >
+              {{ nombreColumnas(column) }}
+            </th>
+            <td mat-cell *matCellDef="let element" class="pl-2 pr-2">
+              <div *ngIf="column === 'ciudad'">
+                {{ element[column] }}
+              </div>
+              <div *ngIf="column === 'nombres_apellidos'">
+                {{ element[column] }}
+              </div>
+              <div *ngIf="column === 'total'">
+                {{
+                  redondearDinero(element["pasaje_por_dia"] * element["dias"])
+                }}
+              </div>
+              <div *ngIf="column === 'pasaje_por_dia'">
+                <div *ngIf="!element.editar" (click)="element.editar = true">
+                  {{ element[column] }}
+                </div>
+                <div *ngIf="element.editar">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      [(ngModel)]="element[column]"
+                      (keyup.enter)="enviandoDataEditada(element)"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div *ngIf="column === 'dias'">
+                {{ calcularNumeroDias(element) }}
+              </div>
+              <div *ngIf="column === 'todosDias'">
+                <b *ngIf="element.todosDias">1</b>
+              </div>
+              <div *ngIf="column === 'dia1'">
+                <b *ngIf="element.dia1">1</b>
+              </div>
+              <div *ngIf="column === 'dia2'">
+                <b *ngIf="element.dia2">1</b>
+              </div>
+              <div *ngIf="column === 'dia3'">
+                <b *ngIf="element.dia3">1</b>
+              </div>
+              <div *ngIf="column === 'dia4'">
+                <b *ngIf="element.dia4">1</b>
+              </div>
+              <div *ngIf="column === 'dia5'">
+                <b *ngIf="element.dia5">1</b>
+              </div>
+              <div *ngIf="column === 'dia6'">
+                <b *ngIf="element.dia6">1</b>
+              </div>
+              <div *ngIf="column === 'dia7'">
+                <b *ngIf="element.dia7">1</b>
+              </div>
+              <div *ngIf="column === 'dia8'">
+                <b *ngIf="element.dia8">1</b>
+              </div>
+              <div *ngIf="column === 'dia9'">
+                <b *ngIf="element.dia9">1</b>
+              </div>
+              <div *ngIf="column === 'dia10'">
+                <b *ngIf="element.dia10">1</b>
+              </div>
+              <div *ngIf="column === 'dia11'">
+                <b *ngIf="element.dia11">1</b>
+              </div>
+              <div *ngIf="column === 'dia12'">
+                <b *ngIf="element.dia12">1</b>
+              </div>
+              <div *ngIf="column === 'dia13'">
+                <b *ngIf="element.dia13">1</b>
+              </div>
+              <div *ngIf="column === 'dia14'">
+                <b *ngIf="element.dia14">1</b>
+              </div>
+              <div *ngIf="column === 'dia15'">
+                <b *ngIf="element.dia15">1</b>
+              </div>
+              <div *ngIf="column === 'dia16'">
+                <b *ngIf="element.dia16">1</b>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+  <!-- #endregion -->
+</div>

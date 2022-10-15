@@ -1,0 +1,36 @@
+<div class="col-xl-10 mx-auto" style="padding-top: 90px;">
+    <div>
+        <div class="mb-3" style="text-align: center;">
+            <mat-card class="title-card">Reportes</mat-card>
+        </div>
+    </div>
+
+    <mat-tab-group mat-align-tabs="center" #tabs>
+        <!-- Reporte de presupuestos y estados -->
+        <mat-tab label="Pptos y estados">
+            <app-pptos-estados></app-pptos-estados>
+        </mat-tab>
+
+        <!-- Presupuestos partidas y saldos -->
+        <mat-tab label="Pptos partidas y saldos">
+            <app-pptos-partidas-saldos></app-pptos-partidas-saldos>
+        </mat-tab>
+
+        <!-- Reporte detallado de gastos de presupuestos -->
+        <mat-tab label="Detallado de gastos">
+            <app-dialog-informe-gasto [tipoPresupuesto]='1'></app-dialog-informe-gasto>
+        </mat-tab>
+
+        <!-- Informe del personal de Staff -->
+        <mat-tab label="Informe Staff">
+            <app-pptos-informe-staff></app-pptos-informe-staff>
+        </mat-tab>
+
+
+        
+        <mat-tab label="Costo empresa proyectado">
+        </mat-tab>
+        <mat-tab label="Costo empresa nominal">
+        </mat-tab>
+    </mat-tab-group>
+</div>

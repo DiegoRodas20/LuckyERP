@@ -1,0 +1,60 @@
+<!-- Botones Flotantes -->
+<div class="fab-container">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <button *ngFor="let btn of abLista; let ibtn = index;" mat-mini-fab class="fab-secondary" color="secondary"
+            (click)="clickFab(ibtn)">
+            <i class="material-icons" matTooltip="{{btn.tool}}" matTooltipPosition="left">{{btn.icon}}</i>
+        </button>
+    </div>
+</div>
+
+<div class=" col-md-8 offset-md-2">
+    <div style="padding-top: 70px;">
+        <div class="mb-3" style="text-align: center;">
+            <mat-card class="title-card">Reporte Artículo Pallet</mat-card>
+        </div>
+    </div>
+
+    <mat-card>
+        <form autocomplete="off" [formGroup]="formularioReporte">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-10 col-10">
+                    <mat-form-field>
+                        <mat-label>Fecha Inicio</mat-label>
+                        <input matInput readonly [matDatepicker]="dp" formControlName="fechaInicio" (click)="dp.open()">
+                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-10 col-10">
+                    <mat-form-field>
+                        <mat-label>Fecha Fin</mat-label>
+                        <input matInput readonly [matDatepicker]="dp2" formControlName="fechaFin" (click)="dp2.open()">
+                        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                        <mat-datepicker disabled="false" #dp2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <!-- 
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <button mat-mini-fab class="fab-secondary" color="accent" (click)="generarReporte()">
+                        <i class="material-icons" matTooltip="Generar Reporte" matTooltipPosition="left">article</i>
+                    </button>
+                </div> -->
+            </div>
+        </form>
+    </mat-card>
+</div>
+
+
+<!-- <pre>
+    Estado del formulario {{formularioReporte.valid}}
+  <br />
+    Status: {{formularioReporte.status}}
+  </pre>
+
+<pre>
+  {{ formularioReporte.value | json }}
+  </pre> -->

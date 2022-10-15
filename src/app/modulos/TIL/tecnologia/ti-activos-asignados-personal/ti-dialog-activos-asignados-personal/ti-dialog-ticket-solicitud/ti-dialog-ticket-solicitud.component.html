@@ -1,0 +1,154 @@
+<h5 mat-dialog-title class="card-header">
+    Solicitud de Ticket con Descuento en Cuenta
+    <button class="close button-modal-lucky" (click)="this.dialogRef.close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h5>
+
+<mat-dialog-content>
+    <mat-card>
+
+        <form [formGroup]="formSolicitud" class="row">
+
+            <div class="form-group col-md-6">
+                <ng-select class="alinea-ng-select" appendTo="body" [clearable]="false" formControlName="presupuesto"
+                    placeholder="Presupuesto" required>
+                    <ng-option *ngFor="let vPres of listaPresupuestos" [value]="vPres.nIdCentroCosto">
+                        {{vPres.sCentroCosto}}</ng-option>
+                </ng-select>
+                <mat-error class="ngSelectError"
+                    *ngIf="this.formSolicitud.get('presupuesto').hasError('required') && formSolicitud.get('presupuesto').touched">
+                    Debe seleccionar un presupuesto
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-6">
+                <ng-select appendTo="body" class="alinea-ng-select" [clearable]="false" placeholder="Partida"
+                    formControlName="partida" notFoundText="No hay partidas disponibles">
+                    <ng-option *ngFor="let element of listaPartida" [value]="element.nIdPartida">
+                        {{element.sCodPartida}} - {{element.sPartida}}
+                    </ng-option>
+                </ng-select>
+                <mat-error class="ngSelectError"
+                    *ngIf="this.formSolicitud.get('partida').hasError('required') && formSolicitud.get('partida').touched">
+                    Debe seleccionar una partida
+                </mat-error>
+            </div>
+
+            <div class="form-group col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto Total Dolares:</mat-label>
+                    <input type="text" matInput readonly formControlName="total">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto Total Soles:</mat-label>
+                    <input type="text" matInput readonly formControlName="totalSoles">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto pendiente:</mat-label>
+                    <input type="text" matInput readonly formControlName="pendiente" style="color: rgb(236, 0, 140);">
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-3 col-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Monto:</mat-label>
+                    <input type="number" matInput formControlName="monto">
+                </mat-form-field>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end">
+                <button type="button" matTooltip="Agregar" mat-mini-fab color="accent" (click)="fnAgregarItem()">
+                    <mat-icon>check</mat-icon>
+                </button>
+            </div>
+        </form>
+    </mat-card>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <!--Mat Table Pptos-->
+            <div id="listaMobile" class="mat-elevation-z8 ">
+                <div class="example-container">
+                    <table mat-table [dataSource]="dataSourcePpto" #sortPpto="matSort" matSort>
+
+                        <ng-container matColumnDef="opcion" sticky>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            </th>
+                            <td data-label='Eliminar: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <button mat-stroked-button color="accent" matTooltip="Eliminar"
+                                    (click)="fnQuitarItem(row);">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sPresupuesto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Presupuesto
+                            </th>
+                            <td data-label='Presupuesto: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sPresupuesto">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sSucursal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Sucursal
+                            </th>
+                            <td data-label='Sucursal: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sSucursal">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sPartida">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Partida
+                            </th>
+                            <td data-label='Partida: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.sPartida">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nMonto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Monto
+                            </th>
+                            <td data-label='Monto: ' mat-cell *matCellDef="let row" class="has_label_on_mobile">
+                                <ngb-highlight [result]="row.nMonto | number:'1.4-4'">
+                                </ngb-highlight>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsPpto; sticky: true">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsPpto;">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator #paginatorPpto [pageSizeOptions]="[5,10,20]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <!--Para guardar-->
+    <div class="col-md-12 d-flex justify-content-end">
+
+        <button matTooltip="Guardar" mat-mini-fab color="accent" (click)="fnGuardar()">
+            <mat-icon>save</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

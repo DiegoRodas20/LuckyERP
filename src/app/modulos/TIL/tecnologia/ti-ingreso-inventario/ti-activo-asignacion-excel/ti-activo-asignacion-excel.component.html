@@ -1,0 +1,35 @@
+<div class="mb-3 " style="text-align: center; position: relative; ">
+    <mat-card class="title-card ">Generar Excel Asignaciones</mat-card>
+    <button mat-icon-button class="closeButtonModal" (click)="fnSalir()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<!-- Botones -->
+<div class="fab-container" [ngStyle]="{display: mostrarBotones ? 'flex' : 'none'}">
+    <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+        <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+    </button>
+    <div [@speedDialStagger]="abLista.length">
+        <ng-container *ngFor="let btn of abLista; let ibtn = index;">
+            <button *ngIf="btn.state" mat-mini-fab class="fab-secondary" [matTooltip]="btn.tool"
+                matTooltipPosition="left" color="secondary" (click)="clickFab(ibtn)">
+                <i class="material-icons">{{btn.icon}}</i>
+            </button>
+        </ng-container>
+    </div>
+</div>
+
+<div mat-dialog-content>
+    
+    <div class="row mx-auto my-3" [formGroup]="formExcelAsignaciones" style="width: 100%;">
+        <div class="col-lg-12">
+            <ng-select [clearable]="true" placeholder="Tipo de Activo" formControlName="tipoActivo"
+                notFoundText="No hay tipos de activo disponibles" appendTo="body">
+                <ng-option *ngFor="let element of listaTipoActivos" [value]="element.nId">
+                    {{element.sDescripcion}}
+                </ng-option>
+            </ng-select>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="modal-header text-center header-modal-lucky d-flex justify-content-between clsHeader">
+    <div>
+    </div>
+
+    <h5 class="clsTitle">
+        <Label> Documentos del RS {{NroPPTO}} - {{sNombreRS}}</Label>
+    </h5>
+    <button class="close button-modal-lucky" matDialogClose>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div></div>
+<div *ngIf="nTipoModal==1">
+    <div>
+        <p style="color: #002c4b; font-weight: bold; padding-top: 10px;">
+            Subir Documento:
+        </p>
+
+    </div>
+    <div class="form-row">
+        <div class="form-row col-md-12">
+            <div class="form-group col-md-10">
+
+
+                <input type="file" #archivoFile accept="application/pdf"
+                    (change)="fnSeleccionarArchivo($event,lblName.id)" [formControl]="fileUpload"
+                    class="custom-file-input" aria-describedby="inputGroupFileAddon04">
+                <mat-label class="custom-file-label" #lblName id="lblName" style="width: 100%">
+                    Seleccione Archivo:</mat-label>
+
+            </div>
+            <div class="form-group col-md-2">
+                <button mat-raised-button color="primary" matTooltip="Subir Archivo" (click)="fnNombreArchivo(lblName.id)"
+                    type="button">
+                    <mat-icon>cloud_upload</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- <div *ngIf="vArchivoSeleccionado.length == 0" class="col-md-12 alert alert-info">
+            ¡No selecciono ningún documento!
+        </div> -->
+    </div>
+</div>
+
+<div mat-dialog-content class="clsContent">
+
+    <div class="mat-elevation-z8">
+        <div class="example-container">
+            <table mat-table [dataSource]="dataSource">
+
+
+                <!-- State Column -->
+                <ng-container matColumnDef="opcion">
+                    <th mat-header-cell *matHeaderCellDef class="clsColumnOpcion"> Opción </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div class="row">
+                            <div class="float:left">
+                                <button mat-raised-button (click)="fnVistaPrevia(element)" matTooltip="Vista Previa">
+                                    <mat-icon> visibility </mat-icon>
+                                </button>                            
+                            </div>
+                            <div class="clsBtnDelete" *ngIf="nTipoModal==1">
+                                <button mat-raised-button color="warn" (click)="fnEliminarPDF(element)" matTooltip="Eliminar PDF">
+                                    <mat-icon> delete </mat-icon>
+                                </button>                            
+                            </div>
+                            <div class="float:right">
+                                <button mat-raised-button (click)="fnDescargar(element)" matTooltip="Descargar PDF">
+                                    <mat-icon> cloud_download </mat-icon>
+                                </button>                                
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- User Column -->
+                <ng-container matColumnDef="usuario">
+                    <th mat-header-cell *matHeaderCellDef class="clsColumnUser"> Usuario Subió</th>
+                    <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+                </ng-container>
+
+                <!-- Date Column -->
+                <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef class="clsColumnFecha"> Fecha Subió </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fecha | date:'yyyy-MM-dd HH:mm'}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</div>

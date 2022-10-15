@@ -1,0 +1,156 @@
+<div class="col-md-12 fondo">Notas Anuladas de la sucursal de: {{data.sSucursal}}</div>
+<br />
+
+<div class="form-group col-md-12">
+  <div class="row">
+    <div class="col-md-12 offset-md-2">
+      <div class="form-row">
+        <div class="col-md-3 col-sm-3 col-12">
+          <mat-form-field style="width: 100%">
+            <mat-label> Búsqueda </mat-label>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Ruta" #input />
+            <button *ngIf="input.value" matSuffix mat-icon-button (click)="fnClean(); input.value = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="listaMobile" class="example-container mat-elevation-z8">
+  <table mat-table [dataSource]="dsAnulados" matSort style="width: 100%">
+    <ng-container matColumnDef="opcion" sticky>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Opción</th>
+      <td mat-cell *matCellDef="let row; let i = index" class="has_label_on_mobile clsColumnaOpc2" data-label="Opción: ">
+        <button mat-icon-button [matMenuTriggerFor]="menuDetalle" matTooltip="Desplegar" matTooltipPosition="right"
+          mat-stroked-button color="accent">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuDetalle="matMenu" xPosition="after">
+          <button mat-menu-item (click)="Desvincular(row, i)">
+            <mat-icon color="accent">reply</mat-icon>
+            <span>Desvincular</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sGrupo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nro. de Ruta</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Grupo: ">
+        <ngb-highlight [result]="row.sGrupo" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sPunto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Punto</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Punto: ">
+        <ngb-highlight [result]="row.sPunto" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sCodTransporte">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Transporte</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Transporte: ">
+        <ngb-highlight [result]="row.sCodTransporte" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="bEstado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado Trans</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="estado trans: ">
+        <ngb-highlight [result]="row.bEstado" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sNombreEmpresa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Empresa: ">
+        <ngb-highlight [result]="row.sNombreEmpresa" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sCodPresupuesto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Presupuesto</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Presupuesto: ">
+        <ngb-highlight [result]="row.sCodPresupuesto" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sNota">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Nota : ">
+        <ngb-highlight [result]="row.sNota" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sGuia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Guía</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Guía: ">
+        <ngb-highlight [result]="row.sGuia" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sCodAlmacen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Almacén</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Almacén: ">
+        <ngb-highlight [result]="row.sCodAlmacen" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nCantidad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidades</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Cantidad: ">
+        <ngb-highlight [result]="row.nCantidad" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nPeso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Peso: ">
+        {{ row.nPeso | number: "1.2-2" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nVolumen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Volumen</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Volumen: ">
+        {{ row.nVolumen | number: "1.6-6" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sPuntoLLegada">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Punto Llegada</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Punto Llegada: ">
+        <ngb-highlight [result]="row.sPuntoLLegada" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sDistrito">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Distrito</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Distrito: ">
+        <ngb-highlight [result]="row.sDistrito" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sFechaEntrega">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Entrega</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Fecha Entrega: ">
+        <ngb-highlight [result]="row.sFechaEntrega" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sHora">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+      <td mat-cell *matCellDef="let row" class="has_label_on_mobile clsColumnaLib" data-label="Hora: ">
+        <ngb-highlight [result]="row.sHora" [term]="input.value"></ngb-highlight>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>

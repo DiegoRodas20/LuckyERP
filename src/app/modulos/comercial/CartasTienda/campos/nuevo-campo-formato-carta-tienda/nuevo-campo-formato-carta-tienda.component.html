@@ -1,0 +1,52 @@
+<div>
+  <form #formCampo="ngForm" (ngSubmit)="crearNuevoCampo(formCampo)">
+    <h3 mat-dialog-title>Nuevo Campo</h3>
+
+    <!-- #region CAMPOS DEL FORMULARIO-->
+    <mat-dialog-content class="mat-typography">
+      <!-- #region -->
+      <mat-form-field>
+        <mat-label>Nombre del campo</mat-label>
+        <input
+          matInput
+          required
+          [(ngModel)]="model.nombre"
+          name="nombre"
+          #nombre="ngModel"
+        />
+      </mat-form-field>
+      <!-- #endregion -->
+
+      <!-- #region LISTA DE TIPOS DE CAMPOS-->
+      <mat-form-field class="d-block">
+        <mat-label>Selecciona el tipo</mat-label>
+        <mat-select
+          required
+          [(ngModel)]="model.tipo"
+          name="tipo"
+          #tipo="ngModel"
+        >
+          <mat-option *ngFor="let item of tiposCampo" [value]="item.pId">
+            {{ item.pNombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- #endregion -->
+    </mat-dialog-content>
+    <!-- #endregion -->
+
+    <!-- #region BOTON PARA GUARDAR EL NUEVO CAMPO-->
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button
+        mat-button
+        type="submit"
+        color="primary"
+        [disabled]="!formCampo.form.valid"
+      >
+        Guardar
+      </button>
+    </mat-dialog-actions>
+    <!-- #endregion -->
+  </form>
+</div>

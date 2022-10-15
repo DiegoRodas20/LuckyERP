@@ -1,0 +1,204 @@
+<div class="clsprincipal" [ngClass]="estaCargado ? 'clsShow' : 'clsHide'">
+    <div class="col-md-10 offset-md-1">
+        <h5 class="card-header center-text-card">Centro de Costo Asignar Presupuesto</h5>
+        <div *ngIf="!vSecundario" class="row"><br /></div>
+    </div>
+
+    <div class="col-md-10 offset-md-1 ">
+        <div [ngClass]="vPrincipal ? 'clsShow' : 'clsHide'">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <!-- Inicio del contenido -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Buscar centro costo:</mat-label>
+                                <input type="text" matInput [formControl]="txtFiltro" (input)="fnFiltrar()">
+                                <button style="outline: none;" mat-button *ngIf="txtFiltro.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="this.txtFiltro.setValue('');fnListarCCNuevo(this.cboAnio.value)">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-6">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Año:</mat-label>
+                                <mat-select (ngModelChange)="fnListarCCNuevo($event)" [formControl]="cboAnio">
+                                    <mat-option *ngFor="let vAnio of lAnio" [value]="vAnio.sAnio">
+                                        {{vAnio.sAnio}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- nueva tabla material -->
+                    <div id="listaMobile" class="mat-elevation-z8 ">
+                        <div class="example-container ">
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="nIdCC" sticky>
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2">
+                                    </th>
+                                    <td data-label='Opciones: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Desplegar"
+                                            matTooltipPosition="right" mat-stroked-button color="accent">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu" xPosition="after">
+                                            <button mat-menu-item (click)="fnVerDetalle(row)">
+                                                <mat-icon color="accent">edit</mat-icon>
+                                                <span>Asignar Presupuesto</span>
+                                            </button>
+                                            <button mat-menu-item (click)="fnAbrirDialog(row)">
+                                                <mat-icon color="accent">monetization_on</mat-icon>
+                                                <span>Ver Partidas</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sCodCC">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Código
+                                    </th>
+                                    <td data-label='Código: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.sCodCC" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescCC">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLarge">
+                                        Centro de
+                                        costo
+                                    </th>
+                                    <td data-label='Centro de costo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLarge">
+                                        <ngb-highlight [result]="row.sDescCC" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescDireccion">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Dirección
+                                    </th>
+                                    <td data-label='Dirección: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sDescDireccion" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescArea">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Área
+                                    </th>
+                                    <td data-label='Area: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sDescArea" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sSubCargo">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">
+                                        Subcargo
+                                    </th>
+                                    <td data-label='Subcargo: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sSubCargo" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sDescMoneda">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Moneda
+                                    </th>
+                                    <td data-label='Moneda: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.sDescMoneda" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nImporte">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaLib">Total
+                                        anual
+                                    </th>
+                                    <td data-label='Total anual: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaLib">
+                                        <ngb-highlight [result]="row.nImporte" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sEstadoCC">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="clsColumnaOpc2"> Estado
+                                    </th>
+                                    <td data-label='Estado: ' mat-cell *matCellDef="let row"
+                                        class="has_label_on_mobile clsColumnaOpc2">
+                                        <ngb-highlight [result]="row.sEstadoCC" [term]="txtFiltro.value">
+                                        </ngb-highlight>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 40]"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-asigna-crear [pCentrodeCosto]="vCentroCostoSeleccionado" *ngIf="vSecundario"></app-asigna-crear>
+
+        <div class="fab-container">
+
+            <button mat-mini-fab class="fab-toggler" (click)="onToggleFab(1, -1)">
+                <i class="material-icons" [@fabToggler]="{value: tsLista}">add</i>
+            </button>
+            <div [@speedDialStagger]="this.nListaLength">
+
+                <!--Para guardar-->
+                <button matTooltipPosition="left" *ngIf="this.nListaLength>0  && vSecundario"
+                    [disabled]="(asignacrearComp?.vSucursalCC==null || asignacrearComp?.lPrespuestoPartida.length==0)"
+                    mat-raised-button mat-mini-fab class="fab-secondary" matTooltip="Guardar" color="secondary" (click)="asignacrearComp?.fnGuardarMatTable()
+                     "><i class="material-icons">save</i></button>
+
+                <!--Para cancelar-->
+                <button *ngIf="this.nListaLength>0 && vSecundario" matTooltipPosition="left" mat-raised-button
+                    mat-mini-fab class="fab-secondary" matTooltip="Cancelar" color="secondary"
+                    [disabled]="(asignacrearComp?.vSucursalCC==null || asignacrearComp?.lPrespuestoPartida.length==0)"
+                    (click)="asignacrearComp?.fnCancelar()"><i class="material-icons">close</i></button>
+
+                <!--Para descargar en detalle-->
+                <button *ngIf="this.nListaLength>0 && vSecundario" mat-raised-button mat-mini-fab [disabled]=""
+                    class="fab-secondary" matTooltipPosition="left" matTooltip="Descargar Archivo" color="secondary"
+                    (click)="asignacrearComp?.fnDescargarExcelDetalle()"><i class="material-icons">cloud_download</i>
+                </button>
+
+                <!--Para salir-->
+                <button *ngIf="this.nListaLength>0 && vSecundario" mat-raised-button mat-mini-fab class="fab-secondary"
+                    matTooltip="Salir" color="warn" (click)="fnSalir()"><i
+                        class="material-icons">exit_to_app</i></button>
+
+                <!--Para descargar en detalle-->
+                <button *ngIf="this.nListaLength>0 && !vSecundario" mat-raised-button mat-mini-fab [disabled]=""
+                    class="fab-secondary" matTooltipPosition="left" matTooltip="Descargar Archivo" color="secondary"
+                    (click)="fnDescargarExcel()"><i class="material-icons">cloud_download</i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="vSecundario">
+            <br>
+        </div>
+    </div>
+</div>
